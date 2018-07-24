@@ -6,9 +6,9 @@ const pushService = require('./pushService');
 app.post('/message', function (req, res) {
   console.log(req.body);
   res.send('OK');
-  pusher.trigger('my-channel', 'my-event', {
+  /*pushService.trigger('my-channel', 'my-event', {
     "message": "hello world"
-  });
+  });*/
 });
 
 app.listen(process.env.PORT);
