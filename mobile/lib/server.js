@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 export async function sendMessage(message) {
-  const url = 'http://201.17.18.255:3000/message';
+  const url = 'https://us-central1-chat-534f7.cloudfunctions.net/function-2';
   try {
     const res = await axios.post(url, message);
     console.log(res);

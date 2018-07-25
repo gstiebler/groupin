@@ -8,8 +8,8 @@ let pusher = new Pusher({
   encrypted: true,
 });
 
-pusher.trigger('my-channel', 'my-event', {
-  "message": "hello world"
-});
+function pushMessage(channel, payload) {
+  pusher.trigger('my-channel', 'my-event', payload);
+}
 
-module.exports = pusher;
+module.exports = pushMessage;

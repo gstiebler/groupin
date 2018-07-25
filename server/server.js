@@ -1,14 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const pushService = require('./pushService');
+const index = require('./index');
 
-app.post('/message', function (req, res) {
-  console.log(req.body);
-  res.send('OK');
-  /*pushService.trigger('my-channel', 'my-event', {
-    "message": "hello world"
-  });*/
-});
+app.post('/message', index.postMessage);
 
 app.listen(process.env.PORT);
