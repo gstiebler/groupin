@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha src/tests/**/*.spec.js --reporter spec"
+  },
   "dependencies": {
+    "chai": "^4.1.2",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3",
-    "pusher": "^2.0.1"
+    "graphql": "^0.13.2",
+    "mocha": "^5.2.0",
+    "pusher": "^2.0.1",
+    "sinon": "3"
   }
 }

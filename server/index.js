@@ -1,6 +1,9 @@
-const pushMessage = require('./pushService');
 
-exports.postMessage = (req, res) => {
-  pushMessage('my-channel', req.body);
-  res.send('OK');
-};
+const { graphql } = require('graphql');
+const schema = require('./src/graphqlSchema');
+
+function main(req, res) {
+  graphql(schema, req.query).then(result => res.send(result));
+}
+
+module.exports = { main };

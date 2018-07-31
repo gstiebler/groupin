@@ -9,7 +9,7 @@ let pusher = new Pusher({
 });
 
 function pushMessage(channel, payload) {
-  pusher.trigger('my-channel', 'my-event', payload);
+  pusher.trigger(channel, 'my-event', payload);
 }
 
 module.exports = pushMessage;
