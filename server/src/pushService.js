@@ -8,8 +8,12 @@ let pusher = new Pusher({
   encrypted: true,
 });
 
+const DEFAULT_EVENT = 'my-event';
+
 function pushMessage(channel, payload) {
-  pusher.trigger(channel, 'my-event', payload);
+  pusher.trigger(channel, DEFAULT_EVENT, payload);
 }
 
-module.exports = pushMessage;
+module.exports = { 
+  pushMessage,
+};

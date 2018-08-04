@@ -4,7 +4,7 @@ const {
   GraphQLString
 } = require('graphql');
 
-const pushMessage = require('./pushService');
+const pushService = require('./pushService');
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -19,12 +19,16 @@ const schema = new GraphQLSchema({
     }
   }),
   mutation: new GraphQLObjectType({
-    name: 'RootQueryTypess',
+    name: 'RootMutationType',
     fields: {
-      hello: {
+      sendMessage: {
         type: GraphQLString,
-        resolve() {
-          pushMessage('my-channel', req.body);
+        args: { 
+          message: { type: GraphQLString } 
+        },
+        resolve(root, { message }, source, fieldASTs) {
+          pushService.pushMessage('my-channel', message);
+          return 'OK';
         }
       }
     }
