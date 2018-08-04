@@ -24,10 +24,17 @@ const schema = new GraphQLSchema({
       sendMessage: {
         type: GraphQLString,
         args: { 
-          message: { type: GraphQLString } 
+          message: { type: GraphQLString },
+          authorName: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
+          topicId: { type: GraphQLString },
         },
-        resolve(root, { message }, source, fieldASTs) {
-          pushService.pushMessage('my-channel', message);
+        resolve(root, { message, authorName, topicId }, source, fieldASTs) {
+          const payload = {
+            message,
+            authorName,
+            topicId,
+          };
+          pushService.pushMessage('my-channel', payload);
           return 'OK';
         }
       }
