@@ -4,7 +4,7 @@ const {
   GraphQLString
 } = require('graphql');
 
-const pushService = require('./pushService');
+const resolver = require('./resolver');
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -21,23 +21,7 @@ const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'RootMutationType',
     fields: {
-      sendMessage: {
-        type: GraphQLString,
-        args: { 
-          message: { type: GraphQLString },
-          authorName: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
-          topicId: { type: GraphQLString },
-        },
-        resolve(root, { message, authorName, topicId }, source, fieldASTs) {
-          const payload = {
-            message,
-            authorName,
-            topicId,
-          };
-          pushService.pushMessage('my-channel', payload);
-          return 'OK';
-        }
-      }
+      ...resolver.Mutation,
     }
   }),
 });
