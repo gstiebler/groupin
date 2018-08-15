@@ -28,6 +28,34 @@ async function createGroup(groupName) {
   return res.createGroup;
 }
 
+async function joinGroup(groupId) {
+  const userId = 'userId';
+  const query = `
+    mutation {
+      joinGroup (
+        userId: "${userId}",
+        groupId: "${groupId}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.joinGroup;
+}
+
+async function leaveGroup(groupId) {
+  const userId = 'userId';
+  const query = `
+    mutation {
+      leaveGroup (
+        userId: "${userId}",
+        groupId: "${groupId}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.leaveGroup;
+}
+
 async function createTopic(topicName, groupId) {
   const userId = 'userId';
   const query = `
@@ -112,4 +140,6 @@ module.exports = {
   getOwnGroups,
   getTopicsOfGroup,
   getMessagesOfTopic,
+  joinGroup,
+  leaveGroup,
 };

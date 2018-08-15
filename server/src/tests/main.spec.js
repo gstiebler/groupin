@@ -56,6 +56,16 @@ describe('main', () => {
     expect(result).to.equal('OK');
   });
 
+  it('joinGroup', async () => {
+    const result = await server.joinGroup('group 1');
+    expect(result).to.equal('OK');
+  });
+
+  it('leaveGroup', async () => {
+    const result = await server.leaveGroup('group 1');
+    expect(result).to.equal('OK');
+  });
+
   it('getOwnGroups', async () => {
     const result = await server.getOwnGroups();
     expect(result).to.eql([
