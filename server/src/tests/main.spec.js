@@ -62,4 +62,20 @@ describe('main', () => {
     ]);
   });
 
+  it('getTopicsOfGroup', async () => {
+    const result = await server.getTopicsOfGroup('groupId1', 20, 'startingId1');
+    expect(result).to.eql([
+      {
+        id: 'topicId1',
+        name: 'Topic 1',
+        imgUrl: '',
+      },
+      {
+        id: 'topicId2',
+        name: 'Topic 2',
+        imgUrl: '',
+      },
+    ]);
+  });
+
 });

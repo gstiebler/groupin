@@ -10,14 +10,16 @@ const pushService = require('./pushService');
 
 const Query = {
   ownGroups: {
-    type: new GraphQLList(new GraphQLObjectType({
-      name: 'ownGroupsType',
-      fields: {
-        id: { type: GraphQLString },
-        name: { type: GraphQLString },
-        imgUrl: { type: GraphQLString },
-      },
-    })),
+    type: new GraphQLList(
+      new GraphQLObjectType({
+        name: 'ownGroupsType',
+        fields: {
+          id: { type: GraphQLString },
+          name: { type: GraphQLString },
+          imgUrl: { type: GraphQLString },
+        },
+      })
+    ),
     args: { 
       userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
     },
@@ -37,19 +39,23 @@ const Query = {
     }
   },
   topicsOfGroup: {
-    type: new GraphQLObjectType({
-      name: 'topicsOfGroupType',
-      fields: {
-        id: { type: GraphQLString },
-        name: { type: GraphQLString },
-        imgUrl: { type: GraphQLString },
-      },
-    }),
+    type: new GraphQLList(
+      new GraphQLObjectType({
+        name: 'topicsOfGroupType',
+        fields: {
+          id: { type: GraphQLString },
+          name: { type: GraphQLString },
+          imgUrl: { type: GraphQLString },
+        },
+      })
+    ),
     args: { 
       userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       groupId: { type: GraphQLString },
+      limit: { type: GraphQLFloat },
+      startingId: { type: GraphQLString },
     },
-    resolve(root, { userId, groupId }, source, fieldASTs) {
+    resolve(root, { userId, groupId, limit, startingId }, source, fieldASTs) {
       const topicsOfGroups = new Map([
         ['groupId1', [
           {
