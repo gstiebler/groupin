@@ -51,6 +51,11 @@ describe('main', () => {
     expect(result).to.equal('OK');
   });
 
+  it('createTopic', async () => {
+    const result = await server.createTopic('new group 1');
+    expect(result).to.equal('OK');
+  });
+
   it('getOwnGroups', async () => {
     const result = await server.getOwnGroups();
     expect(result).to.eql([

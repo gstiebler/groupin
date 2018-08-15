@@ -28,6 +28,21 @@ async function createGroup(groupName) {
   return res.createGroup;
 }
 
+async function createTopic(topicName, groupId) {
+  const userId = 'userId';
+  const query = `
+    mutation {
+      createTopic (
+        userId: "${userId}",
+        topicName: "${topicName}",
+        groupId: "${groupId}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.createTopic;
+}
+
 async function getOwnGroups() {
   const userId = 'userId';
   const query = `
@@ -93,6 +108,7 @@ async function getMessagesOfTopic(topicId, limit, startingId) {
 module.exports = {
   sendMessage,
   createGroup,
+  createTopic,
   getOwnGroups,
   getTopicsOfGroup,
   getMessagesOfTopic,
