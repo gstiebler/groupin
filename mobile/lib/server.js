@@ -14,6 +14,20 @@ async function sendMessage(message, topicId, authorName) {
   return res.sendMessage;
 }
 
+async function createGroup(groupName) {
+  const userId = 'userId';
+  const query = `
+    mutation {
+      createGroup (
+        userId: "${userId}",
+        groupName: "${groupName}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.createGroup;
+}
+
 async function getOwnGroups() {
   const userId = 'userId';
   const query = `
@@ -78,6 +92,7 @@ async function getMessagesOfTopic(topicId, limit, startingId) {
 
 module.exports = {
   sendMessage,
+  createGroup,
   getOwnGroups,
   getTopicsOfGroup,
   getMessagesOfTopic,

@@ -161,6 +161,7 @@ const Mutation = {
       return 'OK';
     }
   },
+
   createGroup: {
     type: GraphQLString,
     args: { 
@@ -171,6 +172,7 @@ const Mutation = {
       return 'OK';
     }
   },
+
   createTopic: {
     type: GraphQLString,
     args: { 
@@ -186,6 +188,7 @@ const Mutation = {
       return 'OK';
     }
   },
+
   joinGroup: {
     type: GraphQLString,
     args: { 
@@ -196,6 +199,7 @@ const Mutation = {
       return 'OK';
     }
   },
+  
   leaveGroup: {
     type: GraphQLString,
     args: { 
