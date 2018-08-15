@@ -14,6 +14,24 @@ async function sendMessage(message, topicId, authorName) {
   return res.sendMessage;
 }
 
+async function getOwnGroups() {
+  const userId = 'userId';
+  const query = `
+    query {
+      ownGroups (
+        userId: "${userId}"
+      ) {
+        id,
+        name,
+        imgUrl
+      }
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.ownGroups;
+}
+
 module.exports = {
   sendMessage,
+  getOwnGroups,
 };

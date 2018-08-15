@@ -30,7 +30,7 @@ describe('main', () => {
   });
 
   afterEach(() => {
-    pushMessageStub.reset();
+    pushMessageStub.restore();
   });
 
   it('sendMessage', async () => {
@@ -44,6 +44,22 @@ describe('main', () => {
       authorName: 'author name 1',
     });
     expect(result).to.equal('OK');
+  });
+
+  it('getOwnGroups', async () => {
+    const result = await server.getOwnGroups();
+    expect(result).to.eql([
+      {
+        id: 'groupId1',
+        name: 'Group 1',
+        imgUrl: 'url1',
+      },
+      {
+        id: 'groupId2',
+        name: 'Group 2',
+        imgUrl: 'url2',
+      },
+    ]);
   });
 
 });
