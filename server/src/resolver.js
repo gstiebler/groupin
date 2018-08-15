@@ -38,6 +38,7 @@ const Query = {
       ];
     }
   },
+
   topicsOfGroup: {
     type: new GraphQLList(
       new GraphQLObjectType({
@@ -85,26 +86,40 @@ const Query = {
       return topicsOfGroups.get(groupId);
     }
   },
+
   messagesOfTopic: {
-    type: new GraphQLObjectType({
-      name: 'messagesOfTopicType',
-      fields: {
-        id: { type: GraphQLString },
-        authorName: { type: GraphQLString },
-        text: { type: GraphQLString },
-        moment: { type: GraphQLFloat },
-      },
-    }),
+    type: new GraphQLList(
+      new GraphQLObjectType({
+        name: 'messagesOfTopicType',
+        fields: {
+          _id: { type: GraphQLFloat },
+          text: { type: GraphQLString },
+          createdAt: { type: GraphQLFloat },
+          user: { 
+            type: new GraphQLObjectType({
+              name: 'userType',
+              fields: {
+                _id: { type: GraphQLFloat },
+                name: { type: GraphQLString },
+                avatar: { type: GraphQLString },
+              }
+            }), 
+          }
+        },
+      })
+    ),
     args: { 
       userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       topicId: { type: GraphQLString },
+      limit: { type: GraphQLFloat },
+      startingId: { type: GraphQLString },
     },
-    resolve(root, { userId, topicId }, source, fieldASTs) {
+    resolve(root, { userId, topicId, limit, startingId }, source, fieldASTs) {
       const messages = [
         {
           _id: 1,
           text: 'Hello developer',
-          createdAt: new Date(),
+          createdAt: Date.parse('2018-06-01T12:00:00-0800'),
           user: {
             _id: 2,
             name: 'React Native',
@@ -114,7 +129,7 @@ const Query = {
         {
           _id: 3,
           text: 'Hello developer 2',
-          createdAt: new Date(),
+          createdAt: Date.parse('2018-05-01T12:00:00-0800'),
           user: {
             _id:2,
             name: 'React Native',

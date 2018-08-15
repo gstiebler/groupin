@@ -78,4 +78,30 @@ describe('main', () => {
     ]);
   });
 
+  it('getMessagesOfTopic', async () => {
+    const result = await server.getMessagesOfTopic('groupId1', 20, 'startingId1');
+    expect(result).to.eql([
+      {
+        _id: 1,
+        text: 'Hello developer',
+        createdAt: Date.parse('2018-06-01T12:00:00-0800'),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+      {
+        _id: 3,
+        text: 'Hello developer 2',
+        createdAt: Date.parse('2018-05-01T12:00:00-0800'),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+    ]);
+  });
+
 });

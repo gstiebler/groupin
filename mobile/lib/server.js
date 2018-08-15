@@ -51,8 +51,34 @@ async function getTopicsOfGroup(groupId, limit, startingId) {
   return res.topicsOfGroup;
 }
 
+async function getMessagesOfTopic(topicId, limit, startingId) {
+  const userId = 'userId';
+  const query = `
+    query {
+      messagesOfTopic (
+        userId: "${userId}"
+        topicId: "${topicId}"
+        limit: ${limit}
+        startingId: "${startingId}"
+      ) {
+        _id,
+        text,
+        createdAt,
+        user {
+          _id,
+          name,
+          avatar
+        }
+      }
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.messagesOfTopic;
+}
+
 module.exports = {
   sendMessage,
   getOwnGroups,
   getTopicsOfGroup,
+  getMessagesOfTopic,
 };
