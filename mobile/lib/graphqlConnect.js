@@ -1,11 +1,17 @@
 const axios = require('axios');
 
-const url = 'https://us-central1-chat-534f7.cloudfunctions.net/function-2';
+const url = 'https://b2hbks8mx8.execute-api.us-east-1.amazonaws.com/prod/groupin';
 
 async function sendQuery(query) {
   try {
-    const res = await axios.post(url, query);
-    return res.data;
+    const parsedQuery = query.replace(/\n/g, '').replace(/\"/g, '\\\"');
+    const requestConfig = {
+      url,
+      method: 'post',
+      data: `"${parsedQuery}"`,
+    };
+    const res = await axios.request(requestConfig);
+    return res.data.data;
   } catch(err) {
     console.error(err);
   }
