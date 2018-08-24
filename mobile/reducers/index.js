@@ -1,4 +1,7 @@
-import { ADD_MESSSAGES } from "../constants/action-types";
+import { 
+  ADD_MESSSAGES,
+  SET_OWN_GROUPS,
+} from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 
 const initialState = {
@@ -14,6 +17,7 @@ const initialState = {
       },
     },
   ],
+  ownGroups: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -22,6 +26,11 @@ const rootReducer = (state = initialState, action) => {
       return { 
         ...state, 
         messages: mergeMessages(state.messages, action.messages),
+      };
+    case SET_OWN_GROUPS:
+      return { 
+        ...state, 
+        ownGroups: action.ownGroups,
       };
     default:
       return state;
