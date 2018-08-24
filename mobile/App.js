@@ -5,6 +5,9 @@ import SearchBar from './components/SearchBar';
 import Chat from './components/Chat';
 import { Provider } from "react-redux";
 import store from "./store/index";
+import { fetchOwnGroups } from './actions';
+
+fetchOwnGroups();
 
 export default class App extends React.Component {
   render() {
