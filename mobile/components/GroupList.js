@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from "react-redux";
 import {  } from '../actions/index';
 import { List, ListItem } from 'react-native-elements'
+import { SafeAreaView } from 'react-native';
 
 const mapStateToProps = state => {
   return { ownGroups: state.ownGroups };
@@ -10,25 +11,30 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    selectGroup: (group) => { console.log(group) }
+    selectGroup: (group) => { 
+      console.log(group);
+    }
   };
 };
 
-const GroupListComponent = ({ownGroups, selectGroup}) => {
+const GroupListComponent = ({ownGroups, selectGroup, navigation}) => {
+  console.log(navigation);
   return (
-    <List containerStyle={{marginBottom: 20}}>
-      {
-        ownGroups.map((group) => (
-          <ListItem
-            roundAvatar
-            avatar={{ uri: group.imgUrl }}
-            key={group.id}
-            title={group.name}
-            onPress={() => selectGroup(group.id)}
-          />
-        ))
-      }
-   </List>
+    <SafeAreaView>
+      <List containerStyle={{marginBottom: 20}}>
+        {
+          ownGroups.map((group) => (
+            <ListItem
+              roundAvatar
+              avatar={{ uri: group.imgUrl }}
+              key={group.id}
+              title={group.name}
+              onPress={() => { selectGroup(group.id); navigation.navigate('Chat'); } }
+            />
+          ))
+        }
+    </List>
+   </SafeAreaView>
   );
 }
 

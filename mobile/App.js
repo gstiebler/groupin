@@ -1,9 +1,14 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Text, View } from 'react-native';
+import { 
+  StyleSheet, 
+  //SafeAreaView,
+} from 'react-native';
+// import { SafeAreaView } from 'react-navigation';
 import FirstNB from './components/FirstNativeBase';
 import SearchBar from './components/SearchBar';
 import Chat from './components/Chat';
 import GroupList from './components/GroupList';
+import Navigator from './components/Navigator';
 import { Provider } from "react-redux";
 import store from "./store/index";
 import { fetchOwnGroups } from './actions';
@@ -14,9 +19,7 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <SafeAreaView>
-          <GroupList />
-        </SafeAreaView>
+        <Navigator />
       </Provider>
     );
   }
