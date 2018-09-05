@@ -2,6 +2,7 @@ import {
   ADD_MESSSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
+  SET_MESSAGES,
 } from "../constants/action-types";
 import * as server from '../lib/server';
 
@@ -25,7 +26,6 @@ const setOwnGroups = (ownGroups) => ({
 
 export async function fetchOwnGroups() {
   const ownGroups = await server.getOwnGroups();
-  console.log(ownGroups);
   store.dispatch(setOwnGroups(ownGroups));
 }
 
@@ -35,8 +35,16 @@ const setTopics = (topics) => ({
 });
 
 export async function getTopicsOfGroup(dispatch, groupId) {
-  console.log(groupId);
   const topics = await server.getTopicsOfGroup(groupId, 20, '');
-  console.log(topics);
   dispatch(setTopics(topics));
+}
+
+const setMessages = (messages) => ({ 
+  type: SET_MESSAGES, 
+  messages,
+});
+
+export async function getMessagesOfTopic(dispatch, topicId) {
+  const topics = await server.getMessagesOfTopic(topicId, 20, '');
+  dispatch(setMessages(topics));
 }

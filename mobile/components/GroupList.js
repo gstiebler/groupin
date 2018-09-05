@@ -19,7 +19,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const GroupListComponent = ({ownGroups, selectGroup, navigation}) => {
-  console.log(navigation);
   return (
     <SafeAreaView>
       <List containerStyle={{marginBottom: 20}}>
@@ -30,7 +29,7 @@ const GroupListComponent = ({ownGroups, selectGroup, navigation}) => {
               avatar={{ uri: group.imgUrl }}
               key={group.id}
               title={group.name}
-              onPress={() => { selectGroup(group.id); navigation.navigate('Chat'); } }
+              onPress={() => { selectGroup(group.id); navigation.navigate('TopicsList'); } }
             />
           ))
         }

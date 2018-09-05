@@ -2,6 +2,7 @@ import {
   ADD_MESSSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
+  SET_MESSAGES,
 } from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 
@@ -38,6 +39,11 @@ const rootReducer = (state = initialState, action) => {
       return { 
         ...state, 
         topics: action.topics,
+      };
+    case SET_MESSAGES:
+      return { 
+        ...state, 
+        messages: action.messages,
       };
     default:
       return state;
