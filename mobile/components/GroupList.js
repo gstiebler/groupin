@@ -1,7 +1,7 @@
 import React from 'react';
 // import { Text, FlatList } from 'react-native';
 import { connect } from "react-redux";
-import {  } from '../actions/index';
+import { getTopicsOfGroup } from '../actions/index';
 import { List, ListItem } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 
@@ -11,8 +11,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    selectGroup: (group) => { 
-      console.log(group);
+    selectGroup: (groupId) => { 
+      console.log(groupId);
+      getTopicsOfGroup(dispatch, groupId);
     }
   };
 };

@@ -1,6 +1,7 @@
 import { 
   ADD_MESSSAGES,
   SET_OWN_GROUPS,
+  SET_TOPICS,
 } from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 
@@ -18,6 +19,7 @@ const initialState = {
     },
   ],
   ownGroups: [],
+  topics: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -31,6 +33,11 @@ const rootReducer = (state = initialState, action) => {
       return { 
         ...state, 
         ownGroups: action.ownGroups,
+      };
+    case SET_TOPICS:
+      return { 
+        ...state, 
+        topics: action.topics,
       };
     default:
       return state;
