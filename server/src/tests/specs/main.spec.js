@@ -7,6 +7,11 @@ const schema = require('../../graphqlSchema');
 const expect = require('chai').expect;
 const { initFixtures } = require('../fixtures');
 const mongooseConfig = require('../../config/mongoose');
+const logger = require('../../config/winston');
+
+const chai = require('chai');
+const chaiSubset = require('chai-subset');
+chai.use(chaiSubset);
 
 let pushMessageStub;
 
@@ -19,12 +24,14 @@ describe('main', () => {
       try {
         const result = await graphql(schema, query);
         if (result.errors) {
-          console.error(result.errors);
+          for (const error of result.errors) {
+            logger.error(error.stack);
+          }
         } else {
           return result.data;
         }
       } catch(error) {
-        console.error(error);
+        logger.error(error);
       }
     });
   });
@@ -77,15 +84,13 @@ describe('main', () => {
 
   it('getOwnGroups', async () => {
     const result = await server.getOwnGroups();
-    expect(result).to.eql([
+    expect(result).containSubset([
       {
-        id: 'groupId1',
-        name: 'Group 1',
+        name: 'First Group',
         imgUrl: 'url1',
       },
       {
-        id: 'groupId2',
-        name: 'Group 2',
+        name: 'Second Group',
         imgUrl: 'url2',
       },
     ]);

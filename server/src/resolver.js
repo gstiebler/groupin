@@ -6,6 +6,8 @@ const {
   GraphQLInputObjectType,
 } = require('graphql');
 
+const Group = require('./db/schema/Group');
+
 const pushService = require('./pushService');
 
 const Query = {
@@ -23,19 +25,9 @@ const Query = {
     args: { 
       userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
     },
-    resolve(root, { userId }, source, fieldASTs) {
-      return [
-        {
-          id: 'groupId1',
-          name: 'Group 1',
-          imgUrl: 'url1',
-        },
-        {
-          id: 'groupId2',
-          name: 'Group 2',
-          imgUrl: 'url2',
-        },
-      ];
+    async resolve(root, { userId }, source, fieldASTs) {
+      const groups = await Group.find({}).lean();
+      return groups.map(group => ({ ...group, id: group._id }));
     }
   },
 
