@@ -9,6 +9,9 @@ const {
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
 const Topic = require('./db/schema/Topic');
+const Message = require('./db/schema/Message');
+
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const pushService = require('./pushService');
 
@@ -56,8 +59,8 @@ const Query = {
     },
     async resolve(root, { userId, groupId, limit, startingId }, source, fieldASTs) {
       const topicsOfGroup = await Topic.find({ groupId })
-        .limit(limit)
         .sort({ createdAt: -1 })
+        .limit(limit)
         .lean();
       return topicsOfGroup.map(topic => ({ ...topic, id: topic._id }));
     }
@@ -68,14 +71,14 @@ const Query = {
       new GraphQLObjectType({
         name: 'messagesOfTopicType',
         fields: {
-          _id: { type: GraphQLFloat },
+          _id: { type: GraphQLString },
           text: { type: GraphQLString },
           createdAt: { type: GraphQLFloat },
           user: { 
             type: new GraphQLObjectType({
               name: 'userType',
               fields: {
-                _id: { type: GraphQLFloat },
+                _id: { type: GraphQLString },
                 name: { type: GraphQLString },
                 avatar: { type: GraphQLString },
               }
@@ -90,29 +93,34 @@ const Query = {
       limit: { type: GraphQLFloat },
       startingId: { type: GraphQLString },
     },
-    resolve(root, { userId, topicId, limit, startingId }, source, fieldASTs) {
-      const messages = [
+    async resolve(root, { userId, topicId, limit, startingId }, source, fieldASTs) {
+      const messages = await Message.aggregate([
         {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: Date.parse('2018-06-01T12:00:00-0800'),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
+          $match: {
+            topic: ObjectId(topicId),
+          }
         },
         {
-          _id: 3,
-          text: 'Hello developer 2',
-          createdAt: Date.parse('2018-05-01T12:00:00-0800'),
-          user: {
-            _id:2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "user"
+          }
         },
-      ];
+        { $unwind: '$user' },
+        {
+          $project: {
+            text: '$text',
+            createdAt: '$createdAt',
+            'user._id': '$user._id',
+            'user.name': '$user.name',
+            'user.avatar': '$user.imgUrl',
+          }
+        },
+        { $sort: { createdAt: -1 } },
+        { $limit: limit },
+      ]);
       return messages;
     }
   },

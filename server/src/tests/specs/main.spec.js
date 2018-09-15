@@ -7,6 +7,8 @@ const mongooseConfig = require('../../config/mongoose');
 const logger = require('../../config/winston');
 const userFixtures = require('../fixtures/userFixtures');
 const groupFixtures = require('../fixtures/groupFixtures');
+const topicFixtures = require('../fixtures/topicFixtures');
+const messageFixtures = require('../fixtures/messageFixtures');
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
@@ -91,26 +93,21 @@ describe('main', () => {
   });
 
   it('getMessagesOfTopic', async () => {
-    const result = await server.getMessagesOfTopic('groupId1', 20, 'startingId1');
-    expect(result).to.eql([
+    const result = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');
+    expect(result).containSubset([
       {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: Date.parse('2018-06-01T12:00:00-0800'),
+        _id: messageFixtures.message2topic1._id.toHexString(),
+        text: 'Topic 1 Group 1 Robert',
         user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+          name: 'Robert',
+          avatar: 'robert_url',
         },
       },
       {
-        _id: 3,
-        text: 'Hello developer 2',
-        createdAt: Date.parse('2018-05-01T12:00:00-0800'),
+        text: 'Topic 1 Group 1 Alice',
         user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+          name: 'Alice',
+          avatar: 'alice_url',
         },
       },
     ]);
