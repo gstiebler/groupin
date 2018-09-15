@@ -4,15 +4,19 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha src/tests/**/*.spec.js --reporter spec"
+    "test": "./node_modules/mocha/bin/mocha src/tests/**/*.spec.js --reporter spec",
+    "dev_server": "node ./src/server.js"
   },
   "dependencies": {
     "chai": "^4.1.2",
     "dotenv": "^6.0.0",
+    "express": "^4.16.3",
     "graphql": "^0.13.2",
     "mocha": "^5.2.0",
     "moment": "^2.22.2",
+    "mongoose": "^5.2.14",
     "pusher": "^2.0.1",
-    "sinon": "4"
+    "sinon": "4",
+    "winston": "^3.1.0"
   }
 }

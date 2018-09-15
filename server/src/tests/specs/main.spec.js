@@ -1,9 +1,9 @@
 const sinon = require('sinon');
-const graphqlConnect = require('../../../mobile/lib/graphqlConnect');
-const server = require('../../../mobile/lib/server');
-const pushService = require('../pushService');
+const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
+const server = require('../../../../mobile/lib/server');
+const pushService = require('../../pushService');
 const { graphql } = require('graphql');
-const schema = require('../graphqlSchema');
+const schema = require('../../graphqlSchema');
 const expect = require('chai').expect;
 
 let pushMessageStub;
