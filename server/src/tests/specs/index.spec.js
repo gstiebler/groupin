@@ -23,3 +23,7 @@ before(async () => {
     }
   });
 });
+
+after(async () => {
+  await mongooseConfig.disconnect();
+});

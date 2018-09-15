@@ -18,12 +18,7 @@ let pushMessageStub;
 
 describe('main', () => {
 
-  after(async () => {
-    await mongooseConfig.disconnect();
-  });
-
   beforeEach(async () => {
-    await initFixtures();
     pushMessageStub = sinon.stub(pushService, 'pushMessage');
   });
 
@@ -31,86 +26,102 @@ describe('main', () => {
     pushMessageStub.restore();
   });
 
-  it('sendMessage', async () => {
-    const result = await server.sendMessage('message 1', 'topic 1', 'author name 1');
-    const call0args = pushMessageStub.args[0];
-    expect(call0args).to.have.lengthOf(2);
-    expect(call0args[0]).to.equal('my-channel');
-    expect(call0args[1]).to.eql({
-      message: 'message 1',
-      topicId: 'topic 1',
-      authorName: 'author name 1',
+  describe('reading', () => {
+
+    before(async () => {
+      await initFixtures();
     });
-    expect(result).to.equal('OK');
-  });
 
-  it('createGroup', async () => {
-    const result = await server.createGroup('new group 1');
-    expect(result).to.equal('OK');
-  });
-
-  it('createTopic', async () => {
-    const result = await server.createTopic('new group 1');
-    expect(result).to.equal('OK');
-  });
-
-  it('joinGroup', async () => {
-    const result = await server.joinGroup('group 1');
-    expect(result).to.equal('OK');
-  });
-
-  it('leaveGroup', async () => {
-    const result = await server.leaveGroup('group 1');
-    expect(result).to.equal('OK');
-  });
-
-  it('getOwnGroups', async () => {
-    const result = await server.getOwnGroups(userFixtures.robert._id.toHexString());
-    expect(result).containSubset([
-      {
-        name: 'Second Group',
-        imgUrl: 'url2',
-      },
-      {
-        name: 'First Group',
-        imgUrl: 'url1',
-      },
-    ]);
-  });
-
-  it('getTopicsOfGroup', async () => {
-    const result = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
-    expect(result).containSubset([
-      {
-        name: 'Topic 2 Group 1',
-        imgUrl: 't2g1_url',
-      },
-      {
-        name: 'Topic 1 Group 1',
-        imgUrl: 't1g1_url',
-      },
-    ]);
-  });
-
-  it('getMessagesOfTopic', async () => {
-    const result = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');
-    expect(result).containSubset([
-      {
-        _id: messageFixtures.message2topic1._id.toHexString(),
-        text: 'Topic 1 Group 1 Robert',
-        user: {
-          name: 'Robert',
-          avatar: 'robert_url',
+    it('getOwnGroups', async () => {
+      const result = await server.getOwnGroups(userFixtures.robert._id.toHexString());
+      expect(result).containSubset([
+        {
+          name: 'Second Group',
+          imgUrl: 'url2',
         },
-      },
-      {
-        text: 'Topic 1 Group 1 Alice',
-        user: {
-          name: 'Alice',
-          avatar: 'alice_url',
+        {
+          name: 'First Group',
+          imgUrl: 'url1',
         },
-      },
-    ]);
+      ]);
+    });
+  
+    it('getTopicsOfGroup', async () => {
+      const result = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
+      expect(result).containSubset([
+        {
+          name: 'Topic 2 Group 1',
+          imgUrl: 't2g1_url',
+        },
+        {
+          name: 'Topic 1 Group 1',
+          imgUrl: 't1g1_url',
+        },
+      ]);
+    });
+  
+    it('getMessagesOfTopic', async () => {
+      const result = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');
+      expect(result).containSubset([
+        {
+          _id: messageFixtures.message2topic1._id.toHexString(),
+          text: 'Topic 1 Group 1 Robert',
+          user: {
+            name: 'Robert',
+            avatar: 'robert_url',
+          },
+        },
+        {
+          text: 'Topic 1 Group 1 Alice',
+          user: {
+            name: 'Alice',
+            avatar: 'alice_url',
+          },
+        },
+      ]);
+    });
+    
+  });
+
+  describe('writting', () => {
+
+    beforeEach(async () => {
+      await initFixtures();
+    });
+
+    it('sendMessage', async () => {
+      const result = await server.sendMessage('message 1', 'topic 1', 'author name 1');
+      const call0args = pushMessageStub.args[0];
+      expect(call0args).to.have.lengthOf(2);
+      expect(call0args[0]).to.equal('my-channel');
+      expect(call0args[1]).to.eql({
+        message: 'message 1',
+        topicId: 'topic 1',
+        authorName: 'author name 1',
+      });
+      expect(result).to.equal('OK');
+    });
+  
+    it('createGroup', async () => {
+      const result = await server.createGroup('new group 1');
+      expect(result).to.equal('OK');
+    });
+  
+    it('createTopic', async () => {
+      const result = await server.createTopic('new group 1');
+      expect(result).to.equal('OK');
+    });
+  
+    it('joinGroup', async () => {
+      const result = await server.joinGroup('group 1');
+      expect(result).to.equal('OK');
+    });
+  
+    it('leaveGroup', async () => {
+      const result = await server.leaveGroup('group 1');
+      expect(result).to.equal('OK');
+    });
+
   });
 
 });
