@@ -6,7 +6,6 @@ const schema = require('../../graphqlSchema');
 const logger = require('../../config/winston');
 
 before(async () => {
-  logger.debug('before');
   require('dotenv').config();
   await mongooseConfig.init();
   sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
@@ -23,5 +22,4 @@ before(async () => {
       logger.error(error);
     }
   });
-  logger.debug('after');
 });

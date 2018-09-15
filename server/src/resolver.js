@@ -8,6 +8,7 @@ const {
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
+const Topic = require('./db/schema/Topic');
 
 const pushService = require('./pushService');
 
@@ -53,34 +54,12 @@ const Query = {
       limit: { type: GraphQLFloat },
       startingId: { type: GraphQLString },
     },
-    resolve(root, { userId, groupId, limit, startingId }, source, fieldASTs) {
-      const topicsOfGroups = new Map([
-        ['groupId1', [
-          {
-            id: 'topicId1',
-            name: 'Topic 1',
-            imgUrl: '',
-          },
-          {
-            id: 'topicId2',
-            name: 'Topic 2',
-            imgUrl: '',
-          },
-        ]],
-        ['groupId2', [
-          {
-            id: 'topicId3',
-            name: 'Topic 4',
-            imgUrl: '',
-          },
-          {
-            id: 'topicId4',
-            name: 'Topic 4',
-            imgUrl: '',
-          },
-        ]],
-      ]);
-      return topicsOfGroups.get(groupId);
+    async resolve(root, { userId, groupId, limit, startingId }, source, fieldASTs) {
+      const topicsOfGroup = await Topic.find({ groupId })
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .lean();
+      return topicsOfGroup.map(topic => ({ ...topic, id: topic._id }));
     }
   },
 

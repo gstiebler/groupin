@@ -6,6 +6,7 @@ const { initFixtures } = require('../fixtures');
 const mongooseConfig = require('../../config/mongoose');
 const logger = require('../../config/winston');
 const userFixtures = require('../fixtures/userFixtures');
+const groupFixtures = require('../fixtures/groupFixtures');
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
@@ -76,17 +77,15 @@ describe('main', () => {
   });
 
   it('getTopicsOfGroup', async () => {
-    const result = await server.getTopicsOfGroup('groupId1', 20, 'startingId1');
-    expect(result).to.eql([
+    const result = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
+    expect(result).containSubset([
       {
-        id: 'topicId1',
-        name: 'Topic 1',
-        imgUrl: '',
+        name: 'Topic 2 Group 1',
+        imgUrl: 't2g1_url',
       },
       {
-        id: 'topicId2',
-        name: 'Topic 2',
-        imgUrl: '',
+        name: 'Topic 1 Group 1',
+        imgUrl: 't1g1_url',
       },
     ]);
   });
