@@ -8,6 +8,7 @@ const expect = require('chai').expect;
 const { initFixtures } = require('../fixtures');
 const mongooseConfig = require('../../config/mongoose');
 const logger = require('../../config/winston');
+const userFixtures = require('../fixtures/userFixtures');
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
@@ -83,15 +84,15 @@ describe('main', () => {
   });
 
   it('getOwnGroups', async () => {
-    const result = await server.getOwnGroups();
+    const result = await server.getOwnGroups(userFixtures.robert._id.toHexString());
     expect(result).containSubset([
-      {
-        name: 'First Group',
-        imgUrl: 'url1',
-      },
       {
         name: 'Second Group',
         imgUrl: 'url2',
+      },
+      {
+        name: 'First Group',
+        imgUrl: 'url1',
       },
     ]);
   });

@@ -71,8 +71,7 @@ async function createTopic(topicName, groupId) {
   return res.createTopic;
 }
 
-async function getOwnGroups() {
-  const userId = 'userId';
+async function getOwnGroups(userId) {
   const query = `
     query {
       ownGroups (
