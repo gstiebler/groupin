@@ -5,12 +5,16 @@ const pushService = require('../../pushService');
 const { graphql } = require('graphql');
 const schema = require('../../graphqlSchema');
 const expect = require('chai').expect;
+const { initFixtures } = require('../fixtures');
+const mongooseConfig = require('../../config/mongoose');
 
 let pushMessageStub;
 
 describe('main', () => {
 
-  before(() => {
+  before(async () => {
+    require('dotenv').config();
+    await mongooseConfig.init();
     sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
       try {
         const result = await graphql(schema, query);
@@ -25,7 +29,12 @@ describe('main', () => {
     });
   });
 
-  beforeEach(() => {
+  after(async () => {
+    await mongooseConfig.disconnect();
+  });
+
+  beforeEach(async () => {
+    await initFixtures();
     pushMessageStub = sinon.stub(pushService, 'pushMessage');
   });
 
