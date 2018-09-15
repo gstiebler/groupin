@@ -15,7 +15,7 @@ let logger = winston.createLogger({
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.simple(),
-    level: process.env.WINSTON_CONSOLE_LEVEL
+    level: process.env.WINSTON_CONSOLE_LEVEL,
   }));
 }
 
