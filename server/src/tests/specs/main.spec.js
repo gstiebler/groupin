@@ -5,6 +5,7 @@ const expect = require('chai').expect;
 const { initFixtures } = require('../fixtures');
 const mongooseConfig = require('../../config/mongoose');
 const logger = require('../../config/winston');
+const Message = require('../../db/schema/Message');
 const userFixtures = require('../fixtures/userFixtures');
 const groupFixtures = require('../fixtures/groupFixtures');
 const topicFixtures = require('../fixtures/topicFixtures');
@@ -90,16 +91,29 @@ describe('main', () => {
     });
 
     it('sendMessage', async () => {
-      const result = await server.sendMessage('message 1', 'topic 1', 'author name 1');
+      const alice = userFixtures.alice;
+      const result = await server.sendMessage('new message 1 from Alice', alice._id.toHexString(), alice.name, 
+        topicFixtures.topic2Group1._id.toHexString());
+
+      // test push
       const call0args = pushMessageStub.args[0];
       expect(call0args).to.have.lengthOf(2);
       expect(call0args[0]).to.equal('my-channel');
       expect(call0args[1]).to.eql({
-        message: 'message 1',
-        topicId: 'topic 1',
-        authorName: 'author name 1',
-      });
+        message: 'new message 1 from Alice',
+        topicId: topicFixtures.topic2Group1._id.toHexString(),
+        authorName: alice.name,
+      });      
       expect(result).to.equal('OK');
+
+      // test message was added to DB
+      const messages = await Message.find().sort({createdAt: -1}).lean();
+      expect(messages).to.have.lengthOf(4);
+      expect(messages[3]).to.containSubset({
+        text: 'new message 1 from Alice',
+        user: alice._id,
+        topic: topicFixtures.topic2Group1._id,
+      });
     });
   
     it('createGroup', async () => {

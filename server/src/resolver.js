@@ -130,18 +130,25 @@ const Mutation = {
   sendMessage: {
     type: GraphQLString,
     args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       message: { type: GraphQLString },
-      authorName: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
+      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
+      userName: { type: GraphQLString },
       topicId: { type: GraphQLString },
     },
-    resolve(root, { userId, message, authorName, topicId }, source, fieldASTs) {
+    async resolve(root, { message, userId, userName, topicId }, source, fieldASTs) {
+      await Message.create({
+        text: message,
+        user: userId,
+        topic: topicId,
+      });
+
       const payload = {
         message,
-        authorName,
+        authorName: userName,
         topicId,
       };
       pushService.pushMessage('my-channel', payload);
+
       return 'OK';
     }
   },
