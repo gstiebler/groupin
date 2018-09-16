@@ -8,7 +8,8 @@ async function init() {
   const port = process.env.MONGODB_PORT;
   const dbHost = process.env.MONGODB_HOST;
   const userPwStr = process.env.MONGODB_USER ? `${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@` : '';
-  const mongoURL = `mongodb://${userPwStr}${dbHost}:${port}/${dbName}`;
+  const prodUrl = process.env.MONGODB_PROD_URL;
+  const mongoURL = `mongodb://${userPwStr}${dbHost}:${port}/${dbName}${prodUrl}`;
   mongoose.Promise = global.Promise;
 
   await mongoose.disconnect();

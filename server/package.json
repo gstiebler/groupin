@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha src/tests/**/*.spec.js --reporter spec",
+    "test": "./node_modules/mocha/bin/mocha src/tests/**/*.spec.js --reporter spec --timeout 5000",
     "dev_server": "node ./src/server.js"
   },
   "dependencies": {
