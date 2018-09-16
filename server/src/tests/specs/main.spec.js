@@ -137,14 +137,45 @@ describe('main', () => {
         expect(_.map(groups, 'name')).to.eql([ 'Second Group', 'First Group']);
       });
     });
+  
+    describe('createTopic', async () => {
+      let result;
+      const topicName = 'new topic foca';
+
+      beforeEach(async () => {
+        result = await server.createTopic({
+          topicName,
+          groupId: groupFixtures.secondGroup._id.toHexString(),
+          userId: userFixtures.robert._id.toHexString(),
+        });
+      });
+
+      it('push', async () => {
+        const call0args = pushMessageStub.args[0];
+        expect(call0args).to.have.lengthOf(2);
+        expect(call0args[0]).to.equal(groupFixtures.secondGroup._id.toHexString());
+        expect(call0args[1]).to.eql({
+          topicName,
+        });      
+        expect(result).to.equal('OK');
+      });
+
+      it('topic created on DB', async () => {
+        const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup._id.toHexString(), 20, 'startingId1');
+        expect(topics).to.have.lengthOf(3);
+        // test order
+        expect(_.map(topics, 'name')).to.eql([topicName, 'Topic 2 Group 2', 'Topic 1 Group 2']);
+      });
+
+      it('group sort order', async () => {
+        const groups = await server.getOwnGroups(userFixtures.robert._id.toHexString());
+        expect(_.map(groups, 'name')).to.eql([ 'Second Group', 'First Group']);
+      });
+
+    });
 
     it('createGroup', async () => {
       const result = await server.createGroup('new group 1');
-      expect(result).to.equal('OK');
-    });
-  
-    it('createTopic', async () => {
-      const result = await server.createTopic('new group 1');
       expect(result).to.equal('OK');
     });
   

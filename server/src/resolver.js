@@ -187,11 +187,31 @@ const Mutation = {
       topicName: { type: GraphQLString },
       groupId: { type: GraphQLString },
     },
-    resolve(root, { userId, topicName, groupId }) {
-      const payload = {
+    async resolve(root, { userId, topicName, groupId }) {
+      let topicCreatePromise = Topic.create({
+        name: topicName,
+        groupId: ObjectId(groupId),
+        createdBy: ObjectId(userId),
+      });
+
+      let groupUpdatePromise = Group.updateOne(
+        { _id: ObjectId(groupId) },
+        { 
+          $set: { 
+            updatedAt: Date.now(),
+          }
+        },
+      );
+
+      await Promise.all([
+        topicCreatePromise,
+        groupUpdatePromise,
+      ]);
+
+      const pushPayload = {
         topicName,
       };
-      pushService.pushMessage(groupId, payload);
+      pushService.pushMessage(groupId, pushPayload);
       return 'OK';
     }
   },

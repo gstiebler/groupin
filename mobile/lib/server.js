@@ -57,8 +57,7 @@ async function leaveGroup(groupId) {
   return res.leaveGroup;
 }
 
-async function createTopic(topicName, groupId) {
-  const userId = 'userId';
+async function createTopic({ topicName, groupId, userId }) {
   const query = `
     mutation {
       createTopic (
