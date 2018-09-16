@@ -6,6 +6,7 @@ const groupSchema = new mongoose.Schema({
   imgUrl: { type: String },
   description: { type: String },
   createdAt: { type: Date, default: Date.now, required: true },
+  updatedAt: { type: Date, default: Date.now, required: true },
 });
 
 const Group = mongoose.model('Group', groupSchema);

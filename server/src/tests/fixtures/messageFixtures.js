@@ -24,6 +24,13 @@ const messages = {
     topic: topicFixtures.topic2Group1._id,
     createdAt: Date.parse('2018-10-03'),
   },
+  message1topic1Group2: {
+    _id: ObjectId(),
+    text: 'Topic 1 Group 2 Robert elvis',
+    user: userFixtures.robert._id,
+    topic: topicFixtures.topic1Group2._id,
+    createdAt: Date.parse('2018-09-12'),
+  },
 };
 
 module.exports = messages;

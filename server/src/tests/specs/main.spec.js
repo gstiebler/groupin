@@ -10,6 +10,7 @@ const userFixtures = require('../fixtures/userFixtures');
 const groupFixtures = require('../fixtures/groupFixtures');
 const topicFixtures = require('../fixtures/topicFixtures');
 const messageFixtures = require('../fixtures/messageFixtures');
+const _ = require('lodash');
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
@@ -34,36 +35,40 @@ describe('main', () => {
     });
 
     it('getOwnGroups', async () => {
-      const result = await server.getOwnGroups(userFixtures.robert._id.toHexString());
-      expect(result).containSubset([
-        {
-          name: 'Second Group',
-          imgUrl: 'url2',
-        },
+      const groups = await server.getOwnGroups(userFixtures.robert._id.toHexString());
+      expect(groups).containSubset([
         {
           name: 'First Group',
           imgUrl: 'url1',
         },
+        {
+          name: 'Second Group',
+          imgUrl: 'url2',
+        },
       ]);
+      // test order
+      expect(_.map(groups, 'name')).to.eql([ 'First Group', 'Second Group']);
     });
   
     it('getTopicsOfGroup', async () => {
-      const result = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
-      expect(result).containSubset([
-        {
-          name: 'Topic 2 Group 1',
-          imgUrl: 't2g1_url',
-        },
+      const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
+      expect(topics).containSubset([
         {
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
         },
+        {
+          name: 'Topic 2 Group 1',
+          imgUrl: 't2g1_url',
+        },
       ]);
+      // test order
+      expect(_.map(topics, 'name')).to.eql([ 'Topic 1 Group 1', 'Topic 2 Group 1']);
     });
   
     it('getMessagesOfTopic', async () => {
-      const result = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');
-      expect(result).containSubset([
+      const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');
+      expect(messages).containSubset([
         {
           _id: messageFixtures.message2topic1._id.toHexString(),
           text: 'Topic 1 Group 1 Robert',
@@ -80,6 +85,7 @@ describe('main', () => {
           },
         },
       ]);
+      expect(_.map(messages, 'text')).to.eql([ 'Topic 1 Group 1 Robert', 'Topic 1 Group 1 Alice']);
     });
     
   });
@@ -92,28 +98,39 @@ describe('main', () => {
 
     it('sendMessage', async () => {
       const alice = userFixtures.alice;
-      const result = await server.sendMessage('new message 1 from Alice', alice._id.toHexString(), alice.name, 
-        topicFixtures.topic2Group1._id.toHexString());
+      const messageText = 'new message 1 from Alice';
+      const result = await server.sendMessage(messageText, alice._id.toHexString(), alice.name, 
+        topicFixtures.topic1Group2._id.toHexString());
 
-      // test push
+      // push
       const call0args = pushMessageStub.args[0];
       expect(call0args).to.have.lengthOf(2);
       expect(call0args[0]).to.equal('my-channel');
       expect(call0args[1]).to.eql({
-        message: 'new message 1 from Alice',
-        topicId: topicFixtures.topic2Group1._id.toHexString(),
+        message: messageText,
+        topicId: topicFixtures.topic1Group2._id.toHexString(),
         authorName: alice.name,
       });      
       expect(result).to.equal('OK');
 
-      // test message was added to DB
-      const messages = await Message.find().sort({createdAt: -1}).lean();
-      expect(messages).to.have.lengthOf(4);
-      expect(messages[3]).to.containSubset({
-        text: 'new message 1 from Alice',
-        user: alice._id,
-        topic: topicFixtures.topic2Group1._id,
+      // message was added to DB
+      const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group2._id.toHexString(), 20, 'startingId1');;
+      expect(messages).to.have.lengthOf(2);
+      // the most recent message
+      expect(messages[0]).to.containSubset({
+        text: messageText,
+        user: {
+          name: 'Alice',
+        },
       });
+
+      // topic sort order
+      const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup._id.toHexString(), 20, 'startingId1');
+      expect(_.map(topics, 'name')).to.eql([ 'Topic 1 Group 2', 'Topic 2 Group 2']);
+
+      // group sort order
+      const groups = await server.getOwnGroups(userFixtures.robert._id.toHexString());
+      expect(_.map(groups, 'name')).to.eql([ 'Second Group', 'First Group']);
     });
   
     it('createGroup', async () => {

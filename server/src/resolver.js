@@ -34,7 +34,7 @@ const Query = {
       const user = await User.findById(userId).lean();
       const groups = await Group
         .find({ _id: { $in: user.groups } })
-        .sort({ createdAt: -1 })
+        .sort({ updatedAt: -1 })
         .lean();
       return groups.map(group => ({ ...group, id: group._id }));
     }
@@ -59,7 +59,7 @@ const Query = {
     },
     async resolve(root, { userId, groupId, limit, startingId }, source, fieldASTs) {
       const topicsOfGroup = await Topic.find({ groupId })
-        .sort({ createdAt: -1 })
+        .sort({ updatedAt: -1 })
         .limit(limit)
         .lean();
       return topicsOfGroup.map(topic => ({ ...topic, id: topic._id }));
@@ -136,18 +136,34 @@ const Mutation = {
       topicId: { type: GraphQLString },
     },
     async resolve(root, { message, userId, userName, topicId }, source, fieldASTs) {
+      // TODO: make calls to DB in parallel when possible
+      // TODO: check user permissions for topic/group
       await Message.create({
         text: message,
         user: userId,
         topic: topicId,
       });
 
-      const payload = {
+      // update topic updatedAt
+      await Topic.updateOne(
+        { _id: ObjectId(topicId) },
+        { $set: { updatedAt: Date.now() } }  
+      );
+
+      // update group updatedAt
+      const topic = await Topic.findById(topicId);
+      await Group.updateOne(
+        { _id: topic.groupId },
+        { $set: { updatedAt: Date.now() } }  
+      );
+
+      // send push notification
+      const pushPayload = {
         message,
         authorName: userName,
         topicId,
       };
-      pushService.pushMessage('my-channel', payload);
+      pushService.pushMessage('my-channel', pushPayload);
 
       return 'OK';
     }
