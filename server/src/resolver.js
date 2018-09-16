@@ -175,7 +175,17 @@ const Mutation = {
       userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       groupName: { type: GraphQLString },
     },
-    resolve(root, { userId, groupName }) {
+    async resolve(root, { userId, groupName }) {
+      const newGroup = await Group.create({
+        name: groupName,
+        createdBy: ObjectId(userId),
+      });
+
+      await User.update(
+        { _id: ObjectId(userId) },
+        { $push: { groups: newGroup._id } }
+      );
+
       return 'OK';
     }
   },

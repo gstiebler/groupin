@@ -15,8 +15,7 @@ async function sendMessage(message, userId, userName, topicId) {
   return res.sendMessage;
 }
 
-async function createGroup(groupName) {
-  const userId = 'userId';
+async function createGroup(groupName, userId) {
   const query = `
     mutation {
       createGroup (

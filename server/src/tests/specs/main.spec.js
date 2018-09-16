@@ -175,8 +175,11 @@ describe('main', () => {
     });
 
     it('createGroup', async () => {
-      const result = await server.createGroup('new group 1');
-      expect(result).to.equal('OK');
+      const result = await server.createGroup('new group 1', userFixtures.robert._id.toHexString());
+      expect(result).to.equal('OK');      
+      const groups = await server.getOwnGroups(userFixtures.robert._id.toHexString());
+      expect(groups).to.have.lengthOf(3);
+      expect(groups[0].name).to.equal('new group 1');
     });
   
     it('joinGroup', async () => {

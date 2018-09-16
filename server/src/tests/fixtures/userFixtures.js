@@ -1,5 +1,5 @@
 const ObjectId = require('mongoose').Types.ObjectId;
-const groupFixtures = require('./groupFixtures');
+const groupIds = require('./groupIds');
 
 const users = {
   alice: {
@@ -8,7 +8,7 @@ const users = {
     phoneNumber: '4444',
     imgUrl: 'alice_url',
     groups: [
-      groupFixtures.firstGroup._id,
+      groupIds.firstGroup,
     ],
   },
   robert: {
@@ -17,8 +17,8 @@ const users = {
     phoneNumber: '5555',
     imgUrl: 'robert_url',
     groups: [
-      groupFixtures.firstGroup._id,
-      groupFixtures.secondGroup._id,
+      groupIds.firstGroup,
+      groupIds.secondGroup,
     ],
   },
 };

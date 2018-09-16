@@ -5,6 +5,7 @@ const groupSchema = new mongoose.Schema({
   name: { type: String, required: true },
   imgUrl: { type: String },
   description: { type: String },
+  createdBy: { type: ObjectId, ref: 'User', required: true },
   createdAt: { type: Date, default: Date.now, required: true },
   updatedAt: { type: Date, default: Date.now, required: true },
 });
