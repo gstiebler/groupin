@@ -18,6 +18,9 @@ async function sendQuery(query) {
     if (res.data.errors) {
       throw new Error(res.data.errors[0].message);
     }
+    if (res.data.errorMessage) {
+      throw new Error(res.data.errorMessage);
+    }
     return res.data.data;
   } catch(err) {
     console.error(err);
