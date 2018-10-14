@@ -13,12 +13,12 @@ async function sendQuery(query) {
     };
     const res = await axios.request(requestConfig);
     if (res.data.errors) {
-      console.error(res.data.errors);
-      return [];
+      throw new Error(res.data.errors);
     }
     return res.data.data;
   } catch(err) {
     console.error(err);
+    throw new Error(res.data.errors);
   }
 }
 

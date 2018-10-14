@@ -99,8 +99,12 @@ describe('main', () => {
       let result;
 
       beforeEach(async () => {
-        result = await server.sendMessage(messageText, alice._id.toHexString(), alice.name, 
-          topicFixtures.topic1Group2._id.toHexString());
+        result = await server.sendMessage({
+          message: messageText, 
+          userId: alice._id.toHexString(), 
+          userName: alice.name, 
+          topicId: topicFixtures.topic1Group2._id.toHexString(),
+        });
       });
 
       it('push', async () => {

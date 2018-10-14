@@ -181,7 +181,7 @@ const Mutation = {
         createdBy: ObjectId(userId),
       });
 
-      await User.update(
+      await User.updateOne(
         { _id: ObjectId(userId) },
         { $push: { groups: newGroup._id } }
       );
