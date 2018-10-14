@@ -10,7 +10,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSend: messages => dispatch(sendMessages(messages))
+    onSend: messages => sendMessages(dispatch, messages),
   };
 };
 

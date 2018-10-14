@@ -14,9 +14,15 @@ export const addMessages = messages => ({
   messages,
 });
 
-export function sendMessages(messages) {
-  server.sendMessage(messages[0]);
-  store.dispatch(addMessages(messages));
+export async function sendMessages(dispatch, messages) {
+  const firstMessage = messages[0];
+  await server.sendMessage({
+    message: firstMessage.text,
+    userId: firstMessage.user._id,
+    userName: 'teste',
+    topicId: 'teste',
+  });
+  dispatch(addMessages(messages));
 }
 
 const setOwnGroups = (ownGroups) => ({ 

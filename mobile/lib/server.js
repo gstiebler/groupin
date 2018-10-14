@@ -1,6 +1,6 @@
 const graphql = require('./graphqlConnect');
 
-async function sendMessage(message, userId, userName, topicId) {
+async function sendMessage({message, userId, userName, topicId}) {
   const query = `
     mutation {
       sendMessage (
