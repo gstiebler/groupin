@@ -12,13 +12,16 @@ async function sendQuery(query) {
       data: `"${parsedQuery}"`,
     };
     const res = await axios.request(requestConfig);
+    if (!res.data) {
+      throw new Error('No data returned from server');
+    }
     if (res.data.errors) {
-      throw new Error(res.data.errors);
+      throw new Error(res.data.errors[0].message);
     }
     return res.data.data;
   } catch(err) {
     console.error(err);
-    throw new Error(res.data.errors);
+    throw new Error(err);
   }
 }
 
