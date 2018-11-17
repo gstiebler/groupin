@@ -5,6 +5,7 @@ const {
   GraphQLList,
   GraphQLInputObjectType,
 } = require('graphql');
+const logger = require('./config/winston');
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
@@ -31,7 +32,11 @@ const Query = {
       userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
     },
     async resolve(root, { userId }, source, fieldASTs) {
-      const user = await User.findById(userId).lean();
+      const user = await User.findById(ObjectId(userId)).lean();
+      if (!user) {
+        throw new Error(`User ${userId} not found.`);
+      }
+
       const groups = await Group
         .find({ _id: { $in: user.groups } })
         .sort({ updatedAt: -1 })

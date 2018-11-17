@@ -30,8 +30,8 @@ const setOwnGroups = (ownGroups) => ({
   ownGroups,
 });
 
-export async function fetchOwnGroups() {
-  const ownGroups = await server.getOwnGroups();
+export async function fetchOwnGroups({ userId }) {
+  const ownGroups = await server.getOwnGroups(userId);
   store.dispatch(setOwnGroups(ownGroups));
 }
 
