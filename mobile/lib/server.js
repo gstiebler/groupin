@@ -1,11 +1,10 @@
 const graphql = require('./graphqlConnect');
 
-async function sendMessage({message, userId, userName, topicId}) {
+async function sendMessage({message, userName, topicId}) {
   const query = `
     mutation {
       sendMessage (
         message: "${message}",
-        userId: "${userId}"
         userName: "${userName}"
         topicId: "${topicId}",
       )
@@ -15,11 +14,10 @@ async function sendMessage({message, userId, userName, topicId}) {
   return res.sendMessage;
 }
 
-async function createGroup(groupName, userId) {
+async function createGroup(groupName) {
   const query = `
     mutation {
       createGroup (
-        userId: "${userId}",
         groupName: "${groupName}",
       )
     }
@@ -29,11 +27,9 @@ async function createGroup(groupName, userId) {
 }
 
 async function joinGroup(groupId) {
-  const userId = 'userId';
   const query = `
     mutation {
       joinGroup (
-        userId: "${userId}",
         groupId: "${groupId}",
       )
     }
@@ -43,11 +39,9 @@ async function joinGroup(groupId) {
 }
 
 async function leaveGroup(groupId) {
-  const userId = 'userId';
   const query = `
     mutation {
       leaveGroup (
-        userId: "${userId}",
         groupId: "${groupId}",
       )
     }
@@ -56,11 +50,10 @@ async function leaveGroup(groupId) {
   return res.leaveGroup;
 }
 
-async function createTopic({ topicName, groupId, userId }) {
+async function createTopic({ topicName, groupId }) {
   const query = `
     mutation {
       createTopic (
-        userId: "${userId}",
         topicName: "${topicName}",
         groupId: "${groupId}",
       )
@@ -70,12 +63,10 @@ async function createTopic({ topicName, groupId, userId }) {
   return res.createTopic;
 }
 
-async function getOwnGroups(userId) {
+async function getOwnGroups() {
   const query = `
     query {
-      ownGroups (
-        userId: "${userId}"
-      ) {
+      ownGroups {
         id,
         name,
         imgUrl
@@ -87,11 +78,9 @@ async function getOwnGroups(userId) {
 }
 
 async function getTopicsOfGroup(groupId, limit, startingId) {
-  const userId = 'userId';
   const query = `
     query {
       topicsOfGroup (
-        userId: "${userId}"
         groupId: "${groupId}"
         limit: ${limit}
         startingId: "${startingId}"
@@ -107,11 +96,9 @@ async function getTopicsOfGroup(groupId, limit, startingId) {
 }
 
 async function getMessagesOfTopic(topicId, limit, startingId) {
-  const userId = 'userId';
   const query = `
     query {
       messagesOfTopic (
-        userId: "${userId}"
         topicId: "${topicId}"
         limit: ${limit}
         startingId: "${startingId}"

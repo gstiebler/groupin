@@ -6,6 +6,7 @@ const {
   GraphQLInputObjectType,
 } = require('graphql');
 const logger = require('./config/winston');
+const _ = require('lodash');
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
@@ -28,13 +29,9 @@ const Query = {
         },
       })
     ),
-    args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
-    },
-    async resolve(root, { userId }, source, fieldASTs) {
-      const user = await User.findById(ObjectId(userId)).lean();
+    async resolve(root, args, { user }, fieldASTs) {
       if (!user) {
-        throw new Error(`User ${userId} not found.`);
+        throw new Error(`Method only available with a user`);
       }
 
       const groups = await Group
@@ -57,12 +54,14 @@ const Query = {
       })
     ),
     args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       groupId: { type: GraphQLString },
       limit: { type: GraphQLFloat },
       startingId: { type: GraphQLString },
     },
-    async resolve(root, { userId, groupId, limit, startingId }, source, fieldASTs) {
+    async resolve(root, { groupId, limit, startingId }, { user }, fieldASTs) {
+      if (!_.find(user.groups, ObjectId(groupId))) {
+        throw new Error(`User does not participate in the group`);
+      }
       const topicsOfGroup = await Topic.find({ groupId })
         .sort({ updatedAt: -1 })
         .limit(limit)
@@ -92,13 +91,16 @@ const Query = {
         },
       })
     ),
-    args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
+    args: {
       topicId: { type: GraphQLString },
       limit: { type: GraphQLFloat },
       startingId: { type: GraphQLString },
     },
-    async resolve(root, { userId, topicId, limit, startingId }, source, fieldASTs) {
+    async resolve(root, { topicId, limit, startingId }, { user }, fieldASTs) {
+      const topic = await Topic.findById(topicId);
+      if (!_.find(user.groups, topic.groupId)) {
+        throw new Error(`User does not participate in the group`);
+      }
       const messages = await Message.aggregate([
         {
           $match: {
@@ -136,16 +138,20 @@ const Mutation = {
     type: GraphQLString,
     args: { 
       message: { type: GraphQLString },
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       userName: { type: GraphQLString },
       topicId: { type: GraphQLString },
     },
-    async resolve(root, { message, userId, userName, topicId }, source, fieldASTs) {
+    async resolve(root, { message, userName, topicId }, { user }, fieldASTs) {
       // TODO: make calls to DB in parallel when possible
-      // TODO: check user permissions for topic/group
+
+      const topic = await Topic.findById(topicId);
+      if (!user.groups.find(topic.groupId)) {
+        throw new Error(`User does not participate in the group`);
+      }
+
       await Message.create({
         text: message,
-        user: userId,
+        user: user._id,
         topic: topicId,
       });
 
@@ -177,17 +183,16 @@ const Mutation = {
   createGroup: {
     type: GraphQLString,
     args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       groupName: { type: GraphQLString },
     },
-    async resolve(root, { userId, groupName }) {
+    async resolve(root, { groupName }, { user }) {
       const newGroup = await Group.create({
         name: groupName,
-        createdBy: ObjectId(userId),
+        createdBy: ObjectId(user._id),
       });
 
       await User.updateOne(
-        { _id: ObjectId(userId) },
+        { _id: ObjectId(user._id) },
         { $push: { groups: newGroup._id } }
       );
 
@@ -197,16 +202,15 @@ const Mutation = {
 
   createTopic: {
     type: GraphQLString,
-    args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
+    args: {
       topicName: { type: GraphQLString },
       groupId: { type: GraphQLString },
     },
-    async resolve(root, { userId, topicName, groupId }) {
+    async resolve(root, { topicName, groupId }, { user }) {
       let topicCreatePromise = Topic.create({
         name: topicName,
         groupId: ObjectId(groupId),
-        createdBy: ObjectId(userId),
+        createdBy: ObjectId(user._id),
       });
 
       let groupUpdatePromise = Group.updateOne(
@@ -234,21 +238,19 @@ const Mutation = {
   joinGroup: {
     type: GraphQLString,
     args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
       groupId: { type: GraphQLString },
     },
-    resolve(root, { userId, groupId }) {
+    resolve(root, { groupId }, { user }) {
       return 'OK';
     }
   },
   
   leaveGroup: {
     type: GraphQLString,
-    args: { 
-      userId: { type: GraphQLString }, // TODO: temporary, should be removed when auth is in place
+    args: {
       groupId: { type: GraphQLString },
     },
-    resolve(root, { userId, groupId }) {
+    resolve(root, { groupId }, { user }) {
       return 'OK';
     }
   },
