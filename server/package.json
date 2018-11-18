@@ -11,13 +11,13 @@
     "chai": "^4.1.2",
     "chai-subset": "^1.6.0",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3",
     "graphql": "^0.13.2",
     "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "moment": "^2.22.2",
     "mongoose": "^5.2.14",
     "pusher": "^2.0.1",
+    "serverless-offline": "^3.31.3",
     "sinon": "4",
     "winston": "^3.1.0"
   }
