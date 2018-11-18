@@ -145,7 +145,7 @@ const Mutation = {
       // TODO: make calls to DB in parallel when possible
 
       const topic = await Topic.findById(topicId);
-      if (!user.groups.find(topic.groupId)) {
+      if (!_.find(user.groups, topic.groupId)) {
         throw new Error(`User does not participate in the group`);
       }
 
@@ -162,7 +162,6 @@ const Mutation = {
       );
 
       // update group updatedAt
-      const topic = await Topic.findById(topicId);
       await Group.updateOne(
         { _id: topic.groupId },
         { $set: { updatedAt: Date.now() } }  

@@ -1,8 +1,7 @@
 const sinon = require('sinon');
 const mongooseConfig = require('../../config/mongoose');
 const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
-const { graphql } = require('graphql');
-const schema = require('../../graphqlSchema');
+const graphqlMain = require('../../lib/graphqlMain');
 const logger = require('../../config/winston');
 
 let currentUser;
@@ -16,8 +15,7 @@ before(async () => {
   await mongooseConfig.init();
   sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
     try {
-      const context = { user: currentUser };
-      const result = await graphql(schema, query, null, context);
+      const result = await graphqlMain.main(query, currentUser.token);
       if (result.errors) {
         for (const error of result.errors) {
           logger.error(error.stack);

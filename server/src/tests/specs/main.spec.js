@@ -106,7 +106,7 @@ describe('main', () => {
         result = await server.sendMessage({
           message: messageText, 
           userName: alice.name, 
-          topicId: topicFixtures.topic1Group2._id.toHexString(),
+          topicId: topicFixtures.topic1Group1._id.toHexString(),
         });
       });
 
@@ -117,7 +117,7 @@ describe('main', () => {
         expect(call0args[0]).to.equal('my-channel');
         expect(call0args[1]).to.eql({
           message: messageText,
-          topicId: topicFixtures.topic1Group2._id.toHexString(),
+          topicId: topicFixtures.topic1Group1._id.toHexString(),
           authorName: alice.name,
         });      
         expect(result).to.equal('OK');
@@ -125,8 +125,8 @@ describe('main', () => {
 
       it('message was added to DB', async () => {
         setCurrentUser(alice);
-        const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group2._id.toHexString(), 20, 'startingId1');;
-        expect(messages).to.have.lengthOf(2);
+        const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');;
+        expect(messages).to.have.lengthOf(3);
         // the most recent message
         expect(messages[0]).to.containSubset({
           text: messageText,
@@ -138,14 +138,10 @@ describe('main', () => {
 
       it('topic sort order', async () => {
         setCurrentUser(alice);
-        const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup._id.toHexString(), 20, 'startingId1');
-        expect(_.map(topics, 'name')).to.eql([ 'Topic 1 Group 2', 'Topic 2 Group 2']);
+        const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
+        expect(_.map(topics, 'name')).to.eql([ 'Topic 1 Group 1', 'Topic 2 Group 1']);
       });
 
-      it('group sort order', async () => {
-        setCurrentUser(userFixtures.robert);
-        expect(_.map(groups, 'name')).to.eql([ 'Second Group', 'First Group']);
-      });
     });
   
     describe('createTopic', async () => {
@@ -170,6 +166,7 @@ describe('main', () => {
       });
 
       it('topic created on DB', async () => {
+        setCurrentUser(userFixtures.robert);
         const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup._id.toHexString(), 20, 'startingId1');
         expect(topics).to.have.lengthOf(3);
         // test order
