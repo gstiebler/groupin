@@ -7,7 +7,7 @@ const users = {
     name: 'Alice',
     phoneNumber: '4444',
     imgUrl: 'alice_url',
-    token: '46894278465624393771',
+    token: '46894278465624393Alice',
     groups: [
       groupIds.firstGroup,
     ],
@@ -17,7 +17,7 @@ const users = {
     name: 'Robert',
     phoneNumber: '5555',
     imgUrl: 'robert_url',
-    token: '85076546477256749024',
+    token: '85076546477256749024Robert',
     groups: [
       groupIds.firstGroup,
       groupIds.secondGroup,

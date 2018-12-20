@@ -206,6 +206,9 @@ const Mutation = {
       groupId: { type: GraphQLString },
     },
     async resolve(root, { topicName, groupId }, { user }) {
+      if (!_.find(user.groups, ObjectId(groupId))) {
+        throw new Error(`User does not participate in the group`);
+      }
       let topicCreatePromise = Topic.create({
         name: topicName,
         groupId: ObjectId(groupId),

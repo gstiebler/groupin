@@ -4,10 +4,10 @@ const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
 const graphqlMain = require('../../lib/graphqlMain');
 const logger = require('../../config/winston');
 
-let currentUser;
+let currentUserHolder = { currentUser: null };
 
 function setCurrentUser(user) {
-  currentUser = user;
+  currentUserHolder.currentUser = user;
 }
 
 before(async () => {
@@ -15,7 +15,7 @@ before(async () => {
   await mongooseConfig.init();
   sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
     try {
-      const result = await graphqlMain.main(query, currentUser.token);
+      const result = await graphqlMain.main(query, currentUserHolder.currentUser.token);
       if (result.errors) {
         for (const error of result.errors) {
           logger.error(error.stack);

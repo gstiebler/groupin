@@ -3,9 +3,7 @@ const server = require('../../../../mobile/lib/server');
 const pushService = require('../../pushService');
 const expect = require('chai').expect;
 const { initFixtures } = require('../fixtures');
-const mongooseConfig = require('../../config/mongoose');
 const logger = require('../../config/winston');
-const Message = require('../../db/schema/Message');
 const userFixtures = require('../fixtures/userFixtures');
 const groupFixtures = require('../fixtures/groupFixtures');
 const topicFixtures = require('../fixtures/topicFixtures');
@@ -148,6 +146,10 @@ describe('main', () => {
       let result;
       const topicName = 'new topic foca';
 
+      before(() => {
+        setCurrentUser(userFixtures.robert);
+      });
+      
       beforeEach(async () => {
         result = await server.createTopic({
           topicName,
