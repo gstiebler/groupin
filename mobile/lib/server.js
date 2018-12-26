@@ -1,5 +1,19 @@
 const graphql = require('./graphqlConnect');
 
+async function register({name, userName, password}) {
+  const query = `
+    mutation {
+      register (
+        name: "${name}",
+        userName: "${userName}"
+        password: "${password}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.register;
+}
+
 async function sendMessage({message, userName, topicId}) {
   const query = `
     mutation {
@@ -119,6 +133,7 @@ async function getMessagesOfTopic(topicId, limit, startingId) {
 }
 
 module.exports = {
+  register,
   sendMessage,
   createGroup,
   createTopic,

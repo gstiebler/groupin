@@ -10,6 +10,8 @@ const topicFixtures = require('../fixtures/topicFixtures');
 const messageFixtures = require('../fixtures/messageFixtures');
 const _ = require('lodash');
 const { setCurrentUser } = require('./index.spec');
+const User = require('../../db/schema/User');
+const md5 = require('md5');
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
@@ -93,6 +95,24 @@ describe('main', () => {
 
     afterEach(() => {
       pushMessageStub.restore();
+    });
+
+    it('register', async () => {
+      const password = 'smallpassword';
+      const token = await server.register({
+        name: 'Guilherme',
+        userName: '(21)999995555',
+        password,
+      });
+      expect(token.length).to.be.greaterThan(15);
+
+      const userByToken = await User.findOne({ token });
+      expect(userByToken.phoneNumber).to.equal('(21)999995555');
+      expect(userByToken.name).to.equal('Guilherme');
+      expect(userByToken.tempPassword).to.be.not.equal(password);
+
+      const userByPassword = await User.findOne({ tempPassword: md5(password) });
+      expect(userByPassword.phoneNumber).to.equal('(21)999995555');
     });
 
     describe('sendMessage', () => {

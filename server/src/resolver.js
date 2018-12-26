@@ -7,6 +7,8 @@ const {
 } = require('graphql');
 const logger = require('./config/winston');
 const _ = require('lodash');
+const md5 = require('md5');
+const userHelper = require('./lib/userHelper');
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
@@ -134,6 +136,27 @@ const Query = {
 };
 
 const Mutation = {
+
+  register: {
+    type: GraphQLString,
+    args: { 
+      name: { type: GraphQLString },
+      userName: { type: GraphQLString },
+      password: { type: GraphQLString },
+    },
+    async resolve(root, { name, userName, password }) {
+      const user = await User.create({
+        name,
+        phoneNumber: userName,
+        // TODO: replace by SMS code
+        tempPassword: md5(password),
+        token: userHelper.genToken(),
+      });
+
+      return user.token;
+    }
+  },
+
   sendMessage: {
     type: GraphQLString,
     args: { 
