@@ -4,7 +4,7 @@ let logger = winston.createLogger({
   level: process.env.WINSTON_FILE_LEVEL,
   format: winston.format.json(),
   /*transports: [
-    new winston.transports.File({ filename: `${__dirname}/../../log/error.log`, level: 'error' }),
+    new winston.transports.File({ filename: `${__dirname}/../../log/debug.log`, level: 'debug' }),
   ]*/
 });
 
@@ -17,6 +17,15 @@ if (process.env.NODE_ENV !== 'production') {
     format: winston.format.simple(),
     level: process.env.WINSTON_CONSOLE_LEVEL,
   }));
+}
+
+if (process.env.WINSTON_FILE_LEVEL) {
+  logger.add(
+    new winston.transports.File({
+      filename: `${__dirname}/../../log/debug.log`, 
+      level: process.env.WINSTON_FILE_LEVEL,
+    }),
+  );
 }
 
 module.exports = logger;
