@@ -4,7 +4,6 @@ jobs:
     docker:
       - image: circleci/node:8.11.1
       - image: mongo:3.6
-    working_directory: ~/server
     environment:
       NODE_ENV: test
     steps:
@@ -14,8 +13,12 @@ jobs:
           key: npm-dependencies
 
       - run:
+          name: Changing directory
+          command: |
+            cd server
+
+      - run:
           name: Preparing environment
-          working_directory: ~/server
           command: |
             yarn
       - save_cache:
@@ -34,7 +37,6 @@ jobs:
             
       - run:
           name: Running Tests
-          working_directory: ~/server
           command: |
             npm test
 
