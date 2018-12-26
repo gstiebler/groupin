@@ -13,13 +13,9 @@ jobs:
           key: npm-dependencies
 
       - run:
-          name: Changing directory
-          command: |
-            cd server
-
-      - run:
           name: Preparing environment
           command: |
+            cd server
             yarn
       - save_cache:
           paths:
@@ -38,6 +34,7 @@ jobs:
       - run:
           name: Running Tests
           command: |
+            cd server
             npm test
 
       - store_artifacts:
