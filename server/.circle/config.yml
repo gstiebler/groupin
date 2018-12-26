@@ -15,7 +15,9 @@ jobs:
       - run:
           name: Preparing environment
           command: |
+            pwd
             cd server
+            pwd
             yarn
       - save_cache:
           paths:
