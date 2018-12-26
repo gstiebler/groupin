@@ -102,11 +102,11 @@ functions:
       MONGODB_PORT: 27017
       MONGODB_DB_NAME: ${env:MONGODB_DB_NAME}
       MONGODB_TEST_DB_NAME: 'groupin_test'
-      WINSTON_FILE_LEVEL: 'error'
+      WINSTON_FILE_LEVEL: ${env:WINSTON_FILE_LEVEL}
       WINSTON_CONSOLE_LEVEL: 'debug'
       MONGODB_USER: ${env:MONGODB_USER}
       MONGODB_PW: ${env:MONGODB_PW}
-      MONGODB_PROD_URL: "?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
+      MONGODB_PROD_URL: ${env:MONGODB_PROD_URL}
 
 # you can add CloudFormation resource templates here
 #resources:
