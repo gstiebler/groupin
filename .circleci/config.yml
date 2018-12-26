@@ -15,6 +15,9 @@ jobs:
       - run:
           name: Preparing environment
           command: |
+            pwd
+            cd server
+            pwd
             yarn
       - save_cache:
           paths:
@@ -33,6 +36,7 @@ jobs:
       - run:
           name: Running Tests
           command: |
+            cd server
             npm test
 
       - store_artifacts:
