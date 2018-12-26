@@ -15,6 +15,7 @@ jobs:
 
       - run:
           name: Preparing environment
+          working_directory: ~/server
           command: |
             yarn
       - save_cache:
@@ -33,6 +34,7 @@ jobs:
             
       - run:
           name: Running Tests
+          working_directory: ~/server
           command: |
             npm test
 
