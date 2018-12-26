@@ -13,12 +13,17 @@ jobs:
           key: npm-dependencies
 
       - run:
-          name: Preparing environment
+          name: Installing server packages
           command: |
-            pwd
             cd server
-            pwd
             yarn
+
+      - run:
+          name: Installing client packages
+          command: |
+            cd mobile
+            yarn
+
       - save_cache:
           paths:
             - node_modules
