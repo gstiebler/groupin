@@ -26,7 +26,8 @@ jobs:
 
       - save_cache:
           paths:
-            - node_modules
+            - server/node_modules
+            - mobile/node_modules
           key: npm-dependencies
             
       - run:
