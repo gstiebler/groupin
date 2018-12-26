@@ -2,14 +2,14 @@
 require('dotenv').config();
 const logger = require('./src/config/winston');
 const mongooseConfig = require('./src/config/mongoose');
-const { main } = require('./src/graphqlMain');
+const graphqlMain = require('./src/graphqlMain');
 
 let mongooseInitPromise = mongooseConfig.init();
 
 async function main(event) {
   try {
     await mongooseInitPromise;
-    const result = await main(JSON.parse(event.body), event.token);
+    const result = await graphqlMain.main(JSON.parse(event.body), event.headers.authorization);
 
     return {
       statusCode: 200,

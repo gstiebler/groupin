@@ -2,6 +2,8 @@ const axios = require('axios');
 
 const url = 'https://b2hbks8mx8.execute-api.us-east-1.amazonaws.com/prod/groupin';
 
+axios.defaults.headers.common.authorization = '85076546477256749024Robert';
+
 async function sendQuery(query) {
   try {
     console.log(query);

@@ -1,7 +1,7 @@
 const { graphql } = require('graphql');
-const schema = require('../graphqlSchema');
-const logger = require('../config/winston');
-const User = require('../db/schema/User');
+const schema = require('./graphqlSchema');
+const logger = require('./config/winston');
+const User = require('./db/schema/User');
 const _ = require('lodash');
 
 async function main(graphqlQuery, userToken) {

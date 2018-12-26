@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const mongooseConfig = require('../../config/mongoose');
 const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
-const graphqlMain = require('../../lib/graphqlMain');
+const graphqlMain = require('../../graphqlMain');
 const logger = require('../../config/winston');
 
 let currentUserHolder = { currentUser: null };
