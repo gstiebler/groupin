@@ -115,6 +115,15 @@ describe('main', () => {
       expect(userByPassword.phoneNumber).to.equal('(21)999995555');
     });
 
+    it('login', async () => {
+      const password = 'smallpassword';
+      const token = await server.login({
+        userName: '4444',
+        password: md5('passwordAlice'),
+      });
+      expect(token).to.equal('46894278465624393Alice');
+    });
+
     describe('sendMessage', () => {
       const alice = userFixtures.alice;
       const messageText = 'new message 1 from Alice';

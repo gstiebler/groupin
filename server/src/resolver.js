@@ -157,6 +157,21 @@ const Mutation = {
     }
   },
 
+  login: {
+    type: GraphQLString,
+    args: { 
+      userName: { type: GraphQLString },
+      password: { type: GraphQLString },
+    },
+    async resolve(root, { userName, password }) {
+      const user = await User.findOne({ 
+        phoneNumber: userName,
+        tempPassword: password,
+      });
+      return user.token;
+    }
+  },
+
   sendMessage: {
     type: GraphQLString,
     args: { 

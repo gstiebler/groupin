@@ -1,5 +1,6 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const groupIds = require('./groupIds');
+const md5 = require('md5');
 
 const users = {
   alice: {
@@ -11,6 +12,7 @@ const users = {
     groups: [
       groupIds.firstGroup,
     ],
+    tempPassword: md5('passwordAlice'),
   },
   robert: {
     _id: ObjectId(),

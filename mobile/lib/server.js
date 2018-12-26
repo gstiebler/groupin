@@ -14,6 +14,19 @@ async function register({name, userName, password}) {
   return res.register;
 }
 
+async function login({ userName, password }) {
+  const query = `
+    mutation {
+      login (
+        userName: "${userName}"
+        password: "${password}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.login;
+}
+
 async function sendMessage({message, userName, topicId}) {
   const query = `
     mutation {
@@ -134,6 +147,7 @@ async function getMessagesOfTopic(topicId, limit, startingId) {
 
 module.exports = {
   register,
+  login,
   sendMessage,
   createGroup,
   createTopic,
