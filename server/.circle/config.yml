@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Preparing environment
           command: |
-            yarn install --modules-folder server
+            yarn
       - save_cache:
           paths:
             - node_modules
