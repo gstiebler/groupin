@@ -6,6 +6,11 @@ import {
 } from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 
+const mutationHelper = propertyName => state => ({
+  ...state,
+  [propertyName]: state[propertyName],
+});
+
 const initialState = {
   messages: [
     {
@@ -23,31 +28,24 @@ const initialState = {
   topics: [],
 };
 
+const addMessages = state => ({
+  ...state, 
+  messages: mergeMessages(state.messages, action.messages),
+});
+
+const reducerFunctions = {
+  [ADD_MESSSAGES]: addMessages,
+  [SET_OWN_GROUPS]: mutationHelper('ownGroups'),
+  [SET_TOPICS]: mutationHelper('topics'),
+  [SET_MESSAGES]: mutationHelper('messages'),
+};
+
 const rootReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ADD_MESSSAGES:
-      return { 
-        ...state, 
-        messages: mergeMessages(state.messages, action.messages),
-      };
-    case SET_OWN_GROUPS:
-      return { 
-        ...state, 
-        ownGroups: action.ownGroups,
-      };
-    case SET_TOPICS:
-      return { 
-        ...state, 
-        topics: action.topics,
-      };
-    case SET_MESSAGES:
-      return { 
-        ...state, 
-        messages: action.messages,
-      };
-    default:
-      return state;
+  const reducerFunction = reducerFunctions[action.type];
+  if (!reducerFunction) {
+    return state;
   }
+  return reducerFunction(state);
 };
 
 export default rootReducer;
