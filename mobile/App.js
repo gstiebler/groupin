@@ -13,9 +13,6 @@ import { Provider } from "react-redux";
 import store from "./store/index";
 import { fetchOwnGroups } from './actions';
 
-// TODO: use real ID
-fetchOwnGroups({userId: '5bc3ca99342fcfec653e2411'});
-
 export default class App extends React.Component {
   render() {
     return (
