@@ -3,6 +3,7 @@ import {
   SET_OWN_GROUPS,
   SET_TOPICS,
   SET_MESSAGES,
+  SET_TOKEN,
 } from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 import { mutationHelper, reducerMain } from '../lib/helpers';
@@ -22,6 +23,7 @@ const initialState = {
   ],
   ownGroups: [],
   topics: [],
+  token: null,
 };
 
 const addMessages = (state, payload) => ({
@@ -34,6 +36,7 @@ const reducerFunctions = {
   [SET_OWN_GROUPS]: mutationHelper('ownGroups'),
   [SET_TOPICS]: mutationHelper('topics'),
   [SET_MESSAGES]: mutationHelper('messages'),
+  [SET_TOKEN]: mutationHelper('token'),
 };
 
 export default reducerMain(initialState, reducerFunctions);

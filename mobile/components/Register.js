@@ -39,8 +39,16 @@ const RegisterComponent = ({
         onChangeText={changePassword} 
         secureTextEntry={true}
       />
-      <Button title='Registrar' style={styles.basic}/>
-      <Button title='Já sou cadastrado' style={styles.basic} />
+      <Button 
+        title='Registrar' 
+        style={styles.basic}
+        onPress={onRegister}
+      />
+      <Button 
+        title='Já sou cadastrado' 
+        style={styles.basic}
+        onPress={onShowLogin}
+      />
     </SafeAreaView>
   );
 }
