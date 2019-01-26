@@ -1,7 +1,7 @@
 import { GiftedChat } from 'react-native-gifted-chat';
 import React from 'react';
 import { connect } from "react-redux";
-import { sendMessages } from '../actions/index';
+import { sendMessages } from '../actions/rootActions';
 import { SafeAreaView } from 'react-navigation';
 
 const mapStateToProps = state => {

@@ -7,7 +7,7 @@ import {
 import * as server from '../lib/server';
 
 // TODO: replace by redux-saga
-import store from "../store/index";
+import store from "../store/rootStore";
 
 export const addMessages = messages => ({ 
   type: ADD_MESSSAGES, 

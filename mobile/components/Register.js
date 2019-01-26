@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { getTopicsOfGroup } from '../actions/index';
+import { getTopicsOfGroup } from '../actions/rootActions';
 import { SafeAreaView } from 'react-native';
 // import { Text, FlatList } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'

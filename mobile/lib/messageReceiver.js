@@ -1,6 +1,6 @@
 // TODO: replace by redux-saga
-import store from "../store/index";
-import { addMessages } from '../actions/index';
+import store from "../store/rootStore";
+import { addMessages } from '../actions/rootActions';
 
 import Pusher from 'pusher-js/react-native';
 Pusher.logToConsole = true;

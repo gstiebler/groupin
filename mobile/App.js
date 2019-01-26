@@ -10,7 +10,7 @@ import Chat from './components/Chat';
 import GroupList from './components/GroupList';
 import Navigator from './components/Navigator';
 import { Provider } from "react-redux";
-import store from "./store/index";
+import store from "./store/rootStore";
 import { fetchOwnGroups } from './actions';
 
 export default class App extends React.Component {

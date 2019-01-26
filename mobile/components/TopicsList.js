@@ -1,7 +1,7 @@
 import React from 'react';
 // import { Text, FlatList } from 'react-native';
 import { connect } from "react-redux";
-import { getMessagesOfTopic } from '../actions/index';
+import { getMessagesOfTopic } from '../actions/rootActions';
 import { List, ListItem } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 
