@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 
 const mapStateToProps = state => {
-  return { ownGroups: state.ownGroups };
+  return {  };
 };
 
 const mapDispatchToProps = dispatch => {

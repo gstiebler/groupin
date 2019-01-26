@@ -11,7 +11,7 @@ import GroupList from './components/GroupList';
 import Navigator from './components/Navigator';
 import { Provider } from "react-redux";
 import store from "./store/rootStore";
-import { fetchOwnGroups } from './actions';
+import { fetchOwnGroups } from './actions/rootActions';
 
 export default class App extends React.Component {
   render() {
