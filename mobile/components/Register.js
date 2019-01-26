@@ -1,8 +1,24 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
-import { FormLabel, FormInput } from 'react-native-elements'
+import { StyleSheet } from 'react-native';
+import { FormLabel, FormInput, Button } from 'react-native-elements'
 
-const RegisterComponent = ({ name, username, password, changeName, changeUsername, changePassword }) => {
+const styles = StyleSheet.create({
+  basic: {
+    margin: 20,
+  },
+});
+
+const RegisterComponent = ({ 
+    name, 
+    username, 
+    password, 
+    changeName, 
+    changeUsername, 
+    changePassword,
+    onRegister,
+    onShowLogin,
+  }) => {
   return (
     <SafeAreaView>
       <FormLabel>Nome</FormLabel>
@@ -23,6 +39,8 @@ const RegisterComponent = ({ name, username, password, changeName, changeUsernam
         onChangeText={changePassword} 
         secureTextEntry={true}
       />
+      <Button title='Registrar' style={styles.basic}/>
+      <Button title='Já sou cadastrado' style={styles.basic} />
     </SafeAreaView>
   );
 }
