@@ -26,7 +26,9 @@
     "react-navigation": "^2.12.1",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
-    "redux-devtools-extension": "^2.13.7",
     "redux-saga": "^0.16.0"
+  },
+  "devDependencies": {
+    "remote-redux-devtools": "^0.5.16"
   }
 }
