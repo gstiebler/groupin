@@ -5,7 +5,15 @@ import thunk from 'redux-thunk';
 
 const store = createStore(
   rootReducer, 
+  {},
   composeWithDevTools(applyMiddleware(thunk))
 );
+
+if (module.hot) {
+  module.hot.accept(() => {
+    const nextRootReducer = require('../reducers/rootReducer').default;
+    store.replaceReducer(nextRootReducer);
+  });
+}
 
 export default store;
