@@ -6,11 +6,23 @@ const RegisterComponent = ({ name, username, password, changeName, changeUsernam
   return (
     <SafeAreaView>
       <FormLabel>Nome</FormLabel>
-      <FormInput value={name} onChangeText={changeName} />
+      <FormInput 
+        value={name} 
+        onChangeText={changeName} 
+        autoCapitalize="words"
+      />
       <FormLabel>Usuário</FormLabel>
-      <FormInput value={username} onChangeText={changeUsername} />
+      <FormInput 
+        value={username} 
+        onChangeText={changeUsername} 
+        autoCapitalize="none"
+      />
       <FormLabel>Senha</FormLabel>
-      <FormInput value={password} onChangeText={changePassword} />
+      <FormInput 
+        value={password} 
+        onChangeText={changePassword} 
+        secureTextEntry={true}
+      />
     </SafeAreaView>
   );
 }
