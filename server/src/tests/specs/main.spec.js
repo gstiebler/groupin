@@ -13,10 +13,6 @@ const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
 const md5 = require('md5');
 
-const chai = require('chai');
-const chaiSubset = require('chai-subset');
-chai.use(chaiSubset);
-
 let pushMessageStub;
 
 describe('main', () => {

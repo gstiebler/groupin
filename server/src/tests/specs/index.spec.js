@@ -4,6 +4,10 @@ const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
 const graphqlMain = require('../../graphqlMain');
 const logger = require('../../config/winston');
 
+const chai = require('chai');
+const chaiSubset = require('chai-subset');
+chai.use(chaiSubset);
+
 let currentUserHolder = { currentUser: null };
 
 function setCurrentUser(user) {
