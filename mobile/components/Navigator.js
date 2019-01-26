@@ -1,7 +1,7 @@
 import GroupList from './GroupList';
 import TopicsList from './TopicsList';
 import Chat from './Chat';
-import Register from './Register';
+import Register from '../containers/RegisterContainer';
 
 import { createStackNavigator } from 'react-navigation'
 

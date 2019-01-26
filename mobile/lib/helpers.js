@@ -1,8 +1,10 @@
 
-export const mutationHelper = propertyName => (state, payload) => ({
-  ...state,
-  [propertyName]: payload[propertyName],
-});
+export const mutationHelper = propertyName => (state, payload) => {
+  return {
+    ...state,
+    [propertyName]: payload[propertyName],
+  }
+}
 
 export const reducerMain = (initialState, reducerFunctions) => (state = initialState, action) => {
   const reducerFunction = reducerFunctions[action.type];

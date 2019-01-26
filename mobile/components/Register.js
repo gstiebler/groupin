@@ -1,32 +1,18 @@
 import React from 'react';
-import { connect } from "react-redux";
-import { getTopicsOfGroup } from '../actions/rootActions';
 import { SafeAreaView } from 'react-native';
-// import { Text, FlatList } from 'react-native';
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
+import { FormLabel, FormInput } from 'react-native-elements'
 
-const mapStateToProps = state => {
-  return {  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-  };
-};
-
-const RegisterComponent = ({navigation}) => {
+const RegisterComponent = ({ name, username, password, changeName, changeUsername, changePassword }) => {
   return (
     <SafeAreaView>
       <FormLabel>Nome</FormLabel>
-      <FormInput />
+      <FormInput value={name} onChangeText={changeName} />
       <FormLabel>Usuário</FormLabel>
-      <FormInput />
+      <FormInput value={username} onChangeText={changeUsername} />
       <FormLabel>Senha</FormLabel>
-      <FormInput />
+      <FormInput value={password} onChangeText={changePassword} />
     </SafeAreaView>
   );
 }
 
-
-const Register = connect(mapStateToProps, mapDispatchToProps)(RegisterComponent);
-export default Register;
+export default RegisterComponent;
