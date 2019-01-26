@@ -6,9 +6,9 @@ import {
 } from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 
-const mutationHelper = propertyName => state => ({
+const mutationHelper = propertyName => (state, payload) => ({
   ...state,
-  [propertyName]: state[propertyName],
+  [propertyName]: payload[propertyName],
 });
 
 const initialState = {
@@ -28,9 +28,9 @@ const initialState = {
   topics: [],
 };
 
-const addMessages = state => ({
+const addMessages = (state, payload) => ({
   ...state, 
-  messages: mergeMessages(state.messages, action.messages),
+  messages: mergeMessages(state.messages, payload.messages),
 });
 
 const reducerFunctions = {
@@ -45,7 +45,7 @@ const rootReducer = (state = initialState, action) => {
   if (!reducerFunction) {
     return state;
   }
-  return reducerFunction(state);
+  return reducerFunction(state, action.payload);
 };
 
 export default rootReducer;
