@@ -1,8 +1,10 @@
 const axios = require('axios');
 
-const url = 'https://b2hbks8mx8.execute-api.us-east-1.amazonaws.com/prod/groupin';
+const url = 'http://localhost:3000/graphql';
 
-axios.defaults.headers.common.authorization = '85076546477256749024Robert';
+function setToken(token) {
+  axios.defaults.headers.common.authorization = token;
+}
 
 async function sendQuery(query) {
   try {
@@ -32,4 +34,5 @@ async function sendQuery(query) {
 
 module.exports = {
   sendQuery,
+  setToken,
 };

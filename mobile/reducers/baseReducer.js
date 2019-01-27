@@ -7,6 +7,7 @@ import {
 } from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 import { mutationHelper, reducerMain } from '../lib/helpers';
+import * as graphqlConect from '../lib/graphqlConnect';
 
 const initialState = {
   messages: [
@@ -26,17 +27,25 @@ const initialState = {
   token: null,
 };
 
-const addMessages = (state, payload) => ({
+const addMessages = (state, { messages }) => ({
   ...state, 
-  messages: mergeMessages(state.messages, payload.messages),
+  messages: mergeMessages(state.messages, messages),
 });
+
+const setToken = (state, { token }) => {
+  graphqlConect.setToken(token);
+  return {
+    ...state,
+    token,
+  };
+}
 
 const reducerFunctions = {
   [ADD_MESSSAGES]: addMessages,
   [SET_OWN_GROUPS]: mutationHelper('ownGroups'),
   [SET_TOPICS]: mutationHelper('topics'),
   [SET_MESSAGES]: mutationHelper('messages'),
-  [SET_TOKEN]: mutationHelper('token'),
+  [SET_TOKEN]: setToken,
 };
 
 export default reducerMain(initialState, reducerFunctions);
