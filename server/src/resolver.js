@@ -145,6 +145,10 @@ const Mutation = {
       password: { type: GraphQLString },
     },
     async resolve(root, { name, userName, password }) {
+      const previousUser = await User.findOne({ phoneNumber: userName });
+      if (previousUser) {
+        throw new Error('User is already registered');
+      }
       const user = await User.create({
         name,
         phoneNumber: userName,
