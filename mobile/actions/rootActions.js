@@ -21,8 +21,8 @@ export async function sendMessages(dispatch, messages) {
   dispatch(addMessages(messages));
 }
 
-export async function fetchOwnGroups({ userId }) {
-  const ownGroups = await server.getOwnGroups(userId);
+export async function fetchOwnGroups() {
+  const ownGroups = await server.getOwnGroups();
   store.dispatch({ type: SET_OWN_GROUPS, payload: { ownGroups } });
 }
 
