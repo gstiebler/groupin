@@ -325,7 +325,13 @@ const Mutation = {
     args: { 
       groupId: { type: GraphQLString },
     },
-    resolve(root, { groupId }, { user }) {
+    async resolve(root, { groupId }, { user }) {
+      const hasGroup = _.find(user.groups, ObjectId(groupId));
+      if (hasGroup) {
+        throw new Error('User already participate in the group');
+      }
+      user.groups.push(ObjectId(groupId));
+      await user.save();
       return 'OK';
     }
   },

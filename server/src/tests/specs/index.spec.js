@@ -6,7 +6,9 @@ const logger = require('../../config/winston');
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
+const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiSubset);
+chai.use(chaiAsPromised);
 
 let currentUserHolder = { currentUser: null };
 
@@ -23,19 +25,14 @@ before(async () => {
   require('dotenv').config();
   await mongooseConfig.init();
   sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
-    try {
-      const result = await graphqlMain.main(query, currentUserHolder.currentUser.token);
-      if (result.errors) {
-        for (const error of result.errors) {
-          logger.error(error.stack);
-        }
-      } else {
-        return result.data;
+    const result = await graphqlMain.main(query, currentUserHolder.currentUser.token);
+    if (result.errors) {
+      for (const error of result.errors) {
+        logger.debug(error.stack);
       }
-    } catch(error) {
-      logger.error(error);
-      return error;
+      throw new Error(result.errors[0].message);
     }
+    return result.data;
   });
 });
 

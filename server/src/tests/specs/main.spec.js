@@ -237,14 +237,28 @@ describe('main', () => {
       expect(groups[0].name).to.equal('new group 1');
     });
   
-    it('joinGroup', async () => {
-      const result = await server.joinGroup('group 1');
-      expect(result).to.equal('OK');
-    });
-  
     it('leaveGroup', async () => {
       const result = await server.leaveGroup('group 1');
       expect(result).to.equal('OK');
+    });
+
+    describe('joinGroup', () => {
+
+      it('User already joined the group', async () => {
+        setCurrentUser(userFixtures.alice);
+        const groupId = groupFixtures.firstGroup._id.toHexString();
+        await expect(server.joinGroup(groupId)).to.be.rejectedWith('User already participate in the group');
+      });
+
+      it('joined group', async () => {
+        setCurrentUser(userFixtures.alice);
+        const groupId = groupFixtures.secondGroup._id.toHexString();
+        await server.joinGroup(groupId);
+        const groups = await server.getOwnGroups();
+        expect(groups).to.have.lengthOf(2);
+        expect(groups[1].name).to.equal('Second Group');
+      });
+
     });
 
   });
