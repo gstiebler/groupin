@@ -117,7 +117,7 @@ describe('main', () => {
       const password = 'smallpassword';
       const token = await server.login({
         userName: '4444',
-        password: md5('passwordAlice'),
+        password: 'passwordAlice',
       });
       expect(token).to.equal('46894278465624393Alice');
     });

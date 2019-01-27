@@ -2,17 +2,19 @@ import GroupList from '../containers/GroupListContainer';
 import TopicsList from './TopicsList';
 import Chat from './Chat';
 import Register from '../containers/RegisterContainer';
+import Login from '../containers/LoginContainer';
 
-import { createStackNavigator } from 'react-navigation'
+import { createSwitchNavigator } from 'react-navigation'
 
-export const Navigator = createStackNavigator(
+export const Navigator = createSwitchNavigator(
   {
     Register: { screen: Register },
+    Login: { screen: Login },
     GroupList: { screen: GroupList },
     Chat: { screen: Chat },
     TopicsList: { screen: TopicsList },
   },
-  { initialRouteName: 'Register' },
+  { initialRouteName: 'Login' },
 );
 
 export default Navigator;

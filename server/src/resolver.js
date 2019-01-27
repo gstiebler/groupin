@@ -145,6 +145,7 @@ const Mutation = {
       password: { type: GraphQLString },
     },
     async resolve(root, { name, userName, password }) {
+      // TODO: exception on simple passwords
       const previousUser = await User.findOne({ phoneNumber: userName });
       if (previousUser) {
         throw new Error('User is already registered');
@@ -168,10 +169,19 @@ const Mutation = {
       password: { type: GraphQLString },
     },
     async resolve(root, { userName, password }) {
+      if (userName.length < 5) {
+        throw new Error('Username length too short');
+      }
       const user = await User.findOne({ 
         phoneNumber: userName,
-        tempPassword: password,
       });
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      if (password.length < 3 || user.tempPassword !== md5(password)) {
+        throw new Error('Invalid password');
+      }
       return user.token;
     }
   },

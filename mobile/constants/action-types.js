@@ -7,3 +7,6 @@ export const SET_TOKEN = 'token';
 export const REGISTER_NAME = 'register name';
 export const REGISTER_USERNAME = 'register username';
 export const REGISTER_PASSWORD = 'register password';
+
+export const LOGIN_USERNAME = 'login username';
+export const LOGIN_PASSWORD = 'login password';

@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => {
     changeUsername: username => dispatch({ type: REGISTER_USERNAME, payload: { username } }),
     changePassword: password => dispatch({ type: REGISTER_PASSWORD, payload: { password } }),
     onRegister: (navigation) => dispatch(register(navigation)),
-    onShowLogin: () => redirect(),
+    onShowLogin: (navigation) => navigation.navigate('Login'),
   };
 };
 
