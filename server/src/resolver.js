@@ -3,7 +3,6 @@ const {
   GraphQLFloat,
   GraphQLObjectType,
   GraphQLList,
-  GraphQLInputObjectType,
 } = require('graphql');
 const logger = require('./config/winston');
 const _ = require('lodash');
@@ -18,6 +17,8 @@ const Message = require('./db/schema/Message');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const pushService = require('./pushService');
+
+const numMaxReturnedItems = 50;
 
 const Query = {
   ownGroups: {
@@ -131,6 +132,33 @@ const Query = {
         { $limit: limit },
       ]);
       return messages;
+    }
+  },
+
+  findGroups: {
+    type: new GraphQLList(
+      new GraphQLObjectType({
+        name: 'findGroupsType',
+        fields: {
+          id: { type: GraphQLString },
+          name: { type: GraphQLString },
+          imgUrl: { type: GraphQLString },
+        },
+      })
+    ),
+    args: {
+      searchText: { type: GraphQLString },
+      limit: { type: GraphQLFloat },
+      startingId: { type: GraphQLString },
+    },
+    async resolve(root, { searchText, limit, startingId }, { user }, fieldASTs) {
+      limit = Math.min(limit, numMaxReturnedItems);
+      const groups = await Group
+        .find({ "name" : { $regex: searchText, $options: 'i' } })
+        .sort({ updatedAt: -1 })
+        .limit(limit)
+        .lean();
+      return groups.map(group => ({ ...group, id: group._id }));
     }
   },
 };

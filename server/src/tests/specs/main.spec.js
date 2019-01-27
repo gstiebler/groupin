@@ -41,6 +41,20 @@ describe('main', () => {
       // test order
       expect(_.map(groups, 'name')).to.eql([ 'First Group', 'Second Group']);
     });
+
+    it('findGroups', async () => {
+      setCurrentUser(userFixtures.robert);
+      // TODO: test limit
+      // TODO: test offset
+      const groups = await server.findGroups('second', 20, '');
+      expect(groups).containSubset([
+        {
+          name: 'Second Group',
+          imgUrl: 'url2',
+        },
+      ]);
+      expect(groups).to.have.lengthOf(1);
+    });
   
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);

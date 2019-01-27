@@ -104,12 +104,30 @@ async function getOwnGroups() {
   return res.ownGroups;
 }
 
+async function findGroups(searchText, limit, startingId) {
+  const query = `
+    query {
+      findGroups(
+        searchText: "${searchText}",
+        limit: ${limit},
+        startingId: "${startingId}"
+      ) {
+        id,
+        name,
+        imgUrl
+      }
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.findGroups;
+}
+
 async function getTopicsOfGroup(groupId, limit, startingId) {
   const query = `
     query {
       topicsOfGroup (
-        groupId: "${groupId}"
-        limit: ${limit}
+        groupId: "${groupId}",
+        limit: ${limit},
         startingId: "${startingId}"
       ) {
         id,
@@ -152,6 +170,7 @@ module.exports = {
   createGroup,
   createTopic,
   getOwnGroups,
+  findGroups,
   getTopicsOfGroup,
   getMessagesOfTopic,
   joinGroup,
