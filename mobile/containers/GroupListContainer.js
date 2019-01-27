@@ -2,10 +2,12 @@ import { connect } from "react-redux";
 import GroupListComponent from '../components/GroupList';
 import { 
 } from "../constants/action-types";
-// import { register } from '../actions/registerActions';
+import { fetchOwnGroups } from '../actions/rootActions';
 
 const mapStateToProps = state => {
-  return { ownGroups: state.base.ownGroups };
+  return { 
+    ownGroups: state.base.ownGroups 
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -15,7 +17,7 @@ const mapDispatchToProps = dispatch => {
       navigation.navigate('TopicsList');
     },
     willFocus: (payload) => {
-      console.log('onFocus', payload);
+      fetchOwnGroups(dispatch);
     },
     onAdd: (navigation) => navigation.push('GroupsSearch'),
   };

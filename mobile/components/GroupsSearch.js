@@ -29,7 +29,7 @@ const GroupSearchComponent = ({
     <Header searchBar rounded>   
           <Item>
             <Icon name="ios-search" />
-            <Input placeholder="Search" value={searchText} onChangeText={changeSearchText}/>
+            <Input placeholder="Buscar" value={searchText} onChangeText={changeSearchText}/>
           </Item>
     </Header>
   );
@@ -46,7 +46,7 @@ const GroupSearchComponent = ({
         <Text>{group.name}</Text>
       </Body>
       <Right>
-        <Button iconLeft light>
+        <Button iconLeft light onPress={() =>onGroupAdded(navigation, group.id)}>
           <Icon name='add' />
           <Text>Add</Text>
         </Button>
