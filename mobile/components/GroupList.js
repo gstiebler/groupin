@@ -2,7 +2,8 @@ import React from 'react';
 import { List, ListItem } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 
-export default GroupListComponent = ({ownGroups, selectGroup, navigation}) => {
+export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willFocus }) => {
+  navigation.addListener('willFocus', willFocus);
   return (
     <SafeAreaView>
       <List containerStyle={{marginBottom: 20}}>

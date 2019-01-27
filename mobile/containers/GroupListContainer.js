@@ -12,7 +12,10 @@ const mapDispatchToProps = dispatch => {
   return {
     selectGroup: (groupId) => { 
       getTopicsOfGroup(dispatch, groupId);
-    }
+    },
+    willFocus: (payload) => {
+      console.log('onFocus', payload);
+    },
   };
 };
 
