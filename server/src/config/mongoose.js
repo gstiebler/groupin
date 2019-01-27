@@ -3,8 +3,8 @@ const logger = require('./winston');
 
 let db;
 async function init() {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const dbName = isProduction ? process.env.MONGODB_DB_NAME : process.env.MONGODB_TEST_DB_NAME;
+  const isTest = process.env.NODE_ENV === 'production';
+  const dbName = isTest ? process.env.MONGODB_TEST_DB_NAME : process.env.MONGODB_DB_NAME;
   const port = process.env.MONGODB_PORT;
   const dbHost = process.env.MONGODB_HOST;
   const userPwStr = process.env.MONGODB_USER ? `${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@` : '';
