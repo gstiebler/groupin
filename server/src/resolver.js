@@ -152,10 +152,13 @@ const Query = {
       startingId: { type: GraphQLString },
     },
     async resolve(root, { searchText, limit, startingId }, { user }, fieldASTs) {
+      if (!user) {
+        throw new Error('Only logged in users can search for groups');
+      }
       limit = Math.min(limit, numMaxReturnedItems);
       const groups = await Group
         .find({ "name" : { $regex: searchText, $options: 'i' } })
-        .sort({ updatedAt: -1 })
+        .sort({ name: 1, createdAt: 1 })
         .limit(limit)
         .lean();
       return groups.map(group => ({ ...group, id: group._id }));

@@ -46,7 +46,11 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       // TODO: test limit
       // TODO: test offset
-      const groups = await server.findGroups('second', 20, '');
+      const groups = await server.findGroups({ 
+        searchText: 'second', 
+        limit: 20, 
+        startingId: '',
+      });
       expect(groups).containSubset([
         {
           name: 'Second Group',

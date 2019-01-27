@@ -104,7 +104,7 @@ async function getOwnGroups() {
   return res.ownGroups;
 }
 
-async function findGroups(searchText, limit, startingId) {
+async function findGroups({ searchText, limit, startingId }) {
   const query = `
     query {
       findGroups(

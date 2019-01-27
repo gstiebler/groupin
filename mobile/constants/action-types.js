@@ -10,3 +10,6 @@ export const REGISTER_PASSWORD = 'register password';
 
 export const LOGIN_USERNAME = 'login username';
 export const LOGIN_PASSWORD = 'login password';
+
+export const GROUPS_SEARCH_TEXT = 'groups search text';
+export const GROUPS_SEARCH_ITEMS = 'groups search items';

@@ -12,10 +12,12 @@ const mapDispatchToProps = dispatch => {
   return {
     selectGroup: (groupId) => { 
       getTopicsOfGroup(dispatch, groupId);
+      navigation.navigate('TopicsList');
     },
     willFocus: (payload) => {
       console.log('onFocus', payload);
     },
+    onAdd: (navigation) => navigation.push('GroupsSearch'),
   };
 };
 
