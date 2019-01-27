@@ -8,6 +8,6 @@ export const login = (navigation) => async (dispatch, getState) => {
   const { username, password } = getState().login;
   const token = await server.login({ name, userName: username, password });
   dispatch({ type: SET_TOKEN, payload: { token } });
-  await fetchOwnGroups();
+  await fetchOwnGroups(dispatch);
   navigation.navigate('GroupList');
 }

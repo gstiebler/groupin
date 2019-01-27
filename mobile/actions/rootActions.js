@@ -6,8 +6,6 @@ import {
 } from "../constants/action-types";
 import * as server from '../lib/server';
 
-import store from "../store/rootStore";
-
 export const addMessages = messages => ({ type: ADD_MESSSAGES, payload: { messages } });
 
 export async function sendMessages(dispatch, messages) {
@@ -21,9 +19,9 @@ export async function sendMessages(dispatch, messages) {
   dispatch(addMessages(messages));
 }
 
-export async function fetchOwnGroups() {
+export async function fetchOwnGroups(dispatch) {
   const ownGroups = await server.getOwnGroups();
-  store.dispatch({ type: SET_OWN_GROUPS, payload: { ownGroups } });
+  dispatch({ type: SET_OWN_GROUPS, payload: { ownGroups } });
 }
 
 export async function getTopicsOfGroup(dispatch, groupId) {

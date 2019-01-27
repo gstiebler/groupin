@@ -8,6 +8,6 @@ export const register = (navigation) => async (dispatch, getState) => {
   const {name, username, password} = getState().register;
   const token = await server.register({name, userName: username, password});
   dispatch({ type: SET_TOKEN, payload: { token } });
-  await fetchOwnGroups();
+  await fetchOwnGroups(dispatch);
   navigation.navigate('GroupList');
 }
