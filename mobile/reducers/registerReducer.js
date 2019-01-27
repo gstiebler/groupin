@@ -7,13 +7,13 @@ import { mutationHelper, reducerMain } from '../lib/helpers';
 
 const initialState = {
   name: '',
-  user: '',
+  username: '',
   password: '',
 };
 
 const reducerFunctions = {
   [REGISTER_NAME]: mutationHelper('name'),
-  [REGISTER_USERNAME]: mutationHelper('user'),
+  [REGISTER_USERNAME]: mutationHelper('username'),
   [REGISTER_PASSWORD]: mutationHelper('password'),
 };
 

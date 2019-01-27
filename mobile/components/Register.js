@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
 });
 
 const RegisterComponent = ({ 
+    navigation,
     name, 
     username, 
     password, 
@@ -42,12 +43,12 @@ const RegisterComponent = ({
       <Button 
         title='Registrar' 
         style={styles.basic}
-        onPress={onRegister}
+        onPress={onRegister.bind(null, navigation)}
       />
       <Button 
         title='Já sou cadastrado' 
         style={styles.basic}
-        onPress={onShowLogin}
+        onPress={onShowLogin.bind(null, navigation)}
       />
     </SafeAreaView>
   );
