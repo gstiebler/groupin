@@ -24,9 +24,18 @@ export const SwitchNavigator = createSwitchNavigator(
 export const RootStackNavigator = createStackNavigator(
   {
     Switch: { screen: SwitchNavigator },
-    GroupsSearch: { screen: GroupsSearch },
+    GroupsSearch: { 
+      screen: GroupsSearch,
+      navigationOptions: ({ navigation }) => ({
+        title: 'Buscar grupos',
+        // title: `${navigation.state.params.name}'s Profile'`,
+      }),
+    },
   },
-  { initialRouteName: 'Switch' },
+  { 
+    initialRouteName: 'Switch', 
+    // headerMode: 'none', 
+  },
 );
 
 export default RootStackNavigator;
