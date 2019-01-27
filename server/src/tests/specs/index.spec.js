@@ -29,6 +29,7 @@ before(async () => {
       }
     } catch(error) {
       logger.error(error);
+      return error;
     }
   });
 });

@@ -13,6 +13,8 @@ const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
 const md5 = require('md5');
 
+// TODO: test thrown exceptions
+
 let pushMessageStub;
 
 describe('main', () => {
