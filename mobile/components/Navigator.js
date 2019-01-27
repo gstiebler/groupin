@@ -1,5 +1,5 @@
 import GroupList from '../containers/GroupListContainer';
-import TopicsList from './TopicsList';
+import TopicsList from '../containers/TopicsListContainer';
 import Chat from './Chat';
 import Register from '../containers/RegisterContainer';
 import Login from '../containers/LoginContainer';
