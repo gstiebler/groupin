@@ -14,6 +14,12 @@ function setCurrentUser(user) {
   currentUserHolder.currentUser = user;
 }
 
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV !== 'test') {
+  throw new Error(`Tests are only allowed to run when in test environment. 
+      Current environment: ${process.env.NODE_ENV}`);
+}
+
 before(async () => {
   require('dotenv').config();
   await mongooseConfig.init();
