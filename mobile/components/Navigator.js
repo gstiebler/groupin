@@ -1,4 +1,4 @@
-import GroupList from './GroupList';
+import GroupList from '../containers/GroupListContainer';
 import TopicsList from './TopicsList';
 import Chat from './Chat';
 import Register from '../containers/RegisterContainer';
