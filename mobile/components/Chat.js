@@ -1,18 +1,7 @@
 import { GiftedChat } from 'react-native-gifted-chat';
 import React from 'react';
-import { connect } from "react-redux";
-import { sendMessages } from '../actions/rootActions';
 import { SafeAreaView } from 'react-navigation';
 
-const mapStateToProps = state => {
-  return { messages: state.messages };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onSend: messages => sendMessages(dispatch, messages),
-  };
-};
 
 const ChatComponent = ({messages, onSend}) => {
   return (
@@ -26,5 +15,4 @@ const ChatComponent = ({messages, onSend}) => {
   );
 }
 
-const Chat = connect(mapStateToProps, mapDispatchToProps)(ChatComponent);
-export default Chat;
+export default ChatComponent;
