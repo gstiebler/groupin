@@ -9,7 +9,7 @@ let mongooseInitPromise = mongooseConfig.init();
 async function main(event) {
   try {
     await mongooseInitPromise;
-    const result = await graphqlMain.main(JSON.parse(event.body), event.headers.authorization);
+    const result = await graphqlMain.main(JSON.parse(event.body), event.headers.Authorization);
 
     return {
       statusCode: 200,
