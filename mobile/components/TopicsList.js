@@ -11,7 +11,7 @@ export default TopicsListComponent = ({ navigation, topics, selectTopic, willFoc
       avatar={{ uri: topic.imgUrl }}
       key={topic.id}
       title={topic.name}
-      onPress={() => selectTopic(navigation, topic.id)}
+      onPress={() => selectTopic(navigation, topic.id, topic.name)}
     />
   ));
 

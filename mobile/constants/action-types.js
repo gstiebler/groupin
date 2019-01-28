@@ -13,3 +13,6 @@ export const LOGIN_PASSWORD = 'login password';
 
 export const GROUPS_SEARCH_TEXT = 'groups search text';
 export const GROUPS_SEARCH_ITEMS = 'groups search items';
+
+export const CHAT_TITLE = 'chat title';
+

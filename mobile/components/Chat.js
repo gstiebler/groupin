@@ -1,17 +1,53 @@
 import { GiftedChat } from 'react-native-gifted-chat';
 import React from 'react';
+import { 
+  Container, 
+  Header, 
+  Left, 
+  Body, 
+  Right, 
+  Thumbnail,
+  Title, 
+  Subtitle, 
+  Button, 
+  Icon, 
+  Item, 
+  Input, 
+  List, 
+  ListItem,
+  Text,
+} from 'native-base';
 import { SafeAreaView } from 'react-navigation';
 
 
-const ChatComponent = ({messages, onSend}) => {
+const ChatComponent = ({ navigation, messages, title, onSend, willFocus }) => {  
+  navigation.addListener('willFocus', willFocus);
+
+  const header = (
+    <Header>   
+      <Left />
+      <Body>
+        <Title>{ title }</Title>
+      </Body>
+      <Right>
+        <Button transparent>
+          <Icon name='add'/>
+        </Button>
+      </Right>
+    </Header>
+  );
+
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={newMessages => onSend(newMessages)}
-      user={{
-        _id: 1,
-      }}
-    />
+    <Container>
+      { header }
+      <GiftedChat
+        messages={messages}
+        onSend={newMessages => onSend(newMessages)}
+        user={{
+          _id: 1,
+        }}
+      />
+    </Container>
   );
 }
 
