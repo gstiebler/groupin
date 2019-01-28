@@ -10,7 +10,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    selectTopic: (navigation, topicId, topicName) => navigation.navigate('Chat', { topicId, topicName }),
+    selectTopic: (navigation, topicId, topicName) => navigation.push('Chat', { topicId, topicName }),
     willFocus: ({ state }) => getTopicsOfGroup(dispatch, state.params.groupId),
   };
 };

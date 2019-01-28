@@ -20,26 +20,20 @@ import {
 import { SafeAreaView } from 'react-navigation';
 
 
-const ChatComponent = ({ navigation, messages, title, onSend, willFocus }) => {  
+const ChatComponent = ({ navigation, messages, title, onSend, onBack, willFocus }) => {  
   navigation.addListener('willFocus', willFocus);
 
   const header = (
-    <Header>   
-      <Left />
+    <Header>
       <Body>
         <Title>{ title }</Title>
       </Body>
-      <Right>
-        <Button transparent>
-          <Icon name='add'/>
-        </Button>
-      </Right>
+      <Right />
     </Header>
   );
 
   return (
     <Container>
-      { header }
       <GiftedChat
         messages={messages}
         onSend={newMessages => onSend(newMessages)}

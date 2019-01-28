@@ -10,32 +10,45 @@ import {
   createStackNavigator,
 } from 'react-navigation'
 
-export const SwitchNavigator = createSwitchNavigator(
+export const AppStackNavigator = createStackNavigator(
   {
-    Register: { screen: Register },
-    Login: { screen: Login },
-    GroupList: { screen: GroupList },
-    Chat: { screen: Chat },
-    TopicsList: { screen: TopicsList },
-  },
-  { initialRouteName: 'Login' },
-);
-
-export const RootStackNavigator = createStackNavigator(
-  {
-    Switch: { screen: SwitchNavigator },
     GroupsSearch: { 
       screen: GroupsSearch,
       navigationOptions: ({ navigation }) => ({
         title: 'Buscar grupos',
-        // title: `${navigation.state.params.name}'s Profile'`,
       }),
+    },
+    GroupList: { 
+      screen: GroupList,
+      navigationOptions: ({ navigation }) => ({
+        title: 'Meus grupos',
+      }), 
+    },
+    Chat: { screen: Chat,
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.topicName,
+      }),  
+    },
+    TopicsList: { 
+      screen: TopicsList,
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.groupName,
+      }),  
     },
   },
   { 
-    initialRouteName: 'Switch', 
+    initialRouteName: 'GroupList', 
     // headerMode: 'none', 
   },
 );
 
-export default RootStackNavigator;
+export const RootSwitchNavigator = createSwitchNavigator(
+  {
+    Register: { screen: Register },
+    Login: { screen: Login },
+    AppStack: { screen: AppStackNavigator },
+  },
+  { initialRouteName: 'Login' },
+);
+
+export default RootSwitchNavigator;

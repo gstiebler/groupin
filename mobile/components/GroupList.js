@@ -26,7 +26,7 @@ export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willF
       avatar={{ uri: group.imgUrl }}
       key={group.id}
       title={group.name}
-      onPress={() => selectGroup(navigation, group.id) }
+      onPress={() => selectGroup(navigation, group.id, group.name) }
     />
   ));
 

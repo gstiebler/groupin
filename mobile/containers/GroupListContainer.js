@@ -12,8 +12,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    selectGroup: (navigation, groupId) => { 
-      navigation.navigate('TopicsList', { groupId });
+    selectGroup: (navigation, groupId, groupName) => { 
+      navigation.navigate('TopicsList', { groupId, groupName });
     },
     willFocus: () => {
       fetchOwnGroups(dispatch);
