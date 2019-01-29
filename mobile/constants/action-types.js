@@ -16,3 +16,4 @@ export const GROUPS_SEARCH_ITEMS = 'groups search items';
 
 export const CHAT_TITLE = 'chat title';
 
+export const NEW_TOPIC_NAME = 'new topic name';

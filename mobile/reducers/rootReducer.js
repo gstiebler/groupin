@@ -4,6 +4,7 @@ import register from './registerReducer';
 import login from './loginReducer';
 import groupsSearch from './groupsSearchReducer';
 import chat from './chatReducer';
+import newTopic from './newTopicReducer';
 
 const rootReducer = combineReducers({
   base,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   login,
   groupsSearch,
   chat,
+  newTopic,
 });
 
 export default rootReducer;
