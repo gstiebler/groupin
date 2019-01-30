@@ -194,26 +194,32 @@ const Mutation = {
   },
 
   login: {
-    type: GraphQLString,
+    type: new GraphQLObjectType({
+      name: 'loginType',
+      fields: {
+        token: { type: GraphQLString },
+        errorMessage: { type: GraphQLString },
+      }
+    }),
     args: { 
       userName: { type: GraphQLString },
       password: { type: GraphQLString },
     },
     async resolve(root, { userName, password }) {
       if (userName.length < 5) {
-        throw new Error('Username length too short');
+        return { errorMessage: 'Username length too short' };
       }
       const user = await User.findOne({ 
         phoneNumber: userName,
       });
       if (!user) {
-        throw new Error('User not found');
+        return { errorMessage: 'User not found' };
       }
 
       if (password.length < 3 || user.tempPassword !== md5(password)) {
-        throw new Error('Invalid password');
+        return { errorMessage: 'Invalid password' };
       }
-      return user.token;
+      return { token: user.token };
     }
   },
 

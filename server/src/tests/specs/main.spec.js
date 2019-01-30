@@ -131,14 +131,45 @@ describe('main', () => {
       expect(userByPassword.phoneNumber).to.equal('(21)999995555');
     });
 
-    it('login', async () => {
-      const password = 'smallpassword';
-      const token = await server.login({
-        userName: '44448',
-        password: 'passwordAlice',
+    describe('login', () => {
+
+      it('sucessful', async () => {
+        const result = await server.login({
+          userName: '44448',
+          password: 'passwordAlice',
+        });
+        expect(result.token).to.equal('46894278465624393Alice');
+        expect(result.errorMessage).to.be.null;
       });
-      expect(token).to.equal('46894278465624393Alice');
-    });
+
+      it('invalid password', async () => {
+        const result = await server.login({
+          userName: '44448',
+          password: 'passwordAliceerror',
+        });
+        expect(result.token).to.be.null;
+        expect(result.errorMessage).to.equal('Invalid password');
+      });
+
+      it('user not found', async () => {
+        const result = await server.login({
+          userName: '44448aa',
+          password: 'passwordAlice',
+        });
+        expect(result.token).to.be.null;
+        expect(result.errorMessage).to.equal('User not found');
+      });
+
+      it('user not found', async () => {
+        const result = await server.login({
+          userName: '4a',
+          password: 'passwordAlice',
+        });
+        expect(result.token).to.be.null;
+        expect(result.errorMessage).to.equal('Username length too short');
+      });
+
+    })
 
     describe('sendMessage', () => {
       const alice = userFixtures.alice;

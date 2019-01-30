@@ -20,7 +20,10 @@ async function login({ userName, password }) {
       login (
         userName: "${userName}"
         password: "${password}",
-      )
+      ) {
+        token,
+        errorMessage
+      }
     }
   `;
   const res = await graphql.sendQuery(query);
