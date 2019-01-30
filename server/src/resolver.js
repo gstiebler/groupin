@@ -296,6 +296,7 @@ const Mutation = {
         name: topicName,
         groupId: ObjectId(groupId),
         createdBy: ObjectId(user._id),
+        imgUrl: 'TODO url',
       });
 
       let groupUpdatePromise = Group.updateOne(
