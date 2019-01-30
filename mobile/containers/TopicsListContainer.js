@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import TopicsListComponent from '../components/TopicsList';
-import { getMessagesOfTopic, getTopicsOfGroup } from '../actions/rootActions';
+import { getTopicsOfGroup } from '../actions/rootActions';
 
 const mapStateToProps = state => {
   return { 
@@ -11,6 +11,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     selectTopic: (navigation, topicId, topicName) => navigation.push('Chat', { topicId, topicName }),
+    onAddTopic: (navigation) => navigation.push('NewTopic', { groupId: navigation.state.params.groupId }),
     willFocus: ({ state }) => getTopicsOfGroup(dispatch, state.params.groupId),
   };
 };

@@ -1,8 +1,8 @@
 import React from 'react';
-import { List, ListItem } from 'react-native-elements'
+import { List, ListItem, Button } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 
-export default TopicsListComponent = ({ navigation, topics, selectTopic, willFocus }) => {
+export default TopicsListComponent = ({ navigation, topics, selectTopic, onAddTopic, willFocus }) => {
   navigation.addListener('willFocus', willFocus);
 
   const topicItems = topics.map((topic) => (
@@ -17,6 +17,7 @@ export default TopicsListComponent = ({ navigation, topics, selectTopic, willFoc
 
   return (
     <SafeAreaView>
+      <Button title="Adicionar tópico" onPress={() => onAddTopic(navigation)} />
       <List containerStyle={{marginBottom: 20}}>
         { topicItems }
       </List>

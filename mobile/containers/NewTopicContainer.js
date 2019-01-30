@@ -14,7 +14,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     changeName: name => dispatch({ type: NEW_TOPIC_NAME, payload: { name } }),
-    onCreate: (navigator) => createTopic(navigator, navigator.state.params.groupId),
+    onCreate: (navigator) => dispatch(createTopic(navigator, navigator.state.params.groupId)),
+    willFocus: ({ state }) => dispatch({ type: NEW_TOPIC_NAME, payload: { name: '' } })
   };
 };
 

@@ -14,7 +14,10 @@ const RegisterComponent = ({
     name, 
     changeName, 
     onCreate,
+    willFocus,
   }) => {
+  navigation.addListener('willFocus', willFocus);
+
   return (
     <SafeAreaView>
       <FormLabel>Nome do tópico</FormLabel>

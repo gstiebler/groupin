@@ -1,5 +1,6 @@
 import GroupList from '../containers/GroupListContainer';
 import TopicsList from '../containers/TopicsListContainer';
+import NewTopic from '../containers/NewTopicContainer';
 import Chat from '../containers/ChatContainer';
 import Register from '../containers/RegisterContainer';
 import Login from '../containers/LoginContainer';
@@ -33,6 +34,12 @@ export const AppStackNavigator = createStackNavigator(
       screen: TopicsList,
       navigationOptions: ({ navigation }) => ({
         title: navigation.state.params.groupName,
+      }),  
+    },
+    NewTopic: { 
+      screen: NewTopic,
+      navigationOptions: () => ({
+        title: 'Novo tópico',
       }),  
     },
   },
