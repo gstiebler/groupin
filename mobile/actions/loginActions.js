@@ -3,11 +3,20 @@ import {
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
+// TODO: remove include of React stuff
+import { Toast } from 'native-base';
 
 export const login = (navigation) => async (dispatch, getState) => {
   const { username, password } = getState().login;
-  const token = await server.login({ userName: username, password });
-  dispatch({ type: SET_TOKEN, payload: { token } });
-  await fetchOwnGroups(dispatch);
-  navigation.navigate('GroupList');
+  const result = await server.login({ userName: username, password });
+  if (result.errorMessage) {
+    Toast.show({
+      text: result.errorMessage,
+      buttonText: 'Ok'
+    });
+  } else {
+    dispatch({ type: SET_TOKEN, payload: { token: result.token } });
+    await fetchOwnGroups(dispatch);
+    navigation.navigate('GroupList');
+  }
 }
