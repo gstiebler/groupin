@@ -15,5 +15,6 @@ export const GROUPS_SEARCH_TEXT = 'groups search text';
 export const GROUPS_SEARCH_ITEMS = 'groups search items';
 
 export const CHAT_TITLE = 'chat title';
+export const CHAT_TOPIC_ID = 'chat topic ID';
 
 export const NEW_TOPIC_NAME = 'new topic name';

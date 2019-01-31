@@ -6,17 +6,15 @@ import {
 } from "../constants/action-types";
 import * as server from '../lib/server';
 
-export const addMessages = messages => ({ type: ADD_MESSSAGES, payload: { messages } });
-
-export async function sendMessages(dispatch, messages) {
+export const sendMessages = (messages) => async (dispatch, getState) => {
+  const { topicId } = getState().chat;
   const firstMessage = messages[0];
   await server.sendMessage({
     message: firstMessage.text,
-    userId: firstMessage.user._id,
     userName: 'teste',
-    topicId: 'teste',
+    topicId,
   });
-  dispatch(addMessages(messages));
+  dispatch({ type: ADD_MESSSAGES, payload: { messages } });
 }
 
 export async function fetchOwnGroups(dispatch) {
