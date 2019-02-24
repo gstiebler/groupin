@@ -19,6 +19,7 @@ const mapDispatchToProps = dispatch => {
       fetchOwnGroups(dispatch);
     },
     onAdd: (navigation) => navigation.push('GroupsSearch'),
+    onCreate: (navigation) => navigation.push('NewGroup'),
   };
 };
 

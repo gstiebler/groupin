@@ -3,12 +3,16 @@ import { List, ListItem } from 'react-native-elements'
 import { Container, Header, Left, Body, Right, Title, Subtitle, Button, Icon } from 'native-base';
 import { SafeAreaView } from 'react-native';
 
-export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willFocus, onAdd }) => {
+export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willFocus, onCreate, onAdd }) => {
   navigation.addListener('willFocus', willFocus);
 
   const header = (
     <Header>   
-      <Left />
+      <Left>
+        <Button transparent>
+          <Icon name='create' onPress={() => onCreate(navigation)}/>
+        </Button>
+      </Left>
       <Body>
         <Title>Meus grupos</Title>
       </Body>

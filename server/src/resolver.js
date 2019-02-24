@@ -276,6 +276,7 @@ const Mutation = {
     async resolve(root, { groupName }, { user }) {
       const newGroup = await Group.create({
         name: groupName,
+        imgUrl: 'temp',
         createdBy: ObjectId(user._id),
       });
 
