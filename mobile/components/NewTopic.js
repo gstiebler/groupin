@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const RegisterComponent = ({ 
+const NewTopicComponent = ({ 
     navigation,
     name, 
     changeName, 
@@ -30,4 +30,4 @@ const RegisterComponent = ({
   );
 }
 
-export default RegisterComponent;
+export default NewTopicComponent;
