@@ -4,7 +4,7 @@ import {
   LOGIN_USERNAME,
   LOGIN_PASSWORD,
 } from "../constants/action-types";
-import { login } from '../actions/loginActions';
+import { login, willFocus } from '../actions/loginActions';
 
 const mapStateToProps = state => {
   return { 
@@ -19,6 +19,7 @@ const mapDispatchToProps = dispatch => {
     changePassword: password => dispatch({ type: LOGIN_PASSWORD, payload: { password } }),
     onLogin: (navigation) => dispatch(login(navigation)),
     onShowRegister: (navigation) => navigation.navigate('Register'),
+    willFocus: (navigation) => dispatch(willFocus(navigation)),
   };
 };
 

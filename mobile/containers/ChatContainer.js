@@ -25,9 +25,6 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: CHAT_TOPIC_ID, payload: { topicId: state.params.topicId } });
       getMessagesOfTopic(dispatch, state.params.topicId) 
     },
-    onBack: (navigation) =>{ 
-      navigation.goBack()
-    },
   };
 };
 

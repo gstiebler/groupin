@@ -17,7 +17,10 @@ const LoginComponent = ({
     changePassword,
     onLogin,
     onShowRegister,
+    willFocus,
   }) => {
+  navigation.addListener('willFocus', () => willFocus(navigation));
+  
   return (
     <SafeAreaView>
       <FormLabel>Usuário</FormLabel>

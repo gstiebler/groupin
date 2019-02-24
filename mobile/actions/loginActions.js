@@ -5,6 +5,7 @@ import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
 // TODO: remove include of React stuff
 import { Toast } from 'native-base';
+import { getToken, setToken } from '../lib/auth';
 
 export const login = (navigation) => async (dispatch, getState) => {
   const { username, password } = getState().login;
@@ -16,7 +17,20 @@ export const login = (navigation) => async (dispatch, getState) => {
     });
   } else {
     dispatch({ type: SET_TOKEN, payload: { token: result.token } });
+    await setToken(result.token);
     await fetchOwnGroups(dispatch);
     navigation.navigate('GroupList');
+  }
+}
+
+export const willFocus = (navigation) => async (dispatch, getState) => {
+  try {
+    const token = await getToken();
+    if (token !== null) {
+      dispatch({ type: SET_TOKEN, payload: { token } });
+      navigation.navigate('GroupList');
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
