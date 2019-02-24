@@ -2,20 +2,10 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import React from 'react';
 import { 
   Container, 
-  Header, 
-  Left, 
+  Header,
   Body, 
   Right, 
-  Thumbnail,
   Title, 
-  Subtitle, 
-  Button, 
-  Icon, 
-  Item, 
-  Input, 
-  List, 
-  ListItem,
-  Text,
 } from 'native-base';
 import { SafeAreaView } from 'react-navigation';
 
