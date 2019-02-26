@@ -8,6 +8,7 @@ const userFixtures = require('../fixtures/userFixtures');
 const groupFixtures = require('../fixtures/groupFixtures');
 const topicFixtures = require('../fixtures/topicFixtures');
 const messageFixtures = require('../fixtures/messageFixtures');
+const groupIds = require('../fixtures/groupIds');
 const _ = require('lodash');
 const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
@@ -269,8 +270,12 @@ describe('main', () => {
     });
   
     it('leaveGroup', async () => {
-      const result = await server.leaveGroup('group 1');
+      setCurrentUser(userFixtures.robert);
+      const result = await server.leaveGroup(groupIds.firstGroup.toHexString());
       expect(result).to.equal('OK');
+      const groups = await server.getOwnGroups();
+      expect(groups).to.have.lengthOf(1);
+      expect(groups[0].name).to.equal('Second Group');
     });
 
     describe('joinGroup', () => {

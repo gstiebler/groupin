@@ -349,7 +349,11 @@ const Mutation = {
     args: {
       groupId: { type: GraphQLString },
     },
-    resolve(root, { groupId }, { user }) {
+    async resolve(root, { groupId }, { user }) {
+      await User.updateOne(
+        { _id: user._id }, 
+        { $pull: { groups: ObjectId(groupId) } }
+      );
       return 'OK';
     }
   },
