@@ -31,3 +31,9 @@ export async function getMessagesOfTopic(dispatch, topicId) {
   const messages = await server.getMessagesOfTopic(topicId, 20, '');
   dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
+
+export const leaveGroup = (groupId, navigation) => async (dispatch, getState) => {
+  await server.leaveGroup(groupId);
+  await fetchOwnGroups(dispatch);
+  navigation.navigate('GroupList');
+}

@@ -1,7 +1,6 @@
 import React from 'react';
 import { List, ListItem } from 'react-native-elements'
-import { Container, Header, Left, Body, Right, Title, Subtitle, Button, Icon } from 'native-base';
-import { SafeAreaView } from 'react-native';
+import { Container, Header, Left, Body, Right, Title, Button, Icon } from 'native-base';
 
 export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willFocus, onCreate, onAdd }) => {
   navigation.addListener('willFocus', willFocus);
