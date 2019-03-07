@@ -94,10 +94,10 @@ functions:
 #    Define function environment variables here
     environment:
       PORT: 3000
-      PUSHER_APP_ID: '565224'  
-      PUSHER_KEY: '381fa8ae298bff616f63'
-      PUSHER_SECRET: '9a7546de53842d842d58'
-      PUSHER_CLUSTER: 'us2'
+      PUSHER_APP_ID: ${env:PUSHER_APP_ID}
+      PUSHER_KEY: ${env:PUSHER_KEY}
+      PUSHER_SECRET: ${env:PUSHER_SECRET}
+      PUSHER_CLUSTER: ${env:PUSHER_CLUSTER}
       MONGODB_HOST: ${env:MONGODB_HOST}
       MONGODB_PORT: 27017
       MONGODB_DB_NAME: ${env:MONGODB_DB_NAME}
