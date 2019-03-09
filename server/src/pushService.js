@@ -1,4 +1,5 @@
 const Pusher = require('pusher');
+const logger = require('./config/winston');
 
 let pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
@@ -11,6 +12,7 @@ let pusher = new Pusher({
 const DEFAULT_EVENT = 'my-event';
 
 function pushMessage(channel, payload) {
+  logger.debug(JSON.stringify(payload));
   pusher.trigger(channel, DEFAULT_EVENT, payload);
 }
 
