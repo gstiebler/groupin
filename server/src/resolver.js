@@ -262,6 +262,9 @@ const Mutation = {
         authorName: userName,
         topicId,
       };
+
+      logger.debug(`Mensagem: ${message}`);
+      logger.debug(`Usuário: ${user.name}`);
       pushService.pushMessage('my-channel', pushPayload);
 
       return 'OK';
