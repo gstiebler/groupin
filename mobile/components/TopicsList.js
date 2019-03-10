@@ -2,8 +2,9 @@ import React from 'react';
 import { List, ListItem, Button } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 
-export default TopicsListComponent = ({ navigation, topics, selectTopic, onAddTopic, onLeaveGroup, willFocus }) => {
+export default TopicsListComponent = ({ navigation, topics, selectTopic, onAddTopic, onLeaveGroup, willFocus, willLeave }) => {
   navigation.addListener('willFocus', willFocus);
+  navigation.addListener('willBlur', willLeave);
 
   const topicItems = topics.map((topic) => (
     <ListItem

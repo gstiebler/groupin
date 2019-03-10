@@ -4,6 +4,8 @@ import {
   SET_TOPICS,
   SET_MESSAGES,
   SET_TOKEN,
+  CURRENTLY_VIEWED_GROUP_ID,
+  CURRENTLY_VIEWED_TOPIC_ID,
 } from "../constants/action-types";
 import mergeMessages from '../lib/mergeMessages';
 import { mutationHelper, reducerMain } from '../lib/helpers';
@@ -25,6 +27,8 @@ const initialState = {
   ownGroups: [],
   topics: [],
   token: null,
+  currentlyViewedGroupId: null,
+  currentlyViewedTopicId: null,
 };
 
 const addMessages = (state, { messages }) => ({
@@ -45,6 +49,8 @@ const reducerFunctions = {
   [SET_OWN_GROUPS]: mutationHelper('ownGroups'),
   [SET_TOPICS]: mutationHelper('topics'),
   [SET_MESSAGES]: mutationHelper('messages'),
+  [CURRENTLY_VIEWED_GROUP_ID]: mutationHelper('currentlyViewedGroupId'),
+  [CURRENTLY_VIEWED_TOPIC_ID]: mutationHelper('currentlyViewedTopicId'),
   [SET_TOKEN]: setToken,
 };
 

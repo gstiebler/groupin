@@ -10,8 +10,9 @@ import {
 import { SafeAreaView } from 'react-navigation';
 
 
-const ChatComponent = ({ navigation, messages, title, onSend, onBack, willFocus }) => {  
+const ChatComponent = ({ navigation, messages, title, onSend, onBack, willFocus, willLeave }) => {  
   navigation.addListener('willFocus', willFocus);
+  navigation.addListener('willBlur', willLeave);
 
   const header = (
     <Header>

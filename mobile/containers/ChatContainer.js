@@ -7,6 +7,7 @@ import {
 import { 
   CHAT_TITLE,
   CHAT_TOPIC_ID,
+  CURRENTLY_VIEWED_TOPIC_ID,
 } from "../constants/action-types";
 
 const mapStateToProps = state => {
@@ -23,8 +24,11 @@ const mapDispatchToProps = dispatch => {
     willFocus: ({ state }) => { 
       dispatch({ type: CHAT_TITLE, payload: { title: state.params.topicName } });
       dispatch({ type: CHAT_TOPIC_ID, payload: { topicId: state.params.topicId } });
+      // is `currentlyViewedTopicId` redundant with `topicId`?
+      dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: state.params.topicId } });
       getMessagesOfTopic(dispatch, state.params.topicId) 
     },
+    willLeave: () => dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } }),
   };
 };
 
