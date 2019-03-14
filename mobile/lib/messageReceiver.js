@@ -1,17 +1,15 @@
-// TODO: replace by redux-saga
-import store from "../store/rootStore";
-import { addMessages } from '../actions/rootActions';
+import store from '../store/rootStore';
+import { 
+  getTopicsOfCurrentGroup,
+  getMessagesOfCurrentTopic,
+} from '../actions/rootActions';
 
-import Pusher from 'pusher-js/react-native';
-Pusher.logToConsole = true;
+import * as receiver from './pusherReceiver';
 
-var pusher = new Pusher('381fa8ae298bff616f63', {
-  cluster: 'us2',
-  encrypted: true
-});
-
-var channel = pusher.subscribe('my-channel');
-channel.bind('my-event', function(data) {
+const channel = 'my-channel';
+const event = 'my-event';
+receiver.subscribe(channel, event, data => {
   console.log(JSON.stringify(data));
-  store.dispatch(addMessages([data.message]));
+  getTopicsOfCurrentGroup(store);
+  getMessagesOfCurrentTopic(store);
 });

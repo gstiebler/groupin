@@ -1,6 +1,7 @@
 const axios = require('axios');
 
-const url = 'http://localhost:3000/graphql';
+// const url = 'http://localhost:3000/graphql';
+const url = 'https://b6cpe1dxyg.execute-api.us-east-1.amazonaws.com/dev/graphql';
 
 function setToken(token) {
   axios.defaults.headers.common.authorization = token;

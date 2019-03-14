@@ -6,6 +6,8 @@ import {
 } from "../constants/action-types";
 import * as server from '../lib/server';
 
+const NUM_ITEMS_PER_FETCH = 20;
+
 export const sendMessages = (messages) => async (dispatch, getState) => {
   const { topicId } = getState().chat;
   const firstMessage = messages[0];
@@ -23,13 +25,25 @@ export async function fetchOwnGroups(dispatch) {
 }
 
 export async function getTopicsOfGroup(dispatch, groupId) {
-  const topics = await server.getTopicsOfGroup(groupId, 20, '');
+  const topics = await server.getTopicsOfGroup(groupId, NUM_ITEMS_PER_FETCH, '');
   dispatch({ type: SET_TOPICS, payload: { topics } });
 }
 
+export async function getTopicsOfCurrentGroup(store) {
+  if (!store.currentlyViewedGroupId) { return }
+  const topics = await server.getTopicsOfGroup(store.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH, '');
+  store.dispatch({ type: SET_TOPICS, payload: { topics } });
+}
+
 export async function getMessagesOfTopic(dispatch, topicId) {
-  const messages = await server.getMessagesOfTopic(topicId, 20, '');
+  const messages = await server.getMessagesOfTopic(topicId, NUM_ITEMS_PER_FETCH, '');
   dispatch({ type: SET_MESSAGES, payload: { messages } });
+}
+
+export async function getMessagesOfCurrentTopic(store) {
+  if (!store.currentlyViewedTopicId) { return }
+  const messages = await server.getMessagesOfTopic(store.currentlyViewedTopicId, NUM_ITEMS_PER_FETCH, '');
+  store.dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
 
 export const leaveGroup = (groupId, navigation) => async (dispatch, getState) => {
