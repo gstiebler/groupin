@@ -22,6 +22,7 @@ async function login({ userName, password }) {
         password: "${password}",
       ) {
         token,
+        id,
         errorMessage
       }
     }

@@ -198,6 +198,7 @@ const Mutation = {
       name: 'loginType',
       fields: {
         token: { type: GraphQLString },
+        id: { type: GraphQLString },
         errorMessage: { type: GraphQLString },
       }
     }),
@@ -219,7 +220,10 @@ const Mutation = {
       if (password.length < 3 || user.tempPassword !== md5(password)) {
         return { errorMessage: 'Invalid password' };
       }
-      return { token: user.token };
+      return { 
+        token: user.token,
+        id: user._id,
+      };
     }
   },
 

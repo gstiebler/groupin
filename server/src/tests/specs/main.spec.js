@@ -139,7 +139,9 @@ describe('main', () => {
           userName: '44448',
           password: 'passwordAlice',
         });
-        expect(result.token).to.equal('46894278465624393Alice');
+
+        expect(result.token).to.equal(userFixtures.alice.token);
+        expect(result.id).to.equal(userFixtures.alice._id.toHexString());
         expect(result.errorMessage).to.be.null;
       });
 
