@@ -7,7 +7,11 @@ async function register({name, userName, password}) {
         name: "${name}",
         userName: "${userName}"
         password: "${password}",
-      )
+      ) {
+        token,
+        id,
+        errorMessage
+      }
     }
   `;
   const res = await graphql.sendQuery(query);

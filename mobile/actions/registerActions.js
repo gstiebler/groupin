@@ -7,7 +7,7 @@ import { setToken } from '../lib/auth';
 
 export const register = (navigation) => async (dispatch, getState) => {
   const {name, username, password} = getState().register;
-  const token = await server.register({name, userName: username, password});
+  const { token, id } = await server.register({name, userName: username, password});
   dispatch({ type: SET_TOKEN, payload: { token } });
   await setToken(token);
   await fetchOwnGroups(dispatch);

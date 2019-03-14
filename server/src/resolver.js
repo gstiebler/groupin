@@ -169,7 +169,14 @@ const Query = {
 const Mutation = {
 
   register: {
-    type: GraphQLString,
+    type: new GraphQLObjectType({
+      name: 'registerType',
+      fields: {
+        token: { type: GraphQLString },
+        id: { type: GraphQLString },
+        errorMessage: { type: GraphQLString },
+      }
+    }),
     args: { 
       name: { type: GraphQLString },
       userName: { type: GraphQLString },
@@ -189,7 +196,11 @@ const Mutation = {
         token: userHelper.genToken(),
       });
 
-      return user.token;
+      return { 
+        token: user.token,
+        id: user._id,
+        errorMessage: '',
+      };
     }
   },
 

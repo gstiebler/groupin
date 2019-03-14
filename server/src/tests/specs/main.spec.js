@@ -116,7 +116,7 @@ describe('main', () => {
 
     it('register', async () => {
       const password = 'smallpassword';
-      const token = await server.register({
+      const { token } = await server.register({
         name: 'Guilherme',
         userName: '(21)999995555',
         password,
