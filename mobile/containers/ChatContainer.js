@@ -13,7 +13,8 @@ import {
 const mapStateToProps = state => {
   return { 
     title: state.chat.title,
-    messages: state.base.messages 
+    messages: state.base.messages,
+    userId: state.base.userId, 
   };
 };
 

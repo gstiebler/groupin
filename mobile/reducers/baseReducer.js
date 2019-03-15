@@ -4,6 +4,7 @@ import {
   SET_TOPICS,
   SET_MESSAGES,
   SET_TOKEN,
+  USER_ID,
   CURRENTLY_VIEWED_GROUP_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
 } from "../constants/action-types";
@@ -27,6 +28,7 @@ const initialState = {
   ownGroups: [],
   topics: [],
   token: null,
+  userId: '',
   currentlyViewedGroupId: null,
   currentlyViewedTopicId: null,
 };
@@ -51,6 +53,7 @@ const reducerFunctions = {
   [SET_MESSAGES]: mutationHelper('messages'),
   [CURRENTLY_VIEWED_GROUP_ID]: mutationHelper('currentlyViewedGroupId'),
   [CURRENTLY_VIEWED_TOPIC_ID]: mutationHelper('currentlyViewedTopicId'),
+  [USER_ID]: mutationHelper('userId'),
   [SET_TOKEN]: setToken,
 };
 

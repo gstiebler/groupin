@@ -1,5 +1,6 @@
 import { 
   SET_TOKEN,
+  USER_ID,
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
@@ -9,18 +10,8 @@ import { getToken, setToken } from '../lib/auth';
 
 export const login = (navigation) => async (dispatch, getState) => {
   const { username, password } = getState().login;
-  const result = await server.login({ userName: username, password });
-  if (result.errorMessage) {
-    Toast.show({
-      text: result.errorMessage,
-      buttonText: 'Ok'
-    });
-  } else {
-    dispatch({ type: SET_TOKEN, payload: { token: result.token } });
-    await setToken(result.token);
-    await fetchOwnGroups(dispatch);
-    navigation.navigate('GroupList');
-  }
+  const { token, id, errorMessage } = await server.login({ userName: username, password });
+  baseAuth({ dispatch, navigation, token, id, errorMessage });
 }
 
 export const willFocus = (navigation) => async (dispatch, getState) => {
@@ -33,5 +24,20 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
     }
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function baseAuth({ dispatch, navigation, token, id, errorMessage }) {
+  if (errorMessage) {
+    Toast.show({
+      text: errorMessage,
+      buttonText: 'Ok'
+    });
+  } else {
+    dispatch({ type: SET_TOKEN, payload: { token } });
+    dispatch({ type: USER_ID, payload: { userId: id } });
+    await setToken(token);
+    await fetchOwnGroups(dispatch);
+    navigation.navigate('GroupList');
   }
 }

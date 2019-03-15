@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from 'react-navigation';
 
 
-const ChatComponent = ({ navigation, messages, title, onSend, onBack, willFocus, willLeave }) => {  
+const ChatComponent = ({ navigation, messages, title, userId, onSend, onBack, willFocus, willLeave }) => {  
   navigation.addListener('willFocus', willFocus);
   navigation.addListener('willBlur', willLeave);
 
@@ -28,9 +28,7 @@ const ChatComponent = ({ navigation, messages, title, onSend, onBack, willFocus,
       <GiftedChat
         messages={messages}
         onSend={newMessages => onSend(newMessages)}
-        user={{
-          _id: 1,
-        }}
+        user={{ _id: userId }}
       />
     </Container>
   );
