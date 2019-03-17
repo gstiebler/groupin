@@ -1,38 +1,40 @@
 {
-  "name": "GroupIn",
-  "version": "0.1.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "name": "groupin",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "eject": "expo eject"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "expo": "^30.0.1",
-    "firebase": "^5.2.0",
-    "immutable": "^3.8.2",
-    "native-base": "2.6.0",
-    "pusher": "^2.0.1",
-    "pusher-js": "^4.2.2",
-    "react": "16.3.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
-    "react-native-config": "^0.11.5",
-    "react-native-elements": "^0.19.1",
-    "react-native-firebase": "^4.3.7",
-    "react-native-gifted-chat": "^0.4.3",
-    "react-navigation": "^2.12.1",
-    "react-redux": "^5.0.7",
-    "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "immutable": "3",
+    "native-base": "^2.12.1",
+    "pusher": "2",
+    "react": "16.8.3",
+    "react-native": "0.59.1",
+    "react-native-config": "^0.11.7",
+    "react-native-elements": "0.19",
+    "react-native-gifted-chat": "0.4",
+    "react-navigation": "2.12",
+    "react-redux": "5",
+    "redux": "4",
+    "redux-thunk": "2.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/runtime": "^7.3.4",
+    "babel-jest": "^24.5.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
+    "jest": "^24.5.0",
+    "metro-react-native-babel-preset": "^0.53.1",
+    "react-test-renderer": "16.8.3",
     "remote-redux-devtools": "^0.5.16"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }
