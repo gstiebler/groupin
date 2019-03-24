@@ -3,6 +3,7 @@ export const SET_OWN_GROUPS = "SET_OWN_GROUPS";
 export const SET_TOPICS = "SET_TOPICS";
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_TOKEN = 'token';
+export const FCM_TOKEN = 'firebase token';
 export const USER_ID = 'user ID';
 
 export const CURRENTLY_VIEWED_GROUP_ID = 'currently viewed group ID';

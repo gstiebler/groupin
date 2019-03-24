@@ -4,6 +4,7 @@ import {
   SET_TOPICS,
   SET_MESSAGES,
   SET_TOKEN,
+  FCM_TOKEN,
   USER_ID,
   CURRENTLY_VIEWED_GROUP_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
@@ -28,6 +29,7 @@ const initialState = {
   ownGroups: [],
   topics: [],
   token: null,
+  fcmToken: null,
   userId: '',
   currentlyViewedGroupId: null,
   currentlyViewedTopicId: null,
@@ -54,6 +56,7 @@ const reducerFunctions = {
   [CURRENTLY_VIEWED_GROUP_ID]: mutationHelper('currentlyViewedGroupId'),
   [CURRENTLY_VIEWED_TOPIC_ID]: mutationHelper('currentlyViewedTopicId'),
   [USER_ID]: mutationHelper('userId'),
+  [FCM_TOKEN]: mutationHelper('fcmToken'),
   [SET_TOKEN]: setToken,
 };
 
