@@ -1,4 +1,4 @@
-package com.mobilernc;
+package com.stiebler.groupin;
 
 import com.facebook.react.ReactActivity;
 
