@@ -1,4 +1,4 @@
-package com.mobilernc;
+package com.stiebler.groupin;
 
 import android.app.Application;
 
