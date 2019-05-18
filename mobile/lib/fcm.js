@@ -20,7 +20,7 @@ export async function init() {
 
   const enabled = await firebase.messaging().hasPermission();
   if (enabled) {
-    console.log('is enabled');
+    console.log('FCM has permission');
     startMessageListener();
   } else {
     try {

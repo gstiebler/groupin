@@ -280,7 +280,7 @@ const Mutation = {
 
       logger.debug(`Mensagem: ${message}`);
       logger.debug(`Usuário: ${user.name}`);
-      pushService.pushMessage('my-channel', pushPayload);
+      pushService.pushMessage(topicId, pushPayload);
 
       return 'OK';
     }
