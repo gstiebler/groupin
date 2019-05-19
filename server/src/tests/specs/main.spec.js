@@ -191,8 +191,9 @@ describe('main', () => {
         setCurrentUser(alice);
         const call0args = pushMessageStub.args[0];
         expect(call0args).to.have.lengthOf(2);
-        expect(call0args[0]).to.equal('my-channel');
-        expect(call0args[1]).to.eql({
+        const [channelId, payload] = call0args;
+        expect(channelId).to.equal(topicFixtures.topic1Group1._id.toHexString());
+        expect(payload).to.eql({
           message: messageText,
           topicId: topicFixtures.topic1Group1._id.toHexString(),
           authorName: alice.name,
