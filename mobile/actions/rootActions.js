@@ -5,6 +5,7 @@ import {
   SET_MESSAGES,FCM_TOKEN,
 } from "../constants/action-types";
 import * as server from '../lib/server';
+const _ = require('lodash');
 
 const NUM_ITEMS_PER_FETCH = 20;
 
@@ -52,7 +53,9 @@ export const leaveGroup = (groupId, navigation) => async (dispatch, getState) =>
   navigation.navigate('GroupList');
 }
 
-export const updateFcmToken = (store, fcmToken) => {
-  await server.updateFcmToken(fcmToken);
+export const updateFcmToken = async (store, fcmToken) => {
   store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
+  if (!_.isEmpty(store.base.token)) {
+    await server.updateFcmToken(fcmToken);
+  }
 }

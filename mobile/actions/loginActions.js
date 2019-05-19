@@ -11,7 +11,7 @@ import { getToken, setToken } from '../lib/auth';
 export const login = (navigation) => async (dispatch, getState) => {
   const { username, password } = getState().login;
   const { token, id, errorMessage } = await server.login({ userName: username, password });
-  baseAuth({ dispatch, navigation, token, id, errorMessage });
+  baseAuth({ dispatch, getState, navigation, token, id, errorMessage });
 }
 
 export const willFocus = (navigation) => async (dispatch, getState) => {
@@ -27,7 +27,7 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
   }
 }
 
-export async function baseAuth({ dispatch, navigation, token, id, errorMessage }) {
+export async function baseAuth({ dispatch, getState, navigation, token, id, errorMessage }) {
   if (errorMessage) {
     Toast.show({
       text: errorMessage,
@@ -37,6 +37,7 @@ export async function baseAuth({ dispatch, navigation, token, id, errorMessage }
     dispatch({ type: SET_TOKEN, payload: { token } });
     dispatch({ type: USER_ID, payload: { userId: id } });
     await setToken(token);
+    server.updateFcmToken(getState().base.fcmToken);
     await fetchOwnGroups(dispatch);
     navigation.navigate('GroupList');
   }
