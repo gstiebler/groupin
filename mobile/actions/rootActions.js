@@ -2,7 +2,7 @@ import {
   ADD_MESSSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
-  SET_MESSAGES,
+  SET_MESSAGES,FCM_TOKEN,
 } from "../constants/action-types";
 import * as server from '../lib/server';
 
@@ -50,4 +50,9 @@ export const leaveGroup = (groupId, navigation) => async (dispatch, getState) =>
   await server.leaveGroup(groupId);
   await fetchOwnGroups(dispatch);
   navigation.navigate('GroupList');
+}
+
+export const updateFcmToken = (store, fcmToken) => {
+  await server.updateFcmToken(fcmToken);
+  store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
 }

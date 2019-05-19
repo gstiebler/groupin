@@ -1,21 +1,23 @@
 import firebase, { RemoteMessage } from 'react-native-firebase';
 import { 
-  FCM_TOKEN,
-} from "../constants/action-types";
+  updateFcmToken,
+} from "../actions/rootActions";
 import store from "../store/rootStore";
 
 let tokenRefreshListener;
 let messagesListener;
 
+const topic = 'groupin_main';
+
 export async function init() {
   const fcmToken = await firebase.messaging().getToken();
   if (fcmToken) {
-      store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
+    updateFcmToken(store, fcmToken);
   } else {
     console.log('no firebase token');
   }    
   tokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
-    store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
+    updateFcmToken(store, fcmToken);
   });
 
   const enabled = await firebase.messaging().hasPermission();
@@ -35,8 +37,13 @@ export async function init() {
 }
 
 function startMessageListener() {
-  firebase.messaging().subscribeToTopic('groupin_main');
+  firebase.messaging().subscribeToTopic(topic);
   messageListener = firebase.messaging().onMessage((message) => {
     console.log('received message: ', message);
   });
+}
+
+export function releaseListeners() {
+  tokenRefreshListener();
+  messagesListener();
 }
