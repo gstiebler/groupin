@@ -299,6 +299,15 @@ describe('main', () => {
       });
 
     });
+  
+    it('updateFcmToken', async () => {
+      setCurrentUser(userFixtures.robert);
+      const fcmToken = 'robertFcmToken345873'
+      const result = await server.updateFcmToken(fcmToken);
+      expect(result).to.equal('OK');
+      const robert = await User.findById(userFixtures.robert._id);
+      expect(robert.fcmToken).to.equal(fcmToken);
+    });
 
   });
 

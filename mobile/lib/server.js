@@ -171,6 +171,18 @@ async function getMessagesOfTopic(topicId, limit, startingId) {
   return res.messagesOfTopic;
 }
 
+async function updateFcmToken(fcmToken) {
+  const query = `
+    mutation {
+      updateFcmToken (
+        fcmToken: "${fcmToken}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.updateFcmToken;
+}
+
 module.exports = {
   register,
   login,
@@ -183,4 +195,5 @@ module.exports = {
   getMessagesOfTopic,
   joinGroup,
   leaveGroup,
+  updateFcmToken,
 };

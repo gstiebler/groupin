@@ -375,6 +375,20 @@ const Mutation = {
       return 'OK';
     }
   },
+  
+  updateFcmToken: {
+    type: GraphQLString,
+    args: {
+      fcmToken: { type: GraphQLString },
+    },
+    async resolve(root, { fcmToken }, { user }) {
+      await User.updateOne(
+        { _id: user._id }, 
+        { $set: { fcmToken } }
+      );
+      return 'OK';
+    }
+  },
 }
 
 module.exports = {
