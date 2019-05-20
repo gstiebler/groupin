@@ -17,6 +17,7 @@ const md5 = require('md5');
 // TODO: test thrown exceptions
 
 let pushMessageStub;
+let subscribeStub;
 
 describe('main', () => {
 
@@ -107,11 +108,13 @@ describe('main', () => {
 
     beforeEach(async () => {
       pushMessageStub = sinon.stub(pushService, 'pushMessage');
+      subscribeStub = sinon.stub(pushService, 'subscribe');
       await initFixtures();
     });
 
     afterEach(() => {
       pushMessageStub.restore();
+      subscribeStub.restore();
     });
 
     it('register', async () => {
@@ -196,6 +199,7 @@ describe('main', () => {
         expect(payload).to.eql({
           message: messageText,
           topicId: topicFixtures.topic1Group1._id.toHexString(),
+          groupId: groupFixtures.firstGroup._id.toHexString(),
           authorName: alice.name,
         });      
         expect(result).to.equal('OK');
@@ -307,6 +311,11 @@ describe('main', () => {
       expect(result).to.equal('OK');
       const robert = await User.findById(userFixtures.robert._id);
       expect(robert.fcmToken).to.equal(fcmToken);
+
+      const call0args = subscribeStub.args[0];
+      const [subscribedFcmToken, firstSubscribedGroupId] = call0args;
+      expect(subscribedFcmToken).to.equal(fcmToken);
+      expect(firstSubscribedGroupId).to.equal(userFixtures.robert.groups[0].toHexString());
     });
 
   });

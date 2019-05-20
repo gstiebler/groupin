@@ -31,6 +31,14 @@ async function pushMessage(fcmTopic, payload) {
   }
 }
 
+async function subscribe(fcmToken, fcmTopic) {
+  const response = await messaging.subscribeToTopic([fcmToken], fcmTopic);
+  // See the MessagingTopicManagementResponse reference documentation
+  // for the contents of response.
+  console.log('Successfully subscribed to topic:', response);
+}
+
 module.exports = { 
   pushMessage,
+  subscribe,
 };

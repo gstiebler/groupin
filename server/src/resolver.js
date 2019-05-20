@@ -275,7 +275,7 @@ const Mutation = {
       const pushPayload = {
         message,
         authorName: userName,
-        groupId: topic.groupId,
+        groupId: topic.groupId.toHexString(),
         topicId,
       };
 
@@ -387,9 +387,16 @@ const Mutation = {
         { _id: user._id }, 
         { $set: { fcmToken } }
       );
+      subscribeToAllGroups(user, fcmToken);
       return 'OK';
     }
   },
+}
+
+async function subscribeToAllGroups(user, fcmToken) {
+  for (const group of user.groups) {
+    pushService.subscribe(fcmToken, group.toString());
+  }
 }
 
 module.exports = {
