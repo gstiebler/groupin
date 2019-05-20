@@ -10,18 +10,12 @@ let messagesListener;
 const topic = 'groupin_main';
 
 export async function init() {
-  const fcmToken = await firebase.messaging().getToken();
-  if (fcmToken) {
-    updateFcmToken(store, fcmToken);
-  } else {
-    console.log('no firebase token');
-  }    
   tokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
     updateFcmToken(store, fcmToken);
   });
 
-  const enabled = await firebase.messaging().hasPermission();
-  if (enabled) {
+  const hasPermission = await firebase.messaging().hasPermission();
+  if (hasPermission) {
     console.log('FCM has permission');
     startMessageListener();
   } else {
@@ -37,7 +31,13 @@ export async function init() {
 }
 
 function startMessageListener() {
-  firebase.messaging().subscribeToTopic(topic);
+  const fcmToken = await firebase.messaging().getToken();
+  if (fcmToken) {
+    updateFcmToken(store, fcmToken);
+  } else {
+    console.log('no firebase token');
+  }    
+  // firebase.messaging().subscribeToTopic(topic);
   messageListener = firebase.messaging().onMessage((message) => {
     console.log('received message: ', message);
   });
