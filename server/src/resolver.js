@@ -18,7 +18,8 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 const pushService = require('./lib/pushService');
 
-const numMaxReturnedItems = 50;
+const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
+
 
 const Query = {
   ownGroups: {
@@ -271,17 +272,21 @@ const Mutation = {
         { $set: { updatedAt: Date.now() } }  
       );
 
+      const groupId = topic.groupId.toHexString();
+
       // send push notification
       const pushPayload = {
         message,
         authorName: userName,
-        groupId: topic.groupId.toHexString(),
+        groupId,
         topicId,
+        type: messageTypes.NEW_MESSAGE,
       };
 
       logger.debug(`Mensagem: ${message}`);
       logger.debug(`Usuário: ${user.name}`);
       pushService.pushMessage(topicId, pushPayload);
+      pushService.pushMessage(groupId, pushPayload);
 
       return 'OK';
     }
@@ -340,6 +345,8 @@ const Mutation = {
       ]);
 
       const pushPayload = {
+        type: messageTypes.NEW_TOPIC,
+        groupId,
         topicName,
       };
       pushService.pushMessage(groupId, pushPayload);
@@ -402,4 +409,5 @@ async function subscribeToAllGroups(user, fcmToken) {
 module.exports = {
   Query,
   Mutation,
+  messageTypes,
 };

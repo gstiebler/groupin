@@ -13,6 +13,8 @@ const _ = require('lodash');
 const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
 const md5 = require('md5');
+const { messageTypes } = require('../../lib/constants');
+
 
 // TODO: test thrown exceptions
 
@@ -194,15 +196,20 @@ describe('main', () => {
         setCurrentUser(alice);
         const call0args = pushMessageStub.args[0];
         expect(call0args).to.have.lengthOf(2);
-        const [channelId, payload] = call0args;
-        expect(channelId).to.equal(topicFixtures.topic1Group1._id.toHexString());
+        const [topicId, payload] = call0args;
+        expect(topicId).to.equal(topicFixtures.topic1Group1._id.toHexString());
         expect(payload).to.eql({
           message: messageText,
           topicId: topicFixtures.topic1Group1._id.toHexString(),
           groupId: groupFixtures.firstGroup._id.toHexString(),
           authorName: alice.name,
+          type: messageTypes.NEW_MESSAGE,
         });      
         expect(result).to.equal('OK');
+
+        const call1args = pushMessageStub.args[1];
+        const [groupId, dummy] = call1args;
+        expect(groupId).to.equal(groupFixtures.firstGroup._id.toHexString());
       });
 
       it('message was added to DB', async () => {
@@ -246,6 +253,8 @@ describe('main', () => {
         expect(call0args).to.have.lengthOf(2);
         expect(call0args[0]).to.equal(groupFixtures.secondGroup._id.toHexString());
         expect(call0args[1]).to.eql({
+          type: messageTypes.NEW_TOPIC,
+          groupId: groupFixtures.secondGroup._id.toHexString(),
           topicName,
         });      
         expect(result).to.equal('OK');
