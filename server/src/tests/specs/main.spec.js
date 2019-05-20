@@ -1,6 +1,6 @@
 const sinon = require('sinon');
 const server = require('../../../../mobile/lib/server');
-const pushService = require('../../pushService');
+const pushService = require('../../lib/pushService');
 const expect = require('chai').expect;
 const { initFixtures } = require('../fixtures');
 const logger = require('../../config/winston');

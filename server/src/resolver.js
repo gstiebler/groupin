@@ -16,7 +16,7 @@ const Message = require('./db/schema/Message');
 
 const ObjectId = require('mongoose').Types.ObjectId;
 
-const pushService = require('./pushService');
+const pushService = require('./lib/pushService');
 
 const numMaxReturnedItems = 50;
 
@@ -275,6 +275,7 @@ const Mutation = {
       const pushPayload = {
         message,
         authorName: userName,
+        groupId: topic.groupId,
         topicId,
       };
 
