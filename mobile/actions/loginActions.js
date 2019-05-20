@@ -18,8 +18,8 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
   try {
     const token = await getToken();
     if (token !== null) {
-      await fetchOwnGroups(dispatch);
       dispatch({ type: SET_TOKEN, payload: { token } });
+      await fetchOwnGroups(dispatch);
       navigation.navigate('GroupList');
     }
   } catch (error) {
