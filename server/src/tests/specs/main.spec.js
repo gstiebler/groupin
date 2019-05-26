@@ -25,7 +25,10 @@ const store = createStore(
   {},
   //, applyMiddleware(thunk)
 );
+
 const rootActions = require('../../../../mobile/actions/rootActions');
+const groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
+
 const dispatch = store.dispatch.bind(store);
 
 
@@ -61,20 +64,14 @@ describe('main', () => {
 
     it('findGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      // TODO: test limit
-      // TODO: test offset
-      const groups = await server.findGroups({ 
-        searchText: 'second', 
-        limit: 20, 
-        startingId: '',
-      });
-      expect(groups).containSubset([
+      await groupsSearchActions.findGroups(dispatch, 'second');
+      expect(store.getState().groupsSearch.groups).eql([
         {
+          id: groupFixtures.secondGroup._id.toHexString(),
           name: 'Second Group',
           imgUrl: 'url2',
         },
       ]);
-      expect(groups).to.have.lengthOf(1);
     });
   
     it('getTopicsOfGroup', async () => {
