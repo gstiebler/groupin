@@ -1,9 +1,9 @@
-import { 
+const { 
   REGISTER_NAME,
   REGISTER_USERNAME,
   REGISTER_PASSWORD,
-} from "../constants/action-types";
-import { mutationHelper, reducerMain } from '../lib/helpers';
+} = require("../constants/action-types");
+const { mutationHelper, reducerMain } = require('../lib/helpers');
 
 const initialState = {
   name: '',
@@ -17,4 +17,4 @@ const reducerFunctions = {
   [REGISTER_PASSWORD]: mutationHelper('password'),
 };
 
-export default reducerMain(initialState, reducerFunctions);
+module.exports = reducerMain(initialState, reducerFunctions);

@@ -243,10 +243,9 @@ const Mutation = {
     type: GraphQLString,
     args: { 
       message: { type: GraphQLString },
-      userName: { type: GraphQLString },
       topicId: { type: GraphQLString },
     },
-    async resolve(root, { message, userName, topicId }, { user }, fieldASTs) {
+    async resolve(root, { message, topicId }, { user }, fieldASTs) {
       // TODO: make calls to DB in parallel when possible
 
       const topic = await Topic.findById(topicId);
@@ -277,7 +276,7 @@ const Mutation = {
       // send push notification
       const pushPayload = {
         message,
-        authorName: userName,
+        authorName: user.name,
         groupId,
         topicId,
         messageId: createdMessage._id.toHexString(),

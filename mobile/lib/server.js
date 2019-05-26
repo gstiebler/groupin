@@ -35,12 +35,11 @@ async function login({ userName, password }) {
   return res.login;
 }
 
-async function sendMessage({message, userName, topicId}) {
+async function sendMessage({message, topicId}) {
   const query = `
     mutation {
       sendMessage (
         message: "${message}",
-        userName: "${userName}"
         topicId: "${topicId}",
       )
     }

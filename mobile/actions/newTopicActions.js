@@ -1,7 +1,11 @@
-import * as server from '../lib/server';
+const server = require('../lib/server');
 
-export const createTopic = (navigation, groupId) => async (dispatch, getState) => {
+const createTopic = (navigation, groupId) => async (dispatch, getState) => {
   const topicName = getState().newTopic.name;
   await server.createTopic({ topicName, groupId });
   navigation.goBack();
 }
+
+module.exports = {
+  createTopic,
+};
