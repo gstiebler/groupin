@@ -12,6 +12,8 @@ const groupIds = require('../fixtures/groupIds');
 const _ = require('lodash');
 const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
+const Topic = require('../../db/schema/Topic');
+const Message = require('../../db/schema/Message');
 const md5 = require('md5');
 const { messageTypes } = require('../../lib/constants');
 
@@ -198,10 +200,12 @@ describe('main', () => {
         expect(call0args).to.have.lengthOf(2);
         const [topicId, payload] = call0args;
         expect(topicId).to.equal(topicFixtures.topic1Group1._id.toHexString());
+        const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });;
         expect(payload).to.eql({
           message: messageText,
           topicId: topicFixtures.topic1Group1._id.toHexString(),
           groupId: groupFixtures.firstGroup._id.toHexString(),
+          messageId: createdMessage._id.toHexString(),
           authorName: alice.name,
           type: messageTypes.NEW_MESSAGE,
         });      
@@ -252,8 +256,10 @@ describe('main', () => {
         const call0args = pushMessageStub.args[0];
         expect(call0args).to.have.lengthOf(2);
         expect(call0args[0]).to.equal(groupFixtures.secondGroup._id.toHexString());
+        const newTopic = await Topic.findOne({}, {}, { sort: { _id: -1 } });
         expect(call0args[1]).to.eql({
           type: messageTypes.NEW_TOPIC,
+          topicId: newTopic._id.toHexString(),
           groupId: groupFixtures.secondGroup._id.toHexString(),
           topicName,
         });      

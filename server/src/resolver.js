@@ -254,7 +254,7 @@ const Mutation = {
         throw new Error(`User does not participate in the group`);
       }
 
-      await Message.create({
+      const createdMessage = await Message.create({
         text: message,
         user: user._id,
         topic: topicId,
@@ -280,6 +280,7 @@ const Mutation = {
         authorName: userName,
         groupId,
         topicId,
+        messageId: createdMessage._id.toHexString(),
         type: messageTypes.NEW_MESSAGE,
       };
 
@@ -339,7 +340,7 @@ const Mutation = {
         },
       );
 
-      await Promise.all([
+      const [ createdTopic, dummy ] = await Promise.all([
         topicCreatePromise,
         groupUpdatePromise,
       ]);
@@ -348,6 +349,7 @@ const Mutation = {
         type: messageTypes.NEW_TOPIC,
         groupId,
         topicName,
+        topicId: createdTopic._id.toHexString(),
       };
       pushService.pushMessage(groupId, pushPayload);
       return 'OK';
