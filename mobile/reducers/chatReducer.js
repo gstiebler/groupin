@@ -14,4 +14,4 @@ const reducerFunctions = {
   [CHAT_TOPIC_ID]: mutationHelper('topicId'),
 };
 
-module.exports.default = reducerMain(initialState, reducerFunctions);
+module.exports = reducerMain(initialState, reducerFunctions);

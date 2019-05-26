@@ -12,4 +12,4 @@ const reducerFunctions = {
   [NEW_TOPIC_NAME]: mutationHelper('name'),
 };
 
-module.exports.default = reducerMain(initialState, reducerFunctions);
+module.exports = reducerMain(initialState, reducerFunctions);

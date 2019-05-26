@@ -17,13 +17,16 @@ const Message = require('../../db/schema/Message');
 const md5 = require('md5');
 const { messageTypes } = require('../../lib/constants');
 
-const rootReducer = require('../../../../mobile/reducers/rootReducer').default;
+const rootReducer = require('../../../../mobile/reducers/rootReducer');
 const { createStore, applyMiddleware } = require("redux");
 // const thunk = require('redux-thunk');
 const store = createStore(
-  rootReducer
+  rootReducer,
+  {},
   //, applyMiddleware(thunk)
 );
+const rootActions = require('../../../../mobile/actions/rootActions');
+const dispatch = store.dispatch.bind(store);
 
 
 // TODO: test thrown exceptions
@@ -41,19 +44,19 @@ describe('main', () => {
 
     it('getOwnGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      const groups = await server.getOwnGroups();
-      expect(groups).containSubset([
+      await rootActions.fetchOwnGroups(dispatch);
+      expect(store.getState().base.ownGroups).eql([
         {
+          id: groupFixtures.firstGroup._id.toHexString(),
           name: 'First Group',
           imgUrl: 'url1',
         },
         {
+          id: groupFixtures.secondGroup._id.toHexString(),
           name: 'Second Group',
           imgUrl: 'url2',
         },
       ]);
-      // test order
-      expect(_.map(groups, 'name')).to.eql([ 'First Group', 'Second Group']);
     });
 
     it('findGroups', async () => {

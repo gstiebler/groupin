@@ -17,4 +17,4 @@ const reducerFunctions = {
   [REGISTER_PASSWORD]: mutationHelper('password'),
 };
 
-module.exports.default = reducerMain(initialState, reducerFunctions);
+module.exports = reducerMain(initialState, reducerFunctions);

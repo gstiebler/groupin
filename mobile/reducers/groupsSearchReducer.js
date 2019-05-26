@@ -15,4 +15,4 @@ const reducerFunctions = {
   // TODO: merge groups option
 };
 
-module.exports.default = reducerMain(initialState, reducerFunctions);
+module.exports = reducerMain(initialState, reducerFunctions);

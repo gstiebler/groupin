@@ -59,4 +59,4 @@ const reducerFunctions = {
   [SET_TOKEN]: setToken,
 };
 
-module.exports.default = reducerMain(initialState, reducerFunctions);
+module.exports = reducerMain(initialState, reducerFunctions);

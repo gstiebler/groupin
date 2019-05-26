@@ -15,4 +15,4 @@ const rootReducer = combineReducers({
   newTopic,
 });
 
-module.exports.default = rootReducer;
+module.exports = rootReducer;
