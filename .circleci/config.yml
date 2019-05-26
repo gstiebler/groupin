@@ -33,6 +33,7 @@ jobs:
       - run:
           name: Running Tests
           command: |
+            cp ./mobile/config/env.js.example ./mobile/env.js
             cd server
             npm test
 
