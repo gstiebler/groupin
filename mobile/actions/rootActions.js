@@ -55,7 +55,7 @@ const leaveGroup = (groupId, navigation) => async (dispatch, getState) => {
 
 const updateFcmToken = async (store, fcmToken) => {
   store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
-  if (!_.isEmpty(store.base.token)) {
+  if (!_.isEmpty(store.getState().base.token)) {
     await server.updateFcmToken(fcmToken);
   }
 }

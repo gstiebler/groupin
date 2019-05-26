@@ -1,7 +1,7 @@
 const { createStore, applyMiddleware } = require("redux");
 const rootReducer = require("../reducers/rootReducer");
 const { composeWithDevTools } = require('remote-redux-devtools');
-const thunk = require('redux-thunk');
+const thunk = require('redux-thunk').default;
 
 const store = createStore(
   rootReducer, 
@@ -11,9 +11,9 @@ const store = createStore(
 
 if (module.hot) {
   module.hot.accept(() => {
-    const nextRootReducer = require('../reducers/rootReducer').default;
+    const nextRootReducer = require('../reducers/rootReducer');
     store.replaceReducer(nextRootReducer);
   });
 }
 
-module.exports.default = store;
+module.exports = store;
