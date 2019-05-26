@@ -42,6 +42,7 @@ const Query = {
         .find({ _id: { $in: user.groups } })
         .sort({ updatedAt: -1 })
         .lean();
+      subscribeToAllGroups(user, user.fcmToken);
       return groups.map(group => ({ ...group, id: group._id }));
     }
   },
