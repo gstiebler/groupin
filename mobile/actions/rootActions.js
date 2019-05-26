@@ -31,8 +31,8 @@ async function getTopicsOfGroup(dispatch, groupId) {
 }
 
 async function getTopicsOfCurrentGroup(store) {
-  if (!store.currentlyViewedGroupId) { return }
-  const topics = await server.getTopicsOfGroup(store.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH, '');
+  if (!store.getState().base.currentlyViewedGroupId) { return }
+  const topics = await server.getTopicsOfGroup(store.getState().base.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH, '');
   store.dispatch({ type: SET_TOPICS, payload: { topics } });
 }
 

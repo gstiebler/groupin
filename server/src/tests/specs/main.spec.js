@@ -76,19 +76,40 @@ describe('main', () => {
   
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);
-      const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
-      expect(topics).containSubset([
+      await rootActions.getTopicsOfGroup(dispatch, groupFixtures.firstGroup._id.toHexString());
+      expect(store.getState().base.topics).eql([
         {
+          id: topicFixtures.topic1Group1._id.toHexString(),
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
         },
         {
+          id: topicFixtures.topic2Group1._id.toHexString(),
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
         },
       ]);
-      // test order
-      expect(_.map(topics, 'name')).to.eql([ 'Topic 1 Group 1', 'Topic 2 Group 1']);
+    });
+  
+    it('getTopicsOfCurrentGroup', async () => {
+      setCurrentUser(userFixtures.robert);
+      store.dispatch({ 
+        type: 'currently viewed group ID', 
+        payload: { currentlyViewedGroupId: groupFixtures.firstGroup._id.toHexString() } }
+      );
+      await rootActions.getTopicsOfCurrentGroup(store);
+      expect(store.getState().base.topics).eql([
+        {
+          id: topicFixtures.topic1Group1._id.toHexString(),
+          name: 'Topic 1 Group 1',
+          imgUrl: 't1g1_url',
+        },
+        {
+          id: topicFixtures.topic2Group1._id.toHexString(),
+          name: 'Topic 2 Group 1',
+          imgUrl: 't2g1_url',
+        },
+      ]);
     });
   
     it('getMessagesOfTopic', async () => {
@@ -313,7 +334,9 @@ describe('main', () => {
       it('User already joined the group', async () => {
         setCurrentUser(userFixtures.alice);
         const groupId = groupFixtures.firstGroup._id.toHexString();
-        await expect(server.joinGroup(groupId)).to.be.rejectedWith('User already participate in the group');
+        let navigatePath;
+        const navigation = { navigate: (path) => navigatePath = path };
+        await expect(groupsSearchActions.joinGroup(dispatch, navigation, groupId)).to.be.rejectedWith('User already participate in the group');
       });
 
       it('joined group', async () => {
