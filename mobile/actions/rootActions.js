@@ -15,7 +15,6 @@ const sendMessages = (messages) => async (dispatch, getState) => {
   const firstMessage = messages[0];
   await server.sendMessage({
     message: firstMessage.text,
-    userName: 'teste',
     topicId,
   });
   dispatch({ type: ADD_MESSSAGES, payload: { messages } });

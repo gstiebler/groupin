@@ -28,8 +28,10 @@ const store = createStore(
 
 const rootActions = require('../../../../mobile/actions/rootActions');
 const groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
+const newTopicActions = require('../../../../mobile/actions/newTopicActions');
 
 const dispatch = store.dispatch.bind(store);
+const getState = store.getState.bind(store);
 
 
 // TODO: test thrown exceptions
@@ -113,26 +115,32 @@ describe('main', () => {
     });
   
     it('getMessagesOfTopic', async () => {
+      const localStore = createStore(rootReducer, {});
+      const localDispatch = localStore.dispatch.bind(localStore);
       setCurrentUser(userFixtures.robert);
-      const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');
-      expect(messages).containSubset([
+      await rootActions.getMessagesOfTopic(localDispatch, topicFixtures.topic1Group1._id.toHexString());
+      expect(localStore.getState().base.messages).eql([
         {
           _id: messageFixtures.message2topic1._id.toHexString(),
+          createdAt: Date.parse('2018-10-02'),
           text: 'Topic 1 Group 1 Robert',
           user: {
+            _id: userFixtures.robert._id.toHexString(),
             name: 'Robert',
             avatar: 'robert_url',
           },
         },
         {
+          _id: messageFixtures.message1topic1._id.toHexString(),
+          createdAt: Date.parse('2018-10-01'),
           text: 'Topic 1 Group 1 Alice',
           user: {
+            _id: userFixtures.alice._id.toHexString(),
             name: 'Alice',
             avatar: 'alice_url',
           },
         },
       ]);
-      expect(_.map(messages, 'text')).to.eql([ 'Topic 1 Group 1 Robert', 'Topic 1 Group 1 Alice']);
     });
 
     it('getMessagesOfCurrentTopic', async () => {
@@ -246,18 +254,22 @@ describe('main', () => {
     describe('sendMessage', () => {
       const alice = userFixtures.alice;
       const messageText = 'new message 1 from Alice';
-      let result;
+      const topicId = topicFixtures.topic1Group1._id.toHexString();
+
+      const localStore = createStore(rootReducer, {});
+      const localDispatch = localStore.dispatch.bind(localStore);
+      const localGetState = localStore.getState.bind(localStore);
 
       beforeEach(async () => {
-        result = await server.sendMessage({
-          message: messageText, 
-          userName: alice.name, 
-          topicId: topicFixtures.topic1Group1._id.toHexString(),
+        setCurrentUser(alice);
+        localDispatch({ 
+          type: 'chat topic ID', 
+          payload: { topicId },
         });
+        await rootActions.sendMessages([{ text: messageText }])(localDispatch, localGetState);
       });
 
       it('push', async () => {
-        setCurrentUser(alice);
         const call0args = pushMessageStub.args[0];
         expect(call0args).to.have.lengthOf(2);
         const [topicId, payload] = call0args;
@@ -271,15 +283,15 @@ describe('main', () => {
           authorName: alice.name,
           type: messageTypes.NEW_MESSAGE,
         });      
-        expect(result).to.equal('OK');
 
         const call1args = pushMessageStub.args[1];
         const [groupId, dummy] = call1args;
         expect(groupId).to.equal(groupFixtures.firstGroup._id.toHexString());
+
+        expect(localGetState().base.messages).to.have.lengthOf(2);
       });
 
       it('message was added to DB', async () => {
-        setCurrentUser(alice);
         const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');;
         expect(messages).to.have.lengthOf(3);
         // the most recent message
@@ -292,7 +304,6 @@ describe('main', () => {
       });
 
       it('topic sort order', async () => {
-        setCurrentUser(alice);
         const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
         expect(_.map(topics, 'name')).to.eql([ 'Topic 1 Group 1', 'Topic 2 Group 1']);
       });
@@ -300,18 +311,23 @@ describe('main', () => {
     });
   
     describe('createTopic', async () => {
-      let result;
       const topicName = 'new topic foca';
 
+      const localStore = createStore(rootReducer, {});
+      const localDispatch = localStore.dispatch.bind(localStore);
+      const localGetState = localStore.getState.bind(localStore);
       before(() => {
         setCurrentUser(userFixtures.robert);
       });
       
       beforeEach(async () => {
-        result = await server.createTopic({
-          topicName,
-          groupId: groupFixtures.secondGroup._id.toHexString(),
+        let navigation = { goBack: () => {} };
+        const groupId = groupFixtures.secondGroup._id.toHexString();
+        localDispatch({ 
+          type: 'new topic name', 
+          payload: { name: topicName },
         });
+        await newTopicActions.createTopic(navigation, groupId)(localDispatch, localGetState);
       });
 
       it('push', async () => {
@@ -324,8 +340,7 @@ describe('main', () => {
           topicId: newTopic._id.toHexString(),
           groupId: groupFixtures.secondGroup._id.toHexString(),
           topicName,
-        });      
-        expect(result).to.equal('OK');
+        });
       });
 
       it('topic created on DB', async () => {
@@ -354,12 +369,28 @@ describe('main', () => {
     });
   
     it('leaveGroup', async () => {
+      const localStore = createStore(rootReducer, {});
+      const localDispatch = localStore.dispatch.bind(localStore);
+      const localGetState = localStore.getState.bind(localStore);
+
       setCurrentUser(userFixtures.robert);
-      const result = await server.leaveGroup(groupIds.firstGroup.toHexString());
-      expect(result).to.equal('OK');
+      const groupId = groupIds.firstGroup.toHexString();
+      await rootActions.leaveGroup(groupId, { navigate() {} })(localDispatch, localGetState);
       const groups = await server.getOwnGroups();
-      expect(groups).to.have.lengthOf(1);
-      expect(groups[0].name).to.equal('Second Group');
+      expect(groups).to.eql([
+        {
+          id: groupFixtures.secondGroup._id.toHexString(),
+          imgUrl: 'url2',
+          name: 'Second Group',
+        }
+      ]);
+      expect(localGetState().base.ownGroups).to.eql([
+        {
+          id: groupFixtures.secondGroup._id.toHexString(),
+          imgUrl: 'url2',
+          name: 'Second Group',
+        }
+      ]);
     });
 
     describe('joinGroup', () => {
