@@ -9,6 +9,7 @@ let pushService = {
       credential: admin.credential.cert(serviceAccount),
       databaseURL: "https://groupin-4700b.firebaseio.com"
     };
+    config.private_key = process.env.FIREBASE_PRIVATE_KEY;
     admin.initializeApp(config);
     
     this.messaging = admin.messaging();
