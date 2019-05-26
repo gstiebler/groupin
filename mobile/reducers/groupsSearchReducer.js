@@ -1,8 +1,8 @@
-import { 
+const { 
   GROUPS_SEARCH_TEXT,
   GROUPS_SEARCH_ITEMS,
-} from "../constants/action-types";
-import { mutationHelper, reducerMain } from '../lib/helpers';
+} = require("../constants/action-types");
+const { mutationHelper, reducerMain } = require('../lib/helpers');
 
 const initialState = {
   searchText: '',
@@ -15,4 +15,4 @@ const reducerFunctions = {
   // TODO: merge groups option
 };
 
-export default reducerMain(initialState, reducerFunctions);
+module.exports.default = reducerMain(initialState, reducerFunctions);

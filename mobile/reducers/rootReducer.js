@@ -1,10 +1,10 @@
-import { combineReducers } from 'redux';
-import base from './baseReducer';
-import register from './registerReducer';
-import login from './loginReducer';
-import groupsSearch from './groupsSearchReducer';
-import chat from './chatReducer';
-import newTopic from './newTopicReducer';
+const { combineReducers } = require('redux');
+const base = require('./baseReducer');
+const register = require('./registerReducer');
+const login = require('./loginReducer');
+const groupsSearch = require('./groupsSearchReducer');
+const chat = require('./chatReducer');
+const newTopic = require('./newTopicReducer');
 
 const rootReducer = combineReducers({
   base,
@@ -15,4 +15,4 @@ const rootReducer = combineReducers({
   newTopic,
 });
 
-export default rootReducer;
+module.exports.default = rootReducer;

@@ -17,6 +17,14 @@ const Message = require('../../db/schema/Message');
 const md5 = require('md5');
 const { messageTypes } = require('../../lib/constants');
 
+const rootReducer = require('../../../../mobile/reducers/rootReducer').default;
+const { createStore, applyMiddleware } = require("redux");
+// const thunk = require('redux-thunk');
+const store = createStore(
+  rootReducer
+  //, applyMiddleware(thunk)
+);
+
 
 // TODO: test thrown exceptions
 

@@ -1,8 +1,8 @@
-import { 
+const { 
   NEW_TOPIC_NAME,
-} from "../constants/action-types";
+} = require("../constants/action-types");
 
-import { mutationHelper, reducerMain } from '../lib/helpers';
+const { mutationHelper, reducerMain } = require('../lib/helpers');
 
 const initialState = {
   name: '',
@@ -12,4 +12,4 @@ const reducerFunctions = {
   [NEW_TOPIC_NAME]: mutationHelper('name'),
 };
 
-export default reducerMain(initialState, reducerFunctions);
+module.exports.default = reducerMain(initialState, reducerFunctions);

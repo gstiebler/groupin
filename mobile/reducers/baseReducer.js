@@ -1,4 +1,4 @@
-import { 
+const { 
   ADD_MESSSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
@@ -8,10 +8,9 @@ import {
   USER_ID,
   CURRENTLY_VIEWED_GROUP_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
-} from "../constants/action-types";
-import mergeMessages from '../lib/mergeMessages';
-import { mutationHelper, reducerMain } from '../lib/helpers';
-import * as graphqlConect from '../lib/graphqlConnect';
+} = require("../constants/action-types");
+const { mutationHelper, reducerMain } = require('../lib/helpers');
+const graphqlConect = require('../lib/graphqlConnect');
 
 const initialState = {
   messages: [
@@ -37,7 +36,7 @@ const initialState = {
 
 const addMessages = (state, { messages }) => ({
   ...state, 
-  messages: mergeMessages(state.messages, messages),
+  messages: [...messages, state.messages],
 });
 
 const setToken = (state, { token }) => {
@@ -60,4 +59,4 @@ const reducerFunctions = {
   [SET_TOKEN]: setToken,
 };
 
-export default reducerMain(initialState, reducerFunctions);
+module.exports.default = reducerMain(initialState, reducerFunctions);

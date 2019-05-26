@@ -1,8 +1,8 @@
-import { 
+const { 
   CHAT_TITLE,
   CHAT_TOPIC_ID,
-} from "../constants/action-types";
-import { mutationHelper, reducerMain } from '../lib/helpers';
+} = require("../constants/action-types");
+const { mutationHelper, reducerMain } = require('../lib/helpers');
 
 const initialState = {
   title: 'Chat',
@@ -14,4 +14,4 @@ const reducerFunctions = {
   [CHAT_TOPIC_ID]: mutationHelper('topicId'),
 };
 
-export default reducerMain(initialState, reducerFunctions);
+module.exports.default = reducerMain(initialState, reducerFunctions);
