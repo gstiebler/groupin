@@ -10,7 +10,6 @@
     "axios": "^0.18.0",
     "immutable": "3",
     "native-base": "^2.12.1",
-    "pusher": "2",
     "react": "16.8.3",
     "react-native": "0.59.1",
     "react-native-elements": "0.19",

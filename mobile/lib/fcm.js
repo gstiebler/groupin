@@ -4,6 +4,11 @@ import {
 } from "../actions/rootActions";
 import store from "../store/rootStore";
 
+import { 
+  getTopicsOfCurrentGroup,
+  getMessagesOfCurrentTopic,
+} from '../actions/rootActions';
+
 let tokenRefreshListener;
 let messagesListener;
 
@@ -40,6 +45,8 @@ async function startMessageListener() {
   // firebase.messaging().subscribeToTopic(topic);
   messageListener = firebase.messaging().onMessage((message) => {
     console.log('received message: ', message);
+    getTopicsOfCurrentGroup(store);
+    getMessagesOfCurrentTopic(store);
   });
 }
 
