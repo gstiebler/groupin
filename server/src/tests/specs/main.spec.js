@@ -134,6 +134,39 @@ describe('main', () => {
       ]);
       expect(_.map(messages, 'text')).to.eql([ 'Topic 1 Group 1 Robert', 'Topic 1 Group 1 Alice']);
     });
+
+    it('getMessagesOfCurrentTopic', async () => {
+      const localStore = createStore(rootReducer, {});
+      setCurrentUser(userFixtures.robert);
+      localStore.dispatch({ 
+        type: 'currently viewed topic ID', 
+        payload: { currentlyViewedTopicId: topicFixtures.topic1Group1._id.toHexString() } }
+      );
+      await rootActions.getMessagesOfCurrentTopic(localStore);
+      expect(localStore.getState().base.messages).eql([
+        {
+          _id: messageFixtures.message2topic1._id.toHexString(),
+          createdAt: Date.parse('2018-10-02'),
+          text: 'Topic 1 Group 1 Robert',
+          user: {
+            _id: userFixtures.robert._id.toHexString(),
+            name: 'Robert',
+            avatar: 'robert_url',
+          },
+        },
+        {
+          _id: messageFixtures.message1topic1._id.toHexString(),
+          createdAt: Date.parse('2018-10-01'),
+          text: 'Topic 1 Group 1 Alice',
+          user: {
+            _id: userFixtures.alice._id.toHexString(),
+            name: 'Alice',
+            avatar: 'alice_url',
+          },
+        },
+      ]);
+    });
+  
     
   });
 

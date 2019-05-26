@@ -2,7 +2,8 @@ const {
   ADD_MESSSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
-  SET_MESSAGES,FCM_TOKEN,
+  SET_MESSAGES,
+  FCM_TOKEN,
 } = require("../constants/action-types");
 const server = require('../lib/server');
 const _ = require('lodash');
@@ -42,8 +43,8 @@ async function getMessagesOfTopic(dispatch, topicId) {
 }
 
 async function getMessagesOfCurrentTopic(store) {
-  if (!store.currentlyViewedTopicId) { return }
-  const messages = await server.getMessagesOfTopic(store.currentlyViewedTopicId, NUM_ITEMS_PER_FETCH, '');
+  if (!store.getState().base.currentlyViewedTopicId) { return }
+  const messages = await server.getMessagesOfTopic(store.getState().base.currentlyViewedTopicId, NUM_ITEMS_PER_FETCH, '');
   store.dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
 
