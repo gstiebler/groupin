@@ -30,7 +30,7 @@ export async function init() {
 
 }
 
-function startMessageListener() {
+async function startMessageListener() {
   const fcmToken = await firebase.messaging().getToken();
   if (fcmToken) {
     updateFcmToken(store, fcmToken);
