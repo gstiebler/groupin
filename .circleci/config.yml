@@ -34,6 +34,7 @@ jobs:
           name: Running Tests
           command: |
             cp ./mobile/config/env.js.example ./mobile/env.js
+            cp ./mobile/config/firebase_android_config.json.example ./server/firebase_android_config.json
             cd server
             npm test
 
