@@ -3,7 +3,9 @@ require('dotenv').config();
 const logger = require('./src/config/winston');
 const mongooseConfig = require('./src/config/mongoose');
 const graphqlMain = require('./src/graphqlMain');
+let pushService = require('./src/lib/pushService');
 
+pushService.init();
 let mongooseInitPromise = mongooseConfig.init();
 
 async function main(event) {
