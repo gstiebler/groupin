@@ -4,15 +4,10 @@ import {
 } from "../actions/rootActions";
 import store from "../store/rootStore";
 
-import { 
-  getTopicsOfCurrentGroup,
-  getMessagesOfCurrentTopic,
-} from '../actions/rootActions';
+import messageReceiver from './messageReceiver';
 
 let tokenRefreshListener;
 let messagesListener;
-
-const topic = 'groupin_main';
 
 export async function init() {
   tokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
@@ -45,8 +40,7 @@ async function startMessageListener() {
   // firebase.messaging().subscribeToTopic(topic);
   messageListener = firebase.messaging().onMessage((message) => {
     console.log('received message: ', message);
-    getTopicsOfCurrentGroup(store);
-    getMessagesOfCurrentTopic(store);
+    messageReceiver.messageReceived(store, message);
   });
 }
 
