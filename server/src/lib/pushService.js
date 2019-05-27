@@ -4,12 +4,14 @@ const logger = require('../config/winston');
 let pushService = {
 
   init() {
-    const serviceAccount = require("../../firebase_android_config.json");
+    const serviceAccount = {
+      ...require("../../firebase_android_config.json"),
+      private_key: JSON.parse(`"${process.env.FIREBASE_PRIVATE_KEY}"`),
+    };
     const config = {
       credential: admin.credential.cert(serviceAccount),
       databaseURL: "https://groupin-4700b.firebaseio.com"
     };
-    config.private_key = process.env.FIREBASE_PRIVATE_KEY;
     admin.initializeApp(config);
     
     this.messaging = admin.messaging();
