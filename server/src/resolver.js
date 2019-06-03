@@ -4,6 +4,7 @@ const {
   GraphQLObjectType,
   GraphQLList,
 } = require('graphql');
+const Promise = require('bluebird');
 const logger = require('./config/winston');
 const _ = require('lodash');
 const md5 = require('md5');
@@ -286,8 +287,10 @@ const Mutation = {
 
       logger.debug(`Mensagem: ${message}`);
       logger.debug(`Usuário: ${user.name}`);
-      pushService.pushMessage(topicId, pushPayload);
-      pushService.pushMessage(groupId, pushPayload);
+      await Promise.all([
+        pushService.pushMessage(topicId, pushPayload),
+        pushService.pushMessage(groupId, pushPayload),
+      ]);
 
       return 'OK';
     }
@@ -351,7 +354,7 @@ const Mutation = {
         topicName,
         topicId: createdTopic._id.toHexString(),
       };
-      pushService.pushMessage(groupId, pushPayload);
+      await pushService.pushMessage(groupId, pushPayload);
       return 'OK';
     }
   },
@@ -370,7 +373,7 @@ const Mutation = {
       await user.save();
 
       // subscribe user to the group on FCM
-      pushService.subscribe(user.fcmToken, groupId);
+      await pushService.subscribe(user.fcmToken, groupId);
 
       return 'OK';
     }
@@ -400,16 +403,14 @@ const Mutation = {
         { _id: user._id }, 
         { $set: { fcmToken } }
       );
-      subscribeToAllGroups(user, fcmToken);
+      await subscribeToAllGroups(user, fcmToken);
       return 'OK';
     }
   },
 }
 
-async function subscribeToAllGroups(user, fcmToken) {
-  for (const group of user.groups) {
-    pushService.subscribe(fcmToken, group.toString());
-  }
+function subscribeToAllGroups(user, fcmToken) {
+  return Promise.map(user.groups, group => pushService.subscribe(fcmToken, group.toString()));
 }
 
 module.exports = {

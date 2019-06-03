@@ -45,6 +45,11 @@ describe('main', () => {
 
     before(async () => {
       await initFixtures();
+      subscribeStub = sinon.stub(pushService, 'subscribe');
+    });
+
+    afterEach(() => {
+      subscribeStub.restore();
     });
 
     it('getOwnGroups', async () => {
