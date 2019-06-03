@@ -410,6 +410,10 @@ describe('main', () => {
         const groups = await server.getOwnGroups();
         expect(groups).to.have.lengthOf(2);
         expect(groups[1].name).to.equal('Second Group');
+
+        const call0args = subscribeStub.args[0];
+        const [subscribedFcmToken, subscribedGroup] = call0args;
+        expect(subscribedGroup).to.equal(groupId);
       });
 
     });

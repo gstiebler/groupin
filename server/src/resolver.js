@@ -368,6 +368,10 @@ const Mutation = {
       }
       user.groups.push(ObjectId(groupId));
       await user.save();
+
+      // subscribe user to the group on FCM
+      pushService.subscribe(user.fcmToken, groupId);
+
       return 'OK';
     }
   },
