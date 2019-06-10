@@ -17,13 +17,13 @@ let pushService = {
     this.messaging = admin.messaging();
   },
 
-  async pushMessage(fcmTopic, payload) {
+  async pushMessage(fcmTopic, { payload, title, body }) {
     const message = {
       data: payload,
-      /*notification: {
-        title: 'Teste título',
-        body: 'Corpo da notif',
-      },*/
+      notification: {
+        title,
+        body,
+      },
       // token: registrationToken,
       topic: fcmTopic,
     };

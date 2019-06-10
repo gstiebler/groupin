@@ -8,6 +8,7 @@ import messageReceiver from './messageReceiver';
 
 let tokenRefreshListener;
 let messagesListener;
+let notificationOpenedListener;
 
 export async function init() {
   tokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
@@ -36,15 +37,26 @@ async function startMessageListener() {
     updateFcmToken(store, fcmToken);
   } else {
     console.log('no firebase token');
-  }    
+  }   
+
   // firebase.messaging().subscribeToTopic(topic);
-  messageListener = firebase.messaging().onMessage((message) => {
+  messagesListener = firebase.messaging().onMessage((message) => {
     console.log('received message: ', message);
     messageReceiver.messageReceived(store, message);
   });
+
+  notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
+    messageReceiver.messageReceived(store, notificationOpen);
+  });
+
+  firebase.notifications().getInitialNotification()
+    .then(notificationOpen => {
+      messageReceiver.onInitialNotification(store, notificationOpen);
+    });
 }
 
 export function releaseListeners() {
   tokenRefreshListener();
   messagesListener();
+  notificationOpenedListener();
 }

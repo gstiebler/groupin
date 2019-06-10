@@ -277,16 +277,20 @@ describe('main', () => {
       it('push', async () => {
         const call0args = pushMessageStub.args[0];
         expect(call0args).to.have.lengthOf(2);
-        const [topicId, payload] = call0args;
+        const [topicId, pushParams] = call0args;
         expect(topicId).to.equal(topicFixtures.topic1Group1._id.toHexString());
         const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });;
-        expect(payload).to.eql({
-          message: messageText,
-          topicId: topicFixtures.topic1Group1._id.toHexString(),
-          groupId: groupFixtures.firstGroup._id.toHexString(),
-          messageId: createdMessage._id.toHexString(),
-          authorName: alice.name,
-          type: messageTypes.NEW_MESSAGE,
+        expect(pushParams).to.eql({
+          payload: {
+            message: messageText,
+            topicId: topicFixtures.topic1Group1._id.toHexString(),
+            groupId: groupFixtures.firstGroup._id.toHexString(),
+            messageId: createdMessage._id.toHexString(),
+            authorName: alice.name,
+            type: messageTypes.NEW_MESSAGE,
+          },
+          body: messageText,
+          title: topicFixtures.topic1Group1._id.toHexString(),
         });      
 
         const call1args = pushMessageStub.args[1];
@@ -336,15 +340,18 @@ describe('main', () => {
       });
 
       it('push', async () => {
-        const call0args = pushMessageStub.args[0];
-        expect(call0args).to.have.lengthOf(2);
-        expect(call0args[0]).to.equal(groupFixtures.secondGroup._id.toHexString());
+        const [topic, pushParams] = pushMessageStub.args[0];
+        expect(topic).to.equal(groupFixtures.secondGroup._id.toHexString());
         const newTopic = await Topic.findOne({}, {}, { sort: { _id: -1 } });
-        expect(call0args[1]).to.eql({
-          type: messageTypes.NEW_TOPIC,
-          topicId: newTopic._id.toHexString(),
-          groupId: groupFixtures.secondGroup._id.toHexString(),
-          topicName,
+        expect(pushParams).to.eql({
+          payload: {
+            type: messageTypes.NEW_TOPIC,
+            topicId: newTopic._id.toHexString(),
+            groupId: groupFixtures.secondGroup._id.toHexString(),
+            topicName,
+          },
+          body: topicName,
+          title: 'Novo tópico',
         });
       });
 

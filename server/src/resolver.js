@@ -287,9 +287,14 @@ const Mutation = {
 
       logger.debug(`Mensagem: ${message}`);
       logger.debug(`Usuário: ${user.name}`);
+      const pushParams = {
+        payload: pushPayload,
+        title: topicId,
+        body: message.slice(0, 30),
+      };
       await Promise.all([
-        pushService.pushMessage(topicId, pushPayload),
-        pushService.pushMessage(groupId, pushPayload),
+        pushService.pushMessage(topicId, pushParams),
+        pushService.pushMessage(groupId, pushParams),
       ]);
 
       return 'OK';
@@ -354,7 +359,12 @@ const Mutation = {
         topicName,
         topicId: createdTopic._id.toHexString(),
       };
-      await pushService.pushMessage(groupId, pushPayload);
+      const pushParams = {
+        payload: pushPayload,
+        title: 'Novo tópico',
+        body: topicName.slice(0, 50),
+      };
+      await pushService.pushMessage(groupId, pushParams);
       return 'OK';
     }
   },
