@@ -8,5 +8,6 @@ target 'GroupIn' do
   # Pods for GroupIn# Required by RNFirebase
   pod 'Firebase/Core', '~> 5.15.0'
   pod 'Firebase/Messaging', '~> 5.15.0'
+  pod 'Firebase/Auth', '~> 5.15.0'
 
 end
