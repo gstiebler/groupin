@@ -1,13 +1,6 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { StyleSheet } from 'react-native';
-import { FormLabel, FormInput, Button } from 'react-native-elements'
-
-const styles = StyleSheet.create({
-  basic: {
-    margin: 20,
-  },
-});
+import { SafeAreaView, StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import styles from '../Style';
 
 const LoginComponent = ({ 
     navigation,
@@ -22,29 +15,29 @@ const LoginComponent = ({
   navigation.addListener('willFocus', () => willFocus(navigation));
   
   return (
-    <SafeAreaView>
-      <FormLabel>Usuário</FormLabel>
-      <FormInput 
-        value={username} 
-        onChangeText={changeUsername} 
+    <SafeAreaView style={styles.container}>
+      <Text style={ styles.title1 }>Login</Text>
+      <TextInput
+        style={styles.textInput}
         autoCapitalize="none"
+        placeholder="E-mail"
+        onChangeText={changeUsername}
+        value={username}
       />
-      <FormLabel>Senha</FormLabel>
-      <FormInput 
-        value={password} 
-        onChangeText={changePassword} 
-        secureTextEntry={true}
+      <TextInput
+        secureTextEntry
+        style={styles.textInput}
+        autoCapitalize="none"
+        placeholder="Senha"
+        onChangeText={changePassword}
+        value={password}
       />
-      <Button 
-        title='Login' 
-        style={styles.basic}
-        onPress={onLogin.bind(null, navigation)}
-      />
-      <Button 
-        title='Fazer cadastro' 
-        style={styles.basic}
-        onPress={onShowRegister.bind(null, navigation)}
-      />
+      <Button title="Login" color={ styles.title1.color } onPress={this.handleLogin} />
+      <View>
+      <Text> Não possui uma conta? 
+        <Text onPress={onShowRegister.bind(null, navigation)} style={ styles.title2 }> Fazer cadastro </Text>
+      </Text>
+      </View>
     </SafeAreaView>
   );
 }
