@@ -372,6 +372,9 @@ const Mutation = {
       fcmToken: { type: GraphQLString },
     },
     async resolve(root, { fcmToken }, { user }) {
+      if (!user) {
+        throw new Error('A user is required to update FCM token');
+      }
       await User.updateOne(
         { _id: user._id }, 
         { $set: { fcmToken } }

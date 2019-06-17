@@ -10,9 +10,13 @@ export const register = (navigation) => async (dispatch, getState) => {
       .createUserWithEmailAndPassword(username, password);
 
     const user = firebase.auth().currentUser;
-    // TODO: store `user.uid`
-    await user.sendEmailVerification();
-    const { errorMessage } = await server.register({name, userName: username, password});
+    // await user.sendEmailVerification();
+    const { errorMessage } = await server.register({
+      name, 
+      userName: username, 
+      password, 
+      uid: user.uid,
+    });
     baseAuth({ dispatch, getState, navigation, uid: user.uid, errorMessage });
   } catch (error) {
     console.error(error.message);

@@ -34,7 +34,7 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
 
     firebase.auth().onAuthStateChanged(async function(fbUser) {
       if (fbUser) {
-        console.log(fbUser);  
+        const idToken = await fbUser.getIdToken(true);
         setToken(idToken);
       } else {
         console.log('no user yet');
@@ -53,6 +53,8 @@ export async function baseAuth({ dispatch, getState, navigation, uid, errorMessa
     });
   } else {
     dispatch({ type: USER_ID, payload: { userId: uid } });
+    const user = firebase.auth().currentUser;
+    const idToken = await user.getIdToken(true);
     await initLogin(dispatch, getState, navigation, idToken);
   }
 }
