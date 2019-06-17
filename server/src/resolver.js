@@ -175,8 +175,6 @@ const Mutation = {
     type: new GraphQLObjectType({
       name: 'registerType',
       fields: {
-        token: { type: GraphQLString },
-        id: { type: GraphQLString },
         errorMessage: { type: GraphQLString },
       }
     }),
@@ -184,59 +182,24 @@ const Mutation = {
       name: { type: GraphQLString },
       userName: { type: GraphQLString },
       password: { type: GraphQLString },
+      uid: { type: GraphQLString },
     },
-    async resolve(root, { name, userName, password }) {
+    async resolve(root, { name, userName, password, uid }) {
       // TODO: exception on simple passwords
-      const previousUser = await User.findOne({ phoneNumber: userName });
+      const previousUser = await User.findOne({ email: userName });
       if (previousUser) {
         throw new Error('User is already registered');
       }
       const user = await User.create({
+        uid,
         name,
-        phoneNumber: userName,
+        email: userName,
         // TODO: replace by SMS code
         tempPassword: md5(password),
-        token: userHelper.genToken(),
       });
 
-      return { 
-        token: user.token,
-        id: user._id,
+      return {
         errorMessage: '',
-      };
-    }
-  },
-
-  login: {
-    type: new GraphQLObjectType({
-      name: 'loginType',
-      fields: {
-        token: { type: GraphQLString },
-        id: { type: GraphQLString },
-        errorMessage: { type: GraphQLString },
-      }
-    }),
-    args: { 
-      userName: { type: GraphQLString },
-      password: { type: GraphQLString },
-    },
-    async resolve(root, { userName, password }) {
-      if (userName.length < 5) {
-        return { errorMessage: 'Username length too short' };
-      }
-      const user = await User.findOne({ 
-        phoneNumber: userName,
-      });
-      if (!user) {
-        return { errorMessage: 'User not found' };
-      }
-
-      if (password.length < 3 || user.tempPassword !== md5(password)) {
-        return { errorMessage: 'Invalid password' };
-      }
-      return { 
-        token: user.token,
-        id: user._id,
       };
     }
   },

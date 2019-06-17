@@ -198,63 +198,23 @@ describe('main', () => {
 
     it('register', async () => {
       const password = 'smallpassword';
-      const { token } = await server.register({
+      const uid = 'dk49sdfjhk';
+      await server.register({
         name: 'Guilherme',
         userName: '(21)999995555',
         password,
+        uid,
       });
-      expect(token.length).to.be.greaterThan(15);
 
-      const userByToken = await User.findOne({ token });
-      expect(userByToken.phoneNumber).to.equal('(21)999995555');
-      expect(userByToken.name).to.equal('Guilherme');
-      expect(userByToken.tempPassword).to.be.not.equal(password);
+      const userByUid = await User.findOne({ uid });
+      expect(userByUid.email).to.equal('(21)999995555');
+      expect(userByUid.name).to.equal('Guilherme');
+      expect(userByUid.uid).to.equal(uid);
+      expect(userByUid.tempPassword).to.be.not.equal(password);
 
       const userByPassword = await User.findOne({ tempPassword: md5(password) });
-      expect(userByPassword.phoneNumber).to.equal('(21)999995555');
+      expect(userByPassword.email).to.equal('(21)999995555');
     });
-
-    describe('login', () => {
-
-      it('sucessful', async () => {
-        const result = await server.login({
-          userName: '44448',
-          password: 'passwordAlice',
-        });
-
-        expect(result.token).to.equal(userFixtures.alice.token);
-        expect(result.id).to.equal(userFixtures.alice._id.toHexString());
-        expect(result.errorMessage).to.be.null;
-      });
-
-      it('invalid password', async () => {
-        const result = await server.login({
-          userName: '44448',
-          password: 'passwordAliceerror',
-        });
-        expect(result.token).to.be.null;
-        expect(result.errorMessage).to.equal('Invalid password');
-      });
-
-      it('user not found', async () => {
-        const result = await server.login({
-          userName: '44448aa',
-          password: 'passwordAlice',
-        });
-        expect(result.token).to.be.null;
-        expect(result.errorMessage).to.equal('User not found');
-      });
-
-      it('user not found', async () => {
-        const result = await server.login({
-          userName: '4a',
-          password: 'passwordAlice',
-        });
-        expect(result.token).to.be.null;
-        expect(result.errorMessage).to.equal('Username length too short');
-      });
-
-    })
 
     describe('sendMessage', () => {
       const alice = userFixtures.alice;

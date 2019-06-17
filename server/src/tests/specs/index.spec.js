@@ -1,7 +1,9 @@
+const { graphql } = require('graphql');
 const sinon = require('sinon');
 const mongooseConfig = require('../../config/mongoose');
+const User = require('../../db/schema/User');
 const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
-const graphqlMain = require('../../graphqlMain');
+const schema = require('../../graphqlSchema');
 const logger = require('../../config/winston');
 
 const chai = require('chai');
@@ -25,7 +27,8 @@ before(async () => {
   require('dotenv').config();
   await mongooseConfig.init();
   sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
-    const result = await graphqlMain.main(query, currentUserHolder.currentUser.token);
+    const user = await User.findById(currentUserHolder.currentUser._id);
+    const result = await graphql(schema, query, null, { user });
     if (result.errors) {
       for (const error of result.errors) {
         logger.debug(error.stack);

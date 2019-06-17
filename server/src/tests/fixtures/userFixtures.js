@@ -5,10 +5,10 @@ const md5 = require('md5');
 const users = {
   alice: {
     _id: ObjectId(),
+    uid: '46894278465624393Alice',
     name: 'Alice',
     phoneNumber: '44448',
     imgUrl: 'alice_url',
-    token: '46894278465624393Alice',
     groups: [
       groupIds.firstGroup,
     ],
@@ -16,10 +16,10 @@ const users = {
   },
   robert: {
     _id: ObjectId(),
+    uid: '85076546477256749024Robert',
     name: 'Robert',
     phoneNumber: '55558',
     imgUrl: 'robert_url',
-    token: '85076546477256749024Robert',
     groups: [
       groupIds.firstGroup,
       groupIds.secondGroup,
