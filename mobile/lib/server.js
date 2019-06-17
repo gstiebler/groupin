@@ -1,38 +1,20 @@
 const graphql = require('./graphqlConnect');
 
-async function register({name, userName, password}) {
+async function register({name, userName, password, uid}) {
   const query = `
     mutation {
       register (
         name: "${name}",
         userName: "${userName}"
         password: "${password}",
+        uid: "${uid}",
       ) {
-        token,
-        id,
         errorMessage
       }
     }
   `;
   const res = await graphql.sendQuery(query);
   return res.register;
-}
-
-async function login({ userName, password }) {
-  const query = `
-    mutation {
-      login (
-        userName: "${userName}"
-        password: "${password}",
-      ) {
-        token,
-        id,
-        errorMessage
-      }
-    }
-  `;
-  const res = await graphql.sendQuery(query);
-  return res.login;
 }
 
 async function sendMessage({message, topicId}) {
@@ -184,7 +166,6 @@ async function updateFcmToken(fcmToken) {
 
 module.exports = {
   register,
-  login,
   sendMessage,
   createGroup,
   createTopic,

@@ -46,10 +46,10 @@ const RegisterComponent = ({
           onChangeText={changePassword}
           value={password}
         />
-        <Button title="Registrar" color={ styles.title1.color } onPress={this.handleSignUp}/>
+        <Button title="Registrar" color={ styles.title1.color } onPress={() => onRegister(navigation)}/>
         <View>
         <Text> Já possui uma conta? 
-          <Text onPress={onShowLogin.bind(null, navigation)} style={ styles.title2 }> Login </Text>
+          <Text onPress={() => onShowLogin(navigation)} style={ styles.title2 }> Login </Text>
         </Text>
       </View>
     </SafeAreaView>

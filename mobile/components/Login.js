@@ -32,10 +32,10 @@ const LoginComponent = ({
         onChangeText={changePassword}
         value={password}
       />
-      <Button title="Login" color={ styles.title1.color } onPress={this.handleLogin} />
+      <Button title="Login" color={ styles.title1.color } onPress={() => onLogin(navigation)} />
       <View>
       <Text> Não possui uma conta? 
-        <Text onPress={onShowRegister.bind(null, navigation)} style={ styles.title2 }> Fazer cadastro </Text>
+        <Text onPress={() => onShowRegister(navigation)} style={ styles.title2 }> Fazer cadastro </Text>
       </Text>
       </View>
     </SafeAreaView>

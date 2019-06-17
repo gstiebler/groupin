@@ -3,7 +3,6 @@ module.exports = {
   SET_OWN_GROUPS: "SET_OWN_GROUPS",
   SET_TOPICS: "SET_TOPICS",
   SET_MESSAGES: "SET_MESSAGES",
-  SET_TOKEN: 'token',
   FCM_TOKEN: 'firebase token',
   USER_ID: 'user ID',
 
