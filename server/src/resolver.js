@@ -107,10 +107,13 @@ const Query = {
       if (!_.find(user.groups, topic.groupId)) {
         throw new Error(`User does not participate in the group`);
       }
+      const idMatch = _.isEmpty(startingId) ? {} :
+        { _id: { $lt: ObjectId(startingId) } };
       const messages = await Message.aggregate([
         {
           $match: {
             topic: ObjectId(topicId),
+            ...idMatch,
           }
         },
         {

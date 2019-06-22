@@ -239,7 +239,7 @@ describe('main', () => {
         expect(call0args).to.have.lengthOf(2);
         const [topicId, pushParams] = call0args;
         expect(topicId).to.equal(topicFixtures.topic1Group1._id.toHexString());
-        const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });;
+        const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).to.eql({
           payload: {
             message: messageText,
@@ -261,7 +261,21 @@ describe('main', () => {
       });
 
       it('message was added to DB', async () => {
-        const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, 'startingId1');;
+        const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, '507f1f77bcf86cd799439002');
+        expect(messages).to.eql([{
+          _id: "507f1f77bcf86cd799439001",
+          createdAt: 1538352000000,
+          text: "Topic 1 Group 1 Alice",
+          user: {
+            _id: "507f1f77bcf86cd799430001",
+            avatar: "alice_url",
+            name: "Alice",
+          }
+        }]);
+      });
+
+      it('sendMessage, filtering by `startingId`', async () => {
+        const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, '');
         expect(messages).to.have.lengthOf(3);
         // the most recent message
         expect(messages[0]).to.containSubset({

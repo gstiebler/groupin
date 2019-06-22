@@ -13,7 +13,7 @@ const graphqlConect = require('../lib/graphqlConnect');
 
 const initialState = {
   messages: [
-    {
+    /*{
       _id: 1,
       text: 'Hello developer',
       createdAt: new Date(),
@@ -22,7 +22,7 @@ const initialState = {
         name: 'React Native',
         avatar: 'https://placeimg.com/140/140/any',
       },
-    },
+    },*/
   ],
   ownGroups: [],
   topics: [],
