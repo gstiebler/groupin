@@ -1,4 +1,7 @@
 const sinon = require('sinon');
+const moment = require('moment');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const server = require('../../../../mobile/lib/server');
 const pushService = require('../../lib/pushService');
 const expect = require('chai').expect;
@@ -33,6 +36,20 @@ const newTopicActions = require('../../../../mobile/actions/newTopicActions');
 const dispatch = store.dispatch.bind(store);
 const getState = store.getState.bind(store);
 
+function createMessages(numMessages, user, topic) {
+  let messages = [];
+  const baseMoment = moment();
+  for (let i = 0; i < numMessages; i++) {
+    messages.push({
+      _id: ObjectId(),
+      text: `Message ${i}`,
+      user,
+      topic,
+      createdAt: baseMoment.add(3, 'seconds').valueOf(),
+    });
+  }
+  return messages;
+}
 
 // TODO: test thrown exceptions
 
@@ -45,6 +62,9 @@ describe('main', () => {
 
     before(async () => {
       await initFixtures();
+      const id = ObjectId();
+      const messages = createMessages(50, userFixtures.alice, topicFixtures.topic1Group2._id);
+      await Message.insertMany(messages);
       subscribeStub = sinon.stub(pushService, 'subscribe');
     });
 
@@ -227,6 +247,7 @@ describe('main', () => {
 
       beforeEach(async () => {
         setCurrentUser(alice);
+        localDispatch({ type: 'reset base', payload: {} });
         localDispatch({ 
           type: 'chat topic ID', 
           payload: { topicId },
@@ -257,15 +278,19 @@ describe('main', () => {
         const [groupId, dummy] = call1args;
         expect(groupId).to.equal(groupFixtures.firstGroup._id.toHexString());
 
-        expect(localGetState().base.messages).to.have.lengthOf(2);
+        expect(localGetState().base.messages).to.have.lengthOf(1);
       });
 
       it('message was added to DB', async () => {
-        const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, '507f1f77bcf86cd799439002');
-        expect(messages).to.eql([{
-          _id: "507f1f77bcf86cd799439001",
-          createdAt: 1538352000000,
-          text: "Topic 1 Group 1 Alice",
+        const lastMessageOnStore = _.last(localGetState().base.messages);
+        const messages = await server.getMessagesOfTopic({
+          topicId: topicFixtures.topic1Group1._id.toHexString(), 
+          limit: 20, 
+          afterId: '507f1f77bcf86cd799439002',
+        });
+        expect(messages).to.containSubset([{
+          _id: lastMessageOnStore._id,
+          text: messageText,
           user: {
             _id: "507f1f77bcf86cd799430001",
             avatar: "alice_url",
@@ -275,7 +300,10 @@ describe('main', () => {
       });
 
       it('sendMessage, filtering by `startingId`', async () => {
-        const messages = await server.getMessagesOfTopic(topicFixtures.topic1Group1._id.toHexString(), 20, '');
+        const messages = await server.getMessagesOfTopic({
+          topicId: topicFixtures.topic1Group1._id.toHexString(), 
+          limit: 20,
+        });
         expect(messages).to.have.lengthOf(3);
         // the most recent message
         expect(messages[0]).to.containSubset({

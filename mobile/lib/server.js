@@ -129,13 +129,17 @@ async function getTopicsOfGroup(groupId, limit, startingId) {
   return res.topicsOfGroup;
 }
 
-async function getMessagesOfTopic(topicId, limit, startingId) {
+async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }) {
+  let fields = [
+    `topicId: "${topicId}"`,
+    `limit: ${limit}`,
+    ...(beforeId ? [`beforeId: "${beforeId}"`] : []),
+    ...(afterId ? [`afterId: "${afterId}"`] : []),
+  ];
   const query = `
     query {
       messagesOfTopic (
-        topicId: "${topicId}"
-        limit: ${limit}
-        startingId: "${startingId}"
+        ${fields.join(',')}
       ) {
         _id,
         text,

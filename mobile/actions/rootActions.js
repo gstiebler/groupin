@@ -13,11 +13,14 @@ const NUM_ITEMS_PER_FETCH = 20;
 const sendMessages = (messages) => async (dispatch, getState) => {
   const { topicId } = getState().chat;
   const firstMessage = messages[0];
-  await server.sendMessage({
+  const newMessageId = await server.sendMessage({
     message: firstMessage.text,
     topicId,
   });
-  dispatch({ type: ADD_MESSSAGES, payload: { messages } });
+  const payload = {
+    messages: [{ ...firstMessage, _id: newMessageId }]
+  };
+  dispatch({ type: ADD_MESSSAGES, payload });
 }
 
 async function fetchOwnGroups(dispatch) {
@@ -37,13 +40,16 @@ async function getTopicsOfCurrentGroup(store) {
 }
 
 async function getMessagesOfTopic(dispatch, topicId) {
-  const messages = await server.getMessagesOfTopic(topicId, NUM_ITEMS_PER_FETCH, '');
+  const messages = await server.getMessagesOfTopic({ topicId, limit: NUM_ITEMS_PER_FETCH });
   dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
 
 async function getMessagesOfCurrentTopic(store) {
   if (!store.getState().base.currentlyViewedTopicId) { return }
-  const messages = await server.getMessagesOfTopic(store.getState().base.currentlyViewedTopicId, NUM_ITEMS_PER_FETCH, '');
+  const messages = await server.getMessagesOfTopic({
+    topicId: store.getState().base.currentlyViewedTopicId, 
+    limit: NUM_ITEMS_PER_FETCH,
+  });
   store.dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
 

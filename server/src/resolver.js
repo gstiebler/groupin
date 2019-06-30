@@ -100,20 +100,24 @@ const Query = {
     args: {
       topicId: { type: GraphQLString },
       limit: { type: GraphQLFloat },
-      startingId: { type: GraphQLString },
+      afterId: { type: GraphQLString },
+      beforeId: { type: GraphQLString },
     },
-    async resolve(root, { topicId, limit, startingId }, { user }, fieldASTs) {
+    async resolve(root, { topicId, limit, afterId, beforeId }, { user }, fieldASTs) {
       const topic = await Topic.findById(topicId);
       if (!_.find(user.groups, topic.groupId)) {
         throw new Error(`User does not participate in the group`);
       }
-      const idMatch = _.isEmpty(startingId) ? {} :
-        { _id: { $lt: ObjectId(startingId) } };
+      const afterIdMatch = _.isEmpty(afterId) ? {} :
+        { _id: { $gt: ObjectId(afterId) } };
+      const beforeIdMatch = _.isEmpty(beforeId) ? {} :
+        { _id: { $lt: ObjectId(beforeId) } };
       const messages = await Message.aggregate([
         {
           $match: {
-            topic: ObjectId(topicId),
-            ...idMatch,
+            topic: topic._id,
+            ...afterIdMatch,
+            ...beforeIdMatch,
           }
         },
         {
@@ -134,7 +138,7 @@ const Query = {
             'user.avatar': '$user.imgUrl',
           }
         },
-        { $sort: { createdAt: -1 } },
+        { $sort: { _id: -1 } },
         { $limit: limit },
       ]);
       return messages;
@@ -263,7 +267,7 @@ const Mutation = {
         pushService.pushMessage(groupId, pushParams),
       ]);
 
-      return 'OK';
+      return createdMessage._id.toHexString();
     }
   },
 

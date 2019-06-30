@@ -33,7 +33,7 @@ before(async () => {
       for (const error of result.errors) {
         logger.debug(error.stack);
       }
-      throw new Error(result.errors[0].message);
+      throw new Error(result.errors[0].stack);
     }
     return result.data;
   });

@@ -1,4 +1,5 @@
 const { 
+  RESET_BASE,
   ADD_MESSSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
@@ -35,10 +36,11 @@ const initialState = {
 
 const addMessages = (state, { messages }) => ({
   ...state, 
-  messages: [...messages, state.messages],
+  messages: [...messages, ...state.messages],
 });
 
 const reducerFunctions = {
+  [RESET_BASE]: () => initialState,
   [ADD_MESSSAGES]: addMessages,
   [SET_OWN_GROUPS]: mutationHelper('ownGroups'),
   [SET_TOPICS]: mutationHelper('topics'),

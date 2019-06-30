@@ -1,4 +1,5 @@
 module.exports = {
+  RESET_BASE: 'reset base',
   ADD_MESSSAGES: "ADD_MESSSAGE",
   SET_OWN_GROUPS: "SET_OWN_GROUPS",
   SET_TOPICS: "SET_TOPICS",
