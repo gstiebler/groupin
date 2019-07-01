@@ -8,6 +8,7 @@ const {
   USER_ID,
   CURRENTLY_VIEWED_GROUP_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
+  NO_OLDER_MESSAGES,
 } = require("../constants/action-types");
 const { mutationHelper, reducerMain } = require('../lib/helpers');
 const graphqlConect = require('../lib/graphqlConnect');
@@ -32,6 +33,7 @@ const initialState = {
   userId: '',
   currentlyViewedGroupId: null,
   currentlyViewedTopicId: null,
+  noOlderMessages: false,
 };
 
 const addMessages = (state, { messages }) => ({
@@ -49,6 +51,7 @@ const reducerFunctions = {
   [CURRENTLY_VIEWED_TOPIC_ID]: mutationHelper('currentlyViewedTopicId'),
   [USER_ID]: mutationHelper('userId'),
   [FCM_TOKEN]: mutationHelper('fcmToken'),
+  [NO_OLDER_MESSAGES]: mutationHelper('noOlderMessages'),
 };
 
 module.exports = reducerMain(initialState, reducerFunctions);

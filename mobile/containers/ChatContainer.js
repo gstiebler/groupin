@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { sendMessages } from '../actions/rootActions';
 import ChatComponent from '../components/Chat';
 import { 
-  getMessagesOfTopic,
+  onTopicOpened,
 } from "../actions/rootActions";
 import { 
   CHAT_TITLE,
@@ -27,7 +27,7 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: CHAT_TOPIC_ID, payload: { topicId: state.params.topicId } });
       // is `currentlyViewedTopicId` redundant with `topicId`?
       dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: state.params.topicId } });
-      getMessagesOfTopic(dispatch, state.params.topicId) 
+      dispatch(onTopicOpened(state.params.topicId));
     },
     willLeave: () => dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } }),
   };

@@ -6,6 +6,7 @@ module.exports = {
   SET_MESSAGES: "SET_MESSAGES",
   FCM_TOKEN: 'firebase token',
   USER_ID: 'user ID',
+  NO_OLDER_MESSAGES: 'no older messages',
 
   CURRENTLY_VIEWED_GROUP_ID: 'currently viewed group ID',
   CURRENTLY_VIEWED_TOPIC_ID: 'currently viewed topic ID',
