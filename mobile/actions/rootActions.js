@@ -85,7 +85,7 @@ const onOlderMessagesRequested = (topicId) => async (dispatch, getState) => {
   }
   dispatch({ type: SET_MESSAGES, payload });
   if (messages.length < NUM_ITEMS_PER_FETCH) {
-    dispatch({ type: HAS_OLDER_MESSAGES, payload: { noOlderMessages: false } });
+    dispatch({ type: HAS_OLDER_MESSAGES, payload: { hasOlderMessages: false } });
   }
 }
 

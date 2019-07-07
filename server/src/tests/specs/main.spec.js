@@ -146,38 +146,42 @@ describe('main', () => {
         },
       ]);
     });
+
+    describe('onTopicOpened', () => {
   
-    it('getMessagesOfTopic', async () => {
-      const localStore = createStore(rootReducer, {});
-      const localDispatch = localStore.dispatch.bind(localStore);
-      const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
-      setCurrentUser(userFixtures.robert);
-      let storage = createStorage();
-      await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
-      const expectedMessages = [
-        {
-          _id: messageFixtures.message2topic1._id.toHexString(),
-          createdAt: Date.parse('2018-10-02'),
-          text: 'Topic 1 Group 1 Robert',
-          user: {
-            _id: userFixtures.robert._id.toHexString(),
-            name: 'Robert',
-            avatar: 'robert_url',
+      it('no messages on storage', async () => {
+        const localStore = createStore(rootReducer, {});
+        const localDispatch = localStore.dispatch.bind(localStore);
+        const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
+        setCurrentUser(userFixtures.robert);
+        let storage = createStorage();
+        await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
+        const expectedMessages = [
+          {
+            _id: messageFixtures.message2topic1._id.toHexString(),
+            createdAt: Date.parse('2018-10-02'),
+            text: 'Topic 1 Group 1 Robert',
+            user: {
+              _id: userFixtures.robert._id.toHexString(),
+              name: 'Robert',
+              avatar: 'robert_url',
+            },
           },
-        },
-        {
-          _id: messageFixtures.message1topic1._id.toHexString(),
-          createdAt: Date.parse('2018-10-01'),
-          text: 'Topic 1 Group 1 Alice',
-          user: {
-            _id: userFixtures.alice._id.toHexString(),
-            name: 'Alice',
-            avatar: 'alice_url',
+          {
+            _id: messageFixtures.message1topic1._id.toHexString(),
+            createdAt: Date.parse('2018-10-01'),
+            text: 'Topic 1 Group 1 Alice',
+            user: {
+              _id: userFixtures.alice._id.toHexString(),
+              name: 'Alice',
+              avatar: 'alice_url',
+            },
           },
-        },
-      ];
-      expect(localStore.getState().base.messages).to.eql(expectedMessages);
-      expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
+        ];
+        expect(localStore.getState().base.messages).to.eql(expectedMessages);
+        expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
+      });
+
     });
 
     it('getMessagesOfCurrentTopic', async () => {
