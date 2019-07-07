@@ -109,7 +109,7 @@ const Query = {
         throw new Error(`User does not participate in the group`);
       }
       const afterIdMatch = _.isEmpty(afterId) ? {} :
-        { _id: { $gt: ObjectId(afterId) } };
+        { _id: { $gte: ObjectId(afterId) } };
       const beforeIdMatch = _.isEmpty(beforeId) ? {} :
         { _id: { $lt: ObjectId(beforeId) } };
       const messages = await Message.aggregate([
@@ -138,7 +138,7 @@ const Query = {
             'user.avatar': '$user.imgUrl',
           }
         },
-        { $sort: { _id: -1 } },
+        { $sort: { _id: 1 } },
         { $limit: limit },
       ]);
       return messages;

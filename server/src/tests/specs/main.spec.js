@@ -68,11 +68,12 @@ describe('main', () => {
 
   describe('reading', () => {
 
+    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id);
+    const localMessages50 = messages50.map(m => ({ ...m, _id: m._id.toHexString() }));
+
     before(async () => {
       await initFixtures();
-      const id = ObjectId();
-      const messages = createMessages(50, userFixtures.alice, topicFixtures.topic1Group2._id);
-      await Message.insertMany(messages);
+      await Message.insertMany(messages50);
       subscribeStub = sinon.stub(pushService, 'subscribe');
     });
 
@@ -158,16 +159,6 @@ describe('main', () => {
         await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
         const expectedMessages = [
           {
-            _id: messageFixtures.message2topic1._id.toHexString(),
-            createdAt: Date.parse('2018-10-02'),
-            text: 'Topic 1 Group 1 Robert',
-            user: {
-              _id: userFixtures.robert._id.toHexString(),
-              name: 'Robert',
-              avatar: 'robert_url',
-            },
-          },
-          {
             _id: messageFixtures.message1topic1._id.toHexString(),
             createdAt: Date.parse('2018-10-01'),
             text: 'Topic 1 Group 1 Alice',
@@ -177,9 +168,49 @@ describe('main', () => {
               avatar: 'alice_url',
             },
           },
+          {
+            _id: messageFixtures.message2topic1._id.toHexString(),
+            createdAt: Date.parse('2018-10-02'),
+            text: 'Topic 1 Group 1 Robert',
+            user: {
+              _id: userFixtures.robert._id.toHexString(),
+              name: 'Robert',
+              avatar: 'robert_url',
+            },
+          },
         ];
         expect(localStore.getState().base.messages).to.eql(expectedMessages);
         expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
+      });
+  
+      it('3 extra messages to be fetched', async () => {
+        const localStore = createStore(rootReducer, {});
+        const localDispatch = localStore.dispatch.bind(localStore);
+        const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
+        setCurrentUser(userFixtures.robert);
+        let storage = createStorage();
+        storage.setItem(topicIdStr, localMessages50.slice(26, 46));
+        await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
+
+        // store messages
+        const storeMessageTexts = _.map(localStore.getState().base.messages, 'text');
+        expect(storeMessageTexts).to.have.lengthOf(24);
+        expect(storeMessageTexts[0]).to.eql('Message 26');
+        expect(storeMessageTexts[19]).to.eql('Message 45');
+        expect(storeMessageTexts[20]).to.eql('Message 46');
+        expect(storeMessageTexts[21]).to.eql('Message 47');
+        expect(storeMessageTexts[22]).to.eql('Message 48');
+        expect(storeMessageTexts[23]).to.eql('Message 49');
+
+        // storage messages
+        const storageMessageTexts = _.map(storage.getItem(topicIdStr), 'text');
+        expect(storageMessageTexts).to.have.lengthOf(20);
+        expect(storageMessageTexts[0]).to.eql('Message 30');
+        expect(storageMessageTexts[15]).to.eql('Message 45');
+        expect(storageMessageTexts[16]).to.eql('Message 46');
+        expect(storageMessageTexts[17]).to.eql('Message 47');
+        expect(storageMessageTexts[18]).to.eql('Message 48');
+        expect(storageMessageTexts[19]).to.eql('Message 49');
       });
 
     });
@@ -195,16 +226,6 @@ describe('main', () => {
       await rootActions.getMessagesOfCurrentTopic(localStore, storage);
       expect(localStore.getState().base.messages).eql([
         {
-          _id: messageFixtures.message2topic1._id.toHexString(),
-          createdAt: Date.parse('2018-10-02'),
-          text: 'Topic 1 Group 1 Robert',
-          user: {
-            _id: userFixtures.robert._id.toHexString(),
-            name: 'Robert',
-            avatar: 'robert_url',
-          },
-        },
-        {
           _id: messageFixtures.message1topic1._id.toHexString(),
           createdAt: Date.parse('2018-10-01'),
           text: 'Topic 1 Group 1 Alice',
@@ -212,6 +233,16 @@ describe('main', () => {
             _id: userFixtures.alice._id.toHexString(),
             name: 'Alice',
             avatar: 'alice_url',
+          },
+        },
+        {
+          _id: messageFixtures.message2topic1._id.toHexString(),
+          createdAt: Date.parse('2018-10-02'),
+          text: 'Topic 1 Group 1 Robert',
+          user: {
+            _id: userFixtures.robert._id.toHexString(),
+            name: 'Robert',
+            avatar: 'robert_url',
           },
         },
       ]);
@@ -323,7 +354,7 @@ describe('main', () => {
         });
         expect(messages).to.have.lengthOf(3);
         // the most recent message
-        expect(messages[0]).to.containSubset({
+        expect(messages[2]).to.containSubset({
           text: messageText,
           user: {
             name: 'Alice',

@@ -48,22 +48,23 @@ const onTopicOpened = (topicId, storage) => async (dispatch) => {
   if (messagesEmpty) {
     messages = await server.getMessagesOfTopic({ topicId, limit: NUM_ITEMS_PER_FETCH });
   } else {
-    const lastMessageId = _.last(currentMessages);
+    const lastCurrMessageId = _.last(currentMessages)._id;
     messages = await server.getMessagesOfTopic({ 
       topicId, 
       limit: NUM_ITEMS_PER_FETCH,
-      afterId: lastMessageId,
+      afterId: lastCurrMessageId,
     });
     if (_.isEmpty(messages)) { return }
+    const firstNewMessageId = messages[0]._id;
     // there's no hole, then messages can be merged
-    if (messages[0]._id === lastMessageId) {
+    if (lastCurrMessageId === firstNewMessageId) {
       messages = [
         ...currentMessages, 
         ...messages.slice(1),
       ];
     }
   }
-  await storage.setItem(topicId, messages.slice(0, NUM_ITEMS_PER_FETCH));
+  await storage.setItem(topicId, messages.slice(messages.length - NUM_ITEMS_PER_FETCH));
   dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
 
