@@ -8,7 +8,6 @@ const {
 } = require("../constants/action-types");
 const server = require('../lib/server');
 const _ = require('lodash');
-const AsyncStorage = require('@react-native-community/async-storage');
 
 const NUM_ITEMS_PER_FETCH = 20;
 
@@ -41,9 +40,9 @@ async function getTopicsOfCurrentGroup(store) {
   store.dispatch({ type: SET_TOPICS, payload: { topics } });
 }
 
-const onTopicOpened = (topicId) => async (dispatch, getState) => {
+const onTopicOpened = (topicId, storage) => async (dispatch) => {
   dispatch({ type: NO_OLDER_MESSAGES, payload: { noOlderMessages: false } });
-  const currentMessages = await AsyncStorage.getItem(topicId);
+  const currentMessages = await storage.getItem(topicId);
   const messagesEmpty = _.isEmpty(currentMessages);
   let messages;
   if (messagesEmpty) {
@@ -64,7 +63,7 @@ const onTopicOpened = (topicId) => async (dispatch, getState) => {
       ];
     }
   }
-  await AsyncStorage.setItem(topicId, messages.slice(0, NUM_ITEMS_PER_FETCH));
+  await storage.setItem(topicId, messages.slice(0, NUM_ITEMS_PER_FETCH));
   dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
 
@@ -90,14 +89,15 @@ const onOlderMessagesRequested = (topicId) => async (dispatch, getState) => {
   }
 }
 
-async function getMessagesOfCurrentTopic(store) {
+async function getMessagesOfCurrentTopic(store, storage) {
   if (!store.getState().base.currentlyViewedTopicId) { return }
+  const topicId = store.getState().base.currentlyViewedTopicId;
   const messages = await server.getMessagesOfTopic({
-    topicId: store.getState().base.currentlyViewedTopicId, 
+    topicId, 
     limit: NUM_ITEMS_PER_FETCH,
   });
   store.dispatch({ type: SET_MESSAGES, payload: { messages } });
-  await AsyncStorage.setItem(topicId, messages.slice(0, NUM_ITEMS_PER_FETCH));
+  await storage.setItem(topicId, messages.slice(0, NUM_ITEMS_PER_FETCH));
 }
 
 const leaveGroup = (groupId, navigation) => async (dispatch, getState) => {

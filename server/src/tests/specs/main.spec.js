@@ -51,6 +51,14 @@ function createMessages(numMessages, user, topic) {
   return messages;
 }
 
+function createStorage() {
+  return {
+    messagesByTopic: new Map([[]]),
+    getItem(topicId) { return this.messagesByTopic.get(topicId) },
+    setItem(topicId, messages) { this.messagesByTopic.set(topicId, messages) },
+  };
+}
+
 // TODO: test thrown exceptions
 
 let pushMessageStub;
@@ -142,8 +150,10 @@ describe('main', () => {
     it('getMessagesOfTopic', async () => {
       const localStore = createStore(rootReducer, {});
       const localDispatch = localStore.dispatch.bind(localStore);
+      const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
       setCurrentUser(userFixtures.robert);
-      await rootActions.getMessagesOfTopic(localDispatch, topicFixtures.topic1Group1._id.toHexString());
+      let storage = createStorage();
+      await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
       expect(localStore.getState().base.messages).eql([
         {
           _id: messageFixtures.message2topic1._id.toHexString(),
@@ -175,7 +185,8 @@ describe('main', () => {
         type: 'currently viewed topic ID', 
         payload: { currentlyViewedTopicId: topicFixtures.topic1Group1._id.toHexString() } }
       );
-      await rootActions.getMessagesOfCurrentTopic(localStore);
+      let storage = createStorage();
+      await rootActions.getMessagesOfCurrentTopic(localStore, storage);
       expect(localStore.getState().base.messages).eql([
         {
           _id: messageFixtures.message2topic1._id.toHexString(),
