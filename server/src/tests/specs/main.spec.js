@@ -212,6 +212,34 @@ describe('main', () => {
         expect(storageMessageTexts[18]).to.eql('Message 48');
         expect(storageMessageTexts[19]).to.eql('Message 49');
       });
+  
+      it('hole between fetched and on storage', async () => {
+        const localStore = createStore(rootReducer, {});
+        const localDispatch = localStore.dispatch.bind(localStore);
+        const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
+        setCurrentUser(userFixtures.robert);
+        let storage = createStorage();
+        storage.setItem(topicIdStr, localMessages50.slice(5, 24));
+        await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
+
+        // store messages
+        const storeMessageTexts = _.map(localStore.getState().base.messages, 'text');
+        expect(storeMessageTexts).to.have.lengthOf(20);
+        expect(storeMessageTexts[0]).to.eql('Message 30');
+        expect(storeMessageTexts[1]).to.eql('Message 31');
+        expect(storeMessageTexts[18]).to.eql('Message 48');
+        expect(storeMessageTexts[19]).to.eql('Message 49');
+
+        // storage messages
+        const storageMessageTexts = _.map(storage.getItem(topicIdStr), 'text');
+        expect(storageMessageTexts).to.have.lengthOf(20);
+        expect(storageMessageTexts[0]).to.eql('Message 30');
+        expect(storageMessageTexts[15]).to.eql('Message 45');
+        expect(storageMessageTexts[16]).to.eql('Message 46');
+        expect(storageMessageTexts[17]).to.eql('Message 47');
+        expect(storageMessageTexts[18]).to.eql('Message 48');
+        expect(storageMessageTexts[19]).to.eql('Message 49');
+      });
 
     });
 

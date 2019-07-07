@@ -138,8 +138,9 @@ const Query = {
             'user.avatar': '$user.imgUrl',
           }
         },
-        { $sort: { _id: 1 } },
+        { $sort: { _id: -1 } },
         { $limit: limit },
+        { $sort: { _id: 1 } },
       ]);
       return messages;
     }
