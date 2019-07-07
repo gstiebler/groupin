@@ -154,7 +154,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       let storage = createStorage();
       await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
-      expect(localStore.getState().base.messages).eql([
+      const expectedMessages = [
         {
           _id: messageFixtures.message2topic1._id.toHexString(),
           createdAt: Date.parse('2018-10-02'),
@@ -175,7 +175,9 @@ describe('main', () => {
             avatar: 'alice_url',
           },
         },
-      ]);
+      ];
+      expect(localStore.getState().base.messages).to.eql(expectedMessages);
+      expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
     });
 
     it('getMessagesOfCurrentTopic', async () => {

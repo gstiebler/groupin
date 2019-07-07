@@ -4,7 +4,7 @@ const {
   SET_TOPICS,
   SET_MESSAGES,
   FCM_TOKEN,
-  NO_OLDER_MESSAGES,
+  HAS_OLDER_MESSAGES,
 } = require("../constants/action-types");
 const server = require('../lib/server');
 const _ = require('lodash');
@@ -41,7 +41,7 @@ async function getTopicsOfCurrentGroup(store) {
 }
 
 const onTopicOpened = (topicId, storage) => async (dispatch) => {
-  dispatch({ type: NO_OLDER_MESSAGES, payload: { noOlderMessages: false } });
+  dispatch({ type: HAS_OLDER_MESSAGES, payload: { hasOlderMessages: true } });
   const currentMessages = await storage.getItem(topicId);
   const messagesEmpty = _.isEmpty(currentMessages);
   let messages;
@@ -85,7 +85,7 @@ const onOlderMessagesRequested = (topicId) => async (dispatch, getState) => {
   }
   dispatch({ type: SET_MESSAGES, payload });
   if (messages.length < NUM_ITEMS_PER_FETCH) {
-    dispatch({ type: NO_OLDER_MESSAGES, payload: { noOlderMessages: true } });
+    dispatch({ type: HAS_OLDER_MESSAGES, payload: { noOlderMessages: false } });
   }
 }
 
