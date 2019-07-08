@@ -3,7 +3,7 @@ module.exports = {
   ADD_MESSSAGES: "ADD_MESSSAGE",
   SET_OWN_GROUPS: "SET_OWN_GROUPS",
   SET_TOPICS: "SET_TOPICS",
-  SET_MESSAGES: "SET_MESSAGES",
+  SET_MESSAGES: "set messages",
   FCM_TOKEN: 'firebase token',
   USER_ID: 'user ID',
   HAS_OLDER_MESSAGES: 'has older messages',

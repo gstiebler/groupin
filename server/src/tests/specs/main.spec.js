@@ -242,6 +242,30 @@ describe('main', () => {
       });
 
     });
+  
+    it('onOlderMessagesRequested', async () => {
+      const localStore = createStore(rootReducer, {});
+      const localDispatch = localStore.dispatch.bind(localStore);
+      const localGetState = localStore.getState.bind(localStore);
+      const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
+      setCurrentUser(userFixtures.robert);
+      localDispatch({ type: 'set messages', payload: { messages: localMessages50.slice(45, 50) } });
+
+      await rootActions.onOlderMessagesRequested(topicIdStr)(localDispatch, localGetState);
+
+      // store messages
+      const storeMessageTexts = _.map(localStore.getState().base.messages, 'text');
+      expect(storeMessageTexts).to.have.lengthOf(25);
+      expect(storeMessageTexts[0]).to.eql('Message 25');
+      expect(storeMessageTexts[1]).to.eql('Message 26');
+      expect(storeMessageTexts[18]).to.eql('Message 43');
+      expect(storeMessageTexts[19]).to.eql('Message 44');
+      expect(storeMessageTexts[20]).to.eql('Message 45');
+      expect(storeMessageTexts[21]).to.eql('Message 46');
+      expect(storeMessageTexts[22]).to.eql('Message 47');
+      expect(storeMessageTexts[23]).to.eql('Message 48');
+      expect(storeMessageTexts[24]).to.eql('Message 49');
+    });
 
     it('getMessagesOfCurrentTopic', async () => {
       const localStore = createStore(rootReducer, {});
