@@ -43,6 +43,7 @@ async function getTopicsOfCurrentGroup(store) {
 const onTopicOpened = (topicId, storage) => async (dispatch) => {
   dispatch({ type: HAS_OLDER_MESSAGES, payload: { hasOlderMessages: true } });
   const currentMessages = await storage.getItem(topicId);
+  dispatch({ type: SET_MESSAGES, payload: { messages: currentMessages } });
   const messagesEmpty = _.isEmpty(currentMessages);
   let messages;
   if (messagesEmpty) {
@@ -98,6 +99,7 @@ async function getMessagesOfCurrentTopic(store, storage) {
     limit: NUM_ITEMS_PER_FETCH,
   });
   store.dispatch({ type: SET_MESSAGES, payload: { messages } });
+  // TODO: test line below
   await storage.setItem(topicId, messages.slice(0, NUM_ITEMS_PER_FETCH));
 }
 
