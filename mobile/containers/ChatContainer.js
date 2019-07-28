@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import AsyncStorage from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { sendMessages } from '../actions/rootActions';
 import ChatComponent from '../components/Chat';
 import { 
