@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import storage from './localStorage';
 const { 
   getTopicsOfCurrentGroup,
   getMessagesOfCurrentTopic,
@@ -13,7 +13,7 @@ const {
 async function messageReceived(store, message) {
   await Promise.all([
     getTopicsOfCurrentGroup(store),
-    getMessagesOfCurrentTopic(store, AsyncStorage),
+    getMessagesOfCurrentTopic(store, storage),
   ]);
 }
 
@@ -29,7 +29,7 @@ async function onNewNotification(store, groupId, topicId) {
   
   await Promise.all([
     getTopicsOfCurrentGroup(store),
-    getMessagesOfCurrentTopic(store, AsyncStorage),
+    getMessagesOfCurrentTopic(store, storage),
   ]);
 }
 

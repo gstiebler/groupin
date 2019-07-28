@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { AsyncStorage } from 'react-native';
+import storage from '../lib/localStorage';
 import { sendMessages } from '../actions/rootActions';
 import ChatComponent from '../components/Chat';
 import { 
@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: CHAT_TOPIC_ID, payload: { topicId: state.params.topicId } });
       // is `currentlyViewedTopicId` redundant with `topicId`?
       dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: state.params.topicId } });
-      dispatch(onTopicOpened(state.params.topicId, AsyncStorage));
+      dispatch(onTopicOpened(state.params.topicId, storage));
     },
     willLeave: () => dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } }),
   };
