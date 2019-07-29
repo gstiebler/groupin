@@ -29,6 +29,7 @@ const ChatComponent = ({ navigation, messages, title, userId, onSend, onBack, wi
         messages={messages}
         onSend={newMessages => onSend(newMessages)}
         user={{ _id: userId }}
+        inverted={false}
       />
     </Container>
   );
