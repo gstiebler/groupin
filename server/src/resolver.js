@@ -260,7 +260,7 @@ const Mutation = {
       logger.debug(`Usuário: ${user.name}`);
       const pushParams = {
         payload: pushPayload,
-        title: topicId,
+        title: topic.name,
         body: message.slice(0, 30),
       };
       await Promise.all([

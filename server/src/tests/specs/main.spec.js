@@ -371,7 +371,7 @@ describe('main', () => {
             type: messageTypes.NEW_MESSAGE,
           },
           body: messageText,
-          title: topicFixtures.topic1Group1._id.toHexString(),
+          title: 'Topic 1 Group 1',
         });      
 
         const call1args = pushMessageStub.args[1];
