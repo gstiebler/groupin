@@ -1,5 +1,5 @@
 const { 
-  ADD_MESSSAGES,
+  ADD_MESSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
   SET_MESSAGES,
@@ -21,7 +21,7 @@ const sendMessages = (messages) => async (dispatch, getState) => {
   const payload = {
     messages: [{ ...firstMessage, _id: newMessageId }]
   };
-  dispatch({ type: ADD_MESSSAGES, payload });
+  dispatch({ type: ADD_MESSAGES, payload });
 }
 
 async function fetchOwnGroups(dispatch) {
