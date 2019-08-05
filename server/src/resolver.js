@@ -392,7 +392,7 @@ const Mutation = {
         { $set: { fcmToken } }
       );
       await subscribeToAllGroups(user, fcmToken);
-      return 'OK';
+      return user._id;
     }
   },
 }

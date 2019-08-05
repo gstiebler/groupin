@@ -10,7 +10,8 @@ import firebase from 'react-native-firebase';
 
 async function initLogin(dispatch, getState, navigation, idToken) {      
   setToken(idToken);
-  server.updateFcmToken(getState().base.fcmToken);
+  const userId = await server.updateFcmToken(getState().base.fcmToken);
+  dispatch({ type: USER_ID, payload: { userId } });
   await fetchOwnGroups(dispatch);
   navigation.navigate('GroupList');
 }
@@ -20,8 +21,8 @@ export const login = (navigation) => async (dispatch, getState) => {
   await firebase
      .auth()
      .signInWithEmailAndPassword(username, password);
-  const user = firebase.auth().currentUser;
-  await baseAuth({ dispatch, getState, navigation, uid: user.uid });
+  const userId = await server.updateFcmToken(getState().base.fcmToken);
+  await baseAuth({ dispatch, getState, navigation, userId });
 }
 
 export const willFocus = (navigation) => async (dispatch, getState) => {
@@ -45,14 +46,14 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
   }
 }
 
-export async function baseAuth({ dispatch, getState, navigation, uid, errorMessage }) {
+export async function baseAuth({ dispatch, getState, navigation, userId, errorMessage }) {
   if (errorMessage) {
     Toast.show({
       text: errorMessage,
       buttonText: 'Ok'
     });
   } else {
-    dispatch({ type: USER_ID, payload: { userId: uid } });
+    dispatch({ type: USER_ID, payload: { userId } });
     const user = firebase.auth().currentUser;
     const idToken = await user.getIdToken(true);
     await initLogin(dispatch, getState, navigation, idToken);
