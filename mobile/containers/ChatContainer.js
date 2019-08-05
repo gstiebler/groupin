@@ -4,6 +4,7 @@ import { sendMessages } from '../actions/rootActions';
 import ChatComponent from '../components/Chat';
 import { 
   onTopicOpened,
+  onOlderMessagesRequested,
 } from "../actions/rootActions";
 import { 
   CHAT_TITLE,
@@ -31,6 +32,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(onTopicOpened(state.params.topicId, storage));
     },
     willLeave: () => dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } }),
+    onLoadEarlier: ({ state }) => dispatch(onOlderMessagesRequested(state.params.topicId)),
   };
 };
 
