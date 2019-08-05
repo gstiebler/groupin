@@ -4,7 +4,7 @@ import {
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
 // TODO: remove include of React stuff
-import { Toast } from 'native-base';
+import { Alert } from 'react-native';
 import { setToken } from '../lib/graphqlConnect';
 import firebase from 'react-native-firebase';
 
@@ -18,11 +18,29 @@ async function initLogin(dispatch, getState, navigation, idToken) {
 
 export const login = (navigation) => async (dispatch, getState) => {
   const { username, password } = getState().login;
-  await firebase
-     .auth()
-     .signInWithEmailAndPassword(username, password);
-  const userId = await server.updateFcmToken(getState().base.fcmToken);
-  await baseAuth({ dispatch, getState, navigation, userId });
+  try {
+    await firebase
+      .auth()
+      .signInWithEmailAndPassword(username, password);
+    const userId = await server.updateFcmToken(getState().base.fcmToken);
+    await baseAuth({ dispatch, getState, navigation, userId });
+  } catch(error) {
+    console.log(JSON.stringify(error));
+    const msgByCode = {
+      'auth/user-not-found': 'Usuário não encontrado',
+      'auth/invalid-email': 'E-mail inválido',
+      'auth/wrong-password': 'Senha inválida',
+    };
+    const errorMessage = msgByCode[error.code] || 'Erro';
+    Alert.alert(
+      'Erro',
+      errorMessage,
+      [
+        {text: 'OK'},
+      ],
+      {cancelable: false},
+    );
+  }
 }
 
 export const willFocus = (navigation) => async (dispatch, getState) => {
@@ -48,10 +66,14 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
 
 export async function baseAuth({ dispatch, getState, navigation, userId, errorMessage }) {
   if (errorMessage) {
-    Toast.show({
-      text: errorMessage,
-      buttonText: 'Ok'
-    });
+    Alert.alert(
+      'Erro',
+      errorMessage,
+      [
+        {text: 'OK'},
+      ],
+      {cancelable: false},
+    );
   } else {
     dispatch({ type: USER_ID, payload: { userId } });
     const user = firebase.auth().currentUser;
