@@ -7,6 +7,9 @@ import * as server from '../lib/server';
 import { Alert } from 'react-native';
 import { setToken } from '../lib/graphqlConnect';
 import firebase from 'react-native-firebase';
+import { 
+  updateFcmToken,
+} from "../actions/rootActions";
 
 async function initLogin(dispatch, getState, navigation, idToken) {      
   setToken(idToken);
@@ -22,7 +25,8 @@ export const login = (navigation) => async (dispatch, getState) => {
     await firebase
       .auth()
       .signInWithEmailAndPassword(username, password);
-    const userId = await server.updateFcmToken(getState().base.fcmToken);
+    const fcmToken = await firebase.messaging().getToken();
+    const userId = await server.updateFcmToken(fcmToken);
     await baseAuth({ dispatch, getState, navigation, userId });
   } catch(error) {
     const msgByCode = {
@@ -45,6 +49,7 @@ export const login = (navigation) => async (dispatch, getState) => {
 export const willFocus = (navigation) => async (dispatch, getState) => {
   try {
     const user = firebase.auth().currentUser;
+    // check if user is already logged in
     if (user) {
       const idToken = await user.getIdToken(true);
       initLogin(dispatch, getState, navigation, idToken);
