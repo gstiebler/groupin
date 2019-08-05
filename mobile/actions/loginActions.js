@@ -25,7 +25,6 @@ export const login = (navigation) => async (dispatch, getState) => {
     const userId = await server.updateFcmToken(getState().base.fcmToken);
     await baseAuth({ dispatch, getState, navigation, userId });
   } catch(error) {
-    console.log(JSON.stringify(error));
     const msgByCode = {
       'auth/user-not-found': 'Usuário não encontrado',
       'auth/invalid-email': 'E-mail inválido',
