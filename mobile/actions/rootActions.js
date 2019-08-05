@@ -1,5 +1,5 @@
 const { 
-  ADD_MESSAGES,
+  ADD_NEW_MESSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
   SET_MESSAGES,
@@ -8,6 +8,7 @@ const {
 } = require("../constants/action-types");
 const server = require('../lib/server');
 const _ = require('lodash');
+const { mergeMessages } = require('../lib/messages');
 
 const NUM_ITEMS_PER_FETCH = 20;
 
@@ -21,7 +22,7 @@ const sendMessages = (messages) => async (dispatch, getState) => {
   const payload = {
     messages: [{ ...firstMessage, _id: newMessageId }]
   };
-  dispatch({ type: ADD_MESSAGES, payload });
+  dispatch({ type: ADD_NEW_MESSAGES, payload });
 }
 
 async function fetchOwnGroups(dispatch) {
@@ -59,10 +60,7 @@ const onTopicOpened = (topicId, storage) => async (dispatch) => {
     const firstNewMessageId = messages[0]._id;
     // there's no hole, then messages can be merged
     if (lastCurrMessageId === firstNewMessageId) {
-      messages = [
-        ...currentMessages, 
-        ...messages.slice(1),
-      ];
+      messages = mergeMessages(currentMessages, messages.slice(1));
     }
   }
   await storage.setItem(topicId, messages.slice(messages.length - NUM_ITEMS_PER_FETCH));
@@ -73,20 +71,17 @@ const onOlderMessagesRequested = (topicId) => async (dispatch, getState) => {
   const currentMessages = getState().base.messages;
   if (_.isEmpty(currentMessages)) { return }
   const firstMessage = currentMessages[0];
-  const messages = await server.getMessagesOfTopic({ 
+  const olderMessages = await server.getMessagesOfTopic({ 
     topicId, 
     limit: NUM_ITEMS_PER_FETCH, 
     beforeId: firstMessage._id,
   });
 
   const payload = {
-    messages: [
-      ...messages, 
-      ...currentMessages,
-    ],
+    messages: mergeMessages(olderMessages, currentMessages),
   }
   dispatch({ type: SET_MESSAGES, payload });
-  if (messages.length < NUM_ITEMS_PER_FETCH) {
+  if (olderMessages.length < NUM_ITEMS_PER_FETCH) {
     dispatch({ type: HAS_OLDER_MESSAGES, payload: { hasOlderMessages: false } });
   }
 }

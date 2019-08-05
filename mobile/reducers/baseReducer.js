@@ -1,6 +1,6 @@
 const { 
   RESET_BASE,
-  ADD_MESSAGES,
+  ADD_NEW_MESSAGES,
   SET_OWN_GROUPS,
   SET_TOPICS,
   SET_MESSAGES,
@@ -11,7 +11,7 @@ const {
   HAS_OLDER_MESSAGES,
 } = require("../constants/action-types");
 const { mutationHelper, reducerMain } = require('../lib/helpers');
-const graphqlConect = require('../lib/graphqlConnect');
+const { mergeMessages } = require('../lib/messages');
 
 const initialState = {
   messages: [
@@ -36,14 +36,14 @@ const initialState = {
   hasOlderMessages: false,
 };
 
-const addMessages = (state, { messages }) => ({
+const addNewMessages = (state, { messages }) => ({
   ...state, 
-  messages: [...messages, ...state.messages],
+  messages: mergeMessages(state.messages, messages),
 });
 
 const reducerFunctions = {
   [RESET_BASE]: () => initialState,
-  [ADD_MESSAGES]: addMessages,
+  [ADD_NEW_MESSAGES]: addNewMessages,
   [SET_OWN_GROUPS]: mutationHelper('ownGroups'),
   [SET_TOPICS]: mutationHelper('topics'),
   [SET_MESSAGES]: mutationHelper('messages'),

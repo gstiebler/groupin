@@ -108,16 +108,20 @@ const Query = {
       if (!_.find(user.groups, topic.groupId)) {
         throw new Error(`User does not participate in the group`);
       }
-      const afterIdMatch = _.isEmpty(afterId) ? {} :
-        { _id: { $gte: ObjectId(afterId) } };
-      const beforeIdMatch = _.isEmpty(beforeId) ? {} :
+      const beforeIdMessages = !_.isEmpty(beforeId);
+      const afterIdMessages = !_.isEmpty(afterId);
+      const newestMessages = !beforeIdMessages && !afterIdMessages;
+      if (beforeIdMessages && afterIdMessages) {
+        throw new Error('Only one start of end filter is allowed');
+      }
+      const idMatch = newestMessages ? {} :
+        afterIdMessages ? { _id: { $gte: ObjectId(afterId) } } :
         { _id: { $lt: ObjectId(beforeId) } };
       const messages = await Message.aggregate([
         {
           $match: {
             topic: topic._id,
-            ...afterIdMatch,
-            ...beforeIdMatch,
+            ...idMatch,
           }
         },
         {
