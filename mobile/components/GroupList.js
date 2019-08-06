@@ -2,26 +2,8 @@ import React from 'react';
 import { List, ListItem } from 'react-native-elements'
 import { Container, Header, Left, Body, Right, Title, Button, Icon } from 'native-base';
 
-export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willFocus, onCreate, onAdd }) => {
+export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willFocus }) => {
   navigation.addListener('willFocus', willFocus);
-
-  const header = (
-    <Header>   
-      <Left>
-        <Button transparent>
-          <Icon name='create' onPress={() => onCreate(navigation)}/>
-        </Button>
-      </Left>
-      <Body>
-        <Title>Meus grupos</Title>
-      </Body>
-      <Right>
-        <Button transparent>
-          <Icon name='add' onPress={() => onAdd(navigation)}/>
-        </Button>
-      </Right>
-    </Header>
-  );
 
   const groupItems = ownGroups.map((group) => (
     <ListItem
@@ -35,7 +17,6 @@ export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willF
 
   return (
     <Container>
-      { header }
       <List containerStyle={{marginBottom: 20}}>
         { groupItems }
       </List>

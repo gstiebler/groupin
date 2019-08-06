@@ -6,6 +6,8 @@ import Chat from '../containers/ChatContainer';
 import Register from '../containers/RegisterContainer';
 import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
+import React from 'react';
+import { Button, Icon, Text } from 'native-base';
 
 import { 
   createSwitchNavigator, 
@@ -25,6 +27,16 @@ export const AppStackNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         title: 'Meus grupos',
         headerBackTitle: null,
+        headerLeft: (
+          <Button transparent onPress={() => navigation.push('GroupsSearch')}>
+            <Text>Buscar</Text>
+         </Button>
+        ),
+        headerRight: (
+          <Button transparent>
+            <Icon name='add' onPress={() => navigation.push('NewGroup')}/>
+         </Button>
+        ),
       }), 
     },
     Chat: { screen: Chat,

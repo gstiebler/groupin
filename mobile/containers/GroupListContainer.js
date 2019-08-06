@@ -18,8 +18,6 @@ const mapDispatchToProps = dispatch => {
     willFocus: () => {
       fetchOwnGroups(dispatch);
     },
-    onAdd: (navigation) => navigation.push('GroupsSearch'),
-    onCreate: (navigation) => navigation.push('NewGroup'),
   };
 };
 
