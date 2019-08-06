@@ -15,6 +15,7 @@ const ChatComponent = ({
   messages, 
   title, 
   userId, 
+  hasOlderMessages,
   onSend, 
   onBack, 
   onLoadEarlier, 
@@ -38,7 +39,7 @@ const ChatComponent = ({
       <GiftedChat
         messages={messages}
         user={{ _id: userId }}
-        loadEarlier={true}
+        loadEarlier={hasOlderMessages}
         onSend={newMessages => onSend(newMessages)}
         onLoadEarlier={() => onLoadEarlier(navigation)}
       />

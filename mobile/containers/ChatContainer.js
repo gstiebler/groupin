@@ -17,6 +17,7 @@ const mapStateToProps = state => {
     title: state.chat.title,
     messages: state.base.messages,
     userId: state.base.userId, 
+    hasOlderMessages: state.base.hasOlderMessages,
   };
 };
 
