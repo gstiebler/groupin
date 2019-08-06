@@ -24,6 +24,7 @@ export const AppStackNavigator = createStackNavigator(
       screen: GroupList,
       navigationOptions: ({ navigation }) => ({
         title: 'Meus grupos',
+        headerBackTitle: null,
       }), 
     },
     Chat: { screen: Chat,
@@ -35,6 +36,7 @@ export const AppStackNavigator = createStackNavigator(
       screen: TopicsList,
       navigationOptions: ({ navigation }) => ({
         title: navigation.state.params.groupName,
+        headerBackTitle: null,
       }),  
     },
     NewTopic: { 
