@@ -48,7 +48,7 @@ function createMessages(numMessages, user, topic) {
       createdAt: baseMoment.add(3, 'seconds').valueOf(),
     });
   }
-  return messages;
+  return _.reverse(messages);
 }
 
 function createStorage() {
@@ -157,7 +157,7 @@ describe('main', () => {
         setCurrentUser(userFixtures.robert);
         let storage = createStorage();
         await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
-        const expectedMessages = [
+        const expectedMessages = _.reverse([
           {
             _id: messageFixtures.message1topic1._id.toHexString(),
             createdAt: Date.parse('2018-10-01'),
@@ -178,7 +178,7 @@ describe('main', () => {
               avatar: 'robert_url',
             },
           },
-        ];
+        ]);
         expect(localStore.getState().base.messages).to.eql(expectedMessages);
         expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
       });
@@ -189,11 +189,11 @@ describe('main', () => {
         const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
         setCurrentUser(userFixtures.robert);
         let storage = createStorage();
-        storage.setItem(topicIdStr, localMessages50.slice(26, 46));
+        storage.setItem(topicIdStr, localMessages50.slice(4, 24));
         await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
 
         // store messages
-        const storeMessageTexts = _.map(localStore.getState().base.messages, 'text');
+        const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));
         expect(storeMessageTexts).to.have.lengthOf(24);
         expect(storeMessageTexts[0]).to.eql('Message 26');
         expect(storeMessageTexts[19]).to.eql('Message 45');
@@ -203,7 +203,7 @@ describe('main', () => {
         expect(storeMessageTexts[23]).to.eql('Message 49');
 
         // storage messages
-        const storageMessageTexts = _.map(storage.getItem(topicIdStr), 'text');
+        const storageMessageTexts = _.reverse(_.map(storage.getItem(topicIdStr), 'text'));
         expect(storageMessageTexts).to.have.lengthOf(20);
         expect(storageMessageTexts[0]).to.eql('Message 30');
         expect(storageMessageTexts[15]).to.eql('Message 45');
@@ -219,11 +219,11 @@ describe('main', () => {
         const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
         setCurrentUser(userFixtures.robert);
         let storage = createStorage();
-        storage.setItem(topicIdStr, localMessages50.slice(5, 24));
+        storage.setItem(topicIdStr, localMessages50.slice(25, 44));
         await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
 
         // store messages
-        const storeMessageTexts = _.map(localStore.getState().base.messages, 'text');
+        const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));
         expect(storeMessageTexts).to.have.lengthOf(20);
         expect(storeMessageTexts[0]).to.eql('Message 30');
         expect(storeMessageTexts[1]).to.eql('Message 31');
@@ -231,7 +231,7 @@ describe('main', () => {
         expect(storeMessageTexts[19]).to.eql('Message 49');
 
         // storage messages
-        const storageMessageTexts = _.map(storage.getItem(topicIdStr), 'text');
+        const storageMessageTexts = _.reverse(_.map(storage.getItem(topicIdStr), 'text'));
         expect(storageMessageTexts).to.have.lengthOf(20);
         expect(storageMessageTexts[0]).to.eql('Message 30');
         expect(storageMessageTexts[15]).to.eql('Message 45');
@@ -249,12 +249,12 @@ describe('main', () => {
       const localGetState = localStore.getState.bind(localStore);
       const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
       setCurrentUser(userFixtures.robert);
-      localDispatch({ type: 'set messages', payload: { messages: localMessages50.slice(45, 50) } });
+      localDispatch({ type: 'set messages', payload: { messages: localMessages50.slice(0, 5) } });
 
       await rootActions.onOlderMessagesRequested(topicIdStr)(localDispatch, localGetState);
 
       // store messages
-      const storeMessageTexts = _.map(localStore.getState().base.messages, 'text');
+      const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));
       expect(storeMessageTexts).to.have.lengthOf(25);
       expect(storeMessageTexts[0]).to.eql('Message 25');
       expect(storeMessageTexts[1]).to.eql('Message 26');
@@ -276,7 +276,7 @@ describe('main', () => {
       );
       let storage = createStorage();
       await rootActions.getMessagesOfCurrentTopic(localStore, storage);
-      expect(localStore.getState().base.messages).eql([
+      expect(localStore.getState().base.messages).eql(_.reverse([
         {
           _id: messageFixtures.message1topic1._id.toHexString(),
           createdAt: Date.parse('2018-10-01'),
@@ -297,7 +297,7 @@ describe('main', () => {
             avatar: 'robert_url',
           },
         },
-      ]);
+      ]));
     });
   
     
@@ -406,7 +406,7 @@ describe('main', () => {
         });
         expect(messages).to.have.lengthOf(3);
         // the most recent message
-        expect(messages[2]).to.containSubset({
+        expect(messages[0]).to.containSubset({
           text: messageText,
           user: {
             name: 'Alice',
@@ -535,8 +535,8 @@ describe('main', () => {
     it('updateFcmToken', async () => {
       setCurrentUser(userFixtures.robert);
       const fcmToken = 'robertFcmToken345873'
-      const result = await server.updateFcmToken(fcmToken);
-      expect(result).to.equal('OK');
+      const userId = await server.updateFcmToken(fcmToken);
+      expect(userId).to.eql(userFixtures.robert._id.toHexString());
       const robert = await User.findById(userFixtures.robert._id);
       expect(robert.fcmToken).to.equal(fcmToken);
 

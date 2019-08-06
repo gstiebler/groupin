@@ -8,7 +8,13 @@ const {
 } = require("../constants/action-types");
 const server = require('../lib/server');
 const _ = require('lodash');
-const { mergeMessages } = require('../lib/messages');
+const { 
+  mergeMessages, 
+  getFirst,
+  getLast, 
+  removeFirst,
+  getNNew,
+} = require('../lib/messages');
 
 const NUM_ITEMS_PER_FETCH = 20;
 
@@ -50,27 +56,27 @@ const onTopicOpened = (topicId, storage) => async (dispatch) => {
   if (messagesEmpty) {
     messages = await server.getMessagesOfTopic({ topicId, limit: NUM_ITEMS_PER_FETCH });
   } else {
-    const lastCurrMessageId = _.last(currentMessages)._id;
+    const lastCurrMessageId = getLast(currentMessages)._id;
     messages = await server.getMessagesOfTopic({ 
       topicId, 
       limit: NUM_ITEMS_PER_FETCH,
       afterId: lastCurrMessageId,
     });
     if (_.isEmpty(messages)) { return }
-    const firstNewMessageId = messages[0]._id;
+    const firstNewMessageId = getFirst(messages)._id;
     // there's no hole, then messages can be merged
     if (lastCurrMessageId === firstNewMessageId) {
-      messages = mergeMessages(currentMessages, messages.slice(1));
+      messages = mergeMessages(currentMessages, removeFirst(messages));
     }
   }
-  await storage.setItem(topicId, messages.slice(messages.length - NUM_ITEMS_PER_FETCH));
+  await storage.setItem(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
   dispatch({ type: SET_MESSAGES, payload: { messages } });
 }
 
 const onOlderMessagesRequested = (topicId) => async (dispatch, getState) => {
   const currentMessages = getState().base.messages;
   if (_.isEmpty(currentMessages)) { return }
-  const firstMessage = currentMessages[0];
+  const firstMessage = getFirst(currentMessages);
   const olderMessages = await server.getMessagesOfTopic({ 
     topicId, 
     limit: NUM_ITEMS_PER_FETCH, 
@@ -95,7 +101,7 @@ async function getMessagesOfCurrentTopic(store, storage) {
   });
   store.dispatch({ type: SET_MESSAGES, payload: { messages } });
   // TODO: test line below
-  await storage.setItem(topicId, messages.slice(0, NUM_ITEMS_PER_FETCH));
+  await storage.setItem(topicId, messages);
 }
 
 const leaveGroup = (groupId, navigation) => async (dispatch, getState) => {

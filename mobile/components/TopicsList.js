@@ -18,7 +18,7 @@ export default TopicsListComponent = ({ navigation, topics, selectTopic, onAddTo
 
   return (
     <SafeAreaView>
-      <Button title="Adicionar tópico" onPress={() => onAddTopic(navigation)} style={{marginBottom: 20}} />
+      <Button title="Adicionar tópico" onPress={() => onAddTopic(navigation)} style={{marginBottom: 20, marginTop: 20}} />
       <Button title="Sair do grupo" onPress={() => onLeaveGroup(navigation)} />
       <List containerStyle={{marginBottom: 20}}>
         { topicItems }

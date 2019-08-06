@@ -39,7 +39,6 @@ const ChatComponent = ({
         messages={messages}
         user={{ _id: userId }}
         loadEarlier={true}
-        inverted={false}
         onSend={newMessages => onSend(newMessages)}
         onLoadEarlier={() => onLoadEarlier(navigation)}
       />
