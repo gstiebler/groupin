@@ -8,8 +8,8 @@ export default TopicsListComponent = ({ navigation, topics, selectTopic, onLeave
 
   const topicItems = topics.map((topic) => (
     <ListItem
-      roundAvatar
-      avatar={{ uri: topic.imgUrl }}
+      // roundAvatar
+      // avatar={{ uri: topic.imgUrl }}
       key={topic.id}
       title={topic.name}
       onPress={() => selectTopic(navigation, topic.id, topic.name)}

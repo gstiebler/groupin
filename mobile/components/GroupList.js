@@ -7,8 +7,8 @@ export default GroupListComponent = ({ navigation, ownGroups, selectGroup, willF
 
   const groupItems = ownGroups.map((group) => (
     <ListItem
-      roundAvatar
-      avatar={{ uri: group.imgUrl }}
+      // roundAvatar
+      // avatar={{ uri: group.imgUrl }}
       key={group.id}
       title={group.name}
       onPress={() => selectGroup(navigation, group.id, group.name) }
