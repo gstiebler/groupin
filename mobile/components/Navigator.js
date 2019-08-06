@@ -49,6 +49,11 @@ export const AppStackNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         title: navigation.state.params.groupName,
         headerBackTitle: null,
+        headerRight: (
+          <Button transparent>
+            <Icon name='add' onPress={() => navigation.push('NewTopic', { groupId: navigation.state.params.groupId })}/>
+         </Button>
+        ),
       }),  
     },
     NewTopic: { 

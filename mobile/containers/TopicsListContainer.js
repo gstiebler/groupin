@@ -12,7 +12,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     selectTopic: (navigation, topicId, topicName) => navigation.push('Chat', { topicId, topicName }),
-    onAddTopic: (navigation) => navigation.push('NewTopic', { groupId: navigation.state.params.groupId }),
     onLeaveGroup: (navigation) => dispatch(leaveGroup(navigation.state.params.groupId, navigation)),
     willFocus: ({ state }) => { 
       dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { currentlyViewedGroupId: state.params.groupId } });
