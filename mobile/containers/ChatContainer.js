@@ -24,7 +24,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onSend: messages => dispatch(sendMessages(messages)),
-    onBack: navigation => navigation.goBack(),
     willFocus: ({ state }) => { 
       dispatch({ type: CHAT_TITLE, payload: { title: state.params.topicName } });
       dispatch({ type: CHAT_TOPIC_ID, payload: { topicId: state.params.topicId } });
