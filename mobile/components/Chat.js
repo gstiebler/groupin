@@ -40,6 +40,7 @@ const ChatComponent = ({
         messages={messages}
         user={{ _id: userId }}
         loadEarlier={hasOlderMessages}
+        renderUsernameOnMessage={true}
         onSend={newMessages => onSend(newMessages)}
         onLoadEarlier={() => onLoadEarlier(navigation)}
       />
