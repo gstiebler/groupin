@@ -1,8 +1,8 @@
 import React from 'react';
-import { List, ListItem, Button } from 'react-native-elements'
+import { List, ListItem } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 
-export default TopicsListComponent = ({ navigation, topics, selectTopic, onLeaveGroup, willFocus, willLeave }) => {
+export default TopicsListComponent = ({ navigation, topics, selectTopic, willFocus, willLeave }) => {
   navigation.addListener('willFocus', willFocus);
   navigation.addListener('willBlur', willLeave);
 
@@ -18,7 +18,6 @@ export default TopicsListComponent = ({ navigation, topics, selectTopic, onLeave
 
   return (
     <SafeAreaView>
-      <Button title="Sair do grupo" onPress={() => onLeaveGroup(navigation)} style={{marginBottom: 20, marginTop: 20}} />
       <List containerStyle={{marginBottom: 20}}>
         { topicItems }
       </List>

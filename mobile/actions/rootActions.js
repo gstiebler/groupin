@@ -104,10 +104,9 @@ async function getMessagesOfCurrentTopic(store, storage) {
   await storage.setItem(topicId, messages);
 }
 
-const leaveGroup = (groupId, navigation) => async (dispatch, getState) => {
+const leaveGroup = (groupId) => async (dispatch, getState) => {
   await server.leaveGroup(groupId);
   await fetchOwnGroups(dispatch);
-  navigation.navigate('GroupList');
 }
 
 const updateFcmToken = async (store, fcmToken) => {

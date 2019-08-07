@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import GroupListComponent from '../components/GroupList';
 import { 
   fetchOwnGroups,
+  leaveGroup,
 } from "../actions/rootActions";
 
 const mapStateToProps = state => {
@@ -15,6 +16,7 @@ const mapDispatchToProps = dispatch => {
     selectGroup: (navigation, groupId, groupName) => { 
       navigation.navigate('TopicsList', { groupId, groupName });
     },
+    onLeaveGroup: (groupId) => dispatch(leaveGroup(groupId)),
     willFocus: () => {
       fetchOwnGroups(dispatch);
     },
