@@ -9,6 +9,7 @@ import GroupsSearch from '../containers/GroupsSearchContainer';
 import Settings from '../components/Settings';
 import React from 'react';
 import { Button, Icon, Text } from 'native-base';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { 
   createSwitchNavigator, 
@@ -80,6 +81,24 @@ export const AppStackNavigator = createStackNavigator(
 const tabNavigator = createBottomTabNavigator({
   AppStack: AppStackNavigator,
   Settings: Settings,
+},
+{
+  navigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ focused, horizontal, tintColor }) => {
+      const { routeName } = navigation.state;
+      const iconByRoute = {
+        'AppStack': `group`,
+        'Settings': `settings`,
+      };
+
+      return <MaterialIcons name={iconByRoute[routeName]} size={horizontal ? 20 : 25} color={tintColor} />;
+    },
+  }),
+  tabBarOptions: {
+    activeTintColor: 'purple',
+    inactiveTintColor: 'gray',
+    showLabel: false,
+  },
 });
 
 export const RootSwitchNavigator = createSwitchNavigator(
