@@ -85,3 +85,12 @@ export async function baseAuth({ dispatch, getState, navigation, userId, errorMe
     await initLogin(dispatch, getState, navigation, idToken);
   }
 }
+ 
+export const logout = (navigation) => async (dispatch, getState) => {
+  try {
+    await firebase.auth().signOut();
+    navigation.navigate('Login');
+  } catch (error) {
+    console.log(error);
+  }
+}

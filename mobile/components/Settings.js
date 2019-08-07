@@ -5,10 +5,13 @@ import {
   Body, 
   Right, 
   Title, 
+  Text,
+  Button,
 } from 'native-base';
 
 const SettingsComponent = ({ 
   navigation,
+  logout,
 }) => {  
   // navigation.addListener('willFocus', willFocus);
 
@@ -24,6 +27,9 @@ const SettingsComponent = ({
   return (
     <Container>
       { header }
+      <Button onPress={() => logout(navigation)}>
+        <Text>Sair</Text>
+      </Button>
     </Container>
   );
 }

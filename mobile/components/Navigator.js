@@ -6,7 +6,7 @@ import Chat from '../containers/ChatContainer';
 import Register from '../containers/RegisterContainer';
 import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
-import Settings from '../components/Settings';
+import Settings from '../containers/SettingsContainer';
 import React from 'react';
 import { Button, Icon, Text } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
