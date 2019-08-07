@@ -6,12 +6,14 @@ import Chat from '../containers/ChatContainer';
 import Register from '../containers/RegisterContainer';
 import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
+import Settings from '../components/Settings';
 import React from 'react';
 import { Button, Icon, Text } from 'native-base';
 
 import { 
   createSwitchNavigator, 
   createStackNavigator,
+  createBottomTabNavigator,
 } from 'react-navigation'
 
 export const AppStackNavigator = createStackNavigator(
@@ -75,11 +77,16 @@ export const AppStackNavigator = createStackNavigator(
   },
 );
 
+const tabNavigator = createBottomTabNavigator({
+  AppStack: AppStackNavigator,
+  Settings: Settings,
+});
+
 export const RootSwitchNavigator = createSwitchNavigator(
   {
     Register: { screen: Register },
     Login: { screen: Login },
-    AppStack: { screen: AppStackNavigator },
+    TabNavigator: { screen: tabNavigator },
   },
   { initialRouteName: 'Login' },
 );
