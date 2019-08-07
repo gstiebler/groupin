@@ -30,6 +30,7 @@ const store = createStore(
 );
 
 const rootActions = require('../../../../mobile/actions/rootActions');
+const groupActions = require('../../../../mobile/actions/groupActions');
 const groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
 const newTopicActions = require('../../../../mobile/actions/newTopicActions');
 
@@ -300,6 +301,15 @@ describe('main', () => {
       ]));
     });
   
+    it('getGroupInfo', async () => {
+      const localStore = createStore(rootReducer, {});
+      const localDispatch = localStore.dispatch.bind(localStore);
+      const groupId = groupFixtures.firstGroup._id.toHexString();
+      setCurrentUser(userFixtures.robert);
+      await groupActions.getGroupInfo(groupId)(localDispatch);
+      console.log(localStore.getState().base.currentGroupInfo);
+    });
+    
     
   });
 

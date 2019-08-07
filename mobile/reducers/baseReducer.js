@@ -4,6 +4,7 @@ const {
   SET_OWN_GROUPS,
   SET_TOPICS,
   SET_MESSAGES,
+  CURRENT_GROUP_INFO,
   FCM_TOKEN,
   USER_ID,
   CURRENTLY_VIEWED_GROUP_ID,
@@ -34,6 +35,7 @@ const initialState = {
   currentlyViewedGroupId: null,
   currentlyViewedTopicId: null,
   hasOlderMessages: false,
+  currentGroupInfo: null,
 };
 
 const addNewMessages = (state, { messages }) => ({
@@ -52,6 +54,7 @@ const reducerFunctions = {
   [USER_ID]: mutationHelper('userId'),
   [FCM_TOKEN]: mutationHelper('fcmToken'),
   [HAS_OLDER_MESSAGES]: mutationHelper('hasOlderMessages'),
+  [CURRENT_GROUP_INFO]: mutationHelper('currentGroupInfo'),
 };
 
 module.exports = reducerMain(initialState, reducerFunctions);

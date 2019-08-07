@@ -168,6 +168,26 @@ async function updateFcmToken(fcmToken) {
   return res.updateFcmToken;
 }
 
+async function getGroupInfo(groupId) {
+  const query = `
+    query {
+      getGroupInfo (
+        groupId: "${groupId}",
+      ) {
+        _id,
+        name,
+        imgUrl,
+        description,
+        createdBy,
+        createdAt
+      }
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.getGroupInfo;
+}
+
+
 module.exports = {
   register,
   sendMessage,
@@ -180,4 +200,5 @@ module.exports = {
   joinGroup,
   leaveGroup,
   updateFcmToken,
+  getGroupInfo,
 };

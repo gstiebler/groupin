@@ -2,6 +2,7 @@ module.exports = {
   RESET_BASE: 'reset base',
   ADD_NEW_MESSAGES: "add new messages",
   SET_OWN_GROUPS: "SET_OWN_GROUPS",
+  CURRENT_GROUP_INFO: 'set current group info',
   SET_TOPICS: "SET_TOPICS",
   SET_MESSAGES: "set messages",
   FCM_TOKEN: 'firebase token',

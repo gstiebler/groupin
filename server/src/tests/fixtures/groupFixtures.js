@@ -5,6 +5,7 @@ const groups = {
   firstGroup: {
     _id: groupIds.firstGroup,
     name: 'First Group',
+    description: 'Description of the first group',
     imgUrl: 'url1',
     createdBy: userFixtures.alice._id,
     createdAt: Date.parse('2018-06-05'),

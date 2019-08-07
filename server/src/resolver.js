@@ -8,7 +8,6 @@ const Promise = require('bluebird');
 const logger = require('./config/winston');
 const _ = require('lodash');
 const md5 = require('md5');
-const userHelper = require('./lib/userHelper');
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
@@ -45,6 +44,37 @@ const Query = {
         .lean();
       subscribeToAllGroups(user, user.fcmToken);
       return groups.map(group => ({ ...group, id: group._id }));
+    }
+  },  
+  
+  getGroupInfo: {
+    type: new GraphQLObjectType({
+      name: 'groupInfoType',
+      fields: {
+        _id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        imgUrl: { type: GraphQLString },        
+        description: { type: GraphQLString },
+        createdBy: { type: GraphQLString },
+        createdAt: { type: GraphQLFloat }
+      },
+    }),
+    args: { 
+      groupId: { type: GraphQLString },
+    },
+    async resolve(root, { groupId }, { user }, fieldASTs) {
+      if (!user) {
+        throw new Error(`Method only available with a user`);
+      }
+
+      const group = await Group.findById(groupId, {
+        name: 1,
+        imgUrl: 1,
+        description: 1,
+        createdBy: 1,
+        createdAt: 1,
+      }).lean();
+      return group;
     }
   },
 
