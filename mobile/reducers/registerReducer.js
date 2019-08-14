@@ -1,20 +1,17 @@
 const { 
   REGISTER_NAME,
-  REGISTER_USERNAME,
-  REGISTER_PASSWORD,
+  REGISTER_VERIFICATION_CODE,
 } = require("../constants/action-types");
 const { mutationHelper, reducerMain } = require('../lib/helpers');
 
 const initialState = {
   name: '',
-  username: '',
-  password: '',
+  verificationCode: '',
 };
 
 const reducerFunctions = {
   [REGISTER_NAME]: mutationHelper('name'),
-  [REGISTER_USERNAME]: mutationHelper('username'),
-  [REGISTER_PASSWORD]: mutationHelper('password'),
+  [REGISTER_VERIFICATION_CODE]: mutationHelper('verificationCode'),
 };
 
 module.exports = reducerMain(initialState, reducerFunctions);

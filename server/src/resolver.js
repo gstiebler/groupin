@@ -22,6 +22,21 @@ const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
 
 
 const Query = {
+  getUserId: {
+    type: new GraphQLObjectType({
+      name: 'getUserIdType',
+      fields: {
+        id: { type: GraphQLString },
+      },
+    }),
+    async resolve(root, args, { user }, fieldASTs) {
+      if (!user) {
+        return { id: 'NO USER' };
+      }
+      return { id: user._id.toHexString() };
+    }
+  },  
+
   ownGroups: {
     type: new GraphQLList(
       new GraphQLObjectType({
@@ -222,22 +237,16 @@ const Mutation = {
     }),
     args: { 
       name: { type: GraphQLString },
-      userName: { type: GraphQLString },
-      password: { type: GraphQLString },
-      uid: { type: GraphQLString },
     },
-    async resolve(root, { name, userName, password, uid }) {
-      // TODO: exception on simple passwords
-      const previousUser = await User.findOne({ email: userName });
+    async resolve(root, { name }, { firebaseId, phoneNumber }) {
+      const previousUser = await User.findOne({ phoneNumber });
       if (previousUser) {
         throw new Error('User is already registered');
       }
       const user = await User.create({
-        uid,
         name,
-        email: userName,
-        // TODO: replace by SMS code
-        tempPassword: md5(password),
+        phoneNumber,
+        uid: firebaseId,
       });
 
       return {
@@ -422,7 +431,6 @@ const Mutation = {
         { $set: { fcmToken } }
       );
       await subscribeToAllGroups(user, fcmToken);
-      return user._id;
     }
   },
 }

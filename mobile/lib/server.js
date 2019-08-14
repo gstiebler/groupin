@@ -1,13 +1,10 @@
 const graphql = require('./graphqlConnect');
 
-async function register({name, userName, password, uid}) {
+async function register({ name }) {
   const query = `
     mutation {
       register (
         name: "${name}",
-        userName: "${userName}"
-        password: "${password}",
-        uid: "${uid}",
       ) {
         errorMessage
       }
@@ -77,6 +74,16 @@ async function createTopic({ topicName, groupId }) {
   `;
   const res = await graphql.sendQuery(query);
   return res.createTopic;
+}
+
+async function getUserId() {
+  const query = `
+    query {
+      getUserId { id }
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.getUserId;
 }
 
 async function getOwnGroups() {
@@ -189,6 +196,7 @@ async function getGroupInfo(groupId) {
 
 
 module.exports = {
+  getUserId,
   register,
   sendMessage,
   createGroup,

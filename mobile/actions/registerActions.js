@@ -1,42 +1,57 @@
 import firebase from 'react-native-firebase';
 import * as server from '../lib/server';
-import { baseAuth } from './loginActions';
+import { userLoggedIn } from './loginActions';
 import { Alert } from 'react-native';
+import * as graphqlConnect from '../lib/graphqlConnect';
 
 export const register = (navigation) => async (dispatch, getState) => {
-  const {name, username, password} = getState().register;
+  const { name, verificationCode } = getState().register;
+  const { phoneNumber, confirmResult } = getState().login;
   try {
-    try {
-      await firebase
-        .auth()
-        .createUserWithEmailAndPassword(username, password);
-    } catch (error) {
-      const msgByCode = {
-        'auth/email-already-in-use': 'Usuário já registrado',
-        'auth/invalid-email': 'E-mail inválido',
-        'auth/weak-password': 'Senha fraca. Por favor, escolha uma senha mais complexa.',
-      };
-      const errorMessage = msgByCode[error.code] || 'Erro';
-      Alert.alert(
-        'Erro',
-        errorMessage,
-        [
-          {text: 'OK'},
-        ],
-        {cancelable: false},
-      );
-    }
-
-    const user = firebase.auth().currentUser;
-    // await user.sendEmailVerification();
-    const { errorMessage } = await server.register({
-      name, 
-      userName: username, 
-      password, 
-      uid: user.uid,
-    });
-    baseAuth({ dispatch, getState, navigation, uid: user.uid, errorMessage });
+    await confirmResult.confirm(verificationCode);
   } catch (error) {
-    console.error(error.message);
+    const msgByCode = {
+      'auth/invalid-verification-code': 'Código de verificação inválido',
+      'auth/missing-verification-code': 'Código de verificação vazio',
+    };
+    const errorMessage = msgByCode[error.code] || 'Erro';
+    Alert.alert(
+      'Erro',
+      errorMessage,
+      [
+        {text: 'OK'},
+      ],
+      {cancelable: false},
+    );
+    throw new Error(error);
+  }
+
+  try {
+    // const fcmToken = await firebase.messaging().getToken();
+    const fbUser = firebase.auth().currentUser;
+    const fbToken = await fbUser.getIdToken(true);  
+    graphqlConnect.setToken(fbToken);
+    const userId = (await server.getUserId()).id;
+    if (userId === 'NO USER') {
+      const { errorMessage } = await server.register({
+        name, 
+        phoneNumber,
+      });
+      if (errorMessage) {
+        Alert.alert(
+          'Erro',
+          errorMessage,
+          [
+            {text: 'OK'},
+          ],
+          {cancelable: false},
+        );
+        console.error(error.message);
+        throw new Error(errorMessage);
+      }
+    }
+    await userLoggedIn({ dispatch, navigation, userId });
+  } catch (error) {
+    console.error(error);
   }
 }

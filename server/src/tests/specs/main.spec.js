@@ -337,13 +337,9 @@ describe('main', () => {
       });
 
       const userByUid = await User.findOne({ uid });
-      expect(userByUid.email).to.equal('(21)999995555');
+      expect(userByUid.phoneNumber).to.equal('(21)999995555');
       expect(userByUid.name).to.equal('Guilherme');
       expect(userByUid.uid).to.equal(uid);
-      expect(userByUid.tempPassword).to.be.not.equal(password);
-
-      const userByPassword = await User.findOne({ tempPassword: md5(password) });
-      expect(userByPassword.email).to.equal('(21)999995555');
     });
 
     describe('sendMessage', () => {

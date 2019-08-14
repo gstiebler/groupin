@@ -4,12 +4,9 @@ import styles from '../Style';
 
 const LoginComponent = ({ 
     navigation,
-    password, 
-    username,
-    changeUsername, 
-    changePassword,
+    phoneNumber,
+    changePhoneNumber,
     onLogin,
-    onShowRegister,
     willFocus,
   }) => {
   navigation.addListener('willFocus', () => willFocus(navigation));
@@ -20,24 +17,11 @@ const LoginComponent = ({
       <TextInput
         style={styles.textInput}
         autoCapitalize="none"
-        placeholder="E-mail"
-        onChangeText={changeUsername}
-        value={username}
+        placeholder="Número de telefone"
+        onChangeText={changePhoneNumber}
+        value={phoneNumber}
       />
-      <TextInput
-        secureTextEntry
-        style={styles.textInput}
-        autoCapitalize="none"
-        placeholder="Senha"
-        onChangeText={changePassword}
-        value={password}
-      />
-      <Button title="Login" color={ styles.title1.color } onPress={() => onLogin(navigation)} />
-      <View>
-      <Text> Não possui uma conta? 
-        <Text onPress={() => onShowRegister(navigation)} style={ styles.title2 }> Fazer cadastro </Text>
-      </Text>
-      </View>
+      <Button title="Enviar" color={ styles.title1.color } onPress={() => onLogin(navigation)} />
     </SafeAreaView>
   );
 }

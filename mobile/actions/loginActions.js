@@ -1,34 +1,22 @@
 import { 
   USER_ID,
+  FB_CONFIRM_RESULT,
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
 // TODO: remove include of React stuff
 import { Alert } from 'react-native';
-import { setToken } from '../lib/graphqlConnect';
+import * as graphqlConnect from '../lib/graphqlConnect';
 import firebase from 'react-native-firebase';
-import { 
-  updateFcmToken,
-} from "../actions/rootActions";
-
-async function initLogin(dispatch, getState, navigation, idToken) {      
-  setToken(idToken);
-  const userId = await server.updateFcmToken(getState().base.fcmToken);
-  dispatch({ type: USER_ID, payload: { userId } });
-  await fetchOwnGroups(dispatch);
-  navigation.navigate('GroupList');
-}
 
 export const login = (navigation) => async (dispatch, getState) => {
-  const { username, password } = getState().login;
+  const { phoneNumber } = getState().login;
   try {
-    await firebase
-      .auth()
-      .signInWithEmailAndPassword(username, password);
-    const fcmToken = await firebase.messaging().getToken();
-    const userId = await server.updateFcmToken(fcmToken);
-    await baseAuth({ dispatch, getState, navigation, userId });
+    const confirmResult = await firebase.auth().signInWithPhoneNumber(phoneNumber);
+    dispatch({ type: FB_CONFIRM_RESULT, payload: { confirmResult } });
+    navigation.navigate('Register');
   } catch(error) {
+    //TODO: handle wrong code
     const msgByCode = {
       'auth/user-not-found': 'Usuário não encontrado',
       'auth/invalid-email': 'E-mail inválido',
@@ -48,17 +36,20 @@ export const login = (navigation) => async (dispatch, getState) => {
 
 export const willFocus = (navigation) => async (dispatch, getState) => {
   try {
-    const user = firebase.auth().currentUser;
+    const firebaseUser = firebase.auth().currentUser;
     // check if user is already logged in
-    if (user) {
-      const idToken = await user.getIdToken(true);
-      initLogin(dispatch, getState, navigation, idToken);
+    if (firebaseUser) {
+      const fbUser = firebase.auth().currentUser;
+      const fbToken = await fbUser.getIdToken(true);  
+      graphqlConnect.setToken(fbToken);
+      const userId = (await server.getUserId()).id;
+      userLoggedIn({ dispatch, navigation, userId });
     }
 
     firebase.auth().onAuthStateChanged(async function(fbUser) {
       if (fbUser) {
-        const idToken = await fbUser.getIdToken(true);
-        setToken(idToken);
+        const fbToken = await fbUser.getIdToken(true);
+        graphqlConnect.setToken(fbToken);
       } else {
         console.log('no user yet');
       }
@@ -68,22 +59,10 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
   }
 }
 
-export async function baseAuth({ dispatch, getState, navigation, userId, errorMessage }) {
-  if (errorMessage) {
-    Alert.alert(
-      'Erro',
-      errorMessage,
-      [
-        {text: 'OK'},
-      ],
-      {cancelable: false},
-    );
-  } else {
-    dispatch({ type: USER_ID, payload: { userId } });
-    const user = firebase.auth().currentUser;
-    const idToken = await user.getIdToken(true);
-    await initLogin(dispatch, getState, navigation, idToken);
-  }
+export async function userLoggedIn({ dispatch, navigation, userId }) {
+  dispatch({ type: USER_ID, payload: { userId } });
+  await fetchOwnGroups(dispatch);
+  navigation.navigate('GroupList');
 }
  
 export const logout = (navigation) => async (dispatch, getState) => {

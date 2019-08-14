@@ -13,13 +13,11 @@ import styles from '../Style';
 const RegisterComponent = ({ 
     navigation,
     name, 
-    username, 
-    password, 
+    verificationCode, 
     changeName, 
-    changeUsername, 
-    changePassword,
+    changeVerificationCode,
     onRegister,
-    onShowLogin,
+    onBack,
   }) => {
   return (
     <SafeAreaView style={styles.container}>
@@ -32,25 +30,15 @@ const RegisterComponent = ({
           value={name}
         />
         <TextInput
-          placeholder="E-mail"
+          placeholder="Código de verificação"
           autoCapitalize="none"
           style={styles.textInput}
-          onChangeText={changeUsername}
-          value={username}
-        />
-        <TextInput
-          secureTextEntry
-          placeholder="Senha"
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={changePassword}
-          value={password}
+          onChangeText={changeVerificationCode}
+          value={verificationCode}
         />
         <Button title="Registrar" color={ styles.title1.color } onPress={() => onRegister(navigation)}/>
         <View>
-        <Text> Já possui uma conta? 
-          <Text onPress={() => onShowLogin(navigation)} style={ styles.title2 }> Login </Text>
-        </Text>
+        <Text onPress={() => onBack(navigation)} style={ styles.title2 }> Editar número de telefone </Text>
       </View>
     </SafeAreaView>
   );

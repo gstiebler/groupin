@@ -13,11 +13,10 @@ module.exports = {
   CURRENTLY_VIEWED_TOPIC_ID: 'currently viewed topic ID',
 
   REGISTER_NAME: 'register name',
-  REGISTER_USERNAME: 'register username',
-  REGISTER_PASSWORD: 'register password',
+  REGISTER_VERIFICATION_CODE: 'register verification code',
 
-  LOGIN_USERNAME: 'login username',
-  LOGIN_PASSWORD: 'login password',
+  LOGIN_PHONE_NUMBER: 'login phone number',
+  FB_CONFIRM_RESULT: 'firebase confirm result',
 
   GROUPS_SEARCH_TEXT: 'groups search text',
   GROUPS_SEARCH_ITEMS: 'groups search items',
