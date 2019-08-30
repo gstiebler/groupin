@@ -18,9 +18,11 @@ export const login = (navigation) => async (dispatch, getState) => {
   } catch(error) {
     //TODO: handle wrong code
     const msgByCode = {
-      'auth/user-not-found': 'Usuário não encontrado',
-      'auth/invalid-email': 'E-mail inválido',
-      'auth/wrong-password': 'Senha inválida',
+      'auth/captcha-check-failed': 'Falha no Captcha',
+      'auth/invalid-phone-number': 'Número de telefone inválido',
+      'auth/quota-exceeded': 'Quota de SMS excedida',
+      'auth/user-disabled': 'Usuário desabilitado',
+      'auth/operation-not-allowed': 'Operação não permitida',
     };
     const errorMessage = msgByCode[error.code] || 'Erro';
     Alert.alert(
