@@ -22,6 +22,22 @@ const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
 
 
 const Query = {
+
+  getHello: {
+    type: new GraphQLObjectType({
+      name: 'getHelloType',
+      fields: {
+        msg: { type: GraphQLString },
+      },
+    }),
+    args: { 
+      pass: { type: GraphQLString },
+    },
+    async resolve(root, { pass }, { user }, fieldASTs) {
+      return { msg: pass === 'foca' ? 'OK' : 'ERROR' };
+    }
+  }, 
+
   getUserId: {
     type: new GraphQLObjectType({
       name: 'getUserIdType',

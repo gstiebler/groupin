@@ -56,6 +56,14 @@ package:
 
 plugins:
   - serverless-offline
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: api.gstiebler.net
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
 
 functions:
   graphql:
