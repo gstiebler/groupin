@@ -28,7 +28,9 @@ before(async () => {
   await mongooseConfig.init();
   sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
     const user = await User.findById(currentUserHolder.currentUser._id);
-    const result = await graphql(schema, query, null, { user });
+    const firebaseId = 'dk49sdfjhk';
+    const phoneNumber = '(21)999995555';
+    const result = await graphql(schema, query, null, { user, firebaseId, phoneNumber });
     if (result.errors) {
       for (const error of result.errors) {
         logger.debug(error.stack);

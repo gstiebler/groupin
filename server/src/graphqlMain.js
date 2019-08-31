@@ -13,11 +13,11 @@ async function main(graphqlQuery, authFbToken) {
     let phoneNumber = null;
     let firebaseId = null;
     // ***
-    console.log(`Firebase auth token: ${authFbToken}`);
+    logger.debug(`Firebase auth token: ${authFbToken}`);
     if (authFbToken) {
       // authFbToken comes from the client app  
       const decodedToken = await admin.auth().verifyIdToken(authFbToken);
-      console.log(decodedToken);
+      logger.debug(decodedToken);
       firebaseId = decodedToken.uid;
       phoneNumber = decodedToken.phone_number;
       user = _.isEmpty(firebaseId) ? null : await User.findOne({ uid: firebaseId });

@@ -327,13 +327,9 @@ describe('main', () => {
     });
 
     it('register', async () => {
-      const password = 'smallpassword';
       const uid = 'dk49sdfjhk';
       await server.register({
         name: 'Guilherme',
-        userName: '(21)999995555',
-        password,
-        uid,
       });
 
       const userByUid = await User.findOne({ uid });
@@ -541,8 +537,7 @@ describe('main', () => {
     it('updateFcmToken', async () => {
       setCurrentUser(userFixtures.robert);
       const fcmToken = 'robertFcmToken345873'
-      const userId = await server.updateFcmToken(fcmToken);
-      expect(userId).to.eql(userFixtures.robert._id.toHexString());
+      await server.updateFcmToken(fcmToken);
       const robert = await User.findById(userFixtures.robert._id);
       expect(robert.fcmToken).to.equal(fcmToken);
 
