@@ -3,14 +3,16 @@ const {
   GROUPS_SEARCH_ITEMS,
 } = require("../constants/action-types");
 const server = require('../lib/server');
+const _ = require('lodash');
 
 const findGroups = async (dispatch, searchText) => {
   dispatch({ type: GROUPS_SEARCH_TEXT, payload: { searchText } });
-  const groups = await server.findGroups({ 
+  const findGroups = () => server.findGroups({ 
     searchText, 
     limit: 20, 
     startingId: '',
   });
+  const groups = _.isEmpty(searchText) ? [] : await findGroups();
   dispatch({ type: GROUPS_SEARCH_ITEMS, payload: { groups } });
 }
 
