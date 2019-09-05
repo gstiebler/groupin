@@ -6,8 +6,6 @@ import {
   Body, 
   Right, 
   Thumbnail,
-  Title, 
-  Subtitle, 
   Button, 
   Icon, 
   Item, 
@@ -27,10 +25,10 @@ const GroupSearchComponent = ({
   }) => {
   const header = (
     <Header searchBar rounded>   
-          <Item>
-            <Icon name="ios-search" />
-            <Input placeholder="Buscar" value={searchText} onChangeText={changeSearchText}/>
-          </Item>
+      <Item>
+        <Icon name="ios-search" />
+        <Input placeholder="Buscar" value={searchText} onChangeText={changeSearchText}/>
+      </Item>
     </Header>
   );
 

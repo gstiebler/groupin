@@ -1,5 +1,4 @@
 import React from 'react';
-// import { List, ListItem } from 'react-native-elements'
 import { ListView } from 'react-native';
 import { Container, List, ListItem, Button, Text, Icon } from 'native-base';
 
@@ -20,10 +19,6 @@ export default GroupListComponent = ({ navigation, ownGroups, selectGroup, onLea
             <Text> {"  " + group.name} </Text>
           </ListItem>
         }
-        /*renderLeftHiddenRow={data =>
-          <Button full onPress={() => alert(data)}>
-            <Icon active name="information-circle" />
-          </Button>}*/
         renderRightHiddenRow={(group, secId, rowId, rowMap) =>
           <Button full danger onPress={() => onLeaveGroup(group.id)}>
             <Icon active name="trash" />
