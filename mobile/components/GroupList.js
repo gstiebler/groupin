@@ -6,16 +6,6 @@ import { Container, List, ListItem, Button, Text, Icon } from 'native-base';
 export default GroupListComponent = ({ navigation, ownGroups, selectGroup, onLeaveGroup, willFocus }) => {
   navigation.addListener('willFocus', willFocus);
 
-  const groupItems = ownGroups.map((group) => (
-    <ListItem
-      // roundAvatar
-      // avatar={{ uri: group.imgUrl }}
-      key={group.id}
-      title={group.name}
-      onPress={() => selectGroup(navigation, group.id, group.name) }
-    />
-  ));
-
   let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
   return (
