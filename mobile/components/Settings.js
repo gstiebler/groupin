@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { 
   Container, 
   Header,
@@ -8,6 +9,13 @@ import {
   Text,
   Button,
 } from 'native-base';
+
+const styles = StyleSheet.create({
+  button: {
+    margin: 20,
+  },
+});
+
 
 const SettingsComponent = ({ 
   navigation,
@@ -27,7 +35,7 @@ const SettingsComponent = ({
   return (
     <Container>
       { header }
-      <Button onPress={() => logout(navigation)}>
+      <Button onPress={() => logout(navigation)} style={styles.button} >
         <Text>Sair</Text>
       </Button>
     </Container>
