@@ -23,6 +23,4 @@ module.exports = {
 
   CHAT_TITLE: 'chat title',
   CHAT_TOPIC_ID: 'chat topic ID',
-
-  NEW_TOPIC_NAME: 'new topic name',
 };

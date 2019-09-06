@@ -1,7 +1,6 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { StyleSheet } from 'react-native';
-import { FormLabel, FormInput, Button } from 'react-native-elements'
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
 
 const styles = StyleSheet.create({
   basic: {
@@ -10,23 +9,29 @@ const styles = StyleSheet.create({
 });
 
 const NewTopicComponent = ({ 
-    navigation,
-    name, 
-    changeName, 
-    onCreate,
-    willFocus,
-  }) => {
-  navigation.addListener('willFocus', willFocus);
+  navigation,
+  onCreate,
+}) => {
+  const [name, setName] = useState(0);
 
   return (
-    <SafeAreaView>
-      <FormLabel>Nome do tópico</FormLabel>
-      <FormInput 
-        value={name} 
-        onChangeText={changeName} 
-      />
-      <Button title="Criar tópico" onPress={() => onCreate(navigation)} />
-    </SafeAreaView>
+    <Container style={styles.basic} >
+      <Content>
+        <Form>
+          <Item>
+            <Input 
+              placeholder="Nome do novo tópico" 
+              value={name} 
+              onChangeText={setName} 
+              style={{paddingBottom: 20}}
+            />
+          </Item>
+        </Form>
+        <Button block success onPress={() => onCreate(navigation, name)} >
+          <Text>Criar tópico</Text>
+        </Button>
+      </Content>
+    </Container>
   );
 }
 

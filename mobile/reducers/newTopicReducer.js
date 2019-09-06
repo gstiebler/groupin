@@ -1,15 +1,15 @@
 const { 
-  NEW_TOPIC_NAME,
+  // NEW_TOPIC_NAME,
 } = require("../constants/action-types");
 
 const { mutationHelper, reducerMain } = require('../lib/helpers');
 
 const initialState = {
-  name: '',
+  // name: '',
 };
 
 const reducerFunctions = {
-  [NEW_TOPIC_NAME]: mutationHelper('name'),
+  // [NEW_TOPIC_NAME]: mutationHelper('name'),
 };
 
 module.exports = reducerMain(initialState, reducerFunctions);
