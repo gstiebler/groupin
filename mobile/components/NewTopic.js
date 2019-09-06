@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
 
 const styles = StyleSheet.create({
   basic: {
-    margin: 20,
+    padding: 20,
   },
 });
 
