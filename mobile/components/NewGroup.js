@@ -1,28 +1,36 @@
-import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { FormLabel, FormInput, Button } from 'react-native-elements'
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
 
-class NewGroupComponent extends React.Component {
+const styles = StyleSheet.create({
+  basic: {
+    padding: 20,
+  },
+});
 
-  constructor(props) {
-    super(props);
-    this.state = { name: '' };
-  }
+const NewGroupComponent = ({ navigation, onCreate }) => {
 
-  render() {
-    const { navigation, onCreate } = this.props;
-    const { name } = this.state;
-    return (
-      <SafeAreaView>
-        <FormLabel>Nome do novo grupo</FormLabel>
-        <FormInput 
-          value={name} 
-          onChangeText={newName => this.setState({ name: newName })} 
-        />
-        <Button title="Criar grupo" onPress={() => onCreate(navigation, name)} />
-      </SafeAreaView>
-    );
-  }
+  const [name, setName] = useState(0);
+
+  return (
+    <Container style={styles.basic} >
+      <Content>
+        <Form>
+          <Item>
+            <Input 
+              placeholder="Nome do novo grupo" 
+              value={name} 
+              onChangeText={setName} 
+              style={{paddingBottom: 20}}
+            />
+          </Item>
+        </Form>
+        <Button block success onPress={() => onCreate(navigation, name)} >
+          <Text>Criar grupo</Text>
+        </Button>
+      </Content>
+    </Container>
+  );
 }
 
 export default NewGroupComponent;
