@@ -436,11 +436,7 @@ describe('main', () => {
       beforeEach(async () => {
         let navigation = { goBack: () => {} };
         const groupId = groupFixtures.secondGroup._id.toHexString();
-        localDispatch({ 
-          type: 'new topic name', 
-          payload: { name: topicName },
-        });
-        await newTopicActions.createTopic(navigation, groupId)(localDispatch, localGetState);
+        await newTopicActions.createTopic(navigation, groupId, topicName)(localDispatch, localGetState);
       });
 
       it('push', async () => {
