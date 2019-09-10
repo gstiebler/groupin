@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:8.11.1
-      - image: mongo:3.6
+      - image: mongo:4.0
     environment:
       NODE_ENV: test
     steps:
