@@ -4,8 +4,7 @@ import { userLoggedIn } from './loginActions';
 import { Alert } from 'react-native';
 import * as graphqlConnect from '../lib/graphqlConnect';
 
-export const register = (navigation) => async (dispatch, getState) => {
-  const { name, verificationCode } = getState().register;
+export const register = (navigation, name, verificationCode) => async (dispatch, getState) => {
   const { phoneNumber, confirmResult } = getState().login;
   try {
     await confirmResult.confirm(verificationCode);

@@ -12,9 +12,6 @@ module.exports = {
   CURRENTLY_VIEWED_GROUP_ID: 'currently viewed group ID',
   CURRENTLY_VIEWED_TOPIC_ID: 'currently viewed topic ID',
 
-  REGISTER_NAME: 'register name',
-  REGISTER_VERIFICATION_CODE: 'register verification code',
-
   LOGIN_PHONE_NUMBER: 'login phone number',
   FB_CONFIRM_RESULT: 'firebase confirm result',
 

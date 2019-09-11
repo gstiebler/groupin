@@ -1,45 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   SafeAreaView, 
-  StyleSheet, 
-  Text, 
   TextInput,
-  View,
-  Button, 
-  TouchableOpacity,
 } from 'react-native';
+import { 
+  Container, 
+  Button, 
+  Text,
+  Content,
+  Form,
+  Item,
+  Input,
+} from 'native-base';
+import CodeInput from 'react-native-confirmation-code-field';
 import styles from '../Style';
 
 const RegisterComponent = ({ 
-    navigation,
-    name, 
-    verificationCode, 
-    changeName, 
-    changeVerificationCode,
-    onRegister,
-    onBack,
-  }) => {
+  navigation,
+  onRegister,
+  onBack,
+}) => {
+
+  const [name, changeName] = useState(0);
+  const [verificationCode, changeVerificationCode] = useState(0);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={ styles.title1 }>Registro</Text>
-        <TextInput
-          placeholder="Nome"
-          autoCapitalize="words"
-          style={styles.textInput}
-          onChangeText={changeName}
-          value={name}
-        />
-        <TextInput
-          placeholder="Código de verificação"
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={changeVerificationCode}
-          value={verificationCode}
-        />
-        <Button title="Registrar" color={ styles.title1.color } onPress={() => onRegister(navigation)}/>
-        <View>
-        <Text onPress={() => onBack(navigation)} style={ styles.title2 }> Editar número de telefone </Text>
-      </View>
+    <SafeAreaView style={{ flex: 1 }} >
+      <Container>
+        <Content contentContainerStyle={styles.container}>
+          <Text style={ styles.title1 }>Registro</Text>
+          <Form>
+            <Item>
+              <Input 
+                placeholder="Nome"
+                onChangeText={changeName} 
+                style={{paddingBottom: 20}}
+              />
+            </Item>
+          </Form>
+          <CodeInput onFulfill={changeVerificationCode} />
+          <Button primary full onPress={() => onRegister(navigation, name, verificationCode)}>
+            <Text> Registrar </Text>
+          </Button>
+          <Button primary full onPress={() => onBack(navigation)}>
+            <Text> Editar número de telefone </Text>
+          </Button>
+        </Content>
+      </Container>
     </SafeAreaView>
   );
 }
