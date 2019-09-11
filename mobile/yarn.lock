@@ -2800,6 +2800,11 @@ globals@^11.1.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.11.0.tgz#dcf93757fa2de5486fbeed7118538adf789e9c2e"
   integrity sha512-WHq43gS+6ufNOEqlrDBxVEbb8ntfXrfAUU2ZOpCxrBdGKW3gyv8mCxAfIBD0DroPKGrJ2eSsXsLtY9MPntsyTw==
 
+google-libphonenumber@^2.0.9:
+  version "2.0.19"
+  resolved "https://registry.yarnpkg.com/google-libphonenumber/-/google-libphonenumber-2.0.19.tgz#a6d5ff60412aa33b161bb830d70aa39682583054"
+  integrity sha512-kwtbruT+eyiof081cxT1tltMTxgTOq3CQhUoEYBROC+vNf+COPqzfKJtVnDvgXQe4SzfbnAYkP8KoSpbJBIlSg==
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
@@ -5503,6 +5508,15 @@ react-native-parsed-text@^0.0.20:
   integrity sha512-n77hYu64Tr3oclzIXBXXaiLh1WbMKdA2Y0x6bX/yqwxAM4afcObENY5VrNB+EsTBJBEDqrypA9D1p2cLEIHkuQ==
   dependencies:
     babel-plugin-check-es2015-constants "6.22.0"
+    prop-types "^15.5.10"
+
+react-native-phone-input@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-phone-input/-/react-native-phone-input-0.2.2.tgz#17121b1384a15fd4a7c099362f2b5ca328e48041"
+  integrity sha512-r5LmYtwFftHTrn1Cj6tQCbm9E/h2sUJ5iCo5SXykkM5rIAn3twGSA6jmOAtqlgod+VNnYi49AHuNdUH75gRk7Q==
+  dependencies:
+    google-libphonenumber "^2.0.9"
+    lodash "^4.17.4"
     prop-types "^15.5.10"
 
 react-native-ratings@^6.3.0:

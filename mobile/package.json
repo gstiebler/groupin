@@ -15,6 +15,7 @@
     "react-native-elements": "^1.2.0",
     "react-native-firebase": "^5.3.1",
     "react-native-gifted-chat": "^0.9.11",
+    "react-native-phone-input": "0.2.2",
     "react-native-search-box": "^0.0.19",
     "react-native-vector-icons": "6.1.0",
     "react-navigation": "2.12",
