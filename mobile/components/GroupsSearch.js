@@ -13,51 +13,51 @@ import {
   List, 
   ListItem,
   Text,
+  Content,
 } from 'native-base';
+import Search from 'react-native-search-box';
 
 const GroupSearchComponent = ({ 
     navigation,
-    searchText, 
     groups,
     changeSearchText, 
     onGroupAdded,
     onBack,
   }) => {
-  const header = (
-    <Header searchBar rounded>   
-      <Item>
-        <Icon name="ios-search" />
-        <Input placeholder="Buscar" value={searchText} onChangeText={changeSearchText}/>
-      </Item>
-    </Header>
+  const rightButtonAdd = (
+    <Right>
+      <Button iconLeft light onPress={() =>onGroupAdded(navigation, group.id)}>
+        <Icon name='add' />
+      </Button>
+    </Right>
   );
 
   const groupItems = groups.map((group) => (
-    <ListItem
-      avatar
-      key={group.id} 
-    >
-      <Left>
-        <Thumbnail source={{ uri: group.imgUrl }} />
-      </Left>
+    <ListItem key={group.id} >
       <Body>
         <Text>{group.name}</Text>
       </Body>
-      <Right>
-        <Button iconLeft light onPress={() =>onGroupAdded(navigation, group.id)}>
-          <Icon name='add' />
-          <Text>Add</Text>
-        </Button>
-      </Right>
     </ListItem>
   ));
 
+  const reset = () => changeSearchText('');
+
   return (
     <Container>
-      { header }
-      <List containerStyle={{marginBottom: 20}}>
-        { groupItems }
-      </List>
+      <Content>
+        <Search
+          cancelButtonWidth={80}
+          onSearch={changeSearchText}
+          onChangeText={changeSearchText}
+          onCancel={reset}
+          onDelete={reset}
+          cancelTitle='Cancelar'
+          placeholder='Buscar'
+        />
+        <List containerStyle={{marginBottom: 20}}>
+          { groupItems }
+        </List>
+      </Content>
     </Container>
   );
 }

@@ -4,7 +4,6 @@ import { findGroups, joinGroup } from '../actions/groupsSearchActions';
 
 const mapStateToProps = state => {
   return { 
-    searchText: state.groupsSearch.searchText,
     groups: state.groupsSearch.groups,
   };
 };

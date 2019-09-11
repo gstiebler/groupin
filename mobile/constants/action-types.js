@@ -18,7 +18,6 @@ module.exports = {
   LOGIN_PHONE_NUMBER: 'login phone number',
   FB_CONFIRM_RESULT: 'firebase confirm result',
 
-  GROUPS_SEARCH_TEXT: 'groups search text',
   GROUPS_SEARCH_ITEMS: 'groups search items',
 
   CHAT_TITLE: 'chat title',
