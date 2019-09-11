@@ -1,16 +1,18 @@
+
+import { Alert } from 'react-native';
+import firebase from 'react-native-firebase';
 import { 
   USER_ID,
   FB_CONFIRM_RESULT,
+  LOGIN_PHONE_NUMBER,
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
 // TODO: remove include of React stuff
-import { Alert } from 'react-native';
 import * as graphqlConnect from '../lib/graphqlConnect';
-import firebase from 'react-native-firebase';
 
-export const login = (navigation) => async (dispatch, getState) => {
-  const { phoneNumber } = getState().login;
+export const login = (navigation, phoneNumber) => async (dispatch, getState) => {
+  dispatch({ type: LOGIN_PHONE_NUMBER, payload: { phoneNumber } });
   try {
     const confirmResult = await firebase.auth().signInWithPhoneNumber(phoneNumber);
     dispatch({ type: FB_CONFIRM_RESULT, payload: { confirmResult } });

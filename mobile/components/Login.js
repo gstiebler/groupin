@@ -1,27 +1,41 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native';
+import { 
+  Container, 
+  Button, 
+  Text,
+  Content,
+} from 'native-base';
+import PhoneInput from 'react-native-phone-input'
 import styles from '../Style';
 
 const LoginComponent = ({ 
     navigation,
-    phoneNumber,
-    changePhoneNumber,
     onLogin,
     willFocus,
   }) => {
   navigation.addListener('willFocus', () => willFocus(navigation));
+
+  const [phoneNumber, changePhoneNumber] = useState(0);
   
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={ styles.title1 }>Login</Text>
-      <TextInput
-        style={styles.textInput}
-        autoCapitalize="none"
-        placeholder="Número de telefone"
-        onChangeText={changePhoneNumber}
-        value={phoneNumber}
-      />
-      <Button title="Enviar" color={ styles.title1.color } onPress={() => onLogin(navigation)} />
+    <SafeAreaView style={{ flex: 1 }} >
+      <Container>
+        <Content contentContainerStyle={styles.container}>
+          <Text style={ styles.title1 }>Login</Text>
+          <PhoneInput 
+            initialCountry='br'
+            onChangePhoneNumber={changePhoneNumber}
+            autoFormat={true}
+            style={{paddingTop: 30, paddingBottom: 30}}
+            cancelText='Cancelar'
+            confirmText='Confirmar'
+          />
+          <Button primary full onPress={() => onLogin(navigation, phoneNumber)}>
+            <Text> Enviar </Text>
+          </Button>
+        </Content>
+      </Container>
     </SafeAreaView>
   );
 }
