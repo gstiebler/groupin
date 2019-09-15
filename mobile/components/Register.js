@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   SafeAreaView, 
-  TextInput,
 } from 'react-native';
 import { 
   Container, 
@@ -12,7 +11,6 @@ import {
   Item,
   Input,
 } from 'native-base';
-import CodeInput from 'react-native-confirmation-code-field';
 import styles from '../Style';
 
 const RegisterComponent = ({ 
@@ -27,9 +25,17 @@ const RegisterComponent = ({
   return (
     <SafeAreaView style={{ flex: 1 }} >
       <Container>
-        <Content contentContainerStyle={styles.container}>
+        <Content padder contentContainerStyle={styles.registerContainer}>
           <Text style={ styles.title1 }>Registro</Text>
-          <Form>
+          <Form style={{ marginTop: 20, marginBottom: 20 }}>
+            <Item style={{ marginTop: 20, marginBottom: 20 }} >
+              <Input 
+                placeholder="Código de confirmação"
+                keyboardType='number-pad'
+                onChangeText={changeVerificationCode} 
+                style={{paddingBottom: 20}}
+              />
+            </Item>
             <Item>
               <Input 
                 placeholder="Nome"
@@ -38,8 +44,9 @@ const RegisterComponent = ({
               />
             </Item>
           </Form>
-          <CodeInput onFulfill={changeVerificationCode} />
-          <Button primary full onPress={() => onRegister(navigation, name, verificationCode)}>
+          <Button primary full 
+              onPress={() => onRegister({navigation, name, verificationCode})}
+              style={{ marginBottom: 20}} >
             <Text> Registrar </Text>
           </Button>
           <Button primary full onPress={() => onBack(navigation)}>

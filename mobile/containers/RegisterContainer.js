@@ -9,7 +9,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: (navigation, name, verificationCode) => dispatch(register(navigation, name, verificationCode)),
+    onRegister: ({navigation, name, verificationCode}) => dispatch(register({navigation, name, verificationCode})),
     onBack: (navigation) => navigation.navigate('Login'),
   };
 };

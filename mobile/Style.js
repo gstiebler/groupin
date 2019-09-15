@@ -7,6 +7,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  registerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
   textInput: {
     height: 40,
     fontSize: 20,
