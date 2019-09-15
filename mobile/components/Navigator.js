@@ -110,4 +110,7 @@ export const RootSwitchNavigator = createSwitchNavigator(
   { initialRouteName: 'Login' },
 );
 
+const navigationPersistenceKey = __DEV__ ? "NavigationStateDEV" : null;
+const App = () => <RootSwitchNavigator persistenceKey={navigationPersistenceKey} />;
+
 export default RootSwitchNavigator;
