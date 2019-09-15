@@ -3,6 +3,7 @@ const {
   GraphQLFloat,
   GraphQLObjectType,
   GraphQLList,
+  GraphQLBoolean,
 } = require('graphql');
 const Promise = require('bluebird');
 const logger = require('./config/winston');
@@ -87,7 +88,8 @@ const Query = {
         imgUrl: { type: GraphQLString },        
         description: { type: GraphQLString },
         createdBy: { type: GraphQLString },
-        createdAt: { type: GraphQLFloat }
+        createdAt: { type: GraphQLFloat },
+        iBelong: { type: GraphQLBoolean },
       },
     }),
     args: { 
@@ -105,7 +107,11 @@ const Query = {
         createdBy: 1,
         createdAt: 1,
       }).lean();
-      return group;
+      const iBelong = _.find(user.groups, id => id.toHexString() ===  groupId);
+      return {
+        ...group,
+        iBelong,
+      };
     }
   },
 

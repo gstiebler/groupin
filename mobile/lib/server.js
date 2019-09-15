@@ -186,7 +186,8 @@ async function getGroupInfo(groupId) {
         imgUrl,
         description,
         createdBy,
-        createdAt
+        createdAt,
+        iBelong
       }
     }
   `;

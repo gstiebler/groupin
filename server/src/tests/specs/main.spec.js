@@ -307,7 +307,15 @@ describe('main', () => {
       const groupId = groupFixtures.firstGroup._id.toHexString();
       setCurrentUser(userFixtures.robert);
       await groupActions.getGroupInfo(groupId)(localDispatch);
-      console.log(localStore.getState().base.currentGroupInfo);
+      expect(localStore.getState().base.currentGroupInfo).to.eql({
+        _id: '5c1c1e99e362b2ce8042faaa',
+        name: 'First Group',
+        imgUrl: 'url1',
+        description: 'Description of the first group',
+        createdBy: '507f1f77bcf86cd799430001',
+        createdAt: 1528156800000,
+        iBelong: true,
+      });
     });
     
     
