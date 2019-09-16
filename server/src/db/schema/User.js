@@ -6,8 +6,6 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String },
   phoneNumber: { type: String },
-  // temporary password sent by SMS to the user
-  tempPassword: { type: String },
   fcmToken: { type: String },
   imgUrl: { type: String },
   groups: [{type: ObjectId, ref: 'Group', index: true}],

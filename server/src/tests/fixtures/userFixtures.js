@@ -12,7 +12,6 @@ const users = {
     groups: [
       groupIds.firstGroup,
     ],
-    tempPassword: md5('passwordAlice'),
   },
   robert: {
     _id: ObjectId('507f1f77bcf86cd799430002'),
