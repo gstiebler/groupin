@@ -21,24 +21,17 @@ const GroupSearchComponent = ({
     navigation,
     groups,
     changeSearchText, 
-    onGroupAdded,
+    onGroupSelected,
     onBack,
   }) => {
-  const rightButtonAdd = (
-    <Right>
-      <Button iconLeft light onPress={() =>onGroupAdded(navigation, group.id)}>
-        <Icon name='add' />
-      </Button>
-    </Right>
-  );
 
-  const groupItems = groups.map((group) => (
-    <ListItem key={group.id} >
+  const renderGroup = (group) => (
+    <ListItem button onPress={ () => onGroupSelected(navigation, group._id) }>
       <Body>
         <Text>{group.name}</Text>
       </Body>
     </ListItem>
-  ));
+  );
 
   const reset = () => changeSearchText('');
 
@@ -54,9 +47,10 @@ const GroupSearchComponent = ({
           cancelTitle='Cancelar'
           placeholder='Buscar'
         />
-        <List containerStyle={{marginBottom: 20}}>
-          { groupItems }
-        </List>
+        <List containerStyle={{marginBottom: 20}} 
+          dataArray={groups} 
+          renderRow={renderGroup}
+        />
       </Content>
     </Container>
   );

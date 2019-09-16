@@ -101,7 +101,7 @@ describe('main', () => {
 
     it('findGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      await groupsSearchActions.findGroups(dispatch, 'second');
+      await groupsSearchActions.findGroups('second')(dispatch);
       expect(store.getState().groupsSearch.groups).eql([
         {
           id: groupFixtures.secondGroup._id.toHexString(),
@@ -495,7 +495,7 @@ describe('main', () => {
 
       setCurrentUser(userFixtures.robert);
       const groupId = groupIds.firstGroup.toHexString();
-      await rootActions.leaveGroup(groupId, { navigate() {} })(localDispatch, localGetState);
+      await groupActions.leaveGroup(groupId, () => {})(localDispatch, localGetState);
       const groups = await server.getOwnGroups();
       expect(groups).to.eql([
         {
@@ -518,9 +518,10 @@ describe('main', () => {
       it('User already joined the group', async () => {
         setCurrentUser(userFixtures.alice);
         const groupId = groupFixtures.firstGroup._id.toHexString();
-        let navigatePath;
-        const navigation = { navigate: (path) => navigatePath = path };
-        await expect(groupsSearchActions.joinGroup(dispatch, navigation, groupId)).to.be.rejectedWith('User already participate in the group');
+        // let navigatePath;
+        // const navigation = { navigate: (path) => navigatePath = path };
+        let joinGroupPromise = groupActions.joinGroup(groupId, () => {})(dispatch);
+        await expect(joinGroupPromise).to.be.rejectedWith('User already participate in the group');
       });
 
       it('joined group', async () => {

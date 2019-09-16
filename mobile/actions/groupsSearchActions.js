@@ -4,7 +4,7 @@ const {
 const server = require('../lib/server');
 const _ = require('lodash');
 
-const findGroups = async (dispatch, searchText) => {
+const findGroups = (searchText) => async (dispatch, getState) => {
   const findGroups = () => server.findGroups({ 
     searchText, 
     limit: 20, 
@@ -14,12 +14,6 @@ const findGroups = async (dispatch, searchText) => {
   dispatch({ type: GROUPS_SEARCH_ITEMS, payload: { groups } });
 }
 
-const joinGroup = async (dispatch, navigation, groupId) => {
-  await server.joinGroup(groupId);
-  navigation.navigate('GroupList');
-}
-
 module.exports = {
   findGroups,
-  joinGroup,
 };

@@ -2,8 +2,10 @@ import { connect } from "react-redux";
 import GroupListComponent from '../components/GroupList';
 import { 
   fetchOwnGroups,
-  leaveGroup,
 } from "../actions/rootActions";
+import { 
+  leaveGroup,
+} from "../actions/groupActions";
 
 const mapStateToProps = state => {
   return { 

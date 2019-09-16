@@ -6,6 +6,7 @@ import Chat from '../containers/ChatContainer';
 import Register from '../containers/RegisterContainer';
 import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
+import GroupInfo from '../containers/GroupInfoContainer';
 import Settings from '../containers/SettingsContainer';
 import React from 'react';
 import { Button, Icon, Text } from 'native-base';
@@ -69,6 +70,12 @@ export const AppStackNavigator = createStackNavigator(
       screen: NewGroup,
       navigationOptions: () => ({
         title: 'Novo grupo',
+      }),  
+    },
+    GroupInfo: { 
+      screen: GroupInfo,
+      navigationOptions: () => ({
+        title: 'Informações do grupo',
       }),  
     },
   },

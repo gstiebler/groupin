@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import GroupsSearchComponent from '../components/GroupsSearch';
-import { findGroups, joinGroup } from '../actions/groupsSearchActions';
+import { findGroups } from '../actions/groupsSearchActions';
 
 const mapStateToProps = state => {
   return { 
@@ -10,8 +10,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    changeSearchText: searchText => findGroups(dispatch, searchText),
-    onGroupAdded: (navigation, groupId) => joinGroup(dispatch, navigation, groupId),
+    changeSearchText: searchText => dispatch(findGroups(searchText)),
+    onGroupSelected: (navigation, groupId) => {
+      navigation.push('GroupInfo', { groupId });
+    },
     onBack: (navigation) => navigation.goBack(),
   };
 };

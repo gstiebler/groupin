@@ -104,11 +104,6 @@ async function getMessagesOfCurrentTopic(store, storage) {
   await storage.setItem(topicId, messages);
 }
 
-const leaveGroup = (groupId) => async (dispatch, getState) => {
-  await server.leaveGroup(groupId);
-  await fetchOwnGroups(dispatch);
-}
-
 const updateFcmToken = async (store, fcmToken) => {
   store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
   if (!_.isEmpty(store.getState().base.token)) {
@@ -124,6 +119,5 @@ module.exports = {
   onTopicOpened,
   onOlderMessagesRequested,
   getMessagesOfCurrentTopic,
-  leaveGroup,
   updateFcmToken,
 };
