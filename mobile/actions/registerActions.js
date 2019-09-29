@@ -2,7 +2,7 @@ import firebase from 'react-native-firebase';
 import * as server from '../lib/server';
 import { userLoggedIn } from './loginActions';
 import { Alert } from 'react-native';
-import * as graphqlConnect from '../lib/graphqlConnect';
+import { updateFbUserToken } from './rootActions';
 
 export const register = ({navigation, name, verificationCode}) => async (dispatch, getState) => {
   const { phoneNumber, confirmResult } = getState().login;
@@ -30,7 +30,8 @@ export const register = ({navigation, name, verificationCode}) => async (dispatc
     // const fcmToken = await firebase.messaging().getToken();
     const fbUser = firebase.auth().currentUser;
     const fbToken = await fbUser.getIdToken(true);  
-    graphqlConnect.setToken(fbToken);
+
+    await updateFbUserToken(dispatch, fbToken);
     const userId = (await server.getUserId()).id;
     if (userId === 'NO USER') {
       const { errorMessage } = await server.register({

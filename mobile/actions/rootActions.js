@@ -4,6 +4,7 @@ const {
   SET_TOPICS,
   SET_MESSAGES,
   FCM_TOKEN,
+  FB_USER_TOKEN,
   HAS_OLDER_MESSAGES,
 } = require("../constants/action-types");
 const server = require('../lib/server');
@@ -15,6 +16,7 @@ const {
   removeFirst,
   getNNew,
 } = require('../lib/messages');
+const graphqlConnect = require('../lib/graphqlConnect');
 
 const NUM_ITEMS_PER_FETCH = 20;
 
@@ -104,11 +106,17 @@ async function getMessagesOfCurrentTopic(store, storage) {
   await storage.setItem(topicId, messages);
 }
 
+const updateFbUserToken = async (dispatch, userFbToken) => {
+  graphqlConnect.setToken(userFbToken);
+  dispatch({ type: FB_USER_TOKEN, payload: { fbUserToken } });
+}
+
 const updateFcmToken = async (store, fcmToken) => {
   store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
-  if (!_.isEmpty(store.getState().base.token)) {
-    await server.updateFcmToken(fcmToken);
+  if (_.isEmpty(store.getState().base.userFbToken)) {
+    throw new Error('Firebase user token is not set');
   }
+  await server.updateFcmToken(fcmToken);
 }
 
 module.exports = {
@@ -119,5 +127,6 @@ module.exports = {
   onTopicOpened,
   onOlderMessagesRequested,
   getMessagesOfCurrentTopic,
+  updateFbUserToken,
   updateFcmToken,
 };

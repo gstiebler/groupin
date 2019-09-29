@@ -1,5 +1,6 @@
-
+// TODO: remove include of React stuff
 import { Alert } from 'react-native';
+
 import firebase from 'react-native-firebase';
 import { 
   USER_ID,
@@ -8,8 +9,7 @@ import {
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
-// TODO: remove include of React stuff
-import * as graphqlConnect from '../lib/graphqlConnect';
+import { updateFbUserToken } from './rootActions';
 
 export const login = (navigation, phoneNumber) => async (dispatch, getState) => {
   dispatch({ type: LOGIN_PHONE_NUMBER, payload: { phoneNumber } });
@@ -45,7 +45,7 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
     if (firebaseUser) {
       const fbUser = firebase.auth().currentUser;
       const fbToken = await fbUser.getIdToken(true);  
-      graphqlConnect.setToken(fbToken);
+      await updateFbUserToken(dispatch, fbToken);
       const userId = (await server.getUserId()).id;
       userLoggedIn({ dispatch, navigation, userId });
     }
@@ -53,7 +53,7 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
     firebase.auth().onAuthStateChanged(async function(fbUser) {
       if (fbUser) {
         const fbToken = await fbUser.getIdToken(true);
-        graphqlConnect.setToken(fbToken);
+        await updateFbUserToken(dispatch, fbToken);
       } else {
         console.log('no user yet');
       }
