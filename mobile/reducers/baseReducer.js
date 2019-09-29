@@ -35,7 +35,7 @@ const initialState = {
   currentlyViewedGroupId: null,
   currentlyViewedTopicId: null,
   hasOlderMessages: false,
-  currentGroupInfo: null,
+  currentGroupInfo: {},
 };
 
 const addNewMessages = (state, { messages }) => ({
