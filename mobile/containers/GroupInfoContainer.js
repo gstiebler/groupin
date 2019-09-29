@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import LoginComponent from '../components/Login';
+import GroupInfoComponent from '../components/GroupInfo';
 import { 
   getGroupInfo,
   leaveGroup,
@@ -28,5 +28,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 
-const GroupInfoContainer = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
+const GroupInfoContainer = connect(mapStateToProps, mapDispatchToProps)(GroupInfoComponent);
 export default GroupInfoContainer;

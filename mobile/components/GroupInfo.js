@@ -8,16 +8,20 @@ const GroupInfoComponent = ({ navigation, groupInfo, willFocus, onJoinGroup, onL
   navigation.addListener('willFocus', willFocus);
 
   const joinButton = (
-    <Button block success onPress={() => onJoinGroup(navigation, groupId)} >
+    <Button block success onPress={() => onJoinGroup(navigation, groupInfo._id)} >
       <Text>Entrar no grupo</Text>
     </Button>
   );
 
   const leaveButton =  (
-    <Button block success onPress={() => onLeaveGroup(navigation, groupId)} >
+    <Button block success onPress={() => onLeaveGroup(navigation, groupInfo._id)} >
       <Text>Sair do grupo</Text>
     </Button>
   );
+
+  const button = 
+    !groupInfo        ? null :
+    groupInfo.iBelong ? leaveButton : joinButton;
 
   return (
     <SafeAreaView style={{ flex: 1 }} >
@@ -25,8 +29,7 @@ const GroupInfoComponent = ({ navigation, groupInfo, willFocus, onJoinGroup, onL
         <Content>
           <Text>{ groupInfo.name }</Text>
           <Text>{ groupInfo.description }</Text>
-          { groupInfo && !groupInfo.iBelong ? joinButton : null }
-          { groupInfo && groupInfo.iBelong ? leaveButton : null }
+          { button }
         </Content>
       </Container>
     </SafeAreaView>

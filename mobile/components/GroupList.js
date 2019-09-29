@@ -2,7 +2,13 @@ import React from 'react';
 import { ListView } from 'react-native';
 import { Container, List, ListItem, Button, Text, Icon } from 'native-base';
 
-export default GroupListComponent = ({ navigation, ownGroups, selectGroup, onLeaveGroup, willFocus }) => {
+export default GroupListComponent = ({ 
+  navigation, 
+  ownGroups, 
+  selectGroup, 
+  onLeaveGroup, 
+  willFocus,
+}) => {
   navigation.addListener('willFocus', willFocus);
 
   let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
