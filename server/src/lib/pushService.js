@@ -42,7 +42,7 @@ let pushService = {
     const response = await this.messaging.subscribeToTopic([fcmToken], fcmTopic);
     // See the MessagingTopicManagementResponse reference documentation
     // for the contents of response.
-    console.log('Successfully subscribed to topic:', response);
+    logger.debug('Successfully subscribed to topic:', response);
   }
 
 };

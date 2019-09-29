@@ -26,7 +26,7 @@ const GroupSearchComponent = ({
   }) => {
 
   const renderGroup = (group) => (
-    <ListItem button onPress={ () => onGroupSelected(navigation, group._id) }>
+    <ListItem button onPress={ () => onGroupSelected(navigation, group.id) }>
       <Body>
         <Text>{group.name}</Text>
       </Body>
