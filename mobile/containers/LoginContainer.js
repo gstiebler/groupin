@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import LoginComponent from '../components/Login';
-import { login, willFocus } from '../actions/loginActions';
+import { login } from '../actions/loginActions';
 
 const mapStateToProps = state => {
   return { 
@@ -10,7 +10,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onLogin: (navigation, phoneNumber) => dispatch(login(navigation, phoneNumber)),
-    willFocus: (navigation) => dispatch(willFocus(navigation)),
   };
 };
 

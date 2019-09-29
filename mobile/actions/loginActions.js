@@ -38,16 +38,18 @@ export const login = (navigation, phoneNumber) => async (dispatch, getState) => 
   }
 }
 
-export const willFocus = (navigation) => async (dispatch, getState) => {
+export const init = async (navigate, dispatch) => {
   try {
     const firebaseUser = firebase.auth().currentUser;
     // check if user is already logged in
     if (firebaseUser) {
-      const fbUser = firebase.auth().currentUser;
-      const fbToken = await fbUser.getIdToken(true);  
+      const fbToken = await firebaseUser.getIdToken(true);  
       await updateFbUserToken(dispatch, fbToken);
       const userId = (await server.getUserId()).id;
-      userLoggedIn({ dispatch, navigation, userId });
+      if (!userId) {
+        throw new Error('Error getting user ID');
+      }
+      await userLoggedIn({ dispatch, navigate, userId });
     }
 
     firebase.auth().onAuthStateChanged(async function(fbUser) {
@@ -63,10 +65,10 @@ export const willFocus = (navigation) => async (dispatch, getState) => {
   }
 }
 
-export async function userLoggedIn({ dispatch, navigation, userId }) {
+export async function userLoggedIn({ dispatch, navigate, userId }) {
   dispatch({ type: USER_ID, payload: { userId } });
   await fetchOwnGroups(dispatch);
-  navigation.navigate('GroupList');
+  navigate('GroupList');
 }
  
 export const logout = (navigation) => async (dispatch, getState) => {

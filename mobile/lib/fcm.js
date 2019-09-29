@@ -18,7 +18,7 @@ export async function init() {
   const hasPermission = await firebase.messaging().hasPermission();
   if (hasPermission) {
     console.log('FCM has permission');
-    startMessageListener();
+    await startMessageListener();
   } else {
     try {
       await firebase.messaging().requestPermission();
@@ -34,7 +34,7 @@ export async function init() {
 async function startMessageListener() {
   const fcmToken = await firebase.messaging().getToken();
   if (fcmToken) {
-    updateFcmToken(store, fcmToken);
+    await updateFcmToken(store, fcmToken);
   } else {
     console.log('no firebase token');
   }   

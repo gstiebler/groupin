@@ -17,7 +17,7 @@ const leaveGroup = (groupId, onLeave) => async (dispatch, getState) => {
 
 const joinGroup = (groupId, onJoin) => async (dispatch, getState) => {
   await server.joinGroup(groupId);
-  onJoin(getState().base.groupInfo.name);
+  onJoin(getState().base.currentGroupInfo.name);
 }
 
 module.exports = {

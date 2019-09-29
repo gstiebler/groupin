@@ -106,14 +106,14 @@ async function getMessagesOfCurrentTopic(store, storage) {
   await storage.setItem(topicId, messages);
 }
 
-const updateFbUserToken = async (dispatch, userFbToken) => {
-  graphqlConnect.setToken(userFbToken);
+const updateFbUserToken = async (dispatch, fbUserToken) => {
+  graphqlConnect.setToken(fbUserToken);
   dispatch({ type: FB_USER_TOKEN, payload: { fbUserToken } });
 }
 
 const updateFcmToken = async (store, fcmToken) => {
   store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
-  if (_.isEmpty(store.getState().base.userFbToken)) {
+  if (_.isEmpty(store.getState().base.fbUserToken)) {
     throw new Error('Firebase user token is not set');
   }
   await server.updateFcmToken(fcmToken);

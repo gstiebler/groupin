@@ -11,11 +11,13 @@ import Settings from '../containers/SettingsContainer';
 import React from 'react';
 import { Button, Icon, Text } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import init from '../appInit';
 
 import { 
   createSwitchNavigator, 
   createStackNavigator,
   createBottomTabNavigator,
+  NavigationActions,
 } from 'react-navigation'
 
 export const AppStackNavigator = createStackNavigator(
@@ -119,6 +121,22 @@ export const RootSwitchNavigator = createSwitchNavigator(
 
 // TODO: will change in future versions
 const navigationPersistenceKey = __DEV__ ? "NavigationStateDEV" : null;
-const App = () => <RootSwitchNavigator persistenceKey={navigationPersistenceKey} />;
+const App = () => {
+  return <RootSwitchNavigator 
+    persistenceKey={navigationPersistenceKey} 
+    ref={async navigatorRef => {
+      const navigate = (routeName, params) => {
+        navigatorRef.dispatch(
+          NavigationActions.navigate({
+            routeName,
+            params,
+          })
+        );
+      }
+      await init(navigate);
+    }}
+
+  />;
+};
 
 export default App;
