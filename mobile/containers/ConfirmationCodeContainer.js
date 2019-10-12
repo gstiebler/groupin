@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import ConfirmationCodeComponent from '../components/ConfirmationCode';
 import { 
+  confirmationCodeReceived,
 } from '../actions/loginActions';
 
 const mapStateToProps = state => {
@@ -10,8 +11,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChangeNumber: ({ state }) => dispatch(getGroupInfo(state.params.groupId)),
-    onConfirm: ({ state }) => dispatch(getGroupInfo(state.params.groupId)),
+    onChangeNumber: (navigation) => navigation.navigate('Login'),
+    onConfirm: (navigation, confirmationCode) => dispatch(confirmationCodeReceived({ navigation, confirmationCode })),
   };
 };
 

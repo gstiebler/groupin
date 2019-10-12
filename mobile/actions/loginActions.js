@@ -66,6 +66,45 @@ export const init = async (navigate, dispatch) => {
   }
 }
 
+export const confirmationCodeReceived = ({ navigation, verificationCode }) => async (dispatch, getState) => {
+  const { confirmResult } = getState().login;
+  try {
+    await confirmResult.confirm(verificationCode);
+  } catch (error) {
+    const msgByCode = {
+      'auth/invalid-verification-code': 'Código de verificação inválido',
+      'auth/missing-verification-code': 'Código de verificação vazio',
+    };
+    const errorMessage = msgByCode[error.code] || 'Erro';
+    Alert.alert(
+      'Erro',
+      errorMessage,
+      [
+        {text: 'OK'},
+      ],
+      {cancelable: false},
+    );
+    console.error(error);
+    throw new Error(error);
+  }
+
+  // const fcmToken = await firebase.messaging().getToken();
+  const fbUser = firebase.auth().currentUser;
+  const fbToken = await fbUser.getIdToken(true);  
+
+  await updateFbUserToken(dispatch, fbToken);
+  const userId = (await server.getUserId()).id;
+  if (userId === 'NO USER') {
+    navigation.navigate('Register');
+  } else {
+    await userLoggedIn({ 
+      dispatch, 
+      navigate: (route) => navigation.navigate(route), 
+      userId,
+    });
+  }
+}
+
 export async function userLoggedIn({ dispatch, navigate, userId }) {
   dispatch({ type: USER_ID, payload: { userId } });
   await fetchOwnGroups(dispatch);
