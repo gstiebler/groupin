@@ -10,12 +10,9 @@ import PhoneInput from 'react-native-phone-input'
 import styles from '../Style';
 
 const LoginComponent = ({ 
-    navigation,
-    onLogin,
-    willFocus,
-  }) => {
-  navigation.addListener('willFocus', () => willFocus(navigation));
-
+  navigation,
+  onLogin,
+}) => {
   const [phoneNumber, changePhoneNumber] = useState(0);
   
   return (
