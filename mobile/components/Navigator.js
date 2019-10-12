@@ -8,6 +8,7 @@ import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
 import GroupInfo from '../containers/GroupInfoContainer';
 import Settings from '../containers/SettingsContainer';
+import ConfirmationCode from '../containers/ConfirmationCodeContainer';
 import React from 'react';
 import { Button, Icon, Text } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -114,6 +115,13 @@ export const RootSwitchNavigator = createSwitchNavigator(
   {
     Register: { screen: Register },
     Login: { screen: Login },
+    ConfirmationCode: { 
+      screen: ConfirmationCode,
+      title: 'Confirme o código',
+      navigationOptions: () => ({
+        title: 'Confirme o código',
+      }),  
+    },
     TabNavigator: { screen: tabNavigator },
   },
   { initialRouteName: 'Login' },

@@ -16,7 +16,7 @@ export const login = (navigation, phoneNumber) => async (dispatch, getState) => 
   try {
     const confirmResult = await firebase.auth().signInWithPhoneNumber(phoneNumber);
     dispatch({ type: FB_CONFIRM_RESULT, payload: { confirmResult } });
-    navigation.navigate('Register');
+    navigation.navigate('ConfirmationCode');
   } catch(error) {
     //TODO: handle wrong code
     const msgByCode = {
@@ -27,6 +27,7 @@ export const login = (navigation, phoneNumber) => async (dispatch, getState) => 
       'auth/operation-not-allowed': 'Operação não permitida',
     };
     const errorMessage = msgByCode[error.code] || 'Erro';
+    console.error(error);
     Alert.alert(
       'Erro',
       errorMessage,
