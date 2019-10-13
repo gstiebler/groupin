@@ -28,7 +28,7 @@ const Confirmationcode = ({ navigation, onChangeNumber, onConfirm }) => {
           </Button>
           <Button block success 
               style={{ marginTop: 20, marginBottom: 20 }}
-              onPress={() => onChangeNumber()} >
+              onPress={() => onChangeNumber(navigation)} >
             <Text>Editar número</Text>
           </Button>
         </Content>

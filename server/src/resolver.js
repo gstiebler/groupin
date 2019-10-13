@@ -273,6 +273,7 @@ const Mutation = {
 
       return {
         errorMessage: '',
+        id: user._id,
       };
     }
   },

@@ -5,11 +5,22 @@ import firebase from 'react-native-firebase';
 import { 
   USER_ID,
   FB_CONFIRM_RESULT,
+  FB_USER_TOKEN,
   LOGIN_PHONE_NUMBER,
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
-import { updateFbUserToken } from './rootActions';
+const graphqlConnect = require('../lib/graphqlConnect');
+import localStorage from '../lib/localStorage';
+import _ from 'lodash';
+
+const FIREBASE_USER_TOKEN_LS_KEY = 'firebaseUserToken';
+
+const updateFbUserToken = async (dispatch, fbUserToken) => {
+  await localStorage.setItem(FIREBASE_USER_TOKEN_LS_KEY, fbUserToken);
+  graphqlConnect.setToken(fbUserToken);
+  dispatch({ type: FB_USER_TOKEN, payload: { fbUserToken } });
+}
 
 export const login = (navigation, phoneNumber) => async (dispatch, getState) => {
   dispatch({ type: LOGIN_PHONE_NUMBER, payload: { phoneNumber } });
@@ -18,7 +29,6 @@ export const login = (navigation, phoneNumber) => async (dispatch, getState) => 
     dispatch({ type: FB_CONFIRM_RESULT, payload: { confirmResult } });
     navigation.navigate('ConfirmationCode');
   } catch(error) {
-    //TODO: handle wrong code
     const msgByCode = {
       'auth/captcha-check-failed': 'Falha no Captcha',
       'auth/invalid-phone-number': 'Número de telefone inválido',
@@ -41,9 +51,10 @@ export const login = (navigation, phoneNumber) => async (dispatch, getState) => 
 
 export const init = async (navigate, dispatch) => {
   try {
+    const localFbUserToken = await localStorage.getItem(FIREBASE_USER_TOKEN_LS_KEY);
     const firebaseUser = firebase.auth().currentUser;
     // check if user is already logged in
-    if (firebaseUser) {
+    if (!_.isEmpty(localFbUserToken) && firebaseUser) {
       const fbToken = await firebaseUser.getIdToken(true);  
       await updateFbUserToken(dispatch, fbToken);
       const userId = (await server.getUserId()).id;
@@ -66,10 +77,10 @@ export const init = async (navigate, dispatch) => {
   }
 }
 
-export const confirmationCodeReceived = ({ navigation, verificationCode }) => async (dispatch, getState) => {
+export const confirmationCodeReceived = ({ navigation, confirmationCode }) => async (dispatch, getState) => {
   const { confirmResult } = getState().login;
   try {
-    await confirmResult.confirm(verificationCode);
+    await confirmResult.confirm(confirmationCode);
   } catch (error) {
     const msgByCode = {
       'auth/invalid-verification-code': 'Código de verificação inválido',
@@ -113,6 +124,8 @@ export async function userLoggedIn({ dispatch, navigate, userId }) {
  
 export const logout = (navigation) => async (dispatch, getState) => {
   try {
+    await localStorage.setItem(FIREBASE_USER_TOKEN_LS_KEY, '');
+    dispatch({ type: USER_ID, payload: { userId: '' } });
     await firebase.auth().signOut();
     navigation.navigate('Login');
   } catch (error) {

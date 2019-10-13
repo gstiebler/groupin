@@ -20,7 +20,6 @@ const RegisterComponent = ({
 }) => {
 
   const [name, changeName] = useState(0);
-  const [verificationCode, changeVerificationCode] = useState(0);
 
   return (
     <SafeAreaView style={{ flex: 1 }} >
@@ -28,14 +27,6 @@ const RegisterComponent = ({
         <Content padder contentContainerStyle={styles.registerContainer}>
           <Text style={ styles.title1 }>Registro</Text>
           <Form style={{ marginTop: 20, marginBottom: 20 }}>
-            <Item style={{ marginTop: 20, marginBottom: 20 }} >
-              <Input 
-                placeholder="Código de confirmação"
-                keyboardType='number-pad'
-                onChangeText={changeVerificationCode} 
-                style={{paddingBottom: 20}}
-              />
-            </Item>
             <Item>
               <Input 
                 placeholder="Nome"
@@ -45,7 +36,7 @@ const RegisterComponent = ({
             </Item>
           </Form>
           <Button primary full 
-              onPress={() => onRegister({navigation, name, verificationCode})}
+              onPress={() => onRegister({navigation, name})}
               style={{ marginBottom: 20}} >
             <Text> Registrar </Text>
           </Button>

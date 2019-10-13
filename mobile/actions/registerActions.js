@@ -6,7 +6,7 @@ import { Alert } from 'react-native';
 export const register = ({navigation, name}) => async (dispatch, getState) => {
   const { phoneNumber } = getState().login;
   try {
-    const { errorMessage } = await server.register({
+    const { errorMessage, id } = await server.register({
       name, 
       phoneNumber,
     });
@@ -25,7 +25,7 @@ export const register = ({navigation, name}) => async (dispatch, getState) => {
     await userLoggedIn({ 
       dispatch, 
       navigate: (route) => navigation.navigate(route), 
-      userId,
+      userId: id,
     });
   } catch (error) {
     console.error(error);
