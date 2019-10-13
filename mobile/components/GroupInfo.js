@@ -30,6 +30,7 @@ const GroupInfoComponent = ({ navigation, groupInfo, willFocus, willLeave, onJoi
         <Content>
           <Text>{ groupInfo.name }</Text>
           <Text>{ groupInfo.description }</Text>
+          <Text>Identificador: "{ groupInfo.friendlyId }"</Text>
           { button }
         </Content>
       </Container>

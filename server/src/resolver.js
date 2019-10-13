@@ -84,6 +84,7 @@ const Query = {
       name: 'groupInfoType',
       fields: {
         _id: { type: GraphQLString },
+        friendlyId: { type: GraphQLString },
         name: { type: GraphQLString },
         imgUrl: { type: GraphQLString },        
         description: { type: GraphQLString },
@@ -101,6 +102,7 @@ const Query = {
       }
 
       const group = await Group.findById(groupId, {
+        friendlyId: 1,
         name: 1,
         imgUrl: 1,
         description: 1,

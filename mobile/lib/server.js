@@ -182,6 +182,7 @@ async function getGroupInfo(groupId) {
         groupId: "${groupId}",
       ) {
         _id,
+        friendlyId,
         name,
         imgUrl,
         description,
