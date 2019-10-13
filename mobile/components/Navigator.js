@@ -54,7 +54,10 @@ export const AppStackNavigator = createStackNavigator(
     TopicsList: { 
       screen: TopicsList,
       navigationOptions: ({ navigation }) => ({
-        title: navigation.state.params.groupName,
+        headerTitle: 
+          <Text onPress={ () => navigation.push('GroupInfo', { groupId: navigation.state.params.groupId }) } >
+            { navigation.state.params.groupName }
+          </Text>,
         headerBackTitle: null,
         headerRight: (
           <Button transparent>
