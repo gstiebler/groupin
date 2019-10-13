@@ -31,7 +31,10 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: state.params.topicId } });
       dispatch(onTopicOpened(state.params.topicId, storage));
     },
-    willLeave: () => dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } }),
+    willLeave: () => {
+      dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } });
+      dispatch({ type: SET_MESSAGES, payload: { messages: [] } });
+    },
     onLoadEarlier: ({ state }) => dispatch(onOlderMessagesRequested(state.params.topicId)),
   };
 };

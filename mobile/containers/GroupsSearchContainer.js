@@ -15,6 +15,9 @@ const mapDispatchToProps = dispatch => {
       navigation.push('GroupInfo', { groupId });
     },
     onBack: (navigation) => navigation.goBack(),
+    willLeave: () => { 
+      dispatch({ type: GROUPS_SEARCH_ITEMS, payload: { groups } });
+    },
   };
 };
 

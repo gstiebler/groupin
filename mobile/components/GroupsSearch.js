@@ -18,12 +18,14 @@ import {
 import Search from 'react-native-search-box';
 
 const GroupSearchComponent = ({ 
-    navigation,
-    groups,
-    changeSearchText, 
-    onGroupSelected,
-    onBack,
-  }) => {
+  navigation,
+  groups,
+  changeSearchText, 
+  onGroupSelected,
+  willLeave,
+  onBack,
+}) => {
+  navigation.addListener('willBlur', willLeave);
 
   const renderGroup = (group) => (
     <ListItem button onPress={ () => onGroupSelected(navigation, group.id) }>

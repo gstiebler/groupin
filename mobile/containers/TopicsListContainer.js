@@ -16,7 +16,10 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { currentlyViewedGroupId: state.params.groupId } });
       getTopicsOfGroup(dispatch, state.params.groupId);
     },
-    willLeave: () => dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { currentlyViewedGroupId: null } }),
+    willLeave: () => { 
+      dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { currentlyViewedGroupId: null } });
+      dispatch({ type: SET_TOPICS, payload: { topics: [] } });
+    },
   };
 };
 

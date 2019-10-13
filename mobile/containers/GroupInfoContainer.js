@@ -24,6 +24,9 @@ const mapDispatchToProps = dispatch => {
       const onJoin = groupName => navigation.navigate('TopicsList', { groupId, groupName });
       dispatch(joinGroup(groupId, onJoin));
     },
+    willLeave: () => { 
+      dispatch({ type: CURRENT_GROUP_INFO, payload: { currentGroupInfo: {} } });
+    },
   };
 };
 
