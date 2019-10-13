@@ -13,6 +13,7 @@ import * as server from '../lib/server';
 const graphqlConnect = require('../lib/graphqlConnect');
 import localStorage from '../lib/localStorage';
 import _ from 'lodash';
+import { getAndUpdateFcmToken } from '../lib/fcm';
 
 const FIREBASE_USER_TOKEN_LS_KEY = 'firebaseUserToken';
 
@@ -118,6 +119,7 @@ export const confirmationCodeReceived = ({ navigation, confirmationCode }) => as
 
 export async function userLoggedIn({ dispatch, navigate, userId }) {
   dispatch({ type: USER_ID, payload: { userId } });
+  await getAndUpdateFcmToken();
   await fetchOwnGroups(dispatch);
   navigate('GroupList');
 }

@@ -31,14 +31,17 @@ export async function init() {
 
 }
 
-async function startMessageListener() {
+export async function getAndUpdateFcmToken() {
   const fcmToken = await firebase.messaging().getToken();
   if (fcmToken) {
     await updateFcmToken(store, fcmToken);
   } else {
     console.log('no firebase token');
-  }   
+  }  
+}
 
+async function startMessageListener() { 
+  await getAndUpdateFcmToken();
   // firebase.messaging().subscribeToTopic(topic);
   messagesListener = firebase.messaging().onMessage((message) => {
     console.log('received message: ', message);

@@ -1,4 +1,3 @@
-import firebase from 'react-native-firebase';
 import * as server from '../lib/server';
 import { userLoggedIn } from './loginActions';
 import { Alert } from 'react-native';
