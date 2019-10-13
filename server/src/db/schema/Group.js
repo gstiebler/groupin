@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
+const shortid = require('shortid');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const groupSchema = new mongoose.Schema({
+  friendlyId: {
+    'type': String,
+    'default': shortid.generate
+  },
   name: { type: String, required: true },
   imgUrl: { type: String },
   description: { type: String },
