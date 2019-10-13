@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => {
     },
     onBack: (navigation) => navigation.goBack(),
     willLeave: () => { 
-      dispatch({ type: GROUPS_SEARCH_ITEMS, payload: { groups } });
+      dispatch({ type: GROUPS_SEARCH_ITEMS, payload: { groups: [] } });
     },
   };
 };
