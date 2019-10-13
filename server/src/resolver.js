@@ -239,6 +239,12 @@ const Query = {
       if (!user) {
         throw new Error('Only logged in users can search for groups');
       }
+      searchText = searchText.trim();
+      const byFriedlyId = await Group.findOne({ friendlyId: searchText });
+      if (byFriedlyId) {
+        return [byFriedlyId];
+      }
+
       limit = Math.min(limit, numMaxReturnedItems);
       const groups = await Group
         .find({ "name" : { $regex: searchText, $options: 'i' } })

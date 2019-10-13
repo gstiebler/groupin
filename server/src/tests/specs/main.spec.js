@@ -113,6 +113,18 @@ describe('main', () => {
         },
       ]);
     });
+
+    it('find by friendlyId', async () => {
+      setCurrentUser(userFixtures.robert);
+      await groupsSearchActions.findGroups('  S9hvTvIBWM ')(dispatch);
+      expect(store.getState().groupsSearch.groups).eql([
+        {
+          id: groupFixtures.firstGroup._id.toHexString(),
+          name: 'First Group',
+          imgUrl: 'url1',
+        },
+      ]);
+    });
   
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);
