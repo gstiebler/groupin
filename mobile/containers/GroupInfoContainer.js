@@ -5,6 +5,7 @@ import {
   leaveGroup,
   joinGroup,
 } from '../actions/groupActions';
+import { CURRENT_GROUP_INFO } from "../constants/action-types";
 
 const mapStateToProps = state => {
   return { 

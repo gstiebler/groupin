@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import TopicsListComponent from '../components/TopicsList';
 import { getTopicsOfGroup } from '../actions/rootActions';
-import { CURRENTLY_VIEWED_GROUP_ID } from "../constants/action-types";
+import { 
+  CURRENTLY_VIEWED_GROUP_ID, 
+  SET_TOPICS,
+} from "../constants/action-types";
 
 const mapStateToProps = state => {
   return { 

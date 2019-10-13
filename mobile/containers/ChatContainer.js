@@ -10,6 +10,7 @@ import {
   CHAT_TITLE,
   CHAT_TOPIC_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
+  SET_MESSAGES,
 } from "../constants/action-types";
 
 const mapStateToProps = state => {
