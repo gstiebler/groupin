@@ -64,6 +64,7 @@ function createStorage() {
 
 let pushMessageStub;
 let subscribeStub;
+let unsubscribeStub;
 
 describe('main', () => {
 
@@ -76,10 +77,12 @@ describe('main', () => {
       await initFixtures();
       await Message.insertMany(messages50);
       subscribeStub = sinon.stub(pushService, 'subscribe');
+      unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
     });
 
     afterEach(() => {
       subscribeStub.restore();
+      unsubscribeStub.restore();
     });
 
     it('getOwnGroups', async () => {
@@ -326,12 +329,14 @@ describe('main', () => {
     beforeEach(async () => {
       pushMessageStub = sinon.stub(pushService, 'pushMessage');
       subscribeStub = sinon.stub(pushService, 'subscribe');
+      unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
       await initFixtures();
     });
 
     afterEach(() => {
       pushMessageStub.restore();
       subscribeStub.restore();
+      unsubscribeStub.restore();
     });
 
     it('register', async () => {
@@ -497,6 +502,9 @@ describe('main', () => {
       const groupId = groupIds.firstGroup.toHexString();
       await groupActions.leaveGroup(groupId, () => {})(localDispatch, localGetState);
       const groups = await server.getOwnGroups();
+      const call0args = unsubscribeStub.args[0];
+      const [subscribedFcmToken, unsubscribedGroup] = call0args;
+      expect(unsubscribedGroup).to.equal(groupId);
       expect(groups).to.eql([
         {
           id: groupFixtures.secondGroup._id.toHexString(),

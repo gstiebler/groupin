@@ -43,6 +43,11 @@ let pushService = {
     // See the MessagingTopicManagementResponse reference documentation
     // for the contents of response.
     logger.debug('Successfully subscribed to topic:', response);
+  },
+  
+  async unsubscribe(fcmToken, fcmTopic) {
+    const response = await this.messaging.unsubscribeFromTopic([fcmToken], fcmTopic);
+    logger.debug('Successfully unsubscribed from topic:', response);
   }
 
 };

@@ -436,6 +436,9 @@ const Mutation = {
         { _id: user._id }, 
         { $pull: { groups: ObjectId(groupId) } }
       );
+
+      // unsubscribe user from the group on FCM
+      await pushService.unsubscribe(user.fcmToken, groupId);
       return 'OK';
     }
   },
