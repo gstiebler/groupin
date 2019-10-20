@@ -76,6 +76,18 @@ async function createTopic({ topicName, groupId }) {
   return res.createTopic;
 }
 
+async function setTopicLatestRead(topicId) {
+  const query = `
+    mutation {
+      setTopicLatestRead (
+        topicId: "${topicId}",
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.setTopicLatestRead;
+}
+
 async function getUserId() {
   const query = `
     query {
@@ -203,6 +215,7 @@ module.exports = {
   sendMessage,
   createGroup,
   createTopic,
+  setTopicLatestRead,
   getOwnGroups,
   findGroups,
   getTopicsOfGroup,

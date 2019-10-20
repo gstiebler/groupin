@@ -17,7 +17,7 @@ const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
 const Topic = require('../../db/schema/Topic');
 const Message = require('../../db/schema/Message');
-const md5 = require('md5');
+const TopicLatestRead = require('../../db/schema/TopicLatestRead');
 const { messageTypes } = require('../../lib/constants');
 
 const rootReducer = require('../../../../mobile/reducers/rootReducer');
@@ -571,6 +571,23 @@ describe('main', () => {
       const [subscribedFcmToken, firstSubscribedGroupId] = call0args;
       expect(subscribedFcmToken).to.equal(fcmToken);
       expect(firstSubscribedGroupId).to.equal(userFixtures.robert.groups[0].toHexString());
+    });
+
+    it('setTopicLatestRead', async () => {
+      setCurrentUser(userFixtures.robert);
+
+      // Create
+      const firstCount = await TopicLatestRead.countDocuments();
+      const result1 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
+      expect(result1).to.equal('OK');  
+      const secoundCount = await TopicLatestRead.countDocuments();
+      expect(secoundCount - firstCount).to.eql(1);
+
+      // Update
+      const result2 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
+      expect(result2).to.equal('OK');  
+      const thirdCount = await TopicLatestRead.countDocuments();
+      expect(thirdCount - secoundCount).to.eql(0);
     });
 
   });

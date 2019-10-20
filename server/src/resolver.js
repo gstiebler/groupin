@@ -8,12 +8,12 @@ const {
 const Promise = require('bluebird');
 const logger = require('./config/winston');
 const _ = require('lodash');
-const md5 = require('md5');
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
 const Topic = require('./db/schema/Topic');
 const Message = require('./db/schema/Message');
+const TopicLatestRead = require('./db/schema/TopicLatestRead');
 
 const ObjectId = require('mongoose').Types.ObjectId;
 
@@ -465,6 +465,29 @@ const Mutation = {
         { $set: { fcmToken } }
       );
       await subscribeToAllGroups(user, fcmToken);
+    }
+  },
+
+  setTopicLatestRead: {
+    type: GraphQLString,
+    args: {
+      topicId: { type: GraphQLString },
+    },
+    async resolve(root, { topicId }, { user }) {
+      const topic = await Topic.findById(topicId);
+      const filter = {
+        userId: user._id,
+        topicId: ObjectId(topicId),
+      };
+      const update = {
+        groupId: topic.groupId,
+        latestMoment: new Date(),
+      };
+      await TopicLatestRead.findOneAndUpdate(filter, update, {
+        new: true,
+        upsert: true,
+      });
+      return 'OK';
     }
   },
 }
