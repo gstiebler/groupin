@@ -8,12 +8,14 @@ const {
 const Promise = require('bluebird');
 const logger = require('./config/winston');
 const _ = require('lodash');
+const moment = require('moment');
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
 const Topic = require('./db/schema/Topic');
 const Message = require('./db/schema/Message');
 const TopicLatestRead = require('./db/schema/TopicLatestRead');
+const GroupLatestRead = require('./db/schema/GroupLatestRead');
 
 const ObjectId = require('mongoose').Types.ObjectId;
 
@@ -21,6 +23,7 @@ const pushService = require('./lib/pushService');
 
 const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
 
+const oldDate = moment('2015-01-01').toDate();
 
 const Query = {
 
@@ -62,6 +65,7 @@ const Query = {
           id: { type: GraphQLString },
           name: { type: GraphQLString },
           imgUrl: { type: GraphQLString },
+          unread: { type: GraphQLBoolean },
         },
       })
     ),
@@ -74,8 +78,25 @@ const Query = {
         .find({ _id: { $in: user.groups } })
         .sort({ updatedAt: -1 })
         .lean();
+      
+      const groupLatestRead = await GroupLatestRead.find({
+        groupId: { $in: _.map(groups, '_id') },
+        userId: user._id,
+      });
+      const latestReadById = _.keyBy(groupLatestRead, l => l.groupId.toHexString());
+
+      // TODO: remove when it's garanteed that the user will be subscribed when joining the group
       subscribeToAllGroups(user, user.fcmToken);
-      return groups.map(group => ({ ...group, id: group._id }));
+      return groups.map(group => {
+        const latestReadObj = latestReadById[group._id.toHexString()];
+        // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
+        const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
+        return { 
+          ...group, 
+          id: group._id,
+          unread: moment(latestReadMoment).isBefore(group.updatedAt),
+        }
+      });
     }
   },  
   
@@ -125,6 +146,7 @@ const Query = {
           id: { type: GraphQLString },
           name: { type: GraphQLString },
           imgUrl: { type: GraphQLString },
+          unread: { type: GraphQLBoolean },
         },
       })
     ),
@@ -141,7 +163,21 @@ const Query = {
         .sort({ updatedAt: -1 })
         .limit(limit)
         .lean();
-      return topicsOfGroup.map(topic => ({ ...topic, id: topic._id }));
+      const latestTopicRead = await TopicLatestRead.find({
+        topicId: { $in: _.map(topicsOfGroup, '_id') },
+        userId: user._id,
+      });
+      const latestReadById = _.keyBy(latestTopicRead, l => l.topicId.toHexString());
+      return topicsOfGroup.map(topic => {
+        const latestReadObj = latestReadById[topic._id.toHexString()];
+        // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
+        const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
+        return { 
+          ...topic,
+          id: topic._id,
+          unread: moment(latestReadMoment).isBefore(topic.updatedAt),
+        }
+      });
     }
   },
 
@@ -475,18 +511,31 @@ const Mutation = {
     },
     async resolve(root, { topicId }, { user }) {
       const topic = await Topic.findById(topicId);
-      const filter = {
-        userId: user._id,
-        topicId: ObjectId(topicId),
-      };
-      const update = {
-        groupId: topic.groupId,
+      const updateObj = {
         latestMoment: new Date(),
       };
-      await TopicLatestRead.findOneAndUpdate(filter, update, {
+      const opts = {
         new: true,
         upsert: true,
-      });
+      };
+      // TODO: replace for `update` when is garanteed to have always a LatestMoment for every user/topic
+      await TopicLatestRead.findOneAndUpdate(
+        {
+          userId: user._id,
+          topicId: ObjectId(topicId),
+        }, 
+        updateObj,
+        opts
+      );
+      // TODO: replace for `update` when is garanteed to have always a LatestMoment for every user/topic
+      await GroupLatestRead.findOneAndUpdate(
+        {
+          userId: user._id,
+          groupId: topic.groupId,
+        }, 
+        updateObj,
+        opts
+      );
       return 'OK';
     }
   },

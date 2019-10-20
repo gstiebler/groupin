@@ -104,7 +104,8 @@ async function getOwnGroups() {
       ownGroups {
         id,
         name,
-        imgUrl
+        imgUrl,
+        unread
       }
     }
   `;
@@ -140,7 +141,8 @@ async function getTopicsOfGroup(groupId, limit, startingId) {
       ) {
         id,
         name,
-        imgUrl
+        imgUrl,
+        unread
       }
     }
   `;

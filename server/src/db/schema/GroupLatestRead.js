@@ -5,12 +5,12 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const topicLatestReadSchema = new mongoose.Schema({
+const groupLatestReadSchema = new mongoose.Schema({
   userId: { type: ObjectId, ref: 'User', required: true },
-  topicId: { type: ObjectId, ref: 'Topic', required: true },
+  groupId: { type: ObjectId, ref: 'Group', required: true },
   latestMoment: { type: Date, default: Date.now, required: true },
 });
 
-const TopicLatestRead = mongoose.model('TopicLatestRead', topicLatestReadSchema);
+const GroupLatestRead = mongoose.model('GroupLatestRead', groupLatestReadSchema);
 
-module.exports = TopicLatestRead;
+module.exports = GroupLatestRead;

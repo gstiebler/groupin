@@ -18,6 +18,7 @@ const User = require('../../db/schema/User');
 const Topic = require('../../db/schema/Topic');
 const Message = require('../../db/schema/Message');
 const TopicLatestRead = require('../../db/schema/TopicLatestRead');
+const GroupLatestRead = require('../../db/schema/GroupLatestRead');
 const { messageTypes } = require('../../lib/constants');
 
 const rootReducer = require('../../../../mobile/reducers/rootReducer');
@@ -93,11 +94,13 @@ describe('main', () => {
           id: groupFixtures.firstGroup._id.toHexString(),
           name: 'First Group',
           imgUrl: 'url1',
+          unread: false,
         },
         {
           id: groupFixtures.secondGroup._id.toHexString(),
           name: 'Second Group',
           imgUrl: 'url2',
+          unread: true,
         },
       ]);
     });
@@ -134,11 +137,13 @@ describe('main', () => {
           id: topicFixtures.topic1Group1._id.toHexString(),
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
+          unread: true,
         },
         {
           id: topicFixtures.topic2Group1._id.toHexString(),
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
+          unread: true,
         },
       ]);
     });
@@ -155,11 +160,13 @@ describe('main', () => {
           id: topicFixtures.topic1Group1._id.toHexString(),
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
+          unread: true,
         },
         {
           id: topicFixtures.topic2Group1._id.toHexString(),
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
+          unread: true,
         },
       ]);
     });
@@ -523,6 +530,7 @@ describe('main', () => {
           id: groupFixtures.secondGroup._id.toHexString(),
           imgUrl: 'url2',
           name: 'Second Group',
+          unread: true,
         }
       ]);
       expect(localGetState().base.ownGroups).to.eql([
@@ -530,6 +538,7 @@ describe('main', () => {
           id: groupFixtures.secondGroup._id.toHexString(),
           imgUrl: 'url2',
           name: 'Second Group',
+          unread: true,
         }
       ]);
     });
