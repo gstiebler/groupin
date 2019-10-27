@@ -283,7 +283,7 @@ const Query = {
 
       limit = Math.min(limit, numMaxReturnedItems);
       const groups = await Group
-        .find({ "name" : { $regex: searchText, $options: 'i' } })
+        .find({ name : { $regex: searchText, $options: 'i' }, visibility: 'PUBLIC' })
         .sort({ name: 1, createdAt: 1 })
         .limit(limit)
         .lean();
@@ -386,11 +386,13 @@ const Mutation = {
     type: GraphQLString,
     args: { 
       groupName: { type: GraphQLString },
+      visibility: { type: GraphQLString },
     },
-    async resolve(root, { groupName }, { user }) {
+    async resolve(root, { groupName, visibility }, { user }) {
       const newGroup = await Group.create({
         name: groupName,
         imgUrl: 'temp',
+        visibility,
         createdBy: ObjectId(user._id),
       });
 

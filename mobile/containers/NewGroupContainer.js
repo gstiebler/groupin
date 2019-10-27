@@ -8,7 +8,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onCreate: (navigator, name) => dispatch(createGroup(navigator, name)),
+    onCreate: (navigator, name) => dispatch(createGroup({
+      navigation: navigator, 
+      groupName: name,
+      visibility: 'PUBLIC',
+    })),
   };
 };
 

@@ -27,11 +27,12 @@ async function sendMessage({message, topicId}) {
   return res.sendMessage;
 }
 
-async function createGroup(groupName) {
+async function createGroup({ groupName, visibility }) {
   const query = `
     mutation {
       createGroup (
         groupName: "${groupName}",
+        visibility: "${visibility}"
       )
     }
   `;

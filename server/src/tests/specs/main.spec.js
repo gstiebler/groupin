@@ -506,7 +506,7 @@ describe('main', () => {
 
     it('createGroup', async () => {
       setCurrentUser(userFixtures.robert);
-      const result = await server.createGroup('new group 1');
+      const result = await server.createGroup({ groupName: 'new group 1', visibility: 'SECRET' });
       expect(result).to.equal('OK');      
       const groups = await server.getOwnGroups();
       expect(groups).to.have.lengthOf(3);
