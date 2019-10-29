@@ -8,7 +8,11 @@ const userSchema = new mongoose.Schema({
   phoneNumber: { type: String },
   fcmToken: { type: String },
   imgUrl: { type: String },
-  groups: [{type: ObjectId, ref: 'Group', index: true}],
+  groups: [{
+    id: { type: ObjectId, ref: 'Group' },
+    pinned: { type: Boolean, default: false },
+  }],
+  pinnedTopics: [{ type: ObjectId, ref: 'Topic' }],
   createdAt: { type: Date, default: Date.now, required: true },
 });
 

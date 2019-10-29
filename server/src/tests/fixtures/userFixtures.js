@@ -10,7 +10,10 @@ const users = {
     phoneNumber: '44448',
     imgUrl: 'alice_url',
     groups: [
-      groupIds.firstGroup,
+      { 
+        id: groupIds.firstGroup,
+        pinned: false,
+      }
     ],
   },
   robert: {
@@ -20,8 +23,8 @@ const users = {
     phoneNumber: '55558',
     imgUrl: 'robert_url',
     groups: [
-      groupIds.firstGroup,
-      groupIds.secondGroup,
+      { id: groupIds.firstGroup },
+      { id: groupIds.secondGroup },
     ],
   },
 };
