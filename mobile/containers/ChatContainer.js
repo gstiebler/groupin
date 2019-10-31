@@ -5,6 +5,7 @@ import ChatComponent from '../components/Chat';
 import { 
   onTopicOpened,
   onOlderMessagesRequested,
+  setTopicLatestRead,
 } from "../actions/rootActions";
 import { 
   CHAT_TITLE,
@@ -32,9 +33,11 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: state.params.topicId } });
       dispatch(onTopicOpened(state.params.topicId, storage));
     },
-    willLeave: () => {
+    willLeave: ({ lastState }) => {
       dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } });
       dispatch({ type: SET_MESSAGES, payload: { messages: [] } });
+      console.log('params: **** ', lastState, '  ***----*******');
+      setTopicLatestRead(lastState.params.topicId);
     },
     onLoadEarlier: ({ state }) => dispatch(onOlderMessagesRequested(state.params.topicId)),
   };

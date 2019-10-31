@@ -112,6 +112,8 @@ const updateFcmToken = async (store, fcmToken) => {
   await server.updateFcmToken(fcmToken);
 }
 
+const setTopicLatestRead = async (topicId) => server.setTopicLatestRead(topicId);
+
 module.exports = {
   sendMessages,
   fetchOwnGroups,
@@ -121,4 +123,5 @@ module.exports = {
   onOlderMessagesRequested,
   getMessagesOfCurrentTopic,
   updateFcmToken,
+  setTopicLatestRead,
 };
