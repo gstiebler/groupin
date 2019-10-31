@@ -13,6 +13,15 @@ export default GroupListComponent = ({
 
   let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
+  const renderGroup = group => {
+    const fontWeight = group.unread ? 'bold' : 'normal';
+    return (
+      <ListItem onPress={() => selectGroup(navigation, group.id, group.name) }>
+        <Text style={{ fontWeight }}> {"  " + group.name} </Text>
+      </ListItem>
+    );
+  };
+
   return (
     <Container>
       <List 
@@ -20,11 +29,7 @@ export default GroupListComponent = ({
         dataSource={ds.cloneWithRows(ownGroups)}
         leftOpenValue={75}
         rightOpenValue={-75} 
-        renderRow={group =>
-          <ListItem onPress={() => selectGroup(navigation, group.id, group.name) }>
-            <Text> {"  " + group.name} </Text>
-          </ListItem>
-        }
+        renderRow={renderGroup}
         renderRightHiddenRow={(group, secId, rowId, rowMap) =>
           <Button full danger onPress={() => onLeaveGroup(group.id)}>
             <Icon active name="trash" />
