@@ -201,6 +201,7 @@ async function getGroupInfo(groupId) {
         name,
         imgUrl,
         description,
+        visibility,
         createdBy,
         createdAt,
         iBelong

@@ -109,6 +109,7 @@ const Query = {
         name: { type: GraphQLString },
         imgUrl: { type: GraphQLString },        
         description: { type: GraphQLString },
+        visibility: { type: GraphQLString },
         createdBy: { type: GraphQLString },
         createdAt: { type: GraphQLFloat },
         iBelong: { type: GraphQLBoolean },
@@ -127,6 +128,7 @@ const Query = {
         name: 1,
         imgUrl: 1,
         description: 1,
+        visibility: 1,
         createdBy: 1,
         createdAt: 1,
       }).lean();

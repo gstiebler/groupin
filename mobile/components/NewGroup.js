@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { Container, Content, Form, Item, Input, Button, Text, Picker } from 'native-base';
+import { groupVisibility } from '../constants/domainConstants';
 
 const styles = StyleSheet.create({
   basic: {
@@ -11,7 +12,9 @@ const styles = StyleSheet.create({
 const NewGroupComponent = ({ navigation, onCreate }) => {
 
   const [name, setName] = useState('');
-  const [visibility, setVisibility] = useState('PUBLIC');
+  const [visibility, setVisibility] = useState(groupVisibility[0].value);
+
+  const visibilities = groupVisibility.map(v => <Picker.Item label={v.label} value={v.value} />);
 
   return (
     <Container style={styles.basic} >
@@ -30,8 +33,7 @@ const NewGroupComponent = ({ navigation, onCreate }) => {
               selectedValue={visibility}
               style={{height: 50, width: 100}}
               onValueChange={setVisibility}>
-              <Picker.Item label="Público" value="PUBLIC" />
-              <Picker.Item label="Secreto" value="SECRET" />
+              { visibilities }
             </Picker>
           </Item>
         </Form>
