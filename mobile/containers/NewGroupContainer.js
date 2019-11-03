@@ -8,10 +8,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onCreate: (navigator, name) => dispatch(createGroup({
-      navigation: navigator, 
+    onCreate: ({ navigation, name, visibility }) => dispatch(createGroup({
+      navigation, 
       groupName: name,
-      visibility: 'PUBLIC',
+      visibility,
     })),
   };
 };

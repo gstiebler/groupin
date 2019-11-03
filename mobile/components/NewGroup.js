@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
+import { Container, Content, Form, Item, Input, Button, Text, Picker } from 'native-base';
 
 const styles = StyleSheet.create({
   basic: {
@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
 
 const NewGroupComponent = ({ navigation, onCreate }) => {
 
-  const [name, setName] = useState(0);
+  const [name, setName] = useState('');
+  const [visibility, setVisibility] = useState('PUBLIC');
 
   return (
     <Container style={styles.basic} >
@@ -24,8 +25,17 @@ const NewGroupComponent = ({ navigation, onCreate }) => {
               style={{paddingBottom: 20}}
             />
           </Item>
+          <Item>
+            <Picker
+              selectedValue={visibility}
+              style={{height: 50, width: 100}}
+              onValueChange={setVisibility}>
+              <Picker.Item label="Público" value="PUBLIC" />
+              <Picker.Item label="Secreto" value="SECRET" />
+            </Picker>
+          </Item>
         </Form>
-        <Button block success onPress={() => onCreate(navigation, name)} >
+        <Button block success onPress={() => onCreate({ navigation, name, visibility })} >
           <Text>Criar grupo</Text>
         </Button>
       </Content>
