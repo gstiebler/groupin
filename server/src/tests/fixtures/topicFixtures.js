@@ -1,6 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const groupFixtures = require('./groupFixtures');
 const userFixtures = require('./userFixtures');
+const { topicIds } = require('./preIds');
 
 const topics = {
   topic1Group1: {
@@ -22,7 +23,7 @@ const topics = {
     updatedAt: Date.parse('2018-07-26'),
   },
   topic1Group2: {
-    _id: ObjectId(),
+    _id: topicIds.topic1Group2,
     name: 'Topic 1 Group 2',
     imgUrl: 't1g2_url',
     createdBy: userFixtures.alice._id,
@@ -31,7 +32,7 @@ const topics = {
     updatedAt: Date.parse('2018-07-12'),
   },
   topic2Group2: {
-    _id: ObjectId(),
+    _id: topicIds.topic2Group2,
     name: 'Topic 2 Group 2',
     imgUrl: 't2g2_url',
     createdBy: userFixtures.alice._id,

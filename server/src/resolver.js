@@ -550,6 +550,39 @@ const Mutation = {
       return 'OK';
     }
   },
+
+  setGroupPin: {
+    type: GraphQLString,
+    args: {
+      groupId: { type: GraphQLString },
+      pinned: { type: GraphQLBoolean },
+    },
+    async resolve(root, { groupId, pinned }, { user }) {
+      await User.update(
+        { _id: user._id, 'groups.id': ObjectId(groupId) }, 
+        { $set: { 'groups.$.pinned': pinned } }
+      );
+      await pushService.setSubscription(user.fcmToken, groupId, pinned);
+      return 'OK';
+    }
+  },
+
+  setTopicPin: {
+    type: GraphQLString,
+    args: {
+      topicId: { type: GraphQLString },
+      pinned: { type: GraphQLBoolean },
+    },
+    async resolve(root, { topicId, pinned }, { user }) {
+      const updateOperation = pinned ? '$push' : '$pull';
+      await User.update(
+        { _id: user._id },
+        { [updateOperation]: { pinnedTopics: ObjectId(topicId) } }
+      );
+      await pushService.setSubscription(user.fcmToken, topicId, pinned);
+      return 'OK';
+    }
+  },
 }
 
 function subscribeToAllGroups(user, fcmToken) {

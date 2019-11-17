@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   fcmToken: { type: String },
   imgUrl: { type: String },
   groups: [{
+    _id : false,
     id: { type: ObjectId, ref: 'Group' },
     pinned: { type: Boolean, default: false },
   }],

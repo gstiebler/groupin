@@ -212,6 +212,32 @@ async function getGroupInfo(groupId) {
   return res.getGroupInfo;
 }
 
+async function setGroupPin({ groupId, pinned }) {
+  const query = `
+    mutation {
+      setGroupPin (
+        groupId: "${groupId}",
+        pinned: ${pinned},
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.setGroupPin;
+}
+
+async function setTopicPin({ topicId, pinned }) {
+  const query = `
+    mutation {
+      setTopicPin (
+        topicId: "${topicId}",
+        pinned: ${pinned},
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query);
+  return res.setTopicPin;
+}
+
 
 module.exports = {
   getUserId,
@@ -228,4 +254,6 @@ module.exports = {
   leaveGroup,
   updateFcmToken,
   getGroupInfo,
+  setGroupPin,
+  setTopicPin,
 };

@@ -5,6 +5,7 @@ const User = require('../../db/schema/User');
 const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
 const schema = require('../../graphqlSchema');
 const logger = require('../../config/winston');
+const { addMongooseLogger } = require('../../dev/mongodbLogger');
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
@@ -39,6 +40,7 @@ before(async () => {
     }
     return result.data;
   });
+  addMongooseLogger();
 });
 
 after(async () => {

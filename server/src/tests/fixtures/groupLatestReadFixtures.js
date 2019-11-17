@@ -1,5 +1,5 @@
 const userFixtures = require('./userFixtures');
-const groupIds = require('./groupIds');
+const { groupIds } = require('./preIds');
 const moment = require('moment');
 
 const groupLatestReads = [

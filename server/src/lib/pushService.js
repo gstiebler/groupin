@@ -48,7 +48,21 @@ let pushService = {
   async unsubscribe(fcmToken, fcmTopic) {
     const response = await this.messaging.unsubscribeFromTopic([fcmToken], fcmTopic);
     logger.debug('Successfully unsubscribed from topic:', response);
-  }
+  },
+
+  /**
+   * Subscribe or unsubscribe depending on `subscribed` parameter
+   * @param {*} fcmToken 
+   * @param {*} fcmTopic 
+   * @param {*} subscribed 
+   */
+  async setSubscription(fcmToken, fcmTopic, subscribed) {
+    if (subscribed) {
+      this.subscribe(fcmToken, fcmTopic)
+    } else {
+      this.unsubscribe(fcmToken, fcmTopic)
+    }
+  },
 
 };
 

@@ -11,7 +11,7 @@ const userFixtures = require('../fixtures/userFixtures');
 const groupFixtures = require('../fixtures/groupFixtures');
 const topicFixtures = require('../fixtures/topicFixtures');
 const messageFixtures = require('../fixtures/messageFixtures');
-const groupIds = require('../fixtures/groupIds');
+const { groupIds, topicIds } = require('../fixtures/preIds');
 const _ = require('lodash');
 const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
@@ -66,6 +66,7 @@ function createStorage() {
 let pushMessageStub;
 let subscribeStub;
 let unsubscribeStub;
+let setSubscriptionStub;
 
 describe('main', () => {
 
@@ -79,11 +80,13 @@ describe('main', () => {
       await Message.insertMany(messages50);
       subscribeStub = sinon.stub(pushService, 'subscribe');
       unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
+      setSubscriptionStub = sinon.stub(pushService, 'setSubscription');
     });
 
     afterEach(() => {
       subscribeStub.restore();
       unsubscribeStub.restore();
+      setSubscriptionStub.restore();
     });
 
     it('getOwnGroups', async () => {
@@ -352,6 +355,7 @@ describe('main', () => {
       pushMessageStub = sinon.stub(pushService, 'pushMessage');
       subscribeStub = sinon.stub(pushService, 'subscribe');
       unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
+      setSubscriptionStub = sinon.stub(pushService, 'setSubscription');
       await initFixtures();
     });
 
@@ -359,6 +363,7 @@ describe('main', () => {
       pushMessageStub.restore();
       subscribeStub.restore();
       unsubscribeStub.restore();
+      setSubscriptionStub.restore();
     });
 
     it('register', async () => {
@@ -599,6 +604,74 @@ describe('main', () => {
       expect(result2).to.equal('OK');  
       const thirdCount = await TopicLatestRead.countDocuments();
       expect(thirdCount - secoundCount).to.eql(0);
+    });
+
+    describe('setGroupPin', () => {
+
+      it('pin', async () => {
+        setCurrentUser(userFixtures.robert);
+        const groupId = groupFixtures.firstGroup._id.toHexString();
+        await server.setGroupPin({ 
+          groupId, 
+          pinned: true, 
+        });
+  
+        const user = await User.findById(userFixtures.robert._id);
+        expect(user.groups[0].pinned).to.eql(true);
+        const [fcmTokenP, groupIdP, pinnedP] = setSubscriptionStub.args[0];
+        expect(groupIdP).to.eql(groupId);
+        expect(pinnedP).to.eql(true);
+      });
+
+      it('unpin', async () => {
+        setCurrentUser(userFixtures.robert);
+        const groupId = groupFixtures.secondGroup._id.toHexString();
+        await server.setGroupPin({ 
+          groupId, 
+          pinned: false, 
+        });
+  
+        const user = await User.findById(userFixtures.robert._id);
+        expect(user.groups[1].pinned).to.eql(false);
+        const [fcmTokenP, groupIdP, pinnedP] = setSubscriptionStub.args[0];
+        expect(groupIdP).to.eql(groupId);
+        expect(pinnedP).to.eql(false);
+      });
+
+    });
+
+    describe('setTopicPin', () => {
+
+      it('pin', async () => {
+        setCurrentUser(userFixtures.robert);
+        const topicId = topicFixtures.topic2Group2._id.toHexString();
+        await server.setTopicPin({ 
+          topicId, 
+          pinned: true, 
+        });
+  
+        const user = await User.findById(userFixtures.robert._id);
+        expect(user.pinnedTopics[1].toHexString()).to.eql(topicId);
+        const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
+        expect(topicIdP).to.eql(topicId);
+        expect(pinnedP).to.eql(true);
+      });
+
+      it('unpin', async () => {
+        setCurrentUser(userFixtures.robert);
+        const topicId = topicFixtures.topic1Group2._id.toHexString();
+        await server.setTopicPin({ 
+          topicId, 
+          pinned: false, 
+        });
+  
+        const user = await User.findById(userFixtures.robert._id);
+        expect(user.pinnedTopics).to.have.lengthOf(0);
+        const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
+        expect(topicIdP).to.eql(topicId);
+        expect(pinnedP).to.eql(false);
+      });
+
     });
 
   });
