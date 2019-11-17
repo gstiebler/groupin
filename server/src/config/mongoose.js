@@ -10,6 +10,7 @@ async function init() {
   const prodUrl = process.env.MONGODB_PROD_URL;
   const mongoURL = `mongodb://${userPwStr}${dbHost}:${port}/${dbName}${prodUrl}`;
   mongoose.Promise = global.Promise;
+  mongoose.set('useFindAndModify', false);
 
   await mongoose.disconnect();
 

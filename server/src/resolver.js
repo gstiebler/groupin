@@ -558,7 +558,7 @@ const Mutation = {
       pinned: { type: GraphQLBoolean },
     },
     async resolve(root, { groupId, pinned }, { user }) {
-      await User.update(
+      await User.updateOne(
         { _id: user._id, 'groups.id': ObjectId(groupId) }, 
         { $set: { 'groups.$.pinned': pinned } }
       );
@@ -575,7 +575,7 @@ const Mutation = {
     },
     async resolve(root, { topicId, pinned }, { user }) {
       const updateOperation = pinned ? '$push' : '$pull';
-      await User.update(
+      await User.updateOne(
         { _id: user._id },
         { [updateOperation]: { pinnedTopics: ObjectId(topicId) } }
       );
