@@ -1,9 +1,9 @@
 const admin = require('firebase-admin');
 const { graphql } = require('graphql');
+const _ = require('lodash');
 const schema = require('./graphqlSchema');
 const logger = require('./config/winston');
 const User = require('./db/schema/User');
-const _ = require('lodash');
 
 async function main(graphqlQuery, authFbToken) {
   try {
@@ -15,7 +15,7 @@ async function main(graphqlQuery, authFbToken) {
     // ***
     logger.debug(`Firebase auth token: ${authFbToken}`);
     if (authFbToken) {
-      // authFbToken comes from the client app  
+      // authFbToken comes from the client app
       const decodedToken = await admin.auth().verifyIdToken(authFbToken);
       logger.debug(decodedToken);
       firebaseId = decodedToken.uid;
@@ -29,6 +29,6 @@ async function main(graphqlQuery, authFbToken) {
   }
 }
 
-module.exports = { 
+module.exports = {
   main,
 };

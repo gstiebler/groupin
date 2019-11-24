@@ -1,10 +1,13 @@
 const sinon = require('sinon');
 const moment = require('moment');
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
+
+const { ObjectId } = mongoose.Types;
+const { expect } = require('chai');
+const _ = require('lodash');
+const { createStore, applyMiddleware } = require('redux');
 const server = require('../../../../mobile/lib/server');
 const pushService = require('../../lib/pushService');
-const expect = require('chai').expect;
 const { initFixtures } = require('../fixtures');
 const logger = require('../../config/winston');
 const userFixtures = require('../fixtures/userFixtures');
@@ -12,7 +15,6 @@ const groupFixtures = require('../fixtures/groupFixtures');
 const topicFixtures = require('../fixtures/topicFixtures');
 const messageFixtures = require('../fixtures/messageFixtures');
 const { groupIds, topicIds } = require('../fixtures/preIds');
-const _ = require('lodash');
 const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
 const Topic = require('../../db/schema/Topic');
@@ -22,12 +24,11 @@ const GroupLatestRead = require('../../db/schema/GroupLatestRead');
 const { messageTypes } = require('../../lib/constants');
 
 const rootReducer = require('../../../../mobile/reducers/rootReducer');
-const { createStore, applyMiddleware } = require("redux");
 // const thunk = require('redux-thunk');
 const store = createStore(
   rootReducer,
   {},
-  //, applyMiddleware(thunk)
+  // , applyMiddleware(thunk)
 );
 
 const rootActions = require('../../../../mobile/actions/rootActions');
@@ -39,7 +40,7 @@ const dispatch = store.dispatch.bind(store);
 const getState = store.getState.bind(store);
 
 function createMessages(numMessages, user, topic) {
-  let messages = [];
+  const messages = [];
   const baseMoment = moment();
   for (let i = 0; i < numMessages; i++) {
     messages.push({
@@ -56,8 +57,8 @@ function createMessages(numMessages, user, topic) {
 function createStorage() {
   return {
     messagesByTopic: new Map([[]]),
-    getItem(topicId) { return this.messagesByTopic.get(topicId) },
-    setItem(topicId, messages) { this.messagesByTopic.set(topicId, messages) },
+    getItem(topicId) { return this.messagesByTopic.get(topicId); },
+    setItem(topicId, messages) { this.messagesByTopic.set(topicId, messages); },
   };
 }
 
@@ -69,11 +70,9 @@ let unsubscribeStub;
 let setSubscriptionStub;
 
 describe('main', () => {
-
   describe('reading', () => {
-
     const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id);
-    const localMessages50 = messages50.map(m => ({ ...m, _id: m._id.toHexString() }));
+    const localMessages50 = messages50.map((m) => ({ ...m, _id: m._id.toHexString() }));
 
     before(async () => {
       await initFixtures();
@@ -131,7 +130,7 @@ describe('main', () => {
         },
       ]);
     });
-  
+
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);
       await rootActions.getTopicsOfGroup(dispatch, groupFixtures.firstGroup._id.toHexString());
@@ -150,13 +149,13 @@ describe('main', () => {
         },
       ]);
     });
-  
+
     it('getTopicsOfCurrentGroup', async () => {
       setCurrentUser(userFixtures.robert);
-      store.dispatch({ 
-        type: 'currently viewed group ID', 
-        payload: { currentlyViewedGroupId: groupFixtures.firstGroup._id.toHexString() } }
-      );
+      store.dispatch({
+        type: 'currently viewed group ID',
+        payload: { currentlyViewedGroupId: groupFixtures.firstGroup._id.toHexString() },
+      });
       await rootActions.getTopicsOfCurrentGroup(store);
       expect(store.getState().base.topics).eql([
         {
@@ -175,13 +174,12 @@ describe('main', () => {
     });
 
     describe('onTopicOpened', () => {
-  
       it('no messages on storage', async () => {
         const localStore = createStore(rootReducer, {});
         const localDispatch = localStore.dispatch.bind(localStore);
         const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
         setCurrentUser(userFixtures.robert);
-        let storage = createStorage();
+        const storage = createStorage();
         await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
         const expectedMessages = _.reverse([
           {
@@ -208,13 +206,13 @@ describe('main', () => {
         expect(localStore.getState().base.messages).to.eql(expectedMessages);
         expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
       });
-  
+
       it('3 extra messages to be fetched', async () => {
         const localStore = createStore(rootReducer, {});
         const localDispatch = localStore.dispatch.bind(localStore);
         const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
         setCurrentUser(userFixtures.robert);
-        let storage = createStorage();
+        const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(4, 24));
         await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
 
@@ -238,13 +236,13 @@ describe('main', () => {
         expect(storageMessageTexts[18]).to.eql('Message 48');
         expect(storageMessageTexts[19]).to.eql('Message 49');
       });
-  
+
       it('hole between fetched and on storage', async () => {
         const localStore = createStore(rootReducer, {});
         const localDispatch = localStore.dispatch.bind(localStore);
         const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
         setCurrentUser(userFixtures.robert);
-        let storage = createStorage();
+        const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(25, 44));
         await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
 
@@ -266,9 +264,8 @@ describe('main', () => {
         expect(storageMessageTexts[18]).to.eql('Message 48');
         expect(storageMessageTexts[19]).to.eql('Message 49');
       });
-
     });
-  
+
     it('onOlderMessagesRequested', async () => {
       const localStore = createStore(rootReducer, {});
       const localDispatch = localStore.dispatch.bind(localStore);
@@ -296,11 +293,11 @@ describe('main', () => {
     it('getMessagesOfCurrentTopic', async () => {
       const localStore = createStore(rootReducer, {});
       setCurrentUser(userFixtures.robert);
-      localStore.dispatch({ 
-        type: 'currently viewed topic ID', 
-        payload: { currentlyViewedTopicId: topicFixtures.topic1Group1._id.toHexString() } }
-      );
-      let storage = createStorage();
+      localStore.dispatch({
+        type: 'currently viewed topic ID',
+        payload: { currentlyViewedTopicId: topicFixtures.topic1Group1._id.toHexString() },
+      });
+      const storage = createStorage();
       await rootActions.getMessagesOfCurrentTopic(localStore, storage);
       expect(localStore.getState().base.messages).eql(_.reverse([
         {
@@ -325,7 +322,7 @@ describe('main', () => {
         },
       ]));
     });
-  
+
     it('getGroupInfo', async () => {
       const localStore = createStore(rootReducer, {});
       const localDispatch = localStore.dispatch.bind(localStore);
@@ -336,8 +333,8 @@ describe('main', () => {
         _id: '5c1c1e99e362b2ce8042faaa',
         name: 'First Group',
         imgUrl: 'url1',
-        description: 'Description of the first group',  
-        visibility: 'PUBLIC',            
+        description: 'Description of the first group',
+        visibility: 'PUBLIC',
         visibilityLabel: 'Público',
         friendlyId: 'S9hvTvIBWM',
         createdBy: '507f1f77bcf86cd799430001',
@@ -345,12 +342,9 @@ describe('main', () => {
         iBelong: true,
       });
     });
-    
-    
   });
 
   describe('writting', () => {
-
     beforeEach(async () => {
       pushMessageStub = sinon.stub(pushService, 'pushMessage');
       subscribeStub = sinon.stub(pushService, 'subscribe');
@@ -379,7 +373,7 @@ describe('main', () => {
     });
 
     describe('sendMessage', () => {
-      const alice = userFixtures.alice;
+      const { alice } = userFixtures;
       const messageText = 'new message 1 from Alice';
       const topicId = topicFixtures.topic1Group1._id.toHexString();
 
@@ -390,8 +384,8 @@ describe('main', () => {
       beforeEach(async () => {
         setCurrentUser(alice);
         localDispatch({ type: 'reset base', payload: {} });
-        localDispatch({ 
-          type: 'chat topic ID', 
+        localDispatch({
+          type: 'chat topic ID',
           payload: { topicId },
         });
         await rootActions.sendMessages([{ text: messageText }])(localDispatch, localGetState);
@@ -414,7 +408,7 @@ describe('main', () => {
           },
           body: messageText,
           title: 'Topic 1 Group 1',
-        });      
+        });
 
         const call1args = pushMessageStub.args[1];
         const [groupId, dummy] = call1args;
@@ -426,24 +420,24 @@ describe('main', () => {
       it('message was added to DB', async () => {
         const lastMessageOnStore = _.last(localGetState().base.messages);
         const messages = await server.getMessagesOfTopic({
-          topicId: topicFixtures.topic1Group1._id.toHexString(), 
-          limit: 20, 
+          topicId: topicFixtures.topic1Group1._id.toHexString(),
+          limit: 20,
           afterId: '507f1f77bcf86cd799439002',
         });
         expect(messages).to.containSubset([{
           _id: lastMessageOnStore._id,
           text: messageText,
           user: {
-            _id: "507f1f77bcf86cd799430001",
-            avatar: "alice_url",
-            name: "Alice",
-          }
+            _id: '507f1f77bcf86cd799430001',
+            avatar: 'alice_url',
+            name: 'Alice',
+          },
         }]);
       });
 
       it('sendMessage, filtering by `startingId`', async () => {
         const messages = await server.getMessagesOfTopic({
-          topicId: topicFixtures.topic1Group1._id.toHexString(), 
+          topicId: topicFixtures.topic1Group1._id.toHexString(),
           limit: 20,
         });
         expect(messages).to.have.lengthOf(3);
@@ -458,11 +452,10 @@ describe('main', () => {
 
       it('topic sort order', async () => {
         const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
-        expect(_.map(topics, 'name')).to.eql([ 'Topic 1 Group 1', 'Topic 2 Group 1']);
+        expect(_.map(topics, 'name')).to.eql(['Topic 1 Group 1', 'Topic 2 Group 1']);
       });
-
     });
-  
+
     describe('createTopic', async () => {
       const topicName = 'new topic foca';
 
@@ -472,9 +465,9 @@ describe('main', () => {
       before(() => {
         setCurrentUser(userFixtures.robert);
       });
-      
+
       beforeEach(async () => {
-        let navigation = { goBack: () => {} };
+        const navigation = { goBack: () => {} };
         const groupId = groupFixtures.secondGroup._id.toHexString();
         await newTopicActions.createTopic(navigation, groupId, topicName)(localDispatch, localGetState);
       });
@@ -506,20 +499,19 @@ describe('main', () => {
       it('group sort order', async () => {
         setCurrentUser(userFixtures.robert);
         const groups = await server.getOwnGroups();
-        expect(_.map(groups, 'name')).to.eql([ 'Second Group', 'First Group']);
+        expect(_.map(groups, 'name')).to.eql(['Second Group', 'First Group']);
       });
-
     });
 
     it('createGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const result = await server.createGroup({ groupName: 'new group 1', visibility: 'SECRET' });
-      expect(result).to.equal('OK');      
+      expect(result).to.equal('OK');
       const groups = await server.getOwnGroups();
       expect(groups).to.have.lengthOf(3);
       expect(groups[0].name).to.equal('new group 1');
     });
-  
+
     it('leaveGroup', async () => {
       const localStore = createStore(rootReducer, {});
       const localDispatch = localStore.dispatch.bind(localStore);
@@ -538,7 +530,7 @@ describe('main', () => {
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
-        }
+        },
       ]);
       expect(localGetState().base.ownGroups).to.eql([
         {
@@ -546,18 +538,17 @@ describe('main', () => {
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
-        }
+        },
       ]);
     });
 
     describe('joinGroup', () => {
-
       it('User already joined the group', async () => {
         setCurrentUser(userFixtures.alice);
         const groupId = groupFixtures.firstGroup._id.toHexString();
         // let navigatePath;
         // const navigation = { navigate: (path) => navigatePath = path };
-        let joinGroupPromise = groupActions.joinGroup(groupId, () => {})(dispatch);
+        const joinGroupPromise = groupActions.joinGroup(groupId, () => {})(dispatch);
         await expect(joinGroupPromise).to.be.rejectedWith('User already participate in the group');
       });
 
@@ -573,12 +564,11 @@ describe('main', () => {
         const [subscribedFcmToken, subscribedGroup] = call0args;
         expect(subscribedGroup).to.equal(groupId);
       });
-
     });
-  
+
     it('updateFcmToken', async () => {
       setCurrentUser(userFixtures.robert);
-      const fcmToken = 'robertFcmToken345873'
+      const fcmToken = 'robertFcmToken345873';
       await server.updateFcmToken(fcmToken);
       const robert = await User.findById(userFixtures.robert._id);
       expect(robert.fcmToken).to.equal(fcmToken);
@@ -595,27 +585,26 @@ describe('main', () => {
       // Create
       const firstCount = await TopicLatestRead.countDocuments();
       const result1 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
-      expect(result1).to.equal('OK');  
+      expect(result1).to.equal('OK');
       const secoundCount = await TopicLatestRead.countDocuments();
       expect(secoundCount - firstCount).to.eql(1);
 
       // Update
       const result2 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
-      expect(result2).to.equal('OK');  
+      expect(result2).to.equal('OK');
       const thirdCount = await TopicLatestRead.countDocuments();
       expect(thirdCount - secoundCount).to.eql(0);
     });
 
     describe('setGroupPin', () => {
-
       it('pin', async () => {
         setCurrentUser(userFixtures.robert);
         const groupId = groupFixtures.firstGroup._id.toHexString();
-        await server.setGroupPin({ 
-          groupId, 
-          pinned: true, 
+        await server.setGroupPin({
+          groupId,
+          pinned: true,
         });
-  
+
         const user = await User.findById(userFixtures.robert._id);
         expect(user.groups[0].pinned).to.eql(true);
         const [fcmTokenP, groupIdP, pinnedP] = setSubscriptionStub.args[0];
@@ -626,30 +615,28 @@ describe('main', () => {
       it('unpin', async () => {
         setCurrentUser(userFixtures.robert);
         const groupId = groupFixtures.secondGroup._id.toHexString();
-        await server.setGroupPin({ 
-          groupId, 
-          pinned: false, 
+        await server.setGroupPin({
+          groupId,
+          pinned: false,
         });
-  
+
         const user = await User.findById(userFixtures.robert._id);
         expect(user.groups[1].pinned).to.eql(false);
         const [fcmTokenP, groupIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(groupIdP).to.eql(groupId);
         expect(pinnedP).to.eql(false);
       });
-
     });
 
     describe('setTopicPin', () => {
-
       it('pin', async () => {
         setCurrentUser(userFixtures.robert);
         const topicId = topicFixtures.topic2Group2._id.toHexString();
-        await server.setTopicPin({ 
-          topicId, 
-          pinned: true, 
+        await server.setTopicPin({
+          topicId,
+          pinned: true,
         });
-  
+
         const user = await User.findById(userFixtures.robert._id);
         expect(user.pinnedTopics[1].toHexString()).to.eql(topicId);
         const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
@@ -660,20 +647,17 @@ describe('main', () => {
       it('unpin', async () => {
         setCurrentUser(userFixtures.robert);
         const topicId = topicFixtures.topic1Group2._id.toHexString();
-        await server.setTopicPin({ 
-          topicId, 
-          pinned: false, 
+        await server.setTopicPin({
+          topicId,
+          pinned: false,
         });
-  
+
         const user = await User.findById(userFixtures.robert._id);
         expect(user.pinnedTopics).to.have.lengthOf(0);
         const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(topicIdP).to.eql(topicId);
         expect(pinnedP).to.eql(false);
       });
-
     });
-
   });
-
 });

@@ -2,7 +2,7 @@
  * This file was created to avoid circular dependencies among fixture files
  */
 
-const ObjectId = require('mongoose').Types.ObjectId;
+const { ObjectId } = require('mongoose').Types;
 
 const groupIds = {
   firstGroup: ObjectId('5c1c1e99e362b2ce8042faaa'),

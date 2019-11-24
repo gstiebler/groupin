@@ -1,4 +1,4 @@
-const ObjectId = require('mongoose').Types.ObjectId;
+const { ObjectId } = require('mongoose').Types;
 const groupFixtures = require('./groupFixtures');
 const userFixtures = require('./userFixtures');
 const { topicIds } = require('./preIds');

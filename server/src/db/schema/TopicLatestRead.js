@@ -3,7 +3,8 @@
  */
 
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.Types.ObjectId;
+
+const { ObjectId } = mongoose.Schema.Types;
 
 const topicLatestReadSchema = new mongoose.Schema({
   userId: { type: ObjectId, ref: 'User', required: true },

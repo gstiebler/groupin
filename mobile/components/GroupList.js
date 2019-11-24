@@ -22,6 +22,22 @@ export default GroupListComponent = ({
     );
   };
 
+  const renderDeleteButton = (group, secId, rowId, rowMap) => {
+    return (
+      <Button full danger onPress={() => onLeaveGroup(group.id)}>
+        <Icon active name="trash" />
+      </Button>
+    );
+  }
+
+  const renderPinButton = (group, secId, rowId, rowMap) => {
+    return (
+      <Button full danger onPress={() => onLeaveGroup(group.id)}>
+        <Icon active name="trash" />
+      </Button>
+    );
+  }
+
   return (
     <Container>
       <List 
@@ -30,10 +46,8 @@ export default GroupListComponent = ({
         leftOpenValue={75}
         rightOpenValue={-75} 
         renderRow={renderGroup}
-        renderRightHiddenRow={(group, secId, rowId, rowMap) =>
-          <Button full danger onPress={() => onLeaveGroup(group.id)}>
-            <Icon active name="trash" />
-          </Button>}    
+        renderLeftHiddenRow={renderDeleteButton}   
+        renderRightHiddenRow={renderDeleteButton}    
         />
     </Container>
   );

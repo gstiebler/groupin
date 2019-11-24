@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 const {
   GraphQLString,
@@ -87,7 +88,7 @@ const Query = {
         groupId: { $in: _.map(groups, '_id') },
         userId: user._id,
       });
-      const latestReadById = _.keyBy(groupLatestRead, l => l.groupId.toHexString());
+      const latestReadById = _.keyBy(groupLatestRead, (l) => l.groupId.toHexString());
 
       // TODO: remove when it's garanteed that the user will be subscribed when joining the group
       subscribeToAllGroups(user, user.fcmToken);
@@ -214,7 +215,9 @@ const Query = {
       afterId: { type: GraphQLString },
       beforeId: { type: GraphQLString },
     },
-    async resolve(root, { topicId, limit, afterId, beforeId }, { user }) {
+    async resolve(root, {
+      topicId, limit, afterId, beforeId,
+    }, { user }) {
       const topic = await Topic.findById(topicId);
       if (!_.find(user.groups, (g) => g.id.equals(topic.groupId))) {
         throw new Error('User does not participate in the group');
@@ -225,9 +228,10 @@ const Query = {
       if (beforeIdMessages && afterIdMessages) {
         throw new Error('Only one start of end filter is allowed');
       }
-      const idMatch = newestMessages ? {} :
-        afterIdMessages ? { _id: { $gte: ObjectId(afterId) } } :
-        { _id: { $lt: ObjectId(beforeId) } };
+      // eslint-disable-next-line no-nested-ternary
+      const idMatch = newestMessages ? {}
+        : afterIdMessages ? { _id: { $gte: ObjectId(afterId) } }
+          : { _id: { $lt: ObjectId(beforeId) } };
       const messages = await Message.aggregate([
         {
           $match: {
@@ -238,10 +242,10 @@ const Query = {
         {
           $lookup: {
             from: 'users',
-            localField: "user",
-            foreignField: "_id",
-            as: "user"
-          }
+            localField: 'user',
+            foreignField: '_id',
+            as: 'user',
+          },
         },
         { $unwind: '$user' },
         {
@@ -251,14 +255,14 @@ const Query = {
             'user._id': '$user._id',
             'user.name': '$user.name',
             'user.avatar': '$user.imgUrl',
-          }
+          },
         },
         { $sort: { _id: -1 } },
         { $limit: limit },
         // { $sort: { _id: -1 } },
       ]);
       return messages;
-    }
+    },
   },
 
   findGroups: {
@@ -270,31 +274,31 @@ const Query = {
           name: { type: GraphQLString },
           imgUrl: { type: GraphQLString },
         },
-      })
+      }),
     ),
     args: {
       searchText: { type: GraphQLString },
       limit: { type: GraphQLFloat },
       startingId: { type: GraphQLString },
     },
-    async resolve(root, { searchText, limit, startingId }, { user }, fieldASTs) {
+    async resolve(root, { searchText, limit }, { user }) {
       if (!user) {
         throw new Error('Only logged in users can search for groups');
       }
-      searchText = searchText.trim();
-      const byFriedlyId = await Group.findOne({ friendlyId: searchText });
+      const trimmedSearchText = searchText.trim();
+      const byFriedlyId = await Group.findOne({ friendlyId: trimmedSearchText });
       if (byFriedlyId) {
         return [byFriedlyId];
       }
 
-      limit = Math.min(limit, numMaxReturnedItems);
+      const boundedLimit = Math.min(limit, numMaxReturnedItems);
       const groups = await Group
-        .find({ name : { $regex: searchText, $options: 'i' }, visibility: 'PUBLIC' })
+        .find({ name: { $regex: trimmedSearchText, $options: 'i' }, visibility: 'PUBLIC' })
         .sort({ name: 1, createdAt: 1 })
-        .limit(limit)
+        .limit(boundedLimit)
         .lean();
-      return groups.map(group => ({ ...group, id: group._id }));
-    }
+      return groups.map((group) => ({ ...group, id: group._id }));
+    },
   },
 };
 
@@ -305,9 +309,9 @@ const Mutation = {
       name: 'registerType',
       fields: {
         errorMessage: { type: GraphQLString },
-      }
+      },
     }),
-    args: { 
+    args: {
       name: { type: GraphQLString },
     },
     async resolve(root, { name }, { firebaseId, phoneNumber }) {
@@ -325,7 +329,7 @@ const Mutation = {
         errorMessage: '',
         id: user._id,
       };
-    }
+    },
   },
 
   sendMessage: {
@@ -334,12 +338,12 @@ const Mutation = {
       message: { type: GraphQLString },
       topicId: { type: GraphQLString },
     },
-    async resolve(root, { message, topicId }, { user }, fieldASTs) {
+    async resolve(root, { message, topicId }, { user }) {
       // TODO: make calls to DB in parallel when possible
 
       const topic = await Topic.findById(topicId);
-      if (!_.find(user.groups, g => g.id.equals(topic.groupId))) {
-        throw new Error(`User does not participate in the group`);
+      if (!_.find(user.groups, (g) => g.id.equals(topic.groupId))) {
+        throw new Error('User does not participate in the group');
       }
 
       const createdMessage = await Message.create({
@@ -351,7 +355,7 @@ const Mutation = {
       // update topic updatedAt
       await Topic.updateOne(
         { _id: ObjectId(topicId) },
-        { $set: { updatedAt: Date.now() } }
+        { $set: { updatedAt: Date.now() } },
       );
 
       // update group updatedAt
@@ -385,7 +389,7 @@ const Mutation = {
       ]);
 
       return createdMessage._id.toHexString();
-    }
+    },
   },
 
   createGroup: {
@@ -415,7 +419,7 @@ const Mutation = {
       );
 
       return 'OK';
-    }
+    },
   },
 
   createTopic: {
@@ -425,8 +429,8 @@ const Mutation = {
       groupId: { type: GraphQLString },
     },
     async resolve(root, { topicName, groupId }, { user }) {
-      if (!_.find(user.groups, g => g.id.toHexString() === groupId)) {
-        throw new Error(`User does not participate in the group`);
+      if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
+        throw new Error('User does not participate in the group');
       }
       const topicCreatePromise = Topic.create({
         name: topicName,
@@ -444,7 +448,7 @@ const Mutation = {
         },
       );
 
-      const [createdTopic, dummy] = await Promise.all([
+      const [createdTopic] = await Promise.all([
         topicCreatePromise,
         groupUpdatePromise,
       ]);
@@ -462,16 +466,16 @@ const Mutation = {
       };
       await pushService.pushMessage(groupId, pushParams);
       return 'OK';
-    }
+    },
   },
 
   joinGroup: {
     type: GraphQLString,
-    args: { 
+    args: {
       groupId: { type: GraphQLString },
     },
     async resolve(root, { groupId }, { user }) {
-      const hasGroup = _.find(user.groups, g => g.id.toHexString() === groupId);
+      const hasGroup = _.find(user.groups, (g) => g.id.toHexString() === groupId);
       if (hasGroup) {
         throw new Error('User already participate in the group');
       }
@@ -581,7 +585,7 @@ const Mutation = {
       const updateOperation = pinned ? '$push' : '$pull';
       await User.updateOne(
         { _id: user._id },
-        { [updateOperation]: { pinnedTopics: ObjectId(topicId) } }
+        { [updateOperation]: { pinnedTopics: ObjectId(topicId) } },
       );
       await pushService.setSubscription(user.fcmToken, topicId, pinned);
       return 'OK';

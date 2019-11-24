@@ -1,5 +1,8 @@
 const { graphql } = require('graphql');
 const sinon = require('sinon');
+const chai = require('chai');
+const chaiSubset = require('chai-subset');
+const chaiAsPromised = require('chai-as-promised');
 const mongooseConfig = require('../../config/mongoose');
 const User = require('../../db/schema/User');
 const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
@@ -7,13 +10,11 @@ const schema = require('../../graphqlSchema');
 const logger = require('../../config/winston');
 const { addMongooseLogger } = require('../../dev/mongodbLogger');
 
-const chai = require('chai');
-const chaiSubset = require('chai-subset');
-const chaiAsPromised = require('chai-as-promised');
+
 chai.use(chaiSubset);
 chai.use(chaiAsPromised);
 
-let currentUserHolder = { currentUser: null };
+const currentUserHolder = { currentUser: null };
 
 function setCurrentUser(user) {
   currentUserHolder.currentUser = user;

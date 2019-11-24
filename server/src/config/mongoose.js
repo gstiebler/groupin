@@ -15,10 +15,9 @@ async function init() {
   await mongoose.disconnect();
 
   try {
-    db = await mongoose.connect(mongoURL, {useNewUrlParser: true });
+    db = await mongoose.connect(mongoURL, { useNewUrlParser: true });
     logger.info('Connected to MongoDB');
-
-  } catch(error) {
+  } catch (error) {
     logger.error(error);
   }
 }

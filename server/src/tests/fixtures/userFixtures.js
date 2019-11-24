@@ -1,4 +1,4 @@
-const ObjectId = require('mongoose').Types.ObjectId;
+const { ObjectId } = require('mongoose').Types;
 const { groupIds, topicIds } = require('./preIds');
 
 const users = {
@@ -9,10 +9,10 @@ const users = {
     phoneNumber: '44448',
     imgUrl: 'alice_url',
     groups: [
-      { 
+      {
         id: groupIds.firstGroup,
         pinned: false,
-      }
+      },
     ],
     pinnedTopics: [],
   },
@@ -23,11 +23,11 @@ const users = {
     phoneNumber: '55558',
     imgUrl: 'robert_url',
     groups: [
-      { 
+      {
         id: groupIds.firstGroup,
         pinned: false,
       },
-      { 
+      {
         id: groupIds.secondGroup,
         pinned: true,
       },

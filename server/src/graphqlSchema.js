@@ -10,13 +10,13 @@ const schema = new GraphQLSchema({
     name: 'RootQueryType',
     fields: {
       ...resolver.Query,
-    }
+    },
   }),
   mutation: new GraphQLObjectType({
     name: 'RootMutationType',
     fields: {
       ...resolver.Mutation,
-    }
+    },
   }),
 });
 

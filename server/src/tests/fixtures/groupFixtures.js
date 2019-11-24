@@ -4,7 +4,7 @@ const { groupIds } = require('./preIds');
 const groups = {
   firstGroup: {
     _id: groupIds.firstGroup,
-    friendlyId : 'S9hvTvIBWM',
+    friendlyId: 'S9hvTvIBWM',
     name: 'First Group',
     description: 'Description of the first group',
     imgUrl: 'url1',
@@ -15,7 +15,7 @@ const groups = {
   },
   secondGroup: {
     _id: groupIds.secondGroup,
-    friendlyId : 'TseHHEvGd',
+    friendlyId: 'TseHHEvGd',
     name: 'Second Group',
     imgUrl: 'url2',
     visibility: 'PUBLIC',
