@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const {
   GraphQLString,
   GraphQLFloat,
@@ -6,9 +7,10 @@ const {
   GraphQLBoolean,
 } = require('graphql');
 const Promise = require('bluebird');
-const logger = require('./config/winston');
 const _ = require('lodash');
 const moment = require('moment');
+const { ObjectId } = require('mongoose').Types;
+const logger = require('./config/winston');
 
 const Group = require('./db/schema/Group');
 const User = require('./db/schema/User');
@@ -17,13 +19,15 @@ const Message = require('./db/schema/Message');
 const TopicLatestRead = require('./db/schema/TopicLatestRead');
 const GroupLatestRead = require('./db/schema/GroupLatestRead');
 
-const ObjectId = require('mongoose').Types.ObjectId;
-
 const pushService = require('./lib/pushService');
 
 const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
 
 const oldDate = moment('2015-01-01').toDate();
+
+function subscribeToAllGroups(user, fcmToken) {
+  return Promise.map(user.groups, (group) => pushService.subscribe(fcmToken, group.id.toString()));
+}
 
 const Query = {
 
@@ -34,13 +38,13 @@ const Query = {
         msg: { type: GraphQLString },
       },
     }),
-    args: { 
+    args: {
       pass: { type: GraphQLString },
     },
-    async resolve(root, { pass }, { user }, fieldASTs) {
+    async resolve(root, { pass }) {
       return { msg: pass === 'foca' ? 'OK' : 'ERROR' };
-    }
-  }, 
+    },
+  },
 
   getUserId: {
     type: new GraphQLObjectType({
@@ -49,13 +53,13 @@ const Query = {
         id: { type: GraphQLString },
       },
     }),
-    async resolve(root, args, { user }, fieldASTs) {
+    async resolve(root, args, { user }) {
       if (!user) {
         return { id: 'NO USER' };
       }
       return { id: user._id.toHexString() };
-    }
-  },  
+    },
+  },
 
   ownGroups: {
     type: new GraphQLList(
@@ -67,18 +71,18 @@ const Query = {
           imgUrl: { type: GraphQLString },
           unread: { type: GraphQLBoolean },
         },
-      })
+      }),
     ),
-    async resolve(root, args, { user }, fieldASTs) {
+    async resolve(root, args, { user }) {
       if (!user) {
-        throw new Error(`Method only available with a user`);
+        throw new Error('Method only available with a user');
       }
 
       const groups = await Group
         .find({ _id: { $in: _.map(user.groups, 'id') } })
         .sort({ updatedAt: -1 })
         .lean();
-      
+
       const groupLatestRead = await GroupLatestRead.find({
         groupId: { $in: _.map(groups, '_id') },
         userId: user._id,
@@ -87,19 +91,19 @@ const Query = {
 
       // TODO: remove when it's garanteed that the user will be subscribed when joining the group
       subscribeToAllGroups(user, user.fcmToken);
-      return groups.map(group => {
+      return groups.map((group) => {
         const latestReadObj = latestReadById[group._id.toHexString()];
         // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
         const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
-        return { 
-          ...group, 
+        return {
+          ...group,
           id: group._id,
           unread: moment(latestReadMoment).isBefore(group.updatedAt),
-        }
+        };
       });
-    }
-  },  
-  
+    },
+  },
+
   getGroupInfo: {
     type: new GraphQLObjectType({
       name: 'groupInfoType',
@@ -107,7 +111,7 @@ const Query = {
         _id: { type: GraphQLString },
         friendlyId: { type: GraphQLString },
         name: { type: GraphQLString },
-        imgUrl: { type: GraphQLString },        
+        imgUrl: { type: GraphQLString },
         description: { type: GraphQLString },
         visibility: { type: GraphQLString },
         createdBy: { type: GraphQLString },
@@ -115,12 +119,12 @@ const Query = {
         iBelong: { type: GraphQLBoolean },
       },
     }),
-    args: { 
+    args: {
       groupId: { type: GraphQLString },
     },
-    async resolve(root, { groupId }, { user }, fieldASTs) {
+    async resolve(root, { groupId }, { user }) {
       if (!user) {
-        throw new Error(`Method only available with a user`);
+        throw new Error('Method only available with a user');
       }
 
       const group = await Group.findById(groupId, {
@@ -132,12 +136,12 @@ const Query = {
         createdBy: 1,
         createdAt: 1,
       }).lean();
-      const iBelong = _.find(user.groups, group => group.id.toHexString() === groupId);
+      const iBelong = _.find(user.groups, (group_) => group_.id.toHexString() === groupId);
       return {
         ...group,
         iBelong,
       };
-    }
+    },
   },
 
   topicsOfGroup: {
@@ -150,16 +154,16 @@ const Query = {
           imgUrl: { type: GraphQLString },
           unread: { type: GraphQLBoolean },
         },
-      })
+      }),
     ),
-    args: { 
+    args: {
       groupId: { type: GraphQLString },
       limit: { type: GraphQLFloat },
       startingId: { type: GraphQLString },
     },
-    async resolve(root, { groupId, limit, startingId }, { user }, fieldASTs) {
-      if (!_.find(user.groups, g => g.id.toHexString() === groupId)) {
-        throw new Error(`User does not participate in the group`);
+    async resolve(root, { groupId, limit }, { user }) {
+      if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
+        throw new Error('User does not participate in the group');
       }
       const topicsOfGroup = await Topic.find({ groupId })
         .sort({ updatedAt: -1 })
@@ -169,18 +173,18 @@ const Query = {
         topicId: { $in: _.map(topicsOfGroup, '_id') },
         userId: user._id,
       });
-      const latestReadById = _.keyBy(latestTopicRead, l => l.topicId.toHexString());
-      return topicsOfGroup.map(topic => {
+      const latestReadById = _.keyBy(latestTopicRead, (l) => l.topicId.toHexString());
+      return topicsOfGroup.map((topic) => {
         const latestReadObj = latestReadById[topic._id.toHexString()];
         // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
         const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
-        return { 
+        return {
           ...topic,
           id: topic._id,
           unread: moment(latestReadMoment).isBefore(topic.updatedAt),
-        }
+        };
       });
-    }
+    },
   },
 
   messagesOfTopic: {
@@ -191,18 +195,18 @@ const Query = {
           _id: { type: GraphQLString },
           text: { type: GraphQLString },
           createdAt: { type: GraphQLFloat },
-          user: { 
+          user: {
             type: new GraphQLObjectType({
               name: 'userType',
               fields: {
                 _id: { type: GraphQLString },
                 name: { type: GraphQLString },
                 avatar: { type: GraphQLString },
-              }
-            }), 
-          }
+              },
+            }),
+          },
         },
-      })
+      }),
     ),
     args: {
       topicId: { type: GraphQLString },
@@ -210,10 +214,10 @@ const Query = {
       afterId: { type: GraphQLString },
       beforeId: { type: GraphQLString },
     },
-    async resolve(root, { topicId, limit, afterId, beforeId }, { user }, fieldASTs) {
+    async resolve(root, { topicId, limit, afterId, beforeId }, { user }) {
       const topic = await Topic.findById(topicId);
-      if (!_.find(user.groups, g => g.id.equals(topic.groupId))) {
-        throw new Error(`User does not participate in the group`);
+      if (!_.find(user.groups, (g) => g.id.equals(topic.groupId))) {
+        throw new Error('User does not participate in the group');
       }
       const beforeIdMessages = !_.isEmpty(beforeId);
       const afterIdMessages = !_.isEmpty(afterId);
@@ -229,11 +233,11 @@ const Query = {
           $match: {
             topic: topic._id,
             ...idMatch,
-          }
+          },
         },
         {
           $lookup: {
-            from: "users",
+            from: 'users',
             localField: "user",
             foreignField: "_id",
             as: "user"
@@ -326,7 +330,7 @@ const Mutation = {
 
   sendMessage: {
     type: GraphQLString,
-    args: { 
+    args: {
       message: { type: GraphQLString },
       topicId: { type: GraphQLString },
     },
@@ -347,13 +351,13 @@ const Mutation = {
       // update topic updatedAt
       await Topic.updateOne(
         { _id: ObjectId(topicId) },
-        { $set: { updatedAt: Date.now() } }  
+        { $set: { updatedAt: Date.now() } }
       );
 
       // update group updatedAt
       await Group.updateOne(
         { _id: topic.groupId },
-        { $set: { updatedAt: Date.now() } }  
+        { $set: { updatedAt: Date.now() } },
       );
 
       const groupId = topic.groupId.toHexString();
@@ -386,7 +390,7 @@ const Mutation = {
 
   createGroup: {
     type: GraphQLString,
-    args: { 
+    args: {
       groupName: { type: GraphQLString },
       visibility: { type: GraphQLString },
     },
@@ -400,13 +404,13 @@ const Mutation = {
 
       await User.updateOne(
         { _id: ObjectId(user._id) },
-        { 
-          $push: { 
+        {
+          $push: {
             groups: {
               id: newGroup._id,
               pinned: false,
-            }
-          } 
+            },
+          },
         },
       );
 
@@ -424,23 +428,23 @@ const Mutation = {
       if (!_.find(user.groups, g => g.id.toHexString() === groupId)) {
         throw new Error(`User does not participate in the group`);
       }
-      let topicCreatePromise = Topic.create({
+      const topicCreatePromise = Topic.create({
         name: topicName,
         groupId: ObjectId(groupId),
         createdBy: ObjectId(user._id),
         imgUrl: 'TODO url',
       });
 
-      let groupUpdatePromise = Group.updateOne(
+      const groupUpdatePromise = Group.updateOne(
         { _id: ObjectId(groupId) },
-        { 
-          $set: { 
+        {
+          $set: {
             updatedAt: Date.now(),
-          }
+          },
         },
       );
 
-      const [ createdTopic, dummy ] = await Promise.all([
+      const [createdTopic, dummy] = await Promise.all([
         topicCreatePromise,
         groupUpdatePromise,
       ]);
@@ -478,9 +482,9 @@ const Mutation = {
       await pushService.subscribe(user.fcmToken, groupId);
 
       return 'OK';
-    }
+    },
   },
-  
+
   leaveGroup: {
     type: GraphQLString,
     args: {
@@ -488,16 +492,16 @@ const Mutation = {
     },
     async resolve(root, { groupId }, { user }) {
       await User.updateOne(
-        { _id: user._id }, 
-        { $pull: { groups: { id: ObjectId(groupId) } } }
+        { _id: user._id },
+        { $pull: { groups: { id: ObjectId(groupId) } } },
       );
 
       // unsubscribe user from the group on FCM
       await pushService.unsubscribe(user.fcmToken, groupId);
       return 'OK';
-    }
+    },
   },
-  
+
   updateFcmToken: {
     type: GraphQLString,
     args: {
@@ -508,11 +512,11 @@ const Mutation = {
         throw new Error('A user is required to update FCM token');
       }
       await User.updateOne(
-        { _id: user._id }, 
-        { $set: { fcmToken } }
+        { _id: user._id },
+        { $set: { fcmToken } },
       );
       await subscribeToAllGroups(user, fcmToken);
-    }
+    },
   },
 
   setTopicLatestRead: {
@@ -534,21 +538,21 @@ const Mutation = {
         {
           userId: user._id,
           topicId: ObjectId(topicId),
-        }, 
+        },
         updateObj,
-        opts
+        opts,
       );
       // TODO: replace for `update` when is garanteed to have always a LatestMoment for every user/topic
       await GroupLatestRead.findOneAndUpdate(
         {
           userId: user._id,
           groupId: topic.groupId,
-        }, 
+        },
         updateObj,
-        opts
+        opts,
       );
       return 'OK';
-    }
+    },
   },
 
   setGroupPin: {
@@ -559,12 +563,12 @@ const Mutation = {
     },
     async resolve(root, { groupId, pinned }, { user }) {
       await User.updateOne(
-        { _id: user._id, 'groups.id': ObjectId(groupId) }, 
-        { $set: { 'groups.$.pinned': pinned } }
+        { _id: user._id, 'groups.id': ObjectId(groupId) },
+        { $set: { 'groups.$.pinned': pinned } },
       );
       await pushService.setSubscription(user.fcmToken, groupId, pinned);
       return 'OK';
-    }
+    },
   },
 
   setTopicPin: {
@@ -581,13 +585,9 @@ const Mutation = {
       );
       await pushService.setSubscription(user.fcmToken, topicId, pinned);
       return 'OK';
-    }
+    },
   },
-}
-
-function subscribeToAllGroups(user, fcmToken) {
-  return Promise.map(user.groups, group => pushService.subscribe(fcmToken, group.id.toString()));
-}
+};
 
 module.exports = {
   Query,
