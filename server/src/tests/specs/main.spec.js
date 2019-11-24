@@ -97,12 +97,14 @@ describe('main', () => {
           name: 'First Group',
           imgUrl: 'url1',
           unread: false,
+          pinned: false,
         },
         {
           id: groupFixtures.secondGroup._id.toHexString(),
           name: 'Second Group',
           imgUrl: 'url2',
           unread: true,
+          pinned: true,
         },
       ]);
     });
@@ -530,6 +532,7 @@ describe('main', () => {
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
+          pinned: true,
         },
       ]);
       expect(localGetState().base.ownGroups).to.eql([
@@ -538,6 +541,7 @@ describe('main', () => {
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
+          pinned: true,
         },
       ]);
     });

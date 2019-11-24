@@ -17,7 +17,7 @@ async function main(graphqlQuery, authFbToken) {
     if (authFbToken) {
       // authFbToken comes from the client app
       const decodedToken = await admin.auth().verifyIdToken(authFbToken);
-      logger.debug(decodedToken);
+      logger.debug('decodedToken:', decodedToken);
       firebaseId = decodedToken.uid;
       phoneNumber = decodedToken.phone_number;
       user = _.isEmpty(firebaseId) ? null : await User.findOne({ uid: firebaseId });

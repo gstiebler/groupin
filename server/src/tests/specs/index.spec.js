@@ -35,7 +35,7 @@ before(async () => {
     const result = await graphql(schema, query, null, { user, firebaseId, phoneNumber });
     if (result.errors) {
       for (const error of result.errors) {
-        logger.debug(error.stack);
+        logger.error(error.stack);
       }
       throw new Error(result.errors[0].stack);
     }

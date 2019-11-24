@@ -71,6 +71,7 @@ const Query = {
           name: { type: GraphQLString },
           imgUrl: { type: GraphQLString },
           unread: { type: GraphQLBoolean },
+          pinned: { type: GraphQLBoolean },
         },
       }),
     ),
@@ -84,6 +85,7 @@ const Query = {
         .sort({ updatedAt: -1 })
         .lean();
 
+      const pinnedByGroupId = new Map(_.map(user.groups, (group) => [group.id.toHexString(), group.pinned]));
       const groupLatestRead = await GroupLatestRead.find({
         groupId: { $in: _.map(groups, '_id') },
         userId: user._id,
@@ -100,6 +102,7 @@ const Query = {
           ...group,
           id: group._id,
           unread: moment(latestReadMoment).isBefore(group.updatedAt),
+          pinned: pinnedByGroupId.get(group._id.toHexString()),
         };
       });
     },
