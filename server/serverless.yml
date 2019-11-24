@@ -19,7 +19,7 @@ service: GroupIn
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.16
 
 # you can overwrite defaults here
   stage: dev

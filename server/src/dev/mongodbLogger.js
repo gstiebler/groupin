@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
 function createLogger (filePath) {
-  if (fs.exists(filePath)) {
+  if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
   }
   return winston.createLogger({
