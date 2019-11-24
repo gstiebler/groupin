@@ -26,6 +26,7 @@ async function main(graphqlQuery, authFbToken) {
     return result;
   } catch (error) {
     console.error(error);
+    return -1;
   }
 }
 
