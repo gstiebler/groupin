@@ -14,7 +14,10 @@ const logger = winston.createLogger({
 //
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
-    format: winston.format.simple(),
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.simple()
+    ),
     level: process.env.WINSTON_CONSOLE_LEVEL,
   }));
 }
@@ -23,6 +26,9 @@ if (process.env.WINSTON_FILE_LEVEL) {
   logger.add(
     new winston.transports.File({
       filename: `${__dirname}/../../log/debug.log`,
+      format: winston.format.combine(
+        winston.format.simple()
+      ),
       level: process.env.WINSTON_FILE_LEVEL,
     }),
   );

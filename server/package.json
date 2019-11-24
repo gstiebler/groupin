@@ -6,6 +6,7 @@
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --recursive 'src/tests/**/*.spec.js' --reporter spec --timeout 5000",
     "debug": "export SLS_DEBUG=* && node --inspect ./node_modules/.bin/serverless offline -s dev",
+    "offline": "serverless offline start --useSeparateProcesses",
     "lint": "eslint"
   },
   "dependencies": {
