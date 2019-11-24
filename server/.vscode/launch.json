@@ -18,10 +18,12 @@
       "runtimeArgs": [
         "./node_modules/mocha/bin/mocha",
         "src/tests/**/*.spec.js",
+        "--colors",
         "--reporter",
         "spec"
       ],
       "cwd": "${workspaceFolder}",
+      "internalConsoleOptions": "openOnSessionStart",
       "env": {
         "WINSTON_CONSOLE_LEVEL": "debug",
         "NODE_ENV": "test",
