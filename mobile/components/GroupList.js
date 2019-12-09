@@ -7,6 +7,7 @@ export default GroupListComponent = ({
   ownGroups, 
   selectGroup, 
   onLeaveGroup, 
+  onPinClicked,
   willFocus,
 }) => {
   navigation.addListener('willFocus', willFocus);
@@ -31,9 +32,10 @@ export default GroupListComponent = ({
   }
 
   const renderPinButton = (group, secId, rowId, rowMap) => {
+    const pinIconName = group.pinned ? 'md-arrow-up' : 'md-arrow-down';
     return (
-      <Button full danger onPress={() => onLeaveGroup(group.id)}>
-        <Icon active name="trash" />
+      <Button full onPress={() => onPinClicked(group) }>
+        <Icon active name={pinIconName} />
       </Button>
     );
   }
@@ -47,8 +49,8 @@ export default GroupListComponent = ({
         rightOpenValue={-75} 
         renderRow={renderGroup}
         renderLeftHiddenRow={renderDeleteButton}   
-        renderRightHiddenRow={renderDeleteButton}    
-        />
+        renderRightHiddenRow={renderPinButton}    
+      />
     </Container>
   );
 }

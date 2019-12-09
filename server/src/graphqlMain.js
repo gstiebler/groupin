@@ -13,16 +13,16 @@ async function main(graphqlQuery, authFbToken) {
     let phoneNumber = null;
     let firebaseId = null;
     // ***
-    logger.debug(`Firebase auth token: ${authFbToken}`);
     if (authFbToken) {
       // authFbToken comes from the client app
       const decodedToken = await admin.auth().verifyIdToken(authFbToken);
-      logger.debug('decodedToken:', decodedToken);
       firebaseId = decodedToken.uid;
       phoneNumber = decodedToken.phone_number;
       user = _.isEmpty(firebaseId) ? null : await User.findOne({ uid: firebaseId });
     }
     const result = await graphql(schema, graphqlQuery, null, { user, firebaseId, phoneNumber });
+    logger.debug(JSON.stringify(graphqlQuery, null, 2));
+    logger.debug(JSON.stringify(result, null, 2));
     return result;
   } catch (error) {
     console.error(error);

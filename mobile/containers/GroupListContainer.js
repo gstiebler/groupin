@@ -5,6 +5,7 @@ import {
 } from "../actions/rootActions";
 import { 
   leaveGroup,
+  setGroupPin,
 } from "../actions/groupActions";
 
 const mapStateToProps = state => {
@@ -19,6 +20,7 @@ const mapDispatchToProps = dispatch => {
       navigation.navigate('TopicsList', { groupId, groupName });
     },
     onLeaveGroup: (groupId) => dispatch(leaveGroup(groupId)),
+    onPinClicked: (group) => dispatch(setGroupPin({ groupId: group.id, pinned: !group.pinned })),
     willFocus: () => {
       fetchOwnGroups(dispatch);
     },

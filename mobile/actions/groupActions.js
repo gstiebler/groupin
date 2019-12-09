@@ -31,8 +31,14 @@ const joinGroup = (groupId, onJoin) => async (dispatch, getState) => {
   onJoin(getState().base.currentGroupInfo.name);
 }
 
+const setGroupPin = ({ groupId, pinned }) => async (dispatch, getState) => {
+  await server.setGroupPin({ groupId, pinned });
+  await fetchOwnGroups(dispatch);
+}
+
 module.exports = {
   getGroupInfo,
   leaveGroup,
   joinGroup,
+  setGroupPin,
 };

@@ -106,7 +106,8 @@ async function getOwnGroups() {
         id,
         name,
         imgUrl,
-        unread
+        unread,
+        pinned
       }
     }
   `;
