@@ -1,6 +1,6 @@
 import React from 'react';
-import { ListView } from 'react-native';
-import { Container, List, ListItem, Button, Text, Icon } from 'native-base';
+import { ListView, View } from 'react-native';
+import { Container, List, ListItem, Button, Text, Icon, Left } from 'native-base';
 
 export default GroupListComponent = ({ 
   navigation, 
@@ -16,8 +16,14 @@ export default GroupListComponent = ({
 
   const renderGroup = group => {
     const fontWeight = group.unread ? 'bold' : 'normal';
+    const pinLeftIcon = (
+      <Left>
+        <Icon name="md-arrow-up" />
+      </Left>
+    );
     return (
       <ListItem onPress={() => selectGroup(navigation, group.id, group.name) }>
+        { group.pinned ? pinLeftIcon : <View /> }
         <Text style={{ fontWeight }}> {"  " + group.name} </Text>
       </ListItem>
     );
@@ -32,7 +38,7 @@ export default GroupListComponent = ({
   }
 
   const renderPinButton = (group, secId, rowId, rowMap) => {
-    const pinIconName = group.pinned ? 'md-arrow-up' : 'md-arrow-down';
+    const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
       <Button full onPress={() => onPinClicked(group) }>
         <Icon active name={pinIconName} />
