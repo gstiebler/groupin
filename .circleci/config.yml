@@ -36,6 +36,10 @@ jobs:
             cp ./mobile/config/env.js.example ./mobile/env.js
             cd server
             npm run coverage
+            
+      - run:
+          name: ESLint
+          command: npm run lint
 
       - store_artifacts:
           path: server/log
