@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
 const chaiAsPromised = require('chai-as-promised');
+const dotenv = require('dotenv');
 const mongooseConfig = require('../../config/mongoose');
 const User = require('../../db/schema/User');
 const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
@@ -26,7 +27,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 before(async () => {
-  require('dotenv').config();
+  dotenv.config();
   await mongooseConfig.init();
   sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
     const user = await User.findById(currentUserHolder.currentUser._id);

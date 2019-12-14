@@ -1,11 +1,12 @@
 const admin = require('firebase-admin');
 const logger = require('../config/winston');
+const firebaseConfig = require('../../firebase_android_config.json');
 
 const pushService = {
 
   init() {
     const serviceAccount = {
-      ...require('../../firebase_android_config.json'),
+      ...firebaseConfig,
       private_key: JSON.parse(`"${process.env.FIREBASE_PRIVATE_KEY}"`),
     };
     const config = {
@@ -32,9 +33,9 @@ const pushService = {
     try {
       const response = await this.messaging.send(message);
       // Response is a message ID string.
-      console.log('Successfully sent message:', response);
+      logger.info('Successfully sent message:', response);
     } catch (error) {
-      console.log('Error sending message:', error);
+      logger.info('Error sending message:', error);
     }
   },
 

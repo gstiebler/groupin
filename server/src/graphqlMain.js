@@ -25,7 +25,7 @@ async function main(graphqlQuery, authFbToken) {
     logger.debug(JSON.stringify(result, null, 2));
     return result;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return -1;
   }
 }

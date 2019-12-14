@@ -2,7 +2,8 @@
     "env": {
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "extends": [
         "airbnb-base"
@@ -15,5 +16,10 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "no-underscore-dangle": 0,
+        "object-curly-newline": 0,
+        "no-restricted-syntax": 0,
+        "no-plusplus": 0,
+        "max-len": ["error", { "code": 120 }]
     }
 }

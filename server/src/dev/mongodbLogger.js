@@ -24,7 +24,7 @@ function createLogger(filePath) {
 
 function addMongooseLogger() {
   const mongoDBLogger = createLogger(process.env.MONGODB_LOG_DIR);
-  mongoose.set('debug', (coll, method, query, doc, options) => {
+  mongoose.set('debug', (coll, method, query, doc /* , options */) => {
     const lengthLimit = 2000;
     if (method === 'ensureIndex') { return; } // skip indexes queries
 
@@ -40,11 +40,12 @@ function addMongooseLogger() {
     // reduce the query size if too long
     let strQuery = JSON.stringify(query, formatter, 2);
     if (strQuery.length > lengthLimit) {
-      strQuery = `${strQuery.substr(0, lengthLimit / 2)} **cut ${strQuery.length} ** ${strQuery.slice(-lengthLimit / 2)}`;
+      strQuery = `${strQuery.substr(0, lengthLimit / 2)}
+ **cut ${strQuery.length} ** ${strQuery.slice(-lengthLimit / 2)}`;
     }
 
     // replace the quotes and the markers from the string
-    strQuery = strQuery.replace(/\"\!\*/g, '').replace(/\!\*\"/g, '');
+    strQuery = strQuery.replace(/"!\*/g, '').replace(/!\*"/g, '');
     mongoDBLogger.debug(`db.${coll}.${method}( ${strQuery} )`);
     mongoDBLogger.debug(` *** doc: ${JSON.stringify(doc, null, 2)}`);
   });

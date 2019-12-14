@@ -5,22 +5,21 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const { expect } = require('chai');
 const _ = require('lodash');
-const { createStore, applyMiddleware } = require('redux');
+const { createStore } = require('redux');
 const server = require('../../../../mobile/lib/server');
 const pushService = require('../../lib/pushService');
 const { initFixtures } = require('../fixtures');
-const logger = require('../../config/winston');
+// const logger = require('../../config/winston');
 const userFixtures = require('../fixtures/userFixtures');
 const groupFixtures = require('../fixtures/groupFixtures');
 const topicFixtures = require('../fixtures/topicFixtures');
 const messageFixtures = require('../fixtures/messageFixtures');
-const { groupIds, topicIds } = require('../fixtures/preIds');
+const { groupIds } = require('../fixtures/preIds');
 const { setCurrentUser } = require('./index.spec');
 const User = require('../../db/schema/User');
 const Topic = require('../../db/schema/Topic');
 const Message = require('../../db/schema/Message');
 const TopicLatestRead = require('../../db/schema/TopicLatestRead');
-const GroupLatestRead = require('../../db/schema/GroupLatestRead');
 const { messageTypes } = require('../../lib/constants');
 
 const rootReducer = require('../../../../mobile/reducers/rootReducer');
@@ -37,7 +36,7 @@ const groupsSearchActions = require('../../../../mobile/actions/groupsSearchActi
 const newTopicActions = require('../../../../mobile/actions/newTopicActions');
 
 const dispatch = store.dispatch.bind(store);
-const getState = store.getState.bind(store);
+// const getState = store.getState.bind(store);
 
 function createMessages(numMessages, user, topic) {
   const messages = [];
@@ -400,7 +399,7 @@ describe('main', () => {
       it('push', async () => {
         const call0args = pushMessageStub.args[0];
         expect(call0args).to.have.lengthOf(2);
-        const [topicId, pushParams] = call0args;
+        const [, pushParams] = call0args;
         expect(topicId).to.equal(topicFixtures.topic1Group1._id.toHexString());
         const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).to.eql({
@@ -417,7 +416,7 @@ describe('main', () => {
         });
 
         const call1args = pushMessageStub.args[1];
-        const [groupId, dummy] = call1args;
+        const [groupId] = call1args;
         expect(groupId).to.equal(groupFixtures.firstGroup._id.toHexString());
 
         expect(localGetState().base.messages).to.have.lengthOf(1);
@@ -528,7 +527,7 @@ describe('main', () => {
       await groupActions.leaveGroup(groupId, () => {})(localDispatch, localGetState);
       const groups = await server.getOwnGroups();
       const call0args = unsubscribeStub.args[0];
-      const [subscribedFcmToken, unsubscribedGroup] = call0args;
+      const [, unsubscribedGroup] = call0args;
       expect(unsubscribedGroup).to.equal(groupId);
       expect(groups).to.eql([
         {
@@ -569,7 +568,7 @@ describe('main', () => {
         expect(groups[1].name).to.equal('Second Group');
 
         const call0args = subscribeStub.args[0];
-        const [subscribedFcmToken, subscribedGroup] = call0args;
+        const [, subscribedGroup] = call0args;
         expect(subscribedGroup).to.equal(groupId);
       });
     });
@@ -615,7 +614,7 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.groups[0].pinned).to.eql(true);
-        const [fcmTokenP, groupIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [, groupIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(groupIdP).to.eql(groupId);
         expect(pinnedP).to.eql(true);
       });
@@ -630,7 +629,7 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.groups[1].pinned).to.eql(false);
-        const [fcmTokenP, groupIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [, groupIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(groupIdP).to.eql(groupId);
         expect(pinnedP).to.eql(false);
       });
@@ -647,7 +646,7 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.pinnedTopics[2].toHexString()).to.eql(topicId);
-        const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [/* fcmTokenP */, topicIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(topicIdP).to.eql(topicId);
         expect(pinnedP).to.eql(true);
       });
@@ -662,7 +661,7 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.pinnedTopics).to.have.lengthOf(1);
-        const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [, topicIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(topicIdP).to.eql(topicId);
         expect(pinnedP).to.eql(false);
       });
