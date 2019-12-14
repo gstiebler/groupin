@@ -35,7 +35,7 @@ jobs:
           command: |
             cp ./mobile/config/env.js.example ./mobile/env.js
             cd server
-            npm test
+            npm run coverage
 
       - store_artifacts:
                 path: ~/.npm/_logs
