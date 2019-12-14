@@ -41,4 +41,4 @@ jobs:
           path: server/log
 
       - store_artifacts:
-          path: server/coverage
+          path: .coverage

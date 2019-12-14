@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "mocha --recursive 'src/tests/**/*.spec.js' --reporter spec --timeout 5000",
-    "coverage": "nyc mocha --recursive 'src/tests/**/*.spec.js' --reporter spec --timeout 5000",
+    "coverage": "nyc --cwd ../ mocha --recursive 'src/tests/**/*.spec.js' --reporter spec --timeout 5000",
     "debug": "export SLS_DEBUG=* && node --inspect ./node_modules/.bin/serverless offline -s dev",
     "offline": "serverless offline start --useSeparateProcesses",
     "lint": "eslint"
@@ -13,8 +13,8 @@
   "nyc": {
     "all": true,
     "include": [
-      "src/*.js",
-      "../mobile/actions/*.js"
+      "server/src/**/*.js",
+      "mobile/**/*.js"
     ],
     "reporter": [
       "html",
@@ -22,7 +22,7 @@
       "text",
       "text-summary"
     ],
-    "report-dir": "coverage"
+    "report-dir": ".coverage"
   },
   "dependencies": {
     "bluebird": "^3.7.1",
