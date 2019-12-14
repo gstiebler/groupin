@@ -39,7 +39,9 @@ jobs:
             
       - run:
           name: ESLint
-          command: npm run lint
+          command: |
+            cd server
+            npm run lint
 
       - store_artifacts:
           path: server/log
