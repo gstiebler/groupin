@@ -1,6 +1,9 @@
 import { connect } from "react-redux";
 import TopicsListComponent from '../components/TopicsList';
-import { getTopicsOfGroup } from '../actions/rootActions';
+import { 
+  getTopicsOfGroup,
+  setTopicPin,
+ } from '../actions/rootActions';
 import { 
   CURRENTLY_VIEWED_GROUP_ID, 
   SET_TOPICS,
@@ -23,6 +26,7 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { currentlyViewedGroupId: null } });
       dispatch({ type: SET_TOPICS, payload: { topics: [] } });
     },
+    onPinClicked: (topic) => dispatch(setTopicPin({ topicId: topic.id, pinned: !topic.pinned })),
   };
 };
 

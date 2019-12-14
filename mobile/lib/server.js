@@ -144,7 +144,8 @@ async function getTopicsOfGroup(groupId, limit, startingId) {
         id,
         name,
         imgUrl,
-        unread
+        unread,
+        pinned
       }
     }
   `;

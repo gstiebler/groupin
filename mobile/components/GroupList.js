@@ -14,13 +14,14 @@ export default GroupListComponent = ({
 
   let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
+  const pinLeftIcon = (
+    <Left>
+      <Icon name="md-arrow-up" />
+    </Left>
+  );
+  
   const renderGroup = group => {
     const fontWeight = group.unread ? 'bold' : 'normal';
-    const pinLeftIcon = (
-      <Left>
-        <Icon name="md-arrow-up" />
-      </Left>
-    );
     return (
       <ListItem onPress={() => selectGroup(navigation, group.id, group.name) }>
         { group.pinned ? pinLeftIcon : <View /> }

@@ -111,6 +111,12 @@ const updateFcmToken = async (store, fcmToken) => {
   }
   await server.updateFcmToken(fcmToken);
 }
+const setTopicPin = ({ topicId, pinned }) => async (dispatch, getState) => {
+  await server.setTopicPin({ topicId, pinned });
+  const currentGroupId = getState().base.currentlyViewedGroupId;
+  if (!currentGroupId) { return }
+  await getTopicsOfGroup(dispatch, currentGroupId);
+}
 
 const setTopicLatestRead = async (topicId) => server.setTopicLatestRead(topicId);
 
@@ -124,4 +130,5 @@ module.exports = {
   getMessagesOfCurrentTopic,
   updateFcmToken,
   setTopicLatestRead,
+  setTopicPin,
 };
