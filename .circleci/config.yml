@@ -38,5 +38,7 @@ jobs:
             npm run coverage
 
       - store_artifacts:
-                path: ~/.npm/_logs
-                destination: logs
+          path: server/log
+
+      - store_artifacts:
+          path: server/coverage

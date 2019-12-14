@@ -10,6 +10,20 @@
     "offline": "serverless offline start --useSeparateProcesses",
     "lint": "eslint"
   },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/*.js",
+      "../mobile/actions/*.js"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "report-dir": "coverage"
+  },
   "dependencies": {
     "bluebird": "^3.7.1",
     "dotenv": "^6.0.0",
