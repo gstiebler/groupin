@@ -38,9 +38,15 @@ jobs:
             npm run coverage
             
       - run:
-          name: ESLint
+          name: ESLint Server
           command: |
             cd server
+            npm run lint
+            
+      - run:
+          name: ESLint Mobile
+          command: |
+            cd mobile
             npm run lint
 
       - store_artifacts:
