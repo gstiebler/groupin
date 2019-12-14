@@ -157,6 +157,7 @@ const Query = {
           name: { type: GraphQLString },
           imgUrl: { type: GraphQLString },
           unread: { type: GraphQLBoolean },
+          pinned: { type: GraphQLBoolean },
         },
       }),
     ),
@@ -177,6 +178,7 @@ const Query = {
         topicId: { $in: _.map(topicsOfGroup, '_id') },
         userId: user._id,
       });
+      const pinnedTopicsSet = new Set(_.map(user.pinnedTopics, t => t.toHexString()));
       const latestReadById = _.keyBy(latestTopicRead, (l) => l.topicId.toHexString());
       return topicsOfGroup.map((topic) => {
         const latestReadObj = latestReadById[topic._id.toHexString()];
@@ -186,6 +188,7 @@ const Query = {
           ...topic,
           id: topic._id,
           unread: moment(latestReadMoment).isBefore(topic.updatedAt),
+          pinned: pinnedTopicsSet.has(topic._id.toHexString()),
         };
       });
     },

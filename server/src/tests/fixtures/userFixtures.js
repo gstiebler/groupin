@@ -34,6 +34,7 @@ const users = {
     ],
     pinnedTopics: [
       topicIds.topic1Group2,
+      topicIds.topic2Group1,
     ],
   },
 };

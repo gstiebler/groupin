@@ -12,6 +12,7 @@ const groupIds = {
 const topicIds = {
   topic1Group2: ObjectId('5dd1636fb053b6dc87d8bb97'),
   topic2Group2: ObjectId('5dd1637bf1b0a52641cc03d3'),
+  topic2Group1: ObjectId('5dd1637bf1b0a52641cc03d4'),
 };
 
 module.exports = {

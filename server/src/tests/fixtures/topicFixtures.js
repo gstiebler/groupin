@@ -14,7 +14,7 @@ const topics = {
     updatedAt: Date.parse('2018-07-28'),
   },
   topic2Group1: {
-    _id: ObjectId(),
+    _id: topicIds.topic2Group1,
     name: 'Topic 2 Group 1',
     imgUrl: 't2g1_url',
     createdBy: userFixtures.alice._id,

@@ -142,12 +142,14 @@ describe('main', () => {
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
           unread: true,
+          pinned: false,
         },
         {
           id: topicFixtures.topic2Group1._id.toHexString(),
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
           unread: true,
+          pinned: true,
         },
       ]);
     });
@@ -165,12 +167,14 @@ describe('main', () => {
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
           unread: true,
+          pinned: false,
         },
         {
           id: topicFixtures.topic2Group1._id.toHexString(),
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
           unread: true,
+          pinned: true,
         },
       ]);
     });
@@ -642,7 +646,7 @@ describe('main', () => {
         });
 
         const user = await User.findById(userFixtures.robert._id);
-        expect(user.pinnedTopics[1].toHexString()).to.eql(topicId);
+        expect(user.pinnedTopics[2].toHexString()).to.eql(topicId);
         const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(topicIdP).to.eql(topicId);
         expect(pinnedP).to.eql(true);
@@ -657,7 +661,7 @@ describe('main', () => {
         });
 
         const user = await User.findById(userFixtures.robert._id);
-        expect(user.pinnedTopics).to.have.lengthOf(0);
+        expect(user.pinnedTopics).to.have.lengthOf(1);
         const [fcmTokenP, topicIdP, pinnedP] = setSubscriptionStub.args[0];
         expect(topicIdP).to.eql(topicId);
         expect(pinnedP).to.eql(false);

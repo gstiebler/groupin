@@ -15,8 +15,6 @@ function createLogger(filePath) {
         level: 'debug',
         maxsize: 50000000,
         format: winston.format.combine(
-          winston.format.colorize(),
-          winston.format.timestamp(),
           winston.format.simple(),
         ),
       }),
