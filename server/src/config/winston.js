@@ -16,7 +16,7 @@ if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),
-      winston.format.simple()
+      winston.format.simple(),
     ),
     level: process.env.WINSTON_CONSOLE_LEVEL,
   }));
@@ -27,7 +27,7 @@ if (process.env.WINSTON_FILE_LEVEL) {
     new winston.transports.File({
       filename: `${__dirname}/../../log/debug.log`,
       format: winston.format.combine(
-        winston.format.simple()
+        winston.format.simple(),
       ),
       level: process.env.WINSTON_FILE_LEVEL,
     }),

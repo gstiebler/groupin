@@ -178,7 +178,7 @@ const Query = {
         topicId: { $in: _.map(topicsOfGroup, '_id') },
         userId: user._id,
       });
-      const pinnedTopicsSet = new Set(_.map(user.pinnedTopics, t => t.toHexString()));
+      const pinnedTopicsSet = new Set(_.map(user.pinnedTopics, (t) => t.toHexString()));
       const latestReadById = _.keyBy(latestTopicRead, (l) => l.topicId.toHexString());
       return topicsOfGroup.map((topic) => {
         const latestReadObj = latestReadById[topic._id.toHexString()];

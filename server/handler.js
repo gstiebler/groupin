@@ -3,10 +3,10 @@ require('dotenv').config();
 const logger = require('./src/config/winston');
 const mongooseConfig = require('./src/config/mongoose');
 const graphqlMain = require('./src/graphqlMain');
-let pushService = require('./src/lib/pushService');
+const pushService = require('./src/lib/pushService');
 
 pushService.init();
-let mongooseInitPromise = mongooseConfig.init();
+const mongooseInitPromise = mongooseConfig.init();
 
 async function main(event) {
   try {
@@ -17,7 +17,7 @@ async function main(event) {
       statusCode: 200,
       body: JSON.stringify(result),
     };
-  } catch(error) {
+  } catch (error) {
     logger.error(error);
     return {
       statusCode: 500,
