@@ -4,7 +4,7 @@ import {
   confirmationCodeReceived,
 } from '../actions/loginActions';
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return { 
   };
 };

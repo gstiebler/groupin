@@ -1,4 +1,4 @@
-const { 
+/*const { 
   // NEW_TOPIC_NAME,
 } = require("../constants/action-types");
 
@@ -13,3 +13,4 @@ const reducerFunctions = {
 };
 
 module.exports = reducerMain(initialState, reducerFunctions);
+*/

@@ -1,4 +1,4 @@
-import firebase, { RemoteMessage } from 'react-native-firebase';
+import firebase from 'react-native-firebase';
 import { 
   updateFcmToken,
 } from "../actions/rootActions";

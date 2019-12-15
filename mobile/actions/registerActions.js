@@ -18,7 +18,7 @@ export const register = ({navigation, name}) => async (dispatch, getState) => {
         ],
         {cancelable: false},
       );
-      console.error(error.message);
+      console.error(errorMessage);
       throw new Error(errorMessage);
     }
     await userLoggedIn({ 

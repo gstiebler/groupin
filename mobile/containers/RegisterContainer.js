@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import RegisterComponent from '../components/Register';
 import { register } from '../actions/registerActions';
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return { 
   };
 };

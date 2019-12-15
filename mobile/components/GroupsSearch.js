@@ -1,15 +1,7 @@
 import React from 'react';
 import { 
   Container, 
-  Header, 
-  Left, 
-  Body, 
-  Right, 
-  Thumbnail,
-  Button, 
-  Icon, 
-  Item, 
-  Input, 
+  Body,  
   List, 
   ListItem,
   Text,
@@ -23,7 +15,7 @@ const GroupSearchComponent = ({
   changeSearchText, 
   onGroupSelected,
   willLeave,
-  onBack,
+  // onBack,
 }) => {
   navigation.addListener('willBlur', willLeave);
 

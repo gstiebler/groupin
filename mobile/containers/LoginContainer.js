@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import LoginComponent from '../components/Login';
 import { login } from '../actions/loginActions';
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return { 
   };
 };

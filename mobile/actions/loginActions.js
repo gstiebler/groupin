@@ -23,7 +23,7 @@ const updateFbUserToken = async (dispatch, fbUserToken) => {
   dispatch({ type: FB_USER_TOKEN, payload: { fbUserToken } });
 }
 
-export const login = (navigation, phoneNumber) => async (dispatch, getState) => {
+export const login = (navigation, phoneNumber) => async (dispatch/*, getState*/) => {
   dispatch({ type: LOGIN_PHONE_NUMBER, payload: { phoneNumber } });
   try {
     const confirmResult = await firebase.auth().signInWithPhoneNumber(phoneNumber);
@@ -124,7 +124,7 @@ export async function userLoggedIn({ dispatch, navigate, userId }) {
   navigate('GroupList');
 }
  
-export const logout = (navigation) => async (dispatch, getState) => {
+export const logout = (navigation) => async (dispatch/*, getState */) => {
   try {
     await localStorage.setItem(FIREBASE_USER_TOKEN_LS_KEY, '');
     dispatch({ type: USER_ID, payload: { userId: '' } });

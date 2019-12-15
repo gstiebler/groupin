@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import NewGroupComponent from '../components/NewGroup';
 import { createGroup } from '../actions/newGroupActions';
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 

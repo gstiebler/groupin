@@ -3,7 +3,6 @@ import React from 'react';
 import { 
   Container,
 } from 'native-base';
-import { SafeAreaView } from 'react-navigation';
 
 
 const ChatComponent = ({ 

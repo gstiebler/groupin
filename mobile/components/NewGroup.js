@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Container, Content, Form, Item, Input, Button, Text, Picker } from 'native-base';
 import { groupVisibility } from '../constants/domainConstants';
 
@@ -14,7 +14,7 @@ const NewGroupComponent = ({ navigation, onCreate }) => {
   const [name, setName] = useState('');
   const [visibility, setVisibility] = useState(groupVisibility[0].value);
 
-  const visibilities = groupVisibility.map(v => <Picker.Item label={v.label} value={v.value} />);
+  const visibilities = groupVisibility.map(v => <Picker.Item label={v.label} value={v.value} key={v.value}/>);
 
   return (
     <Container style={styles.basic} >

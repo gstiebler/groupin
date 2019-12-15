@@ -25,7 +25,7 @@ export const AppStackNavigator = createStackNavigator(
   {
     GroupsSearch: { 
       screen: GroupsSearch,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: (/* { navigation } */) => ({
         title: 'Buscar grupos',
       }),
     },
@@ -97,7 +97,7 @@ const tabNavigator = createBottomTabNavigator({
 },
 {
   navigationOptions: ({ navigation }) => ({
-    tabBarIcon: ({ focused, horizontal, tintColor }) => {
+    tabBarIcon: ({ /* focused, */ horizontal, tintColor }) => {
       const { routeName } = navigation.state;
       const iconByRoute = {
         'AppStack': `group`,

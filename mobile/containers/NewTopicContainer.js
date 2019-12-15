@@ -5,7 +5,7 @@ import {
 } from "../constants/action-types";
 import { createTopic } from '../actions/newTopicActions';
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return { 
   };
 };

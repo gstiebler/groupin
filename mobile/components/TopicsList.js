@@ -2,7 +2,7 @@ import React from 'react';
 import { ListView, View } from 'react-native';
 import { Container, List, ListItem, Button, Text, Icon, Left } from 'native-base';
 
-export default TopicsListComponent = ({ navigation, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
+export default ({ navigation, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
   navigation.addListener('willFocus', willFocus);
   navigation.addListener('willBlur', willLeave);
 
@@ -24,7 +24,7 @@ export default TopicsListComponent = ({ navigation, topics, selectTopic, onPinCl
     );
   };
 
-  const renderPinButton = (topic, secId, rowId, rowMap) => {
+  const renderPinButton = (topic/*, secId, rowId, rowMap*/) => {
     const pinIconName = topic.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
       <Button full onPress={() => onPinClicked(topic) }>

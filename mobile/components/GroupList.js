@@ -2,7 +2,7 @@ import React from 'react';
 import { ListView, View } from 'react-native';
 import { Container, List, ListItem, Button, Text, Icon, Left } from 'native-base';
 
-export default GroupListComponent = ({ 
+const GroupListComponent = ({ 
   navigation, 
   ownGroups, 
   selectGroup, 
@@ -30,7 +30,7 @@ export default GroupListComponent = ({
     );
   };
 
-  const renderDeleteButton = (group, secId, rowId, rowMap) => {
+  const renderDeleteButton = (group /*, secId, rowId, rowMap */) => {
     return (
       <Button full danger onPress={() => onLeaveGroup(group.id)}>
         <Icon active name="trash" />
@@ -38,7 +38,7 @@ export default GroupListComponent = ({
     );
   }
 
-  const renderPinButton = (group, secId, rowId, rowMap) => {
+  const renderPinButton = (group /* , secId, rowId, rowMap */) => {
     const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
       <Button full onPress={() => onPinClicked(group) }>
@@ -61,3 +61,5 @@ export default GroupListComponent = ({
     </Container>
   );
 }
+
+export default GroupListComponent;

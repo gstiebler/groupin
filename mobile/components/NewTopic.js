@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
 
 const styles = StyleSheet.create({

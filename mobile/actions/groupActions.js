@@ -20,7 +20,7 @@ const getGroupInfo = (groupId) => async (dispatch) => {
   });
 }
 
-const leaveGroup = (groupId, onLeave) => async (dispatch, getState) => {
+const leaveGroup = (groupId, onLeave) => async (dispatch/*, getState*/) => {
   await server.leaveGroup(groupId);
   onLeave();
   await fetchOwnGroups(dispatch);
@@ -31,7 +31,7 @@ const joinGroup = (groupId, onJoin) => async (dispatch, getState) => {
   onJoin(getState().base.currentGroupInfo.name);
 }
 
-const setGroupPin = ({ groupId, pinned }) => async (dispatch, getState) => {
+const setGroupPin = ({ groupId, pinned }) => async (dispatch/*, getState */) => {
   await server.setGroupPin({ groupId, pinned });
   await fetchOwnGroups(dispatch);
 }

@@ -10,7 +10,7 @@ function setToken(token) {
 async function sendQuery(query) {
   try {
     console.log(query);
-    const parsedQuery = query.replace(/\n/g, '').replace(/\"/g, '\\\"');
+    const parsedQuery = query.replace(/\n/g, '').replace(/"/g, '\\"');
     const requestConfig = {
       url,
       method: 'post',

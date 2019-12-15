@@ -10,7 +10,7 @@ const {
 } = require("../constants/action-types");
 
 
-async function messageReceived(store, message) {
+async function messageReceived(store/*, message*/) {
   await Promise.all([
     getTopicsOfCurrentGroup(store),
     getMessagesOfCurrentTopic(store, storage),
@@ -18,7 +18,6 @@ async function messageReceived(store, message) {
 }
 
 async function onNewNotification(store, groupId, topicId) {
-  console.log(notificationOpen);
   store.dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { 
     currentlyViewedGroupId: groupId 
   } });
