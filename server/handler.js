@@ -11,7 +11,9 @@ const mongooseInitPromise = mongooseConfig.init();
 async function main(event) {
   try {
     await mongooseInitPromise;
-    const result = await graphqlMain.main(JSON.parse(event.body), event.headers.Authorization);
+    // It seems the case of A depends on the platform
+    const authorization = event.headers.Authorization || event.headers.authorization;
+    const result = await graphqlMain.main(JSON.parse(event.body), authorization);
 
     return {
       statusCode: 200,

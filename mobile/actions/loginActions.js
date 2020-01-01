@@ -65,7 +65,7 @@ export const init = async (navigate, dispatch) => {
       await userLoggedIn({ dispatch, navigate, userId });
     }
 
-    firebase.auth().onAuthStateChanged(async function(fbUser) {
+    firebase.auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
         const fbToken = await fbUser.getIdToken(true);
         await updateFbUserToken(dispatch, fbToken);
@@ -103,6 +103,7 @@ export const confirmationCodeReceived = ({ navigation, confirmationCode }) => as
   // const fcmToken = await firebase.messaging().getToken();
   const fbUser = firebase.auth().currentUser;
   const fbToken = await fbUser.getIdToken(true);  
+  console.log(`Confirmation code, token: ${fbToken}`);
 
   await updateFbUserToken(dispatch, fbToken);
   const userId = (await server.getUserId()).id;
