@@ -31,6 +31,7 @@ const pushService = {
     // Send a message to the device corresponding to the provided
     // registration token.
     try {
+      logger.debug(`Sending push message to topic "${fcmTopic}", ${JSON.stringify(message)}`);
       const response = await this.messaging.send(message);
       // Response is a message ID string.
       logger.info('Successfully sent message:', response);
@@ -43,7 +44,7 @@ const pushService = {
     const response = await this.messaging.subscribeToTopic([fcmToken], fcmTopic);
     // See the MessagingTopicManagementResponse reference documentation
     // for the contents of response.
-    logger.debug('Successfully subscribed to topic:', response);
+    logger.debug(`Successfully subscribed to topic: ${fcmTopic}, ${response}`);
   },
 
   async unsubscribe(fcmToken, fcmTopic) {
