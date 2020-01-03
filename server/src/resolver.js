@@ -489,9 +489,6 @@ const Mutation = {
       user.groups.push({ id: ObjectId(groupId) });
       await user.save();
 
-      // subscribe user to the group on FCM
-      await pushService.subscribe(user.fcmToken, groupId);
-
       return 'OK';
     },
   },
