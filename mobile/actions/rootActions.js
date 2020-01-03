@@ -5,6 +5,9 @@ const {
   SET_MESSAGES,
   FCM_TOKEN,
   HAS_OLDER_MESSAGES,
+  CURRENTLY_VIEWED_TOPIC_ID,
+  CHAT_TITLE,
+  CHAT_TOPIC_ID,
 } = require("../constants/action-types");
 const server = require('../lib/server');
 const _ = require('lodash');
@@ -15,6 +18,7 @@ const {
   removeFirst,
   getNNew,
 } = require('../lib/messages');
+const fcm = require('../lib/fcm');
 
 const NUM_ITEMS_PER_FETCH = 20;
 
@@ -47,7 +51,12 @@ async function getTopicsOfCurrentGroup(store) {
   store.dispatch({ type: SET_TOPICS, payload: { topics } });
 }
 
-const onTopicOpened = (topicId, storage) => async (dispatch) => {
+const onTopicOpened = ({topicId, topicName, storage}) => async (dispatch) => {
+  dispatch({ type: CHAT_TITLE, payload: { title: topicName } });
+  dispatch({ type: CHAT_TOPIC_ID, payload: { topicId } });
+  // is `currentlyViewedTopicId` redundant with `topicId`?
+  dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: topicId } });
+
   dispatch({ type: HAS_OLDER_MESSAGES, payload: { hasOlderMessages: true } });
   const currentMessages = await storage.getItem(topicId);
   dispatch({ type: SET_MESSAGES, payload: { messages: currentMessages } });
@@ -71,7 +80,19 @@ const onTopicOpened = (topicId, storage) => async (dispatch) => {
   }
   await storage.setItem(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
   dispatch({ type: SET_MESSAGES, payload: { messages } });
+  fcm.subscribeToTopic(topicId);
 }
+
+const onTopicClosed = async (topicId) => async (dispatch, getState) => {
+  dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } });
+  dispatch({ type: SET_MESSAGES, payload: { messages: [] } });
+  server.setTopicLatestRead(topicId);
+  const currentTopic = _.find(getState().topics, { id: topicId });
+  // TODO: move this logic to the server?
+  if (!currentTopic.pinned) {
+    fcm.subscribeToTopic(topicId);
+  }
+};
 
 const onOlderMessagesRequested = (topicId) => async (dispatch, getState) => {
   const currentMessages = getState().base.messages;
@@ -118,17 +139,15 @@ const setTopicPin = ({ topicId, pinned }) => async (dispatch, getState) => {
   await getTopicsOfGroup(dispatch, currentGroupId);
 }
 
-const setTopicLatestRead = async (topicId) => server.setTopicLatestRead(topicId);
-
 module.exports = {
   sendMessages,
   fetchOwnGroups,
   getTopicsOfGroup,
   getTopicsOfCurrentGroup,
   onTopicOpened,
+  onTopicClosed,
   onOlderMessagesRequested,
   getMessagesOfCurrentTopic,
   updateFcmToken,
-  setTopicLatestRead,
   setTopicPin,
 };

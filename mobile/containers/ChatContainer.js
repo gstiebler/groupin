@@ -5,14 +5,8 @@ import ChatComponent from '../components/Chat';
 import { 
   onTopicOpened,
   onOlderMessagesRequested,
-  setTopicLatestRead,
+  onTopicClosed,
 } from "../actions/rootActions";
-import { 
-  CHAT_TITLE,
-  CHAT_TOPIC_ID,
-  CURRENTLY_VIEWED_TOPIC_ID,
-  SET_MESSAGES,
-} from "../constants/action-types";
 
 const mapStateToProps = state => {
   return { 
@@ -26,18 +20,15 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onSend: messages => dispatch(sendMessages(messages)),
-    willFocus: ({ state }) => { 
-      dispatch({ type: CHAT_TITLE, payload: { title: state.params.topicName } });
-      dispatch({ type: CHAT_TOPIC_ID, payload: { topicId: state.params.topicId } });
-      // is `currentlyViewedTopicId` redundant with `topicId`?
-      dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: state.params.topicId } });
-      dispatch(onTopicOpened(state.params.topicId, storage));
+    willFocus: ({ state }) => {
+      dispatch(onTopicOpened({ 
+        topicId: state.params.topicId, 
+        topicName: state.params.topicName, 
+        storage,
+      }));
     },
     willLeave: ({ lastState }) => {
-      dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } });
-      dispatch({ type: SET_MESSAGES, payload: { messages: [] } });
-      console.log('params: **** ', lastState, '  ***----*******');
-      setTopicLatestRead(lastState.params.topicId);
+      dispatch(onTopicClosed(lastState.params.topicId));
     },
     onLoadEarlier: ({ state }) => dispatch(onOlderMessagesRequested(state.params.topicId)),
   };

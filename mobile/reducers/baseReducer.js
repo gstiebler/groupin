@@ -29,7 +29,7 @@ const initialState = {
     },*/
   ],
   ownGroups: [],
-  topics: [],
+  topics: [], // TODO: change name to `topicsOfGroup`
   fbUserToken: null,
   fcmToken: null,
   userId: '',

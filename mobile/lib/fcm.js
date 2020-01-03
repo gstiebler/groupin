@@ -42,20 +42,28 @@ export async function getAndUpdateFcmToken() {
 
 async function startMessageListener() { 
   await getAndUpdateFcmToken();
-  // firebase.messaging().subscribeToTopic(topic);
   messagesListener = firebase.messaging().onMessage((message) => {
     console.log('received message: ', message);
     messageReceiver.messageReceived(store, message);
   });
 
   notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
+    console.log('onNotificationOpened');
     messageReceiver.messageReceived(store, notificationOpen);
   });
 
-  firebase.notifications().getInitialNotification()
-    .then(notificationOpen => {
-      messageReceiver.onInitialNotification(store, notificationOpen);
-    });
+  firebase.notifications().getInitialNotification().then(notificationOpen => {
+    console.log('getInitialNotification');
+    messageReceiver.onInitialNotification(store, notificationOpen);
+  });
+}
+
+export async function subscribeToTopic(topic) {
+  firebase.messaging().subscribeToTopic(topic);
+}
+
+export async function unsubscribeFromTopic(topic) {
+  firebase.messaging().unsubscribeFromTopic(topic);
 }
 
 export function releaseListeners() {
