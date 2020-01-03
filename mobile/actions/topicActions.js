@@ -14,11 +14,10 @@ const {
   removeFirst,
   getNNew,
 } = require('../lib/messages');
-const fcm = require('../lib/fcm');
 
 const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
 
-const onTopicOpened = ({topicId, topicName, storage}) => async (dispatch) => {
+const onTopicOpened = ({topicId, topicName, storage, subscribeFn}) => async (dispatch) => {
   dispatch({ type: CHAT_TITLE, payload: { title: topicName } });
   dispatch({ type: CHAT_TOPIC_ID, payload: { topicId } });
   // is `currentlyViewedTopicId` redundant with `topicId`?
@@ -47,17 +46,17 @@ const onTopicOpened = ({topicId, topicName, storage}) => async (dispatch) => {
   }
   await storage.setItem(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
   dispatch({ type: SET_MESSAGES, payload: { messages } });
-  fcm.subscribeToTopic(topicId);
+  subscribeFn(topicId);
 }
 
-const onTopicClosed = async (topicId) => async (dispatch, getState) => {
+const onTopicClosed = async ({topicId, unsubscribeFn}) => async (dispatch, getState) => {
   dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } });
   dispatch({ type: SET_MESSAGES, payload: { messages: [] } });
   server.setTopicLatestRead(topicId);
   const currentTopic = _.find(getState().topics, { id: topicId });
   // TODO: move this logic to the server?
   if (!currentTopic.pinned) {
-    fcm.subscribeToTopic(topicId);
+    unsubscribeFn(topicId);
   }
 };
 

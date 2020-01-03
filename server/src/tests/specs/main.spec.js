@@ -34,6 +34,7 @@ const rootActions = require('../../../../mobile/actions/rootActions');
 const groupActions = require('../../../../mobile/actions/groupActions');
 const groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
 const newTopicActions = require('../../../../mobile/actions/newTopicActions');
+const topicActions = require('../../../../mobile/actions/topicActions');
 
 const dispatch = store.dispatch.bind(store);
 // const getState = store.getState.bind(store);
@@ -185,7 +186,12 @@ describe('main', () => {
         const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
-        await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
+        await topicActions.onTopicOpened({
+          topicId: topicIdStr,
+          topicName: 'name',
+          storage,
+          subscribeFn: () => {},
+        })(localDispatch);
         const expectedMessages = _.reverse([
           {
             _id: messageFixtures.message1topic1._id.toHexString(),
@@ -219,7 +225,12 @@ describe('main', () => {
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(4, 24));
-        await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
+        await topicActions.onTopicOpened({
+          topicId: topicIdStr,
+          topicName: 'name',
+          storage,
+          subscribeFn: () => {},
+        })(localDispatch);
 
         // store messages
         const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));
@@ -249,7 +260,12 @@ describe('main', () => {
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(25, 44));
-        await rootActions.onTopicOpened(topicIdStr, storage)(localDispatch);
+        await topicActions.onTopicOpened({
+          topicId: topicIdStr,
+          topicName: 'name',
+          storage,
+          subscribeFn: () => {},
+        })(localDispatch);
 
         // store messages
         const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));

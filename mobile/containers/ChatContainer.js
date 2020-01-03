@@ -9,6 +9,7 @@ import {
   onTopicOpened,
   onTopicClosed,
 } from "../actions/topicActions";
+const fcm = require('../lib/fcm');
 
 const mapStateToProps = state => {
   return { 
@@ -27,10 +28,14 @@ const mapDispatchToProps = dispatch => {
         topicId: state.params.topicId, 
         topicName: state.params.topicName, 
         storage,
+        subscribeFn: (topicId) => { fcm.subscribeToTopic(topicId); },
       }));
     },
     willLeave: ({ lastState }) => {
-      dispatch(onTopicClosed(lastState.params.topicId));
+      dispatch(onTopicClosed({
+        topicId: lastState.params.topicId,
+        unsubscribeFn: (topicId) => { fcm.unsubscribeToTopic(topicId); },
+      }));
     },
     onLoadEarlier: ({ state }) => dispatch(onOlderMessagesRequested(state.params.topicId)),
   };
