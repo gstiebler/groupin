@@ -599,7 +599,7 @@ describe('main', () => {
       const call0args = subscribeStub.args[0];
       const [subscribedFcmToken, firstSubscribedGroupId] = call0args;
       expect(subscribedFcmToken).to.equal(fcmToken);
-      expect(firstSubscribedGroupId).to.equal(userFixtures.robert.groups[0].id.toHexString());
+      expect(firstSubscribedGroupId).to.equal(userFixtures.robert.groups[1].id.toHexString());
     });
 
     it('setTopicLatestRead', async () => {

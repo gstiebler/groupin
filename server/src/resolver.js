@@ -26,8 +26,11 @@ const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
 
 const oldDate = moment('2015-01-01').toDate();
 
-function subscribeToAllGroups(user, fcmToken) {
-  return Promise.map(user.groups, (group) => pushService.subscribe(fcmToken, group.id.toString()));
+async function subscribeToAll(user, fcmToken) {
+  logger.debug('Subscribing to all');
+  const pinnedGroups = _.filter(user.groups, { pinned: true });
+  await Promise.map(pinnedGroups, (group) => pushService.subscribe(fcmToken, group.id.toString()));
+  await Promise.map(user.pinnedTopics, (topic) => pushService.subscribe(fcmToken, topic.toString()));
 }
 
 const Query = {
@@ -92,8 +95,6 @@ const Query = {
       });
       const latestReadById = _.keyBy(groupLatestRead, (l) => l.groupId.toHexString());
 
-      // TODO: remove when it's garanteed that the user will be subscribed when joining the group
-      subscribeToAllGroups(user, user.fcmToken);
       return groups.map((group) => {
         const latestReadObj = latestReadById[group._id.toHexString()];
         // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
@@ -525,7 +526,7 @@ const Mutation = {
         { _id: user._id },
         { $set: { fcmToken } },
       );
-      await subscribeToAllGroups(user, fcmToken);
+      await subscribeToAll(user, fcmToken);
     },
   },
 
