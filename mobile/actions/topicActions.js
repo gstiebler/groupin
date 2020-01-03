@@ -15,6 +15,8 @@ const {
   getNNew,
 } = require('../lib/messages');
 
+const formatDataTopicId = (topicId) => `data:${topicId}`;
+
 const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
 
 const onTopicOpened = ({topicId, topicName, storage, subscribeFn}) => async (dispatch) => {
@@ -46,7 +48,7 @@ const onTopicOpened = ({topicId, topicName, storage, subscribeFn}) => async (dis
   }
   await storage.setItem(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
   dispatch({ type: SET_MESSAGES, payload: { messages } });
-  subscribeFn(topicId);
+  subscribeFn(formatDataTopicId(topicId));
 }
 
 const onTopicClosed = async ({topicId, unsubscribeFn}) => async (dispatch, getState) => {
@@ -56,7 +58,7 @@ const onTopicClosed = async ({topicId, unsubscribeFn}) => async (dispatch, getSt
   const currentTopic = _.find(getState().topics, { id: topicId });
   // TODO: move this logic to the server?
   if (!currentTopic.pinned) {
-    unsubscribeFn(topicId);
+    unsubscribeFn(formatDataTopicId(topicId));
   }
 };
 

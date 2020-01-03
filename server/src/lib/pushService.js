@@ -18,18 +18,18 @@ const pushService = {
     this.messaging = admin.messaging();
   },
 
-  async pushMessage(fcmTopic, { payload, title, body }) {
+  async pushMessage(fcmTopic, { payload, title, body, sendNotification }) {
     const message = {
       data: payload,
-      notification: {
-        title,
-        body,
-      },
-      // token: registrationToken,
+      // token: registrationToken, Only used when sending to an specific device
       topic: fcmTopic,
     };
-    // Send a message to the device corresponding to the provided
-    // registration token.
+    if (sendNotification) {
+      message.notification = {
+        title,
+        body,
+      };
+    }
     try {
       logger.debug(`Sending push message to topic "${fcmTopic}", ${JSON.stringify(message)}`);
       const response = await this.messaging.send(message);

@@ -429,6 +429,7 @@ describe('main', () => {
           },
           body: messageText,
           title: 'Topic 1 Group 1',
+          sendNotification: true,
         });
 
         const call1args = pushMessageStub.args[1];
@@ -506,6 +507,7 @@ describe('main', () => {
           },
           body: topicName,
           title: 'Novo tópico',
+          sendNotification: true,
         });
       });
 
@@ -582,10 +584,6 @@ describe('main', () => {
         const groups = await server.getOwnGroups();
         expect(groups).to.have.lengthOf(2);
         expect(groups[1].name).to.equal('Second Group');
-
-        const call0args = subscribeStub.args[0];
-        const [, subscribedGroup] = call0args;
-        expect(subscribedGroup).to.equal(groupId);
       });
     });
 

@@ -391,8 +391,9 @@ const Mutation = {
         body: message.slice(0, 30),
       };
       await Promise.all([
-        pushService.pushMessage(topicId, pushParams),
-        pushService.pushMessage(groupId, pushParams),
+        pushService.pushMessage(topicId, { ...pushParams, sendNotification: true }),
+        pushService.pushMessage(groupId, { ...pushParams, sendNotification: true }),
+        pushService.pushMessage(`data:${topicId}`, { ...pushParams, sendNotification: false }),
       ]);
 
       return createdMessage._id.toHexString();
@@ -470,6 +471,7 @@ const Mutation = {
         payload: pushPayload,
         title: 'Novo tópico',
         body: topicName.slice(0, 50),
+        sendNotification: true,
       };
       await pushService.pushMessage(groupId, pushParams);
       return 'OK';
