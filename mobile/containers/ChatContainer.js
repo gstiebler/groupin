@@ -2,11 +2,13 @@ import { connect } from "react-redux";
 import storage from '../lib/localStorage';
 import { sendMessages } from '../actions/rootActions';
 import ChatComponent from '../components/Chat';
+import {
+  onOlderMessagesRequested,
+} from "../actions/rootActions";
 import { 
   onTopicOpened,
-  onOlderMessagesRequested,
   onTopicClosed,
-} from "../actions/rootActions";
+} from "../actions/topicActions";
 
 const mapStateToProps = state => {
   return { 
