@@ -67,7 +67,6 @@ function createStorage() {
 let pushMessageStub;
 let subscribeStub;
 let unsubscribeStub;
-let setSubscriptionStub;
 
 describe('main', () => {
   describe('reading', () => {
@@ -79,13 +78,11 @@ describe('main', () => {
       await Message.insertMany(messages50);
       subscribeStub = sinon.stub(pushService, 'subscribe');
       unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
-      setSubscriptionStub = sinon.stub(pushService, 'setSubscription');
     });
 
     afterEach(() => {
       subscribeStub.restore();
       unsubscribeStub.restore();
-      setSubscriptionStub.restore();
     });
 
     it('getOwnGroups', async () => {
@@ -370,7 +367,6 @@ describe('main', () => {
       pushMessageStub = sinon.stub(pushService, 'pushMessage');
       subscribeStub = sinon.stub(pushService, 'subscribe');
       unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
-      setSubscriptionStub = sinon.stub(pushService, 'setSubscription');
       await initFixtures();
     });
 
@@ -378,7 +374,6 @@ describe('main', () => {
       pushMessageStub.restore();
       subscribeStub.restore();
       unsubscribeStub.restore();
-      setSubscriptionStub.restore();
     });
 
     it('register', async () => {
@@ -628,9 +623,8 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.groups[0].pinned).to.eql(true);
-        const [, groupIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [, groupIdP] = subscribeStub.args[0];
         expect(groupIdP).to.eql(groupId);
-        expect(pinnedP).to.eql(true);
       });
 
       it('unpin', async () => {
@@ -643,9 +637,8 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.groups[1].pinned).to.eql(false);
-        const [, groupIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [, groupIdP] = unsubscribeStub.args[0];
         expect(groupIdP).to.eql(groupId);
-        expect(pinnedP).to.eql(false);
       });
     });
 
@@ -660,9 +653,8 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.pinnedTopics[2].toHexString()).to.eql(topicId);
-        const [/* fcmTokenP */, topicIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [/* fcmTokenP */, topicIdP] = subscribeStub.args[0];
         expect(topicIdP).to.eql(topicId);
-        expect(pinnedP).to.eql(true);
       });
 
       it('unpin', async () => {
@@ -675,9 +667,8 @@ describe('main', () => {
 
         const user = await User.findById(userFixtures.robert._id);
         expect(user.pinnedTopics).to.have.lengthOf(1);
-        const [, topicIdP, pinnedP] = setSubscriptionStub.args[0];
+        const [, topicIdP] = unsubscribeStub.args[0];
         expect(topicIdP).to.eql(topicId);
-        expect(pinnedP).to.eql(false);
       });
     });
   });

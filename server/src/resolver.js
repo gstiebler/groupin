@@ -26,11 +26,27 @@ const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
 
 const oldDate = moment('2015-01-01').toDate();
 
+function subscribeToGroup(fcmToken, groupId) {
+  return pushService.subscribe(fcmToken, groupId.toString());
+}
+
+function subscribeToTopic(fcmToken, topicId) {
+  return pushService.subscribe(fcmToken, topicId.toString());
+}
+
+function unsubscribeFromGroup(fcmToken, groupId) {
+  return pushService.unsubscribe(fcmToken, groupId.toString());
+}
+
+function unsubscribeFromTopic(fcmToken, topicId) {
+  return pushService.unsubscribe(fcmToken, topicId.toString());
+}
+
 async function subscribeToAll(user, fcmToken) {
   logger.debug('Subscribing to all');
   const pinnedGroups = _.filter(user.groups, { pinned: true });
-  await Promise.map(pinnedGroups, (group) => pushService.subscribe(fcmToken, group.id.toString()));
-  await Promise.map(user.pinnedTopics, (topic) => pushService.subscribe(fcmToken, topic.toString()));
+  await Promise.map(pinnedGroups, (group) => subscribeToGroup(fcmToken, group.id));
+  await Promise.map(user.pinnedTopics, (topic) => subscribeToTopic(fcmToken, topic));
 }
 
 const Query = {
@@ -507,7 +523,7 @@ const Mutation = {
       );
 
       // unsubscribe user from the group on FCM
-      await pushService.unsubscribe(user.fcmToken, groupId);
+      await unsubscribeFromGroup(user.fcmToken, groupId);
       return 'OK';
     },
   },
@@ -576,7 +592,11 @@ const Mutation = {
         { _id: user._id, 'groups.id': ObjectId(groupId) },
         { $set: { 'groups.$.pinned': pinned } },
       );
-      await pushService.setSubscription(user.fcmToken, groupId, pinned);
+      if (pinned) {
+        subscribeToGroup(user.fcmToken, groupId);
+      } else {
+        unsubscribeFromGroup(user.fcmToken, groupId);
+      }
       return 'OK';
     },
   },
@@ -593,7 +613,11 @@ const Mutation = {
         { _id: user._id },
         { [updateOperation]: { pinnedTopics: ObjectId(topicId) } },
       );
-      await pushService.setSubscription(user.fcmToken, topicId, pinned);
+      if (pinned) {
+        subscribeToTopic(user.fcmToken, topicId);
+      } else {
+        unsubscribeFromTopic(user.fcmToken, topicId);
+      }
       return 'OK';
     },
   },
