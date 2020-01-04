@@ -26,27 +26,43 @@ const { numMaxReturnedItems, messageTypes } = require('./lib/constants');
 
 const oldDate = moment('2015-01-01').toDate();
 
-function subscribeToGroup(fcmToken, groupId) {
-  return pushService.subscribe(fcmToken, groupId.toString());
-}
-
-function subscribeToTopic(fcmToken, topicId) {
-  return pushService.subscribe(fcmToken, topicId.toString());
-}
-
-function unsubscribeFromGroup(fcmToken, groupId) {
-  return pushService.unsubscribe(fcmToken, groupId.toString());
+async function subscribeToTopic(user, fcmToken, topicId) {
+  const topic = await Topic.findById(topicId);
+  const groupId = topic.groupId.toHexString();
+  const groups = _.find(user.groups, (group) => group.id.toHexString() === groupId && group.pinned);
+  // true if the group of the topic is pinned by the user
+  if (!_.isEmpty(groups)) {
+    await pushService.subscribe(fcmToken, topicId.toString());
+  }
 }
 
 function unsubscribeFromTopic(fcmToken, topicId) {
   return pushService.unsubscribe(fcmToken, topicId.toString());
 }
 
+async function subscribeToGroup(user, fcmToken, groupId) {
+  const topics = await Topic.find({
+    _id: { $in: user.pinnedTopics },
+    groupId,
+  });
+  await Promise.map(topics, (topic) => pushService.unsubscribe(fcmToken, topic._id.toString()));
+  await pushService.subscribe(fcmToken, groupId.toString());
+}
+
+async function unsubscribeFromGroup(user, fcmToken, groupId) {
+  const topics = await Topic.find({
+    _id: { $in: user.pinnedTopics },
+    groupId,
+  });
+  await Promise.map(topics, (topic) => pushService.subscribe(fcmToken, topic._id.toString()));
+  await pushService.unsubscribe(fcmToken, groupId.toString());
+}
+
 async function subscribeToAll(user, fcmToken) {
   logger.debug('Subscribing to all');
   const pinnedGroups = _.filter(user.groups, { pinned: true });
-  await Promise.map(pinnedGroups, (group) => subscribeToGroup(fcmToken, group.id));
-  await Promise.map(user.pinnedTopics, (topic) => subscribeToTopic(fcmToken, topic));
+  await Promise.map(pinnedGroups, (group) => subscribeToGroup(user, fcmToken, group.id));
+  await Promise.map(user.pinnedTopics, (topic) => subscribeToTopic(user, fcmToken, topic));
 }
 
 const Query = {
@@ -523,7 +539,7 @@ const Mutation = {
       );
 
       // unsubscribe user from the group on FCM
-      await unsubscribeFromGroup(user.fcmToken, groupId);
+      await unsubscribeFromGroup(user, user.fcmToken, groupId);
       return 'OK';
     },
   },
@@ -593,9 +609,9 @@ const Mutation = {
         { $set: { 'groups.$.pinned': pinned } },
       );
       if (pinned) {
-        subscribeToGroup(user.fcmToken, groupId);
+        await subscribeToGroup(user, user.fcmToken, groupId);
       } else {
-        unsubscribeFromGroup(user.fcmToken, groupId);
+        await unsubscribeFromGroup(user, user.fcmToken, groupId);
       }
       return 'OK';
     },
@@ -614,9 +630,9 @@ const Mutation = {
         { [updateOperation]: { pinnedTopics: ObjectId(topicId) } },
       );
       if (pinned) {
-        subscribeToTopic(user.fcmToken, topicId);
+        await subscribeToTopic(user, user.fcmToken, topicId);
       } else {
-        unsubscribeFromTopic(user.fcmToken, topicId);
+        await unsubscribeFromTopic(user.fcmToken, topicId);
       }
       return 'OK';
     },
