@@ -411,6 +411,7 @@ const Mutation = {
         authorName: user.name,
         groupId,
         topicId,
+        topicName: topic.name,
         messageId: createdMessage._id.toHexString(),
         type: messageTypes.NEW_MESSAGE,
       };
@@ -425,7 +426,7 @@ const Mutation = {
       await Promise.all([
         pushService.pushMessage(topicId, { ...pushParams, sendNotification: true }),
         pushService.pushMessage(groupId, { ...pushParams, sendNotification: true }),
-        pushService.pushMessage(`data:${topicId}`, { ...pushParams, sendNotification: false }),
+        pushService.pushMessage(`data.${topicId}`, { ...pushParams, sendNotification: false }),
       ]);
 
       return createdMessage._id.toHexString();

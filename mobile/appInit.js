@@ -6,5 +6,5 @@ import store from "./store/rootStore";
 export default async function init(navigate) {
   const dispatch = store.dispatch.bind(store);
   await loginActions.init(navigate, dispatch);
-  await FCM.init();
+  await FCM.init(navigate);
 }

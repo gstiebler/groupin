@@ -14,6 +14,7 @@ async function main(graphqlQuery, authFbToken) {
     let firebaseId = null;
     // ***
     if (authFbToken) {
+      logger.debug(authFbToken);
       // authFbToken comes from the client app
       const decodedToken = await admin.auth().verifyIdToken(authFbToken);
       firebaseId = decodedToken.uid;

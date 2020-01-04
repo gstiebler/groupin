@@ -17,7 +17,7 @@ async function messageReceived(store/*, message*/) {
   ]);
 }
 
-async function onNewNotification(store, groupId, topicId) {
+async function onNewNotification({navigateFn, store, groupId, topicId, topicName}) {
   store.dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { 
     currentlyViewedGroupId: groupId 
   } });
@@ -25,6 +25,10 @@ async function onNewNotification(store, groupId, topicId) {
   store.dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { 
     currentlyViewedTopicId: topicId
   } });
+
+  // TODO: push topic list screen
+  // navigation.navigate('TopicsList', { groupId, groupName });
+  navigateFn('Chat', { topicId, topicName });
   
   await Promise.all([
     getTopicsOfCurrentGroup(store),
@@ -32,12 +36,26 @@ async function onNewNotification(store, groupId, topicId) {
   ]);
 }
 
-async function onNotificationOpened(store, notificationOpen) {
-  onNewNotification(store, notificationOpen.payload.groupId, notificationOpen.payload.topicId);
+async function onNotificationOpened(navigateFn, store, notificationOpen) {
+  const { groupId, topicId, topicName } = notificationOpen.notification.data;
+  onNewNotification({
+    navigateFn, 
+    store, 
+    groupId, 
+    topicId,
+    topicName,
+  });
 }
 
-async function onInitialNotification(store, notificationOpen) {
-  onNewNotification(store, notificationOpen.payload.groupId, notificationOpen.payload.topicId);
+async function onInitialNotification(navigateFn, store, notificationOpen) {
+  const { groupId, topicId, topicName } = notificationOpen.notification.data;
+  onNewNotification({
+    navigateFn, 
+    store, 
+    groupId, 
+    topicId,
+    topicName,
+  });
 }
 
 module.exports = {

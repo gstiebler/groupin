@@ -9,8 +9,10 @@ import messageReceiver from './messageReceiver';
 let tokenRefreshListener;
 let messagesListener;
 let notificationOpenedListener;
+let _navigateFn;
 
-export async function init() {
+export async function init(navigateFn) {
+  _navigateFn = navigateFn;
   tokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
     updateFcmToken(store, fcmToken);
   });
@@ -49,12 +51,12 @@ async function startMessageListener() {
 
   notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
     console.log('onNotificationOpened');
-    messageReceiver.messageReceived(store, notificationOpen);
+    messageReceiver.onNotificationOpened(_navigateFn, store, notificationOpen);
   });
 
   firebase.notifications().getInitialNotification().then(notificationOpen => {
     console.log('getInitialNotification');
-    messageReceiver.onInitialNotification(store, notificationOpen);
+    messageReceiver.onInitialNotification(_navigateFn, store, notificationOpen);
   });
 }
 

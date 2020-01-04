@@ -15,7 +15,7 @@ const {
   getNNew,
 } = require('../lib/messages');
 
-const formatDataTopicId = (topicId) => `data:${topicId}`;
+const formatDataTopicId = (topicId) => `data.${topicId}`;
 
 const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
 
@@ -51,7 +51,7 @@ const onTopicOpened = ({topicId, topicName, storage, subscribeFn}) => async (dis
   subscribeFn(formatDataTopicId(topicId));
 }
 
-const onTopicClosed = async ({topicId, unsubscribeFn}) => async (dispatch, getState) => {
+const onTopicClosed = ({topicId, unsubscribeFn}) => async (dispatch, getState) => {
   dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } });
   dispatch({ type: SET_MESSAGES, payload: { messages: [] } });
   server.setTopicLatestRead(topicId);
