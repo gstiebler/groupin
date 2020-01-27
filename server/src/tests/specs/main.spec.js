@@ -420,6 +420,7 @@ describe('main', () => {
             groupId: groupFixtures.firstGroup._id.toHexString(),
             messageId: createdMessage._id.toHexString(),
             authorName: alice.name,
+            topicName: 'Topic 1 Group 1',
             type: messageTypes.NEW_MESSAGE,
           },
           body: messageText,
