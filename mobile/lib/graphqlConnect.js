@@ -7,14 +7,16 @@ function setToken(token) {
   axios.defaults.headers.common.authorization = token;
 }
 
-async function sendQuery(query) {
+async function sendQuery(query, variables) {
   try {
     console.log(query);
-    const parsedQuery = query.replace(/\n/g, '').replace(/"/g, '\\"');
     const requestConfig = {
       url,
       method: 'post',
-      data: `"${parsedQuery}"`,
+      data: { 
+        query, 
+        variables,
+      },
     };
     const res = await axios.request(requestConfig);
     if (!res.data) {

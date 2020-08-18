@@ -25,10 +25,11 @@
     "report-dir": ".coverage"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bluebird": "^3.7.1",
     "dotenv": "^6.0.0",
     "firebase-admin": "^7.1.1",
-    "graphql": "^0.13.2",
+    "graphql": "^15.3.0",
     "lodash": "^4.17.11",
     "md5": "^2.2.1",
     "moment": "^2.22.2",

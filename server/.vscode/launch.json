@@ -19,6 +19,7 @@
         "./node_modules/mocha/bin/mocha",
         "src/tests/**/*.spec.js",
         "--colors",
+        "--timeout", "50000",
         "--reporter",
         "spec"
       ],

@@ -29,11 +29,11 @@ if (process.env.NODE_ENV !== 'test') {
 before(async () => {
   dotenv.config();
   await mongooseConfig.init();
-  sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query) => {
+  sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query, variables) => {
     const user = await User.findById(currentUserHolder.currentUser._id);
     const firebaseId = 'dk49sdfjhk';
     const phoneNumber = '(21)999995555';
-    const result = await graphql(schema, query, null, { user, firebaseId, phoneNumber });
+    const result = await graphql(schema, query, null, { user, firebaseId, phoneNumber }, variables);
     if (result.errors) {
       for (const error of result.errors) {
         logger.error(error.stack);
