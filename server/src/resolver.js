@@ -173,7 +173,7 @@ const Query = {
         createdBy: 1,
         createdAt: 1,
       }).lean();
-      const iBelong = _.find(user.groups, (group_) => group_.id.toHexString() === groupId);
+      const iBelong = !!_.find(user.groups, (group_) => group_.id.toHexString() === groupId);
       return {
         ...group,
         iBelong,
