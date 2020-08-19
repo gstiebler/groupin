@@ -1,10 +1,10 @@
-const { createStore, applyMiddleware } = require("redux");
-const rootReducer = require("../reducers/rootReducer");
+const { createStore, applyMiddleware } = require('redux');
+const rootReducer = require('../reducers/rootReducer');
 const { composeWithDevTools } = require('remote-redux-devtools');
 const thunk = require('redux-thunk').default;
 
 const store = createStore(
-  rootReducer, 
+  rootReducer,
   {},
   composeWithDevTools(applyMiddleware(thunk))
 );
