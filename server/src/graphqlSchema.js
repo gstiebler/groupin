@@ -1,23 +1,8 @@
-const {
-  GraphQLSchema,
-  GraphQLObjectType,
-} = require('graphql');
+const { buildSchema } = require('graphql');
+const fs = require('fs');
+const path = require('path');
 
-const resolver = require('./resolver');
-
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-      ...resolver.Query,
-    },
-  }),
-  mutation: new GraphQLObjectType({
-    name: 'RootMutationType',
-    fields: {
-      ...resolver.Mutation,
-    },
-  }),
-});
+const gqlPath = path.join(__dirname, '/schema.gql');
+const schema = buildSchema(fs.readFileSync(gqlPath, 'utf8'));
 
 module.exports = schema;

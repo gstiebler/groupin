@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const { graphql } = require('graphql');
 const _ = require('lodash');
+const rootValue = require('./resolver');
 const schema = require('./graphqlSchema');
 const logger = require('./config/winston');
 const User = require('./db/schema/User');
@@ -21,7 +22,7 @@ async function main(graphqlQuery, authFbToken) {
       phoneNumber = decodedToken.phone_number;
       user = _.isEmpty(firebaseId) ? null : await User.findOne({ uid: firebaseId });
     }
-    const result = await graphql(schema, graphqlQuery, null, { user, firebaseId, phoneNumber });
+    const result = await graphql(schema, graphqlQuery, rootValue, { user, firebaseId, phoneNumber });
     logger.debug(JSON.stringify(graphqlQuery, null, 2));
     logger.debug(JSON.stringify(result, null, 2));
     return result;

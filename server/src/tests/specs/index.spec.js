@@ -4,6 +4,7 @@ const chai = require('chai');
 const chaiSubset = require('chai-subset');
 const chaiAsPromised = require('chai-as-promised');
 const dotenv = require('dotenv');
+const rootValue = require('../../resolver');
 const mongooseConfig = require('../../config/mongoose');
 const User = require('../../db/schema/User');
 const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
@@ -33,7 +34,7 @@ before(async () => {
     const user = await User.findById(currentUserHolder.currentUser._id);
     const firebaseId = 'dk49sdfjhk';
     const phoneNumber = '(21)999995555';
-    const result = await graphql(schema, query, null, { user, firebaseId, phoneNumber }, variables);
+    const result = await graphql(schema, query, rootValue, { user, firebaseId, phoneNumber }, variables);
     if (result.errors) {
       for (const error of result.errors) {
         logger.error(error.stack);

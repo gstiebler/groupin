@@ -1,0 +1,114 @@
+type Topic {
+  id: String,
+  name: String,
+  imgUrl: String,
+  unread: Boolean,
+  pinned: Boolean,
+}
+
+type Id {
+  id: String,
+}
+
+type Group {
+  id: String,
+  name: String,
+  imgUrl: String,
+  unread: Boolean,
+  pinned: Boolean,
+}
+
+type FullGroup {
+  _id: String,
+  friendlyId: String,
+  name: String,
+  imgUrl: String,
+  description: String,
+  visibility: String,
+  createdBy: String,
+  createdAt: Float,
+  iBelong: Boolean,
+}
+
+type User {
+  _id: String,
+  name: String,
+  avatar: String,
+}
+
+type Message {
+  _id: String,
+  text: String,
+  createdAt: Float,
+  user: User
+}
+
+type Error {
+  errorMessage: String,
+}
+
+type Query {
+
+  topicsOfGroup (
+    groupId: String,
+    limit: Float,
+    startingId: String,
+  ): [Topic]
+
+  getUserId : Id
+
+  ownGroups : [Group]
+
+  getGroupInfo(groupId: String) : FullGroup
+
+  messagesOfTopic (
+    topicId: String,
+    limit: Float,
+    afterId: String,
+    beforeId: String,
+  ) : [Message]
+
+  findGroups(
+    searchText: String,
+    limit: Float,
+    startingId: String,
+  ) : [Group]
+}
+
+type Mutation {
+
+  register(name: String) : Error
+
+  sendMessage(
+    message: String,
+    topicId: String,
+  ) : String
+
+  createGroup(
+    groupName: String,
+    visibility: String,
+  ) : String
+
+  createTopic(
+    topicName: String,
+    groupId: String
+  ) : String
+
+  joinGroup(groupId: String) : String
+
+  leaveGroup(groupId: String) : String
+
+  updateFcmToken(fcmToken: String) : String
+
+  setTopicLatestRead(topicId: String) : String
+
+  setGroupPin(
+    groupId: String,
+    pinned: Boolean
+  ) : String
+
+  setTopicPin(
+    topicId: String,
+    pinned: Boolean
+  ) : String
+}
