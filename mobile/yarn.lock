@@ -1155,6 +1155,16 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/auth@^8.3.3":
+  version "8.3.3"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-8.3.3.tgz#a9c0778dbee0c8251a8cb406951bed5bd02aa9e4"
+  integrity sha512-EM73Q8VDh3n9rbdv9Z8nAoe9d+JfNvbU4iXlEBpmH7FZhCkDKQR9Q9isa4Q8vzhVCmyJTQbgi0sMCJIXbOFTug==
+
+"@react-native-firebase/messaging@^7.7.1":
+  version "7.7.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-7.7.1.tgz#6a6c041ffe8de8e5e9306fd64560cbab07745c26"
+  integrity sha512-8ciaJC59rMHsj0D+WnIZ4ezx0hSIJ99UCkzEROlEX/kun5trlw2+h+1rqH6xzvopl8RR/8YojcmxBFJiXwCoig==
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.1.tgz#e7df00f98a203324f6dc7cc606cad9d4a8ab2217"

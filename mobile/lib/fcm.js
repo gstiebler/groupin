@@ -1,4 +1,4 @@
-import firebase from 'react-native-firebase';
+import messaging from '@react-native-firebase/messaging';
 import { 
   updateFcmToken,
 } from "../actions/rootActions";
@@ -13,17 +13,17 @@ let _navigateFn;
 
 export async function init(navigateFn) {
   _navigateFn = navigateFn;
-  tokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
+  tokenRefreshListener = messaging().onTokenRefresh(fcmToken => {
     updateFcmToken(store, fcmToken);
   });
 
-  const hasPermission = await firebase.messaging().hasPermission();
+  const hasPermission = await messaging().hasPermission();
   if (hasPermission) {
     console.log('FCM has permission');
     await startMessageListener();
   } else {
     try {
-      await firebase.messaging().requestPermission();
+      await messaging().requestPermission();
       console.log('User has authorized messaging');
       startMessageListener();
     } catch (error) {
@@ -34,7 +34,7 @@ export async function init(navigateFn) {
 }
 
 export async function getAndUpdateFcmToken() {
-  const fcmToken = await firebase.messaging().getToken();
+  const fcmToken = await messaging().getToken();
   if (fcmToken) {
     await updateFcmToken(store, fcmToken);
   } else {
@@ -44,28 +44,28 @@ export async function getAndUpdateFcmToken() {
 
 async function startMessageListener() { 
   await getAndUpdateFcmToken();
-  messagesListener = firebase.messaging().onMessage((message) => {
+  messagesListener = messaging().onMessage((message) => {
     console.log('received message: ', message);
     messageReceiver.messageReceived(store, message);
   });
 
-  notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
-    console.log('onNotificationOpened');
+  notificationOpenedListener = messaging().onNotificationOpenedApp(notificationOpen => {
+    console.log('onNotificationOpenedApp');
     messageReceiver.onNotificationOpened(_navigateFn, store, notificationOpen);
   });
 
-  firebase.notifications().getInitialNotification().then(notificationOpen => {
+  messaging().getInitialNotification().then(notificationOpen => {
     console.log('getInitialNotification');
     messageReceiver.onInitialNotification(_navigateFn, store, notificationOpen);
   });
 }
 
 export async function subscribeToTopic(topic) {
-  firebase.messaging().subscribeToTopic(topic);
+  messaging().subscribeToTopic(topic);
 }
 
 export async function unsubscribeFromTopic(topic) {
-  firebase.messaging().unsubscribeFromTopic(topic);
+  messaging().unsubscribeFromTopic(topic);
 }
 
 export function releaseListeners() {

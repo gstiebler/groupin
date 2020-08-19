@@ -1,7 +1,7 @@
 // TODO: remove include of React stuff
 import { Alert } from 'react-native';
 
-import firebase from 'react-native-firebase';
+import auth from '@react-native-firebase/auth';
 import { 
   USER_ID,
   FB_CONFIRM_RESULT,
@@ -53,7 +53,7 @@ export const login = (navigation, phoneNumber) => async (dispatch/*, getState*/)
 export const init = async (navigate, dispatch) => {
   try {
     const localFbUserToken = await localStorage.getItem(FIREBASE_USER_TOKEN_LS_KEY);
-    const firebaseUser = firebase.auth().currentUser;
+    const firebaseUser = auth().currentUser;
     // check if user is already logged in
     if (!_.isEmpty(localFbUserToken) && firebaseUser) {
       const fbToken = await firebaseUser.getIdToken(true);  
@@ -65,7 +65,7 @@ export const init = async (navigate, dispatch) => {
       await userLoggedIn({ dispatch, navigate, userId });
     }
 
-    firebase.auth().onAuthStateChanged(async (fbUser) => {
+    auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
         const fbToken = await fbUser.getIdToken(true);
         await updateFbUserToken(dispatch, fbToken);
@@ -101,7 +101,7 @@ export const confirmationCodeReceived = ({ navigation, confirmationCode }) => as
   }
 
   // const fcmToken = await firebase.messaging().getToken();
-  const fbUser = firebase.auth().currentUser;
+  const fbUser = auth().currentUser;
   const fbToken = await fbUser.getIdToken(true);  
   console.log(`Confirmation code, token: ${fbToken}`);
 
@@ -129,7 +129,7 @@ export const logout = (navigation) => async (dispatch/*, getState */) => {
   try {
     await localStorage.setItem(FIREBASE_USER_TOKEN_LS_KEY, '');
     dispatch({ type: USER_ID, payload: { userId: '' } });
-    await firebase.auth().signOut();
+    await auth().signOut();
     navigation.navigate('Login');
   } catch (error) {
     console.log(error);
