@@ -397,6 +397,8 @@ PODS:
     - Firebase/Messaging (~> 6.28.1)
     - React
     - RNFBApp
+  - RNVectorIcons (7.0.0):
+    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -451,6 +453,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -540,6 +543,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/auth"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -598,6 +603,7 @@ SPEC CHECKSUMS:
   RNFBApp: abbab9c96e6d2f1cada6401c9138d3f8cb2ae930
   RNFBAuth: 0cb359f04e97d76a6c3122adb519bb7c5c64f15c
   RNFBMessaging: 6b8db5ff807c38395c297698bcfa1502cbc5856c
+  RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
