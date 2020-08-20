@@ -1,12 +1,10 @@
 import React from 'react';
-import { ListView, View } from 'react-native';
-import { Container, List, ListItem, Button, Text, Icon, Left } from 'native-base';
+import { FlatList, Item, View } from 'react-native';
+import { Container, Button, Text, Icon, Left } from 'native-base';
 
 export default ({ navigation, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
   navigation.addListener('willFocus', willFocus);
   navigation.addListener('willBlur', willLeave);
-
-  let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
   const pinLeftIcon = (
     <Left>
@@ -17,10 +15,10 @@ export default ({ navigation, topics, selectTopic, onPinClicked, willFocus, will
   const renderTopic = topic => {
     const fontWeight = topic.unread ? 'bold' : 'normal';
     return (
-      <ListItem onPress={() => selectTopic(navigation, topic.id, topic.name) }>
+      <Item onPress={() => selectTopic(navigation, topic.id, topic.name) }>
         { topic.pinned ? pinLeftIcon : <View /> }
         <Text style={{ fontWeight }}> {"  " + topic.name} </Text>
-      </ListItem>
+      </Item>
     );
   };
 
@@ -35,9 +33,9 @@ export default ({ navigation, topics, selectTopic, onPinClicked, willFocus, will
 
   return (
     <Container>
-      <List 
+      <FlatList 
         containerStyle={{marginBottom: 20}}
-        dataSource={ds.cloneWithRows(topics)}
+        data={topics}
         rightOpenValue={-75} 
         renderRow={renderTopic} 
         renderRightHiddenRow={renderPinButton}    

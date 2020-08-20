@@ -1,6 +1,6 @@
 import React from 'react';
-import { ListView, View } from 'react-native';
-import { Container, List, ListItem, Button, Text, Icon, Left } from 'native-base';
+import { FlatList, Item, View } from 'react-native';
+import { Container, Button, Text, Icon, Left } from 'native-base';
 
 const GroupListComponent = ({ 
   navigation, 
@@ -12,8 +12,6 @@ const GroupListComponent = ({
 }) => {
   navigation.addListener('willFocus', willFocus);
 
-  let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
   const pinLeftIcon = (
     <Left>
       <Icon name="md-arrow-up" />
@@ -23,10 +21,10 @@ const GroupListComponent = ({
   const renderGroup = group => {
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
-      <ListItem onPress={() => selectGroup(navigation, group.id, group.name) }>
+      <Item onPress={() => selectGroup(navigation, group.id, group.name) }>
         { group.pinned ? pinLeftIcon : <View /> }
         <Text style={{ fontWeight }}> {"  " + group.name} </Text>
-      </ListItem>
+      </Item>
     );
   };
 
@@ -49,9 +47,9 @@ const GroupListComponent = ({
 
   return (
     <Container>
-      <List 
+      <FlatList 
         containerStyle={{marginBottom: 20}}
-        dataSource={ds.cloneWithRows(ownGroups)}
+        dataSource={ownGroups}
         leftOpenValue={75}
         rightOpenValue={-75} 
         renderRow={renderGroup}
