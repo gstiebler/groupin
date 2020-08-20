@@ -85,6 +85,12 @@ describe('main', () => {
       unsubscribeStub.restore();
     });
 
+    it('getUserId', async () => {
+      setCurrentUser(userFixtures.robert);
+      const { id } = await server.getUserId();
+      expect(id).eql(userFixtures.robert._id.toHexString());
+    });
+
     it('getOwnGroups', async () => {
       setCurrentUser(userFixtures.robert);
       await rootActions.fetchOwnGroups(dispatch);
