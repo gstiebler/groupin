@@ -27,25 +27,27 @@ const Stack = createStackNavigator();
 
 const appStackNavigator = () => (
   <Stack.Navigator initialRouteName="GroupList">
-    <Stack.Screen name="GroupsSearch" component={GroupsSearch} options={{ title: 'Buscar grupos' }}/>
+    <Stack.Screen name="GroupsSearch" component={GroupsSearch} options={{ headerTitle: 'Buscar grupos' }}/>
     <Stack.Screen 
       name="GroupList" 
       key="GROUP_LIST"
       component={GroupList} 
-      options={{ 
-        title: 'Meus grupos',
+      options={({ navigation }) => ({
+        headerTitle: 'Meus grupos',
         headerBackTitle: null,
-        headerLeft: ({ navigation }) => (
+        headerLeft: () => (
           <Button transparent onPress={() => navigation.push('GroupsSearch')}>
             <Text>Buscar</Text>
           </Button>
         ),
-        headerRight: ({ navigation }) => (
+        headerRight: () => (
           <Button transparent>
-            <Icon name='add' onPress={() => navigation.push('NewGroup')}/>
+            <Icon name='add' onPress={() => {
+              navigation.push('NewGroup')
+            }}/>
           </Button>
         ),
-      }}
+      })}
     />
     <Stack.Screen 
       name="Chat" 
@@ -57,19 +59,19 @@ const appStackNavigator = () => (
     <Stack.Screen 
       name="TopicsList" 
       component={TopicsList} 
-      options={{ 
-        headerTitle: ({ navigation }) => (
+      options={({ navigation }) => ({
+        headerTitle: () => (
           <Text onPress={ () => navigation.push('GroupInfo', { groupId: navigation.state.params.groupId }) } >
             { navigation.state.params.groupName }
           </Text>
         ),
         headerBackTitle: null,
-        headerRight: ({ navigation }) => (
+        headerRight: () => (
           <Button transparent>
             <Icon name='add' onPress={() => navigation.push('NewTopic', { groupId: navigation.state.params.groupId })}/>
           </Button>
         ),
-      }}
+      })}
     />
     <Stack.Screen name="NewTopic" component={NewTopic} options={{ title: 'Novo tópico' }}/>
     <Stack.Screen name="NewGroup" component={NewGroup} options={{ title: 'Novo grupo' }}/>
@@ -107,7 +109,7 @@ const App = () => {
   init(navigate);
   return (
     <NavigationContainer ref={ navigationRef } >
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Home" headerMode="none" >
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen 
