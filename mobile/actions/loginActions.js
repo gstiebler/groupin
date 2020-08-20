@@ -122,7 +122,7 @@ export async function userLoggedIn({ dispatch, navigate, userId }) {
   dispatch({ type: USER_ID, payload: { userId } });
   await getAndUpdateFcmToken();
   await fetchOwnGroups(dispatch);
-  navigate('GroupList');
+  navigate('TabNavigator');
 }
  
 export const logout = (navigation) => async (dispatch/*, getState */) => {

@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => {
   return {
     willFocus: ({ state }) => dispatch(getGroupInfo(state.params.groupId)),
     onLeaveGroup: (navigation) => {
-      const onLeave = () => navigation.navigate('GroupList');
+      const onLeave = () => navigation.navigate({ key: 'GROUP_LIST' });
       dispatch(leaveGroup(navigation.state.params.groupId, onLeave));
     },
     onJoinGroup: (navigation) => {
