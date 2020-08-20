@@ -6,7 +6,7 @@ const schema = require('./graphqlSchema');
 const logger = require('./config/winston');
 const User = require('./db/schema/User');
 
-async function main(graphqlQuery, authFbToken) {
+async function main({ query, variables }, authFbToken) {
   try {
     // TODO: return only basic fields from the user, review all places that reads user.groups
     let user = null;
@@ -22,8 +22,8 @@ async function main(graphqlQuery, authFbToken) {
       phoneNumber = decodedToken.phone_number;
       user = _.isEmpty(firebaseId) ? null : await User.findOne({ uid: firebaseId });
     }
-    const result = await graphql(schema, graphqlQuery, rootValue, { user, firebaseId, phoneNumber });
-    logger.debug(JSON.stringify(graphqlQuery, null, 2));
+    const result = await graphql(schema, query, rootValue, { user, firebaseId, phoneNumber }, variables);
+    logger.debug(JSON.stringify(query, null, 2));
     logger.debug(JSON.stringify(result, null, 2));
     return result;
   } catch (error) {
