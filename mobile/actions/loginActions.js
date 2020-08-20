@@ -26,7 +26,7 @@ const updateFbUserToken = async (dispatch, fbUserToken) => {
 export const login = (navigation, phoneNumber) => async (dispatch/*, getState*/) => {
   dispatch({ type: LOGIN_PHONE_NUMBER, payload: { phoneNumber } });
   try {
-    const confirmResult = await firebase.auth().signInWithPhoneNumber(phoneNumber);
+    const confirmResult = await auth().signInWithPhoneNumber(phoneNumber);
     dispatch({ type: FB_CONFIRM_RESULT, payload: { confirmResult } });
     navigation.navigate('ConfirmationCode');
   } catch(error) {
