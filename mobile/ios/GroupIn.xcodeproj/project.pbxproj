@@ -66,6 +66,7 @@
 		8BA6CC193E3D40C7A797CE92 /* Pods-GroupIn-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupIn-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-GroupIn-tvOS/Pods-GroupIn-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		94F302E5B44242792597743E /* Pods-GroupIn-GroupInTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupIn-GroupInTests.debug.xcconfig"; path = "Target Support Files/Pods-GroupIn-GroupInTests/Pods-GroupIn-GroupInTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C2C421E224EDF23A0030E1DB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C2C421E424EDF6FD0030E1DB /* GroupIn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = GroupIn.entitlements; path = GroupIn/GroupIn.entitlements; sourceTree = "<group>"; };
 		DEC2787D03D33F7F40DE0A82 /* Pods-GroupIn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupIn.release.xcconfig"; path = "Target Support Files/Pods-GroupIn/Pods-GroupIn.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -127,6 +128,7 @@
 		13B07FAE1A68108700A75B9A /* GroupIn */ = {
 			isa = PBXGroup;
 			children = (
+				C2C421E424EDF6FD0030E1DB /* GroupIn.entitlements */,
 				C2C421E224EDF23A0030E1DB /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -297,6 +299,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 8NY9K3Y36X;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -669,7 +672,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = GroupIn/GroupIn.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8NY9K3Y36X;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = GroupIn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -678,7 +683,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stiebler.groupin;
 				PRODUCT_NAME = GroupIn;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -692,7 +697,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = GroupIn/GroupIn.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8NY9K3Y36X;
 				INFOPLIST_FILE = GroupIn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -700,7 +707,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stiebler.groupin;
 				PRODUCT_NAME = GroupIn;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
