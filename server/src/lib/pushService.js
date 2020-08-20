@@ -11,7 +11,7 @@ const pushService = {
     };
     const config = {
       credential: admin.credential.cert(serviceAccount),
-      databaseURL: 'https://groupin-4700b.firebaseio.com',
+      databaseURL: process.env.FIREBASE_DATABASE_URL,
     };
     admin.initializeApp(config);
 
