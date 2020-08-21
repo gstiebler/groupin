@@ -52,23 +52,23 @@ const appStackNavigator = () => (
     <Stack.Screen 
       name="Chat" 
       component={Chat} 
-      options={({ navigation }) => ({
-        title: navigation.state.params.topicName,
+      options={({ route }) => ({
+        title: route.params.topicName,
       })}
     />
     <Stack.Screen 
       name="TopicsList" 
       component={TopicsList} 
-      options={({ navigation }) => ({
+      options={({ navigation, route }) => ({
         headerTitle: () => (
-          <Text onPress={ () => navigation.push('GroupInfo', { groupId: navigation.state.params.groupId }) } >
-            { navigation.state.params.groupName }
+          <Text onPress={ () => navigation.push('GroupInfo', { groupId: route.params.groupId }) } >
+            { route.params.groupName }
           </Text>
         ),
         headerBackTitle: null,
         headerRight: () => (
           <Button transparent>
-            <Icon name='add' onPress={() => navigation.push('NewTopic', { groupId: navigation.state.params.groupId })}/>
+            <Icon name='add' onPress={() => navigation.push('NewTopic', { groupId: route.params.groupId })}/>
           </Button>
         ),
       })}
