@@ -1,46 +1,82 @@
 import React from 'react';
-import { FlatList, Item, View } from 'react-native';
-import { Container, Button, Text, Icon, Left } from 'native-base';
+import { TouchableHighlight, View, StyleSheet } from 'react-native';
+import { Container, Button, Text, Icon, ListItem, Body, Left } from 'native-base';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
-  console.log(route);
-  navigation.addListener('focus', () => willFocus(route));
-  navigation.addListener('blur', willLeave);
+  React.useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
+  React.useEffect(() => navigation.addListener('blur', willLeave), [navigation]);
 
-  const pinLeftIcon = (
-    <Left>
-      <Icon name="md-arrow-up" />
-    </Left>
-  );
-
-  const renderTopic = topic => {
+  const renderTopic = ({ item: topic }) => {
     const fontWeight = topic.unread ? 'bold' : 'normal';
     return (
-      <Item onPress={() => selectTopic(navigation, topic.id, topic.name) }>
-        { topic.pinned ? pinLeftIcon : <View /> }
-        <Text style={{ fontWeight }}> {"  " + topic.name} </Text>
-      </Item>
+      <ListItem icon style={{ backgroundColor: "white", opacity: 1 }}>
+        <Left>
+          { topic.pinned ? <Icon name="md-arrow-up" /> : <View /> }
+        </Left>
+        <Body>
+          <TouchableHighlight 
+            style={styles.rowFront}
+            onPress={() => selectTopic(navigation, topic.id, topic.name) }
+          >
+            <View>
+              <Text style={{ fontWeight }}>{ topic.name } </Text>
+            </View>
+          </TouchableHighlight>
+        </Body>
+      </ListItem>
     );
   };
 
-  const renderPinButton = (topic/*, secId, rowId, rowMap*/) => {
-    const pinIconName = topic.pinned ? 'md-arrow-down' : 'md-arrow-up';
+  const renderHiddenItem = (data) => {
+    const group = data.item;
+    const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
-      <Button full onPress={() => onPinClicked(topic) }>
-        <Icon active name={pinIconName} />
-      </Button>
+      <View style={styles.rowBack}>
+        <View />
+        <Button 
+          style={styles.backRightBtn}
+          full onPress={() => onPinClicked(group) }>
+          <Icon active name={pinIconName} />
+        </Button>
+      </View>
     );
-  }
+  };
 
   return (
     <Container>
-      <FlatList 
-        containerStyle={{marginBottom: 20}}
+      <SwipeListView
         data={topics}
         rightOpenValue={-75} 
-        renderRow={renderTopic} 
-        renderRightHiddenRow={renderPinButton}    
+        renderItem={renderTopic}
+        renderHiddenItem={renderHiddenItem}   
       />
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  rowFront: {
+      alignItems: 'center',
+      backgroundColor: 'white',
+      borderBottomColor: 'black',
+      borderBottomWidth: 1,
+      justifyContent: 'center',
+      height: 50,
+  },
+  rowBack: {
+      alignItems: 'center',
+      backgroundColor: '#DDD',
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingLeft: 15,
+  },
+  backRightBtn: {
+      alignItems: 'center',
+      bottom: 0,
+      justifyContent: 'center',
+      top: 0,
+      width: 75,
+  },
+});
