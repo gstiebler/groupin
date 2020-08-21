@@ -6,7 +6,6 @@ const {
   SET_MESSAGES,
   CURRENT_GROUP_INFO,
   FCM_TOKEN,
-  FB_USER_TOKEN,
   USER_ID,
   CURRENTLY_VIEWED_GROUP_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
@@ -30,7 +29,6 @@ const initialState = {
   ],
   ownGroups: [],
   topics: [], // TODO: change name to `topicsOfGroup`
-  fbUserToken: null,
   fcmToken: null,
   userId: '',
   currentlyViewedGroupId: null,
@@ -54,7 +52,6 @@ const reducerFunctions = {
   [CURRENTLY_VIEWED_TOPIC_ID]: mutationHelper('currentlyViewedTopicId'),
   [USER_ID]: mutationHelper('userId'),
   [FCM_TOKEN]: mutationHelper('fcmToken'),
-  [FB_USER_TOKEN]: mutationHelper('fbUserToken'),
   [HAS_OLDER_MESSAGES]: mutationHelper('hasOlderMessages'),
   [CURRENT_GROUP_INFO]: mutationHelper('currentGroupInfo'),
 };

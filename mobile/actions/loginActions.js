@@ -5,23 +5,14 @@ import auth from '@react-native-firebase/auth';
 import { 
   USER_ID,
   FB_CONFIRM_RESULT,
-  FB_USER_TOKEN,
   LOGIN_PHONE_NUMBER,
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
 const graphqlConnect = require('../lib/graphqlConnect');
-import localStorage from '../lib/localStorage';
-import _ from 'lodash';
 import { getAndUpdateFcmToken } from '../lib/fcm';
 
-const FIREBASE_USER_TOKEN_LS_KEY = 'firebaseUserToken';
-
-const updateFbUserToken = async (dispatch, fbUserToken) => {
-  await localStorage.setItem(FIREBASE_USER_TOKEN_LS_KEY, fbUserToken);
-  graphqlConnect.setToken(fbUserToken);
-  dispatch({ type: FB_USER_TOKEN, payload: { fbUserToken } });
-}
+const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
 export const login = (navigation, phoneNumber) => async (dispatch/*, getState*/) => {
   dispatch({ type: LOGIN_PHONE_NUMBER, payload: { phoneNumber } });
@@ -52,12 +43,11 @@ export const login = (navigation, phoneNumber) => async (dispatch/*, getState*/)
 
 export const init = async (navigate, dispatch) => {
   try {
-    const localFbUserToken = await localStorage.getItem(FIREBASE_USER_TOKEN_LS_KEY);
     const firebaseUser = auth().currentUser;
     // check if user is already logged in
-    if (!_.isEmpty(localFbUserToken) && firebaseUser) {
-      const fbToken = await firebaseUser.getIdToken(true);  
-      await updateFbUserToken(dispatch, fbToken);
+    if (firebaseUser) {
+      const fbUserToken = await firebaseUser.getIdToken(true);  
+      updateFbUserToken(fbUserToken);
       const userId = (await server.getUserId()).id;
       if (!userId) {
         throw new Error('Error getting user ID');
@@ -67,8 +57,8 @@ export const init = async (navigate, dispatch) => {
 
     auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
-        const fbToken = await fbUser.getIdToken(true);
-        await updateFbUserToken(dispatch, fbToken);
+        const fbUserToken = await fbUser.getIdToken(true);
+        updateFbUserToken(fbUserToken);
       } else {
         console.log('no user yet');
       }
@@ -102,10 +92,10 @@ export const confirmationCodeReceived = ({ navigation, confirmationCode }) => as
 
   // const fcmToken = await firebase.messaging().getToken();
   const fbUser = auth().currentUser;
-  const fbToken = await fbUser.getIdToken(true);  
-  console.log(`Confirmation code, token: ${fbToken}`);
+  const fbUserToken = await fbUser.getIdToken(true);  
+  console.log(`Confirmation code, token: ${fbUserToken}`);
 
-  await updateFbUserToken(dispatch, fbToken);
+  updateFbUserToken(fbUserToken);
   const userId = (await server.getUserId()).id;
   if (userId === 'NO USER') {
     navigation.navigate('Register');
@@ -127,7 +117,6 @@ export async function userLoggedIn({ dispatch, navigate, userId }) {
  
 export const logout = (navigation) => async (dispatch/*, getState */) => {
   try {
-    await localStorage.setItem(FIREBASE_USER_TOKEN_LS_KEY, '');
     dispatch({ type: USER_ID, payload: { userId: '' } });
     await auth().signOut();
     navigation.navigate('Login');

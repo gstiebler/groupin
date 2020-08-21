@@ -77,9 +77,6 @@ async function getMessagesOfCurrentTopic(store, storage) {
 
 const updateFcmToken = async (store, fcmToken) => {
   store.dispatch({ type: FCM_TOKEN, payload: { fcmToken } });
-  if (_.isEmpty(store.getState().base.fbUserToken)) {
-    throw new Error('Firebase user token is not set');
-  }
   await server.updateFcmToken(fcmToken);
 }
 const setTopicPin = ({ topicId, pinned }) => async (dispatch, getState) => {

@@ -6,7 +6,6 @@ module.exports = {
   SET_TOPICS: "SET_TOPICS",
   SET_MESSAGES: "set messages",
   FCM_TOKEN: 'firebase messaging token',
-  FB_USER_TOKEN: 'firebase user token',
   USER_ID: 'user ID',
   HAS_OLDER_MESSAGES: 'has older messages',
 
