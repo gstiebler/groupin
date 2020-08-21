@@ -112,7 +112,7 @@ const App = () => {
   init(navigate);
   return (
     <NavigationContainer ref={ navigationRef } >
-      <Stack.Navigator initialRouteName="Home" headerMode="none" screenOptions={{ gestureEnabled: false }}>
+      <Stack.Navigator initialRouteName="Login" headerMode="none" screenOptions={{ gestureEnabled: false }}>
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen 

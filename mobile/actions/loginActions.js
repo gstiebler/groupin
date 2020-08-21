@@ -14,7 +14,7 @@ import { getAndUpdateFcmToken } from '../lib/fcm';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
-export const login = (navigation, phoneNumber) => async (dispatch/*, getState*/) => {
+export const login = (navigation, phoneNumber) => async (dispatch) => {
   dispatch({ type: LOGIN_PHONE_NUMBER, payload: { phoneNumber } });
   try {
     const confirmResult = await auth().signInWithPhoneNumber(phoneNumber);

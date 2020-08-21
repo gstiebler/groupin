@@ -13,7 +13,13 @@ const LoginComponent = ({
   navigation,
   onLogin,
 }) => {
-  const [phoneNumber, changePhoneNumber] = useState(0);
+  const [phoneNumber, changePhoneNumber] = useState('');
+  const [phoneRef, changePhoneRef] = useState(0);
+
+  const login = () => {
+    phoneRef.inputPhone.clear();
+    onLogin(navigation, phoneNumber);
+  }
   
   return (
     <SafeAreaView style={{ flex: 1 }} >
@@ -21,6 +27,7 @@ const LoginComponent = ({
         <Content contentContainerStyle={styles.container}>
           <Text style={ styles.title1 }>Login</Text>
           <PhoneInput 
+            ref={changePhoneRef}
             initialCountry='br'
             onChangePhoneNumber={changePhoneNumber}
             autoFormat={true}
@@ -28,7 +35,7 @@ const LoginComponent = ({
             cancelText='Cancelar'
             confirmText='Confirmar'
           />
-          <Button primary full onPress={() => onLogin(navigation, phoneNumber)}>
+          <Button primary full onPress={login}>
             <Text> Enviar </Text>
           </Button>
         </Content>
