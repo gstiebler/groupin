@@ -16,12 +16,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     willFocus: ({ params }) => dispatch(getGroupInfo(params.groupId)),
-    onLeaveGroup: (navigation) => {
-      const onLeave = () => navigation.navigate({ key: 'GROUP_LIST' });
-      dispatch(leaveGroup(navigation.state.params.groupId, onLeave));
+    onLeaveGroup: (navigation, groupId) => {
+      const onLeave = () => navigation.navigate('GroupList');
+      dispatch(leaveGroup(groupId, onLeave));
     },
-    onJoinGroup: (navigation) => {
-      const groupId = navigation.state.params.groupId;
+    onJoinGroup: (navigation, groupId) => {
       const onJoin = groupName => navigation.navigate('TopicsList', { groupId, groupName });
       dispatch(joinGroup(groupId, onJoin));
     },
