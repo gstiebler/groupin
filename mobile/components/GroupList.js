@@ -1,7 +1,8 @@
 import React from 'react';
 import { TouchableHighlight, View, StyleSheet } from 'react-native';
-import { Container, Button, Text, Icon, ListItem, Body, Left } from 'native-base';
+import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import * as _ from 'lodash';
 
 const GroupListComponent = ({ 
   navigation, 
@@ -51,7 +52,9 @@ const GroupListComponent = ({
     );
   };
 
-  return (
+  const getEmpty = () => <Text style={{ padding: 10 }}>Nenhum grupo ainda</Text>
+
+  return _.isEmpty(ownGroups) ? getEmpty() : (
     <Container>
       <SwipeListView
         data={ownGroups}

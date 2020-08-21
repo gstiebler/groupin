@@ -1,7 +1,8 @@
 import React from 'react';
 import { TouchableHighlight, View, StyleSheet } from 'react-native';
-import { Container, Button, Text, Icon, ListItem, Body, Left } from 'native-base';
+import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import * as _ from 'lodash';
 
 export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
   React.useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
@@ -41,7 +42,9 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
     );
   };
 
-  return (
+  const getEmpty = () => <Text style={{ padding: 10 }}>Nenhum tópico criado</Text>
+
+  return _.isEmpty(topics) ? getEmpty() : (
     <Container>
       <SwipeListView
         data={topics}
