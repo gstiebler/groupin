@@ -47,6 +47,7 @@
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
     "redux": "4",
+    "serverless": "^1.79.0",
     "serverless-domain-manager": "^3.3.0",
     "serverless-offline": "^6.5.0",
     "sinon": "4"
