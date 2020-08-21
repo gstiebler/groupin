@@ -105,6 +105,8 @@ async function createGroup({ groupName, visibility }, { user }) {
     },
   );
 
+  // TODO: add groupLatestRead
+
   return 'OK';
 }
 

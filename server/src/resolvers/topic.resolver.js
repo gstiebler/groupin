@@ -20,7 +20,6 @@ const { messageTypes } = require('../lib/constants');
 
 const oldDate = moment('2015-01-01').toDate();
 
-
 async function topicsOfGroup({ groupId, limit }, { user }) {
   if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
     throw new Error('User does not participate in the group');
@@ -72,6 +71,8 @@ async function createTopic({ topicName, groupId }, { user }) {
     topicCreatePromise,
     groupUpdatePromise,
   ]);
+
+  // TODO: add topicLatestRead
 
   const pushPayload = {
     type: messageTypes.NEW_TOPIC,
