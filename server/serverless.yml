@@ -112,6 +112,7 @@ functions:
       MONGODB_PW: ${env:MONGODB_PW}
       MONGODB_PROD_URL: ${env:MONGODB_PROD_URL}
       FIREBASE_PRIVATE_KEY: ${env:FIREBASE_PRIVATE_KEY}
+      FIREBASE_DATABASE_URL: ${FIREBASE_DATABASE_URL}
 
 # you can add CloudFormation resource templates here
 #resources:
