@@ -16,19 +16,15 @@ const GroupListComponent = ({
   const renderGroup = ({ item: group }) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
-      <ListItem icon style={{ backgroundColor: "white", opacity: 1 }}>
+      <ListItem icon style={{ backgroundColor: "white" }}>
         <Left>
           { group.pinned ? <Icon name="md-arrow-up" /> : <View /> }
         </Left>
         <Body>
-          <TouchableHighlight 
-            style={styles.rowFront}
+          <Text 
+            style={{ fontWeight }}
             onPress={() => selectGroup(navigation, group.id, group.name) }
-          >
-            <View>
-              <Text style={{ fontWeight }}>{ group.name } </Text>
-            </View>
-          </TouchableHighlight>
+          >{ group.name } </Text>
         </Body>
       </ListItem>
     );
@@ -40,7 +36,6 @@ const GroupListComponent = ({
     return (
       <View style={styles.rowBack}>
         <Button 
-          style={styles.leftRightBtn}
           full danger onPress={() => onLeaveGroup(group.id)}>
           <Icon active name="trash" />
         </Button>
@@ -68,28 +63,20 @@ const GroupListComponent = ({
 
 
 const styles = StyleSheet.create({
-  rowFront: {
-      alignItems: 'center',
-      backgroundColor: 'white',
-      borderBottomColor: 'black',
-      borderBottomWidth: 1,
-      justifyContent: 'center',
-      height: 50,
-  },
   rowBack: {
-      alignItems: 'center',
-      backgroundColor: '#DDD',
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingLeft: 15,
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
   },
   backRightBtn: {
-      alignItems: 'center',
-      bottom: 0,
-      justifyContent: 'center',
-      top: 0,
-      width: 75,
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    top: 0,
+    width: 75,
   },
 });
 

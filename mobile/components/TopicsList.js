@@ -15,14 +15,10 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
           { topic.pinned ? <Icon name="md-arrow-up" /> : <View /> }
         </Left>
         <Body>
-          <TouchableHighlight 
-            style={styles.rowFront}
+          <Text 
+            style={{ fontWeight }}
             onPress={() => selectTopic(navigation, topic.id, topic.name) }
-          >
-            <View>
-              <Text style={{ fontWeight }}>{ topic.name } </Text>
-            </View>
-          </TouchableHighlight>
+          >{ topic.name } </Text>
         </Body>
       </ListItem>
     );
@@ -56,14 +52,6 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
 }
 
 const styles = StyleSheet.create({
-  rowFront: {
-      alignItems: 'center',
-      backgroundColor: 'white',
-      borderBottomColor: 'black',
-      borderBottomWidth: 1,
-      justifyContent: 'center',
-      height: 50,
-  },
   rowBack: {
       alignItems: 'center',
       backgroundColor: '#DDD',
