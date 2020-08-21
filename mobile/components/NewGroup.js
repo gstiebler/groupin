@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Content, Form, Item, Input, Button, Text, Picker } from 'native-base';
+import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
+import {Picker} from '@react-native-community/picker';
 import { groupVisibility } from '../constants/domainConstants';
 
 const styles = StyleSheet.create({
@@ -31,7 +32,7 @@ const NewGroupComponent = ({ navigation, onCreate }) => {
           <Item>
             <Picker
               selectedValue={visibility}
-              style={{height: 50, width: 100}}
+              style={{height: 50, width: 100, paddingTop: 50}}
               onValueChange={setVisibility}>
               { visibilities }
             </Picker>
