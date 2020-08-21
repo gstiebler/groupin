@@ -3,10 +3,9 @@ import { SafeAreaView } from 'react-native';
 import { Container, Content, Button, Text } from 'native-base';
 import styles from '../Style';
 
-const GroupInfoComponent = ({ navigation, groupInfo, willFocus, willLeave, onJoinGroup, onLeaveGroup }) => {
-
-  navigation.addListener('focus', willFocus);
-  navigation.addListener('blur', willLeave);
+const GroupInfoComponent = ({ navigation, route, groupInfo, willFocus, willLeave, onJoinGroup, onLeaveGroup }) => {
+  React.useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
+  React.useEffect(() => navigation.addListener('blur', willLeave), [navigation]);
 
   const joinButton = (
     <Button block success onPress={() => onJoinGroup(navigation, groupInfo._id)} >

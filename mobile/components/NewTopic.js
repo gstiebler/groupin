@@ -10,9 +10,10 @@ const styles = StyleSheet.create({
 
 const NewTopicComponent = ({ 
   navigation,
+  route,
   onCreate,
 }) => {
-  const [name, setName] = useState(0);
+  const [name, setName] = useState('');
 
   return (
     <Container style={styles.basic} >
@@ -27,7 +28,7 @@ const NewTopicComponent = ({
             />
           </Item>
         </Form>
-        <Button block success onPress={() => onCreate(navigation, name)} >
+        <Button block success onPress={() => onCreate(navigation, route, name)} >
           <Text>Criar tópico</Text>
         </Button>
       </Content>

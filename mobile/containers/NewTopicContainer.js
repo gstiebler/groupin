@@ -12,7 +12,7 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onCreate: (navigator, name) => dispatch(createTopic(navigator, navigator.state.params.groupId, name)),
+    onCreate: (navigator, { params }, name) => dispatch(createTopic(navigator, params.groupId, name)),
   };
 };
 
