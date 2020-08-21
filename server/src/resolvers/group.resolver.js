@@ -71,9 +71,9 @@ async function findGroups({ searchText, limit }, { user }) {
     throw new Error('Only logged in users can search for groups');
   }
   const trimmedSearchText = searchText.trim();
-  const byFriedlyId = await Group.findOne({ friendlyId: trimmedSearchText });
-  if (byFriedlyId) {
-    return [byFriedlyId];
+  const byFriendlyId = await Group.findOne({ friendlyId: trimmedSearchText });
+  if (byFriendlyId) {
+    return [byFriendlyId];
   }
 
   const boundedLimit = Math.min(limit, numMaxReturnedItems);
