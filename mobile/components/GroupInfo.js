@@ -5,8 +5,8 @@ import styles from '../Style';
 
 const GroupInfoComponent = ({ navigation, groupInfo, willFocus, willLeave, onJoinGroup, onLeaveGroup }) => {
 
-  navigation.addListener('willFocus', willFocus);
-  navigation.addListener('willBlur', willLeave);
+  navigation.addListener('focus', willFocus);
+  navigation.addListener('blur', willLeave);
 
   const joinButton = (
     <Button block success onPress={() => onJoinGroup(navigation, groupInfo._id)} >

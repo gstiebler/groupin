@@ -17,7 +17,7 @@ const GroupSearchComponent = ({
   willLeave,
   // onBack,
 }) => {
-  navigation.addListener('willBlur', willLeave);
+  navigation.addListener('blur', willLeave);
 
   const renderGroup = (group) => (
     <ListItem button onPress={ () => onGroupSelected(navigation, group.id) }>

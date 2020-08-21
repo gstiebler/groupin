@@ -21,7 +21,7 @@ const SettingsComponent = ({
   navigation,
   logout,
 }) => {  
-  // navigation.addListener('willFocus', willFocus);
+  // navigation.addListener('focus', willFocus);
 
   const header = (
     <Header>

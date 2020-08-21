@@ -52,9 +52,9 @@ const appStackNavigator = () => (
     <Stack.Screen 
       name="Chat" 
       component={Chat} 
-      options={{ 
-        title: ({ navigation }) => navigation.state.params.topicName,
-      }}
+      options={({ navigation }) => ({
+        title: navigation.state.params.topicName,
+      })}
     />
     <Stack.Screen 
       name="TopicsList" 
