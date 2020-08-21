@@ -10,17 +10,19 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
   const renderTopic = ({ item: topic }) => {
     const fontWeight = topic.unread ? 'bold' : 'normal';
     return (
-      <ListItem icon style={{ backgroundColor: "white", opacity: 1 }}>
-        <Left>
-          { topic.pinned ? <Icon name="md-arrow-up" /> : <View /> }
-        </Left>
-        <Body>
+      <TouchableHighlight
+        onPress={() => console.log('You touched me')}
+        style={styles.rowFront}
+        underlayColor={'#AAA'}
+      >
+        <View style={styles.frontView}>   
+          { topic.pinned ? <Icon name="md-arrow-up" /> : <View style={{ paddingLeft: 10 }}/> }
           <Text 
             style={{ fontWeight }}
             onPress={() => selectTopic(navigation, topic.id, topic.name) }
           >{ topic.name } </Text>
-        </Body>
-      </ListItem>
+        </View>
+      </TouchableHighlight>
     );
   };
 
@@ -43,7 +45,7 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
     <Container>
       <SwipeListView
         data={topics}
-        rightOpenValue={-75} 
+        rightOpenValue={-50} 
         renderItem={renderTopic}
         renderHiddenItem={renderHiddenItem}   
       />
@@ -52,19 +54,40 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
 }
 
 const styles = StyleSheet.create({
+  frontView: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  rowFront: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    height: 50,
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+  },
   rowBack: {
-      alignItems: 'center',
-      backgroundColor: '#DDD',
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingLeft: 15,
+    height: 50,
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  backLeftBtn: {
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
   },
   backRightBtn: {
-      alignItems: 'center',
-      bottom: 0,
-      justifyContent: 'center',
-      top: 0,
-      width: 75,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
   },
 });
