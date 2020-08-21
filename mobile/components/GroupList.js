@@ -1,6 +1,7 @@
 import React from 'react';
-import { FlatList, Item, View } from 'react-native';
-import { Container, Button, Text, Icon, Left } from 'native-base';
+import { TouchableHighlight, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Container, Button, Text, Icon } from 'native-base';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 const GroupListComponent = ({ 
   navigation, 
@@ -10,54 +11,94 @@ const GroupListComponent = ({
   onPinClicked,
   willFocus,
 }) => {
-  navigation.addListener('willFocus', willFocus);
-
-  const pinLeftIcon = (
-    <Left>
-      <Icon name="md-arrow-up" />
-    </Left>
-  );
+  navigation.addListener('focus', willFocus);
   
-  const renderGroup = group => {
+  const renderGroup = ({ item: group }) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
-      <Item onPress={() => selectGroup(navigation, group.id, group.name) }>
-        { group.pinned ? pinLeftIcon : <View /> }
-        <Text style={{ fontWeight }}> {"  " + group.name} </Text>
-      </Item>
+      <TouchableHighlight 
+        style={styles.rowFront}
+        onPress={() => selectGroup(navigation, group.id, group.name) }
+      >
+        <View>
+          { group.pinned ? <Icon name="md-arrow-up" /> : <View /> }
+          <Text style={{ fontWeight }}> {"  " + group.name} </Text>
+        </View>
+      </TouchableHighlight>
     );
   };
 
-  const renderDeleteButton = (group /*, secId, rowId, rowMap */) => {
-    return (
-      <Button full danger onPress={() => onLeaveGroup(group.id)}>
-        <Icon active name="trash" />
-      </Button>
-    );
-  }
-
-  const renderPinButton = (group /* , secId, rowId, rowMap */) => {
+  const renderHiddenItem = (data) => {
+    const group = data.item;
     const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
-      <Button full onPress={() => onPinClicked(group) }>
-        <Icon active name={pinIconName} />
-      </Button>
+      <View style={styles.rowBack}>
+        <Button 
+          style={styles.leftRightBtn}
+          full danger onPress={() => onLeaveGroup(group.id)}>
+          <Icon active name="trash" />
+        </Button>
+        <Button 
+          style={styles.backRightBtn}
+          full onPress={() => onPinClicked(group) }>
+          <Icon active name={pinIconName} />
+        </Button>
+      </View>
     );
-  }
+  };
 
   return (
-    <Container>
-      <FlatList 
-        containerStyle={{marginBottom: 20}}
-        dataSource={ownGroups}
+    <Container style={styles.container}>
+      <SwipeListView
+        data={ownGroups}
         leftOpenValue={75}
         rightOpenValue={-75} 
-        renderRow={renderGroup}
-        renderLeftHiddenRow={renderDeleteButton}   
-        renderRightHiddenRow={renderPinButton}    
+        renderItem={renderGroup}
+        renderHiddenItem={renderHiddenItem}   
       />
     </Container>
   );
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+      backgroundColor: 'white',
+      flex: 1,
+  },
+  backTextWhite: {
+      color: '#FFF',
+  },
+  rowFront: {
+      alignItems: 'center',
+      backgroundColor: 'white',
+      borderBottomColor: 'black',
+      borderBottomWidth: 1,
+      justifyContent: 'center',
+      height: 50,
+  },
+  rowBack: {
+      alignItems: 'center',
+      backgroundColor: '#DDD',
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingLeft: 15,
+  },
+  backRightBtn: {
+      alignItems: 'center',
+      bottom: 0,
+      justifyContent: 'center',
+      top: 0,
+      width: 75,
+  },
+  backLeftBtn: {
+      alignItems: 'center',
+      bottom: 0,
+      justifyContent: 'center',
+      top: 0,
+      width: 75,
+  },
+});
 
 export default GroupListComponent;
