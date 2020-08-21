@@ -18,7 +18,7 @@ const GroupListComponent = ({
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
       <TouchableHighlight
-        onPress={() => console.log('You touched me')}
+        onPress={() => selectGroup(navigation, group.id, group.name) }
         style={styles.rowFront}
         underlayColor={'#AAA'}
       >

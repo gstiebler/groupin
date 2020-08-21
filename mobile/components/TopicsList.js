@@ -12,7 +12,7 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
     const fontWeight = topic.unread ? 'bold' : 'normal';
     return (
       <TouchableHighlight
-        onPress={() => console.log('You touched me')}
+      onPress={() => selectTopic(navigation, topic.id, topic.name) }
         style={styles.rowFront}
         underlayColor={'#AAA'}
       >

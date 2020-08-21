@@ -121,6 +121,6 @@ export const logout = (navigation) => async (dispatch/*, getState */) => {
     await auth().signOut();
     navigation.navigate('Login');
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

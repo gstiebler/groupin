@@ -27,7 +27,7 @@ export async function init(navigateFn) {
       console.log('User has authorized messaging');
       startMessageListener();
     } catch (error) {
-      console.log('User has not authorized messaging');
+      console.error('User has not authorized messaging');
     }
   }
 
