@@ -61,7 +61,10 @@ const appStackNavigator = () => (
       component={TopicsList} 
       options={({ navigation, route }) => ({
         headerTitle: () => (
-          <Text onPress={ () => navigation.push('GroupInfo', { groupId: route.params.groupId }) } >
+          <Text 
+            style={{ fontWeight: 'bold' }}
+            onPress={ () => navigation.push('GroupInfo', { groupId: route.params.groupId }) } 
+          >
             { route.params.groupName }
           </Text>
         ),
