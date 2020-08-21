@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableHighlight, View, StyleSheet } from 'react-native';
-import { Container, Button, Text, Icon } from 'native-base';
+import { Container, Button, Text, Icon, ListItem, Body, Left } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 const GroupListComponent = ({ 
@@ -16,15 +16,21 @@ const GroupListComponent = ({
   const renderGroup = ({ item: group }) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
-      <TouchableHighlight 
-        style={styles.rowFront}
-        onPress={() => selectGroup(navigation, group.id, group.name) }
-      >
-        <View>
+      <ListItem icon style={{ backgroundColor: "white", opacity: 1 }}>
+        <Left>
           { group.pinned ? <Icon name="md-arrow-up" /> : <View /> }
-          <Text style={{ fontWeight }}> {"  " + group.name} </Text>
-        </View>
-      </TouchableHighlight>
+        </Left>
+        <Body>
+          <TouchableHighlight 
+            style={styles.rowFront}
+            onPress={() => selectGroup(navigation, group.id, group.name) }
+          >
+            <View>
+              <Text style={{ fontWeight }}>{ group.name } </Text>
+            </View>
+          </TouchableHighlight>
+        </Body>
+      </ListItem>
     );
   };
 
@@ -48,10 +54,10 @@ const GroupListComponent = ({
   };
 
   return (
-    <Container style={styles.container}>
+    <Container>
       <SwipeListView
         data={ownGroups}
-        leftOpenValue={75}
+        leftOpenValue={50}
         rightOpenValue={-75} 
         renderItem={renderGroup}
         renderHiddenItem={renderHiddenItem}   
@@ -62,13 +68,6 @@ const GroupListComponent = ({
 
 
 const styles = StyleSheet.create({
-  container: {
-      backgroundColor: 'white',
-      flex: 1,
-  },
-  backTextWhite: {
-      color: '#FFF',
-  },
   rowFront: {
       alignItems: 'center',
       backgroundColor: 'white',
@@ -86,13 +85,6 @@ const styles = StyleSheet.create({
       paddingLeft: 15,
   },
   backRightBtn: {
-      alignItems: 'center',
-      bottom: 0,
-      justifyContent: 'center',
-      top: 0,
-      width: 75,
-  },
-  backLeftBtn: {
       alignItems: 'center',
       bottom: 0,
       justifyContent: 'center',

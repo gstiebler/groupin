@@ -26,8 +26,8 @@ export function navigate(name, params) {
 const Stack = createStackNavigator();
 
 const appStackNavigator = () => (
-  <Stack.Navigator initialRouteName="GroupList">
-    <Stack.Screen name="GroupsSearch" component={GroupsSearch} options={{ headerTitle: 'Buscar grupos' }}/>
+  <Stack.Navigator initialRouteName="GroupList" options={{ gestureEnabled: false }}>
+    <Stack.Screen name="GroupsSearch" component={GroupsSearch} screenOptions={{ headerTitle: 'Buscar grupos' }}/>
     <Stack.Screen 
       name="GroupList" 
       key="GROUP_LIST"
@@ -109,7 +109,7 @@ const App = () => {
   init(navigate);
   return (
     <NavigationContainer ref={ navigationRef } >
-      <Stack.Navigator initialRouteName="Home" headerMode="none" >
+      <Stack.Navigator initialRouteName="Home" headerMode="none" screenOptions={{ gestureEnabled: false }}>
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen 
