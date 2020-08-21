@@ -7,6 +7,10 @@ const messageResolver = require('./resolvers/message.resolver');
 const groupResolver = require('./resolvers/group.resolver');
 const topicResolver = require('./resolvers/topic.resolver');
 
+async function getHello({ pass }) {
+  return pass === 'foca' ? 'OK' : 'ERROR';
+}
+
 async function getUserId(args, { user }) {
   if (!user) {
     return { id: 'NO USER' };
@@ -43,6 +47,7 @@ async function updateFcmToken({ fcmToken }, { user }) {
 }
 
 module.exports = {
+  getHello,
   getUserId,
   register,
   updateFcmToken,

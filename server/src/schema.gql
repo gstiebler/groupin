@@ -49,6 +49,8 @@ type Error {
 
 type Query {
 
+  getHello (pass: String!): String
+
   topicsOfGroup (
     groupId: String,
     limit: Float,
