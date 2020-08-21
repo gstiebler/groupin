@@ -11,7 +11,7 @@ const GroupListComponent = ({
   onPinClicked,
   willFocus,
 }) => {
-  navigation.addListener('focus', willFocus);
+  React.useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
   
   const renderGroup = ({ item: group }) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
