@@ -2,8 +2,9 @@ import React from 'react';
 import { FlatList, Item, View } from 'react-native';
 import { Container, Button, Text, Icon, Left } from 'native-base';
 
-export default ({ navigation, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
-  navigation.addListener('focus', willFocus);
+export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
+  console.log(route);
+  navigation.addListener('focus', () => willFocus(route));
   navigation.addListener('blur', willLeave);
 
   const pinLeftIcon = (
