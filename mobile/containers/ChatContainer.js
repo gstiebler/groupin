@@ -23,18 +23,18 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onSend: messages => dispatch(sendMessages(messages)),
-    willFocus: ({ state }) => {
+    willFocus: ({ params }) => {
       dispatch(onTopicOpened({ 
-        topicId: state.params.topicId, 
-        topicName: state.params.topicName, 
+        topicId: params.topicId, 
+        topicName: params.topicName, 
         storage,
         subscribeFn: (topicId) => { fcm.subscribeToTopic(topicId); },
       }));
     },
-    willLeave: ({ lastState }) => {
+    willLeave: ({ params }) => {
       dispatch(onTopicClosed({
-        topicId: lastState.params.topicId,
-        unsubscribeFn: (topicId) => { fcm.unsubscribeToTopic(topicId); },
+        topicId: params.topicId,
+        unsubscribeFn: (formattedTopicId) => { fcm.unsubscribeToTopic(formattedTopicId); },
       }));
     },
     onLoadEarlier: ({ state }) => dispatch(onOlderMessagesRequested(state.params.topicId)),

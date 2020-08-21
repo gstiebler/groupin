@@ -16,13 +16,10 @@ const styles = StyleSheet.create({
   },
 });
 
-
 const SettingsComponent = ({ 
   navigation,
   logout,
-}) => {  
-  // navigation.addListener('focus', willFocus);
-
+}) => {
   const header = (
     <Header>
       <Body>

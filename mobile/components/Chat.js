@@ -6,7 +6,8 @@ import {
 
 
 const ChatComponent = ({ 
-  navigation, 
+  navigation,
+  route,
   messages, 
   userId, 
   hasOlderMessages,
@@ -15,8 +16,8 @@ const ChatComponent = ({
   willFocus, 
   willLeave,
 }) => {  
-  navigation.addListener('focus', willFocus);
-  navigation.addListener('blur', willLeave);
+  React.useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
+  React.useEffect(() => navigation.addListener('blur', () => willLeave(route)), [navigation]);
 
   return (
     <Container>
