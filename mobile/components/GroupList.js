@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableHighlight, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { TouchableHighlight, View, StyleSheet } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
