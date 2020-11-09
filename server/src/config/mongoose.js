@@ -3,12 +3,7 @@ const logger = require('./winston');
 
 let db;
 async function init() {
-  const dbName = process.env.MONGODB_DB_NAME;
-  const port = process.env.MONGODB_PORT;
-  const dbHost = process.env.MONGODB_HOST;
-  const userPwStr = process.env.MONGODB_USER ? `${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@` : '';
-  const prodUrl = process.env.MONGODB_PROD_URL;
-  const mongoURL = `mongodb://${userPwStr}${dbHost}:${port}/${dbName}${prodUrl}`;
+  const mongoURL = process.env.MONGODB_URL;
   mongoose.Promise = global.Promise;
   mongoose.set('useFindAndModify', false);
 
