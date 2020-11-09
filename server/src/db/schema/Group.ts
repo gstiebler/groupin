@@ -1,9 +1,14 @@
-const mongoose = require('mongoose');
-const shortid = require('shortid');
+import {
+  Document,
+  model,
+  Schema,
+  Types,
+} from 'mongoose';
+import shortid from 'shortid';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = Schema.Types;
 
-const groupSchema = new mongoose.Schema({
+const groupSchema = new Schema({
   friendlyId: { type: String, default: shortid.generate },
   name: { type: String, required: true },
   imgUrl: { type: String },
@@ -14,6 +19,17 @@ const groupSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now, required: true },
 });
 
-const Group = mongoose.model('Group', groupSchema);
+export interface IGroup extends Document {
+  friendlyId?: string;
+  name: string;
+  imgUrl: string;
+  description?: string;
+  visibility: 'SECRET' | 'PUBLIC',
+  createdBy: Types.ObjectId;
+  createdAt?: number;
+  updatedAt?: number;
+};
 
-module.exports = Group;
+const Group = model<IGroup>('Group', groupSchema);
+
+export default Group;

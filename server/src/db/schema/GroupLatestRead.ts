@@ -2,16 +2,27 @@
  * Stores the latest moment the user saw a topic
  */
 
-const mongoose = require('mongoose');
+import {
+  Document,
+  model,
+  Schema,
+  Types,
+} from 'mongoose';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = Types;
 
-const groupLatestReadSchema = new mongoose.Schema({
+const groupLatestReadSchema = new Schema({
   userId: { type: ObjectId, ref: 'User', required: true },
   groupId: { type: ObjectId, ref: 'Group', required: true },
   latestMoment: { type: Date, default: Date.now, required: true },
 });
 
-const GroupLatestRead = mongoose.model('GroupLatestRead', groupLatestReadSchema);
+export interface IGroupLatestRead extends Document {
+  userId: Types.ObjectId;
+  groupId: Types.ObjectId;
+  latestMoment: Date;
+};
 
-module.exports = GroupLatestRead;
+const GroupLatestRead = model<IGroupLatestRead>('GroupLatestRead', groupLatestReadSchema);
+
+export default GroupLatestRead;

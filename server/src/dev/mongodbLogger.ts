@@ -1,6 +1,6 @@
-const winston = require('winston');
-const fs = require('fs');
-const mongoose = require('mongoose');
+import winston = require('winston');
+import fs = require('fs');
+import mongoose = require('mongoose');
 
 const { ObjectId } = mongoose.Types;
 
@@ -51,4 +51,4 @@ function addMongooseLogger() {
   });
 }
 
-module.exports = { addMongooseLogger };
+export default addMongooseLogger;

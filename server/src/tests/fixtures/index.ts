@@ -1,15 +1,15 @@
-const groupFixtures = require('./groupFixtures');
-const userFixtures = require('./userFixtures');
-const topicFixtures = require('./topicFixtures');
-const messageFixtures = require('./messageFixtures');
-const groupLatestReadFixtures = require('./groupLatestReadFixtures');
+import groupFixtures from './groupFixtures';
+import userFixtures from './userFixtures';
+import topicFixtures from './topicFixtures';
+import messageFixtures from './messageFixtures';
+import groupLatestReadFixtures from './groupLatestReadFixtures';
 
-const Group = require('../../db/schema/Group');
-const User = require('../../db/schema/User');
-const Topic = require('../../db/schema/Topic');
-const Message = require('../../db/schema/Message');
-const TopicLatestRead = require('../../db/schema/TopicLatestRead');
-const GroupLatestRead = require('../../db/schema/GroupLatestRead');
+import Group from '../../db/schema/Group';
+import User from '../../db/schema/User';
+import Topic from '../../db/schema/Topic';
+import Message from '../../db/schema/Message';
+import TopicLatestRead from '../../db/schema/TopicLatestRead';
+import GroupLatestRead from '../../db/schema/GroupLatestRead';
 
 async function initFixtures() {
   await Promise.all([

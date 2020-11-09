@@ -1,6 +1,6 @@
-const moment = require('moment');
-const userFixtures = require('./userFixtures');
-const { groupIds } = require('./preIds');
+import * as moment from 'moment';
+import userFixtures from './userFixtures';
+import { groupIds } from './preIds';
 
 const groupLatestReads = [
   {
@@ -10,4 +10,4 @@ const groupLatestReads = [
   },
 ];
 
-module.exports = groupLatestReads;
+export default groupLatestReads;

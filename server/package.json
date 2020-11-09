@@ -25,6 +25,8 @@
     "report-dir": ".coverage"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.165",
+    "@types/mongoose": "^5.7.37",
     "axios": "^0.19.2",
     "bluebird": "^3.7.1",
     "firebase-admin": "^7.1.1",
@@ -37,6 +39,7 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.33",
     "@types/body-parser": "^1.19.0",
     "@types/chai": "^4.2.14",
     "@types/dotenv": "^8.2.0",

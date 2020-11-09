@@ -1,14 +1,16 @@
-const _ = require('lodash');
-const { ObjectId } = require('mongoose').Types;
+import * as _ from 'lodash';
+import { Types } from 'mongoose';
 
-const Group = require('../db/schema/Group');
-const Message = require('../db/schema/Message');
-const Topic = require('../db/schema/Topic');
+import Group from '../db/schema/Group';
+import Message from '../db/schema/Message';
+import Topic from '../db/schema/Topic';
 
-const { messageTypes } = require('../lib/constants');
+import { messageTypes } from '../lib/constants';
 
-const pushService = require('../lib/pushService');
-const logger = require('../config/winston');
+import pushService from '../lib/pushService';
+import logger from '../config/winston';
+
+const { ObjectId } = Types;
 
 async function messagesOfTopic({ topicId, limit, afterId, beforeId }, { user }) {
   const topic = await Topic.findById(topicId);

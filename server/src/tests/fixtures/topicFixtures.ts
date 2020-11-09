@@ -1,11 +1,13 @@
-const { ObjectId } = require('mongoose').Types;
-const groupFixtures = require('./groupFixtures');
-const userFixtures = require('./userFixtures');
-const { topicIds } = require('./preIds');
+import * as mongoose from 'mongoose';
+import groupFixtures from './groupFixtures';
+import userFixtures from './userFixtures';
+import { topicIds } from './preIds';
+
+const { ObjectId } = mongoose.Schema.Types;
 
 const topics = {
   topic1Group1: {
-    _id: ObjectId(),
+    _id: new ObjectId('5fa9ad4b8e9d525251658a01'),
     name: 'Topic 1 Group 1',
     imgUrl: 't1g1_url',
     createdBy: userFixtures.alice._id,
@@ -42,4 +44,4 @@ const topics = {
   },
 };
 
-module.exports = topics;
+export default topics;

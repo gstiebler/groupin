@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 
 const { ObjectId } = mongoose.Schema.Types;
 
@@ -11,4 +11,4 @@ const messageSchema = new mongoose.Schema({
 
 const Message = mongoose.model('Message', messageSchema);
 
-module.exports = Message;
+export default Message;

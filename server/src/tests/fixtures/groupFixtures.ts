@@ -1,5 +1,5 @@
-const userFixtures = require('./userFixtures');
-const { groupIds } = require('./preIds');
+import userFixtures from './userFixtures';
+import { groupIds } from './preIds';
 
 const groups = {
   firstGroup: {
@@ -25,4 +25,4 @@ const groups = {
   },
 };
 
-module.exports = groups;
+export default groups;

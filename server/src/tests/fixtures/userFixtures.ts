@@ -1,9 +1,11 @@
-const { ObjectId } = require('mongoose').Types;
-const { groupIds, topicIds } = require('./preIds');
+import * as mongoose from 'mongoose';
+import { groupIds, topicIds } from './preIds';
+
+const { ObjectId } = mongoose.Schema.Types;
 
 const users = {
   alice: {
-    _id: ObjectId('507f1f77bcf86cd799430001'),
+    _id: new ObjectId('507f1f77bcf86cd799430001'),
     uid: '46894278465624393Alice',
     name: 'Alice',
     phoneNumber: '44448',
@@ -17,7 +19,7 @@ const users = {
     pinnedTopics: [],
   },
   robert: {
-    _id: ObjectId('507f1f77bcf86cd799430002'),
+    _id: new ObjectId('507f1f77bcf86cd799430002'),
     uid: '85076546477256749024Robert',
     name: 'Robert',
     phoneNumber: '55558',
@@ -39,4 +41,4 @@ const users = {
   },
 };
 
-module.exports = users;
+export default users;

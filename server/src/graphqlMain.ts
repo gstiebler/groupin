@@ -1,10 +1,10 @@
-const admin = require('firebase-admin');
-const { graphql } = require('graphql');
-const _ = require('lodash');
-const rootValue = require('./resolver');
-const schema = require('./graphqlSchema');
-const logger = require('./config/winston');
-const User = require('./db/schema/User');
+import * as admin from 'firebase-admin';
+import { graphql } from 'graphql';
+import * as _ from 'lodash';
+import rootValue from './resolver';
+import schema from './graphqlSchema';
+import logger from './config/winston';
+import User from './db/schema/User';
 
 async function main({ query, variables }, authFbToken) {
   try {

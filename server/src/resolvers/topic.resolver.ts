@@ -1,22 +1,20 @@
-const Promise = require('bluebird');
-const _ = require('lodash');
-const moment = require('moment');
-const { ObjectId } = require('mongoose').Types;
+import * as bluebird from 'bluebird';
+import Topic from '../db/schema/Topic';
+import _ = require('lodash');
+import * as moment from 'moment';
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
 
-const Group = require('../db/schema/Group');
-const User = require('../db/schema/User');
-const Topic = require('../db/schema/Topic');
-const TopicLatestRead = require('../db/schema/TopicLatestRead');
-const GroupLatestRead = require('../db/schema/GroupLatestRead');
+import Group from '../db/schema/Group';
+import User from '../db/schema/User';
+import TopicLatestRead, { ITopicLatestRead } from '../db/schema/TopicLatestRead';
+import GroupLatestRead from '../db/schema/GroupLatestRead';
 
-const pushService = require('../lib/pushService');
+import pushService from '../lib/pushService';
 
-const {
-  subscribeToTopic,
-  unsubscribeFromTopic,
-} = require('../lib/subscription');
+import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 
-const { messageTypes } = require('../lib/constants');
+import { messageTypes } from '../lib/constants';
 
 const oldDate = moment('2015-01-01').toDate();
 
@@ -33,7 +31,7 @@ async function topicsOfGroup({ groupId, limit }, { user }) {
     userId: user._id,
   });
   const pinnedTopicsSet = new Set(_.map(user.pinnedTopics, (t) => t.toHexString()));
-  const latestReadById = _.keyBy(latestTopicRead, (l) => l.topicId.toHexString());
+  const latestReadById = _.keyBy<ITopicLatestRead>(latestTopicRead, (l) => l.topicId.toString());
   return topics.map((topic) => {
     const latestReadObj = latestReadById[topic._id.toHexString()];
     // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
@@ -67,7 +65,7 @@ async function createTopic({ topicName, groupId }, { user }) {
     },
   );
 
-  const [createdTopic] = await Promise.all([
+  const [createdTopic] = await bluebird.all([
     topicCreatePromise,
     groupUpdatePromise,
   ]);

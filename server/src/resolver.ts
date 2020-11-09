@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-const User = require('./db/schema/User');
+import User from './db/schema/User';
 
-const { subscribeToAll } = require('./lib/subscription');
+import { subscribeToAll } from './lib/subscription';
 
-const messageResolver = require('./resolvers/message.resolver');
-const groupResolver = require('./resolvers/group.resolver');
-const topicResolver = require('./resolvers/topic.resolver');
+import messageResolver = require('./resolvers/message.resolver');
+import groupResolver = require('./resolvers/group.resolver');
+import topicResolver = require('./resolvers/topic.resolver');
 
 async function getHello({ pass }) {
   return pass === 'foca' ? 'OK' : 'ERROR';
@@ -46,7 +46,7 @@ async function updateFcmToken({ fcmToken }, { user }) {
   await subscribeToAll(user, fcmToken);
 }
 
-module.exports = {
+export default {
   getHello,
   getUserId,
   register,

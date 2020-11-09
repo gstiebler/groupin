@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
-const logger = require('./winston');
+import * as mongoose from 'mongoose';
+import * as logger from 'winston';
 
 let db;
-async function init() {
+export async function init() {
   const dbName = process.env.MONGODB_DB_NAME;
   const port = process.env.MONGODB_PORT;
   const dbHost = process.env.MONGODB_HOST;
   const userPwStr = process.env.MONGODB_USER ? `${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@` : '';
   const prodUrl = process.env.MONGODB_PROD_URL;
   const mongoURL = `mongodb://${userPwStr}${dbHost}:${port}/${dbName}${prodUrl}`;
-  mongoose.Promise = global.Promise;
+  require('mongoose').Promise = global.Promise;
   mongoose.set('useFindAndModify', false);
 
   await mongoose.disconnect();
@@ -22,12 +22,6 @@ async function init() {
   }
 }
 
-function disconnect() {
+export function disconnect() {
   return mongoose.disconnect();
 }
-
-module.exports = {
-  init,
-  disconnect,
-  db,
-};

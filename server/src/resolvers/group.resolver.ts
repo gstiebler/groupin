@@ -1,17 +1,18 @@
-const _ = require('lodash');
-const moment = require('moment');
-const { ObjectId } = require('mongoose').Types;
+import * as _ from 'lodash';
+import * as moment from 'moment';
+import { Types } from 'mongoose';
+import Group from '../db/schema/Group';
+import GroupLatestRead from '../db/schema/GroupLatestRead';
+import User from '../db/schema/User';
 
-const Group = require('../db/schema/Group');
-const GroupLatestRead = require('../db/schema/GroupLatestRead');
-const User = require('../db/schema/User');
+import { numMaxReturnedItems } from '../lib/constants';
 
-const { numMaxReturnedItems } = require('../lib/constants');
-
-const {
+import {
   subscribeToGroup,
   unsubscribeFromGroup,
-} = require('../lib/subscription');
+} from '../lib/subscription';
+
+const { ObjectId } = Types;
 
 const oldDate = moment('2015-01-01').toDate();
 

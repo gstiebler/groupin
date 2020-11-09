@@ -1,8 +1,13 @@
-const mongoose = require('mongoose');
+import {
+  Document,
+  model,
+  Schema,
+  Types,
+} from 'mongoose';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = Types;
 
-const topicSchema = new mongoose.Schema({
+const topicSchema = new Schema({
   name: { type: String, required: true },
   imgUrl: { type: String },
   createdBy: { type: ObjectId, ref: 'User', required: true },
@@ -11,6 +16,15 @@ const topicSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now, required: true },
 });
 
-const Topic = mongoose.model('Topic', topicSchema);
+export interface ITopic extends Document {
+  name: string,
+  imgUrl: string,
+  createdBy: Types.ObjectId,
+  groupId: Types.ObjectId,
+  createdAt?: number,
+  updatedAt?: number,
+}
 
-module.exports = Topic;
+const Topic = model<ITopic>('Topic', topicSchema);
+
+export default Topic;

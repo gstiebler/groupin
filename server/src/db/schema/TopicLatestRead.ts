@@ -1,17 +1,22 @@
 /**
  * Stores the latest moment the user saw a topic
  */
+import { Types, Schema, Document, model } from 'mongoose';
 
-const mongoose = require('mongoose');
+const { ObjectId } = Types;
 
-const { ObjectId } = mongoose.Schema.Types;
-
-const topicLatestReadSchema = new mongoose.Schema({
+const topicLatestReadSchema = new Schema({
   userId: { type: ObjectId, ref: 'User', required: true },
   topicId: { type: ObjectId, ref: 'Topic', required: true },
   latestMoment: { type: Date, default: Date.now, required: true },
 });
 
-const TopicLatestRead = mongoose.model('TopicLatestRead', topicLatestReadSchema);
+export interface ITopicLatestRead extends Document {
+  userId: Types.ObjectId;
+  topicId: Types.ObjectId;
+  latestMoment: Date;
+}
 
-module.exports = TopicLatestRead;
+const TopicLatestRead = model<ITopicLatestRead>('TopicLatestRead', topicLatestReadSchema);
+
+export default TopicLatestRead;
