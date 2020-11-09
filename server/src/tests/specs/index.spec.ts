@@ -1,16 +1,17 @@
-const { graphql } = require('graphql');
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiSubset = require('chai-subset');
-const chaiAsPromised = require('chai-as-promised');
-const dotenv = require('dotenv');
-const rootValue = require('../../resolver');
-const mongooseConfig = require('../../config/mongoose');
-const User = require('../../db/schema/User');
-const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
-const schema = require('../../graphqlSchema');
-const logger = require('../../config/winston');
-const { addMongooseLogger } = require('../../dev/mongodbLogger');
+import { graphql } from 'graphql';
+
+import sinon from 'sinon';
+import chai from 'chai';
+import chaiSubset from 'chai-subset';
+import chaiAsPromised from 'chai-as-promised';
+import dotenv from 'dotenv';
+import rootValue from '../../resolver';
+import mongooseConfig from '../../config/mongoose';
+import graphqlConnect from '../../../../mobile/lib/graphqlConnect';
+import schema from '../../graphqlSchema';
+import logger from '../../config/winston';
+import { addMongooseLogger } from '../../dev/mongodbLogger';
+import { User } from '../../db/schema/User';
 
 
 chai.use(chaiSubset);

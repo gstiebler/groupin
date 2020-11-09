@@ -1,3 +1,5 @@
+import server from '../../../../mobile/lib/server';
+
 const sinon = require('sinon');
 const moment = require('moment');
 const mongoose = require('mongoose');
@@ -6,7 +8,6 @@ const { ObjectId } = mongoose.Types;
 const { expect } = require('chai');
 const _ = require('lodash');
 const { createStore } = require('redux');
-const server = require('../../../../mobile/lib/server');
 const pushService = require('../../lib/pushService');
 const { initFixtures } = require('../fixtures');
 // const logger = require('../../config/winston');
@@ -56,7 +57,7 @@ function createMessages(numMessages, user, topic) {
 
 function createStorage() {
   return {
-    messagesByTopic: new Map([[]]),
+    messagesByTopic: new Map([]),
     getItem(topicId) { return this.messagesByTopic.get(topicId); },
     setItem(topicId, messages) { this.messagesByTopic.set(topicId, messages); },
   };

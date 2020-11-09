@@ -1,14 +1,14 @@
 {
   "name": "groupinserver",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "test": "mocha --recursive 'src/tests/**/*.spec.js' --reporter spec --timeout 5000",
-    "coverage": "nyc --cwd ../ mocha --recursive 'src/tests/**/*.spec.js' --reporter spec --timeout 5000",
-    "debug": "export SLS_DEBUG=* && node --inspect ./node_modules/.bin/serverless offline -s dev",
-    "offline": "serverless offline start --useSeparateProcesses",
-    "lint": "eslint ./"
+    "compile": "tsc --declaration",
+    "lint": "tslint --project tsconfig.json",
+    "prepublish": "npm run compile",
+    "test": "mocha --recursive 'lib/tests/**/*.spec.js' --reporter spec --timeout 5000"
   },
   "nyc": {
     "all": true,
@@ -27,10 +27,9 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bluebird": "^3.7.1",
-    "dotenv": "^6.0.0",
     "firebase-admin": "^7.1.1",
     "graphql": "^15.3.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.20",
     "md5": "^2.2.1",
     "moment": "^2.22.2",
     "mongoose": "^5.7.11",
@@ -38,19 +37,36 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
+    "@types/body-parser": "^1.19.0",
+    "@types/chai": "^4.2.14",
+    "@types/dotenv": "^8.2.0",
+    "@types/expect": "^24.3.0",
+    "@types/express": "^4.17.8",
+    "@types/mocha": "^8.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-subset": "^1.6.0",
-    "eslint": "^6.7.0",
+    "dotenv": "^6.2.0",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.18.2",
-    "mocha": "^5.2.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.6",
     "nyc": "^14.1.1",
+    "prettier": "^2.1.2",
     "redux": "4",
     "serverless": "^1.79.0",
     "serverless-domain-manager": "^4.2.0",
     "serverless-offline": "^6.5.0",
-    "sinon": "4"
+    "sinon": "4",
+    "ts-mocha": "^8.0.0",
+    "ts-node": "^9.0.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.0.5"
   },
   "engines": {
     "node": "12.14",
