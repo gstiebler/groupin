@@ -19,6 +19,8 @@ const groupSchema = new Schema({
   updatedAt: { type: Date, default: Date.now, required: true },
 });
 
+groupSchema.index({ name: 1, createdAt: 1 });
+
 export interface IGroup extends Document {
   friendlyId?: string;
   name: string;

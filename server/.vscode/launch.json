@@ -24,7 +24,7 @@
       "env": {
         "WINSTON_CONSOLE_LEVEL": "debug",
         "NODE_ENV": "test",
-        "MONGODB_DB_NAME": "groupin_test"
+        "MONGODB_URL": "mongodb://localhost:27017/groupin_test"
       }
     },
   ]
