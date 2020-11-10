@@ -6,10 +6,11 @@ import * as sinon from 'sinon';
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 
-import server from '../../../../mobile/lib/server';
+const server = require('../../../../mobile/lib/server');
 
 import * as chai from 'chai';
 import * as chaiAsPromised from "chai-as-promised";
+import * as chaiSubset from "chai-subset";
 import _ = require('lodash');
 import pushService from '../../lib/pushService';
 import { initFixtures } from '../fixtures';
@@ -83,6 +84,7 @@ describe('main', () => {
     before(async () => {
       chai.should();
       chai.use(chaiAsPromised);
+      chai.use(chaiSubset);
       await initFixtures();
       await Message.insertMany(messages50);
       subscribeStub = sinon.stub(pushService, 'subscribe');
