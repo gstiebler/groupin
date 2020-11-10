@@ -3,7 +3,7 @@ import groupFixtures from './groupFixtures';
 import userFixtures from './userFixtures';
 import { topicIds } from './preIds';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Types;
 
 const topics = {
   topic1Group1: {

@@ -1,21 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { graphql } from 'graphql';
 
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 import * as chai from 'chai';
-import chaiSubset from 'chai-subset';
-import chaiAsPromised from 'chai-as-promised';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import rootValue from '../../resolver';
 import * as mongooseConfig from '../../config/mongoose';
-import graphqlConnect from '../../../../mobile/lib/graphqlConnect';
 import schema from '../../graphqlSchema';
 import logger from '../../config/winston';
 import addMongooseLogger from '../../dev/mongodbLogger';
 import User from '../../db/schema/User';
 
-chai.use(chaiSubset);
-chai.use(chaiAsPromised);
+const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
 
 const currentUserHolder = { currentUser: null };
 

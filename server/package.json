@@ -8,7 +8,7 @@
     "compile": "tsc --declaration",
     "lint": "tslint --project tsconfig.json",
     "prepublish": "npm run compile",
-    "test": "mocha --recursive 'lib/tests/**/*.spec.js' --reporter spec --timeout 5000"
+    "test": "mocha"
   },
   "nyc": {
     "all": true,
@@ -25,6 +25,7 @@
     "report-dir": ".coverage"
   },
   "dependencies": {
+    "@types/chai-as-promised": "^7.1.3",
     "@types/lodash": "^4.14.165",
     "@types/mongoose": "^5.7.37",
     "axios": "^0.19.2",

@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import topicFixtures from './topicFixtures';
 import userFixtures from './userFixtures';
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Types;
 
 const messages = {
   message1topic1: {

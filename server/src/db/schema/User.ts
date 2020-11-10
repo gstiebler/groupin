@@ -1,8 +1,8 @@
-import * as mongoose from 'mongoose';
+import { Schema, Document, Types, model, Model } from 'mongoose';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = Types;
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   uid: { type: String, required: true, index: true }, // At this time, `uid` from Firebase Auth
   name: { type: String, required: true },
   email: { type: String },
@@ -18,6 +18,25 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now, required: true },
 });
 
-const User = mongoose.model('User', userSchema);
+export interface IUser extends Document {
+  uid: string;
+  name: string;
+  email?: string;
+  phoneNumber: string;
+  fcmToken?: string;
+  imgUrl?: string;
+  groups: {
+    id: Types.ObjectId;
+    pinned: boolean;
+  }[],
+  pinnedTopics?: Types.ObjectId[],
+  createdAt?: number;
+}
+
+export interface UserModel extends Model<IUser> {
+  test?: string;
+}
+
+const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;

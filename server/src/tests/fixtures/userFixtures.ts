@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import { groupIds, topicIds } from './preIds';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Types;
 
 const users = {
   alice: {

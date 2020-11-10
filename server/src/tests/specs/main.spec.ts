@@ -1,29 +1,35 @@
+// @ts-nocheck
+
+import { createStore } from 'redux';
+
+import * as sinon from 'sinon';
+import * as moment from 'moment';
+import * as mongoose from 'mongoose';
+
 import server from '../../../../mobile/lib/server';
 
-const sinon = require('sinon');
-const moment = require('moment');
-const mongoose = require('mongoose');
+import * as chai from 'chai';
+import * as chaiAsPromised from "chai-as-promised";
+import _ = require('lodash');
+import pushService from '../../lib/pushService';
+import { initFixtures } from '../fixtures';
+// const logger = require('../../config/winston');
+import userFixtures from '../fixtures/userFixtures';
+import groupFixtures from '../fixtures/groupFixtures';
+import topicFixtures from '../fixtures/topicFixtures';
+import messageFixtures from '../fixtures/messageFixtures';
+import { groupIds } from '../fixtures/preIds';
+import { setCurrentUser } from './index.spec';
+import User from '../../db/schema/User';
+import Topic, { ITopic } from '../../db/schema/Topic';
+import Message from '../../db/schema/Message';
+import TopicLatestRead from '../../db/schema/TopicLatestRead';
+import { messageTypes } from '../../lib/constants';
 
 const { ObjectId } = mongoose.Types;
-const { expect } = require('chai');
-const _ = require('lodash');
-const { createStore } = require('redux');
-const pushService = require('../../lib/pushService');
-const { initFixtures } = require('../fixtures');
-// const logger = require('../../config/winston');
-const userFixtures = require('../fixtures/userFixtures');
-const groupFixtures = require('../fixtures/groupFixtures');
-const topicFixtures = require('../fixtures/topicFixtures');
-const messageFixtures = require('../fixtures/messageFixtures');
-const { groupIds } = require('../fixtures/preIds');
-const { setCurrentUser } = require('./index.spec');
-const User = require('../../db/schema/User');
-const Topic = require('../../db/schema/Topic');
-const Message = require('../../db/schema/Message');
-const TopicLatestRead = require('../../db/schema/TopicLatestRead');
-const { messageTypes } = require('../../lib/constants');
+const { expect } = chai;
 
-const rootReducer = require('../../../../mobile/reducers/rootReducer');
+import rootReducer = require('../../../../mobile/reducers/rootReducer');
 // const thunk = require('redux-thunk');
 const store = createStore(
   rootReducer,
@@ -31,11 +37,11 @@ const store = createStore(
   // , applyMiddleware(thunk)
 );
 
-const rootActions = require('../../../../mobile/actions/rootActions');
-const groupActions = require('../../../../mobile/actions/groupActions');
-const groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
-const newTopicActions = require('../../../../mobile/actions/newTopicActions');
-const topicActions = require('../../../../mobile/actions/topicActions');
+import rootActions = require('../../../../mobile/actions/rootActions');
+import groupActions = require('../../../../mobile/actions/groupActions');
+import groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
+import newTopicActions = require('../../../../mobile/actions/newTopicActions');
+import topicActions = require('../../../../mobile/actions/topicActions');
 
 const dispatch = store.dispatch.bind(store);
 // const getState = store.getState.bind(store);
@@ -75,6 +81,8 @@ describe('main', () => {
     const localMessages50 = messages50.map((m) => ({ ...m, _id: m._id.toHexString() }));
 
     before(async () => {
+      chai.should();
+      chai.use(chaiAsPromised);
       await initFixtures();
       await Message.insertMany(messages50);
       subscribeStub = sinon.stub(pushService, 'subscribe');
@@ -577,7 +585,7 @@ describe('main', () => {
         // let navigatePath;
         // const navigation = { navigate: (path) => navigatePath = path };
         const joinGroupPromise = groupActions.joinGroup(groupId, () => {})(dispatch);
-        await expect(joinGroupPromise).to.be.rejectedWith('User already participate in the group');
+        await expect(joinGroupPromise).to.eventually.rejectedWith('User already participate in the group');
       });
 
       it('joined group', async () => {

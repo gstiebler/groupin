@@ -4,7 +4,7 @@
 
 import * as mongoose from 'mongoose';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Types;
 
 export const groupIds = {
   firstGroup: new ObjectId('5c1c1e99e362b2ce8042faaa'),

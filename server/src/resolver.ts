@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import User from './db/schema/User';
+import User, { IUser } from './db/schema/User';
 
 import { subscribeToAll } from './lib/subscription';
 
@@ -23,7 +23,7 @@ async function register({ name }, { firebaseId, phoneNumber }) {
   if (previousUser) {
     throw new Error('User is already registered');
   }
-  const user = await User.create({
+  const user = await User.create<Partial<IUser>>({
     name,
     phoneNumber,
     uid: firebaseId,

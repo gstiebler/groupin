@@ -4,7 +4,7 @@ import {
   Schema,
   Types,
 } from 'mongoose';
-import shortid from 'shortid';
+import * as shortid from 'shortid';
 
 const { ObjectId } = Schema.Types;
 
