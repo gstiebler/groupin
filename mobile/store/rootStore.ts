@@ -16,4 +16,4 @@ if (module.hot) {
   });
 }
 
-module.exports = store;
+export default store;
