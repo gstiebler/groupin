@@ -1,12 +1,12 @@
-const _ = require('lodash');
-const server = require('../lib/server');
-const { 
+import * as _ from 'lodash';
+import * as server from '../lib/server';
+import { 
   CURRENT_GROUP_INFO,
-} = require("../constants/action-types");
-const { fetchOwnGroups } = require('./rootActions');
-const { groupVisibility } = require('../constants/domainConstants');
+} from "../constants/action-types";
+import { fetchOwnGroups } from './rootActions';
+import { groupVisibility } from '../constants/domainConstants';
 
-const getGroupInfo = (groupId) => async (dispatch) => {
+export const getGroupInfo = (groupId) => async (dispatch) => {
   const groupInfo = await server.getGroupInfo(groupId);
   const visibilityLabel = _.find(groupVisibility, { value: groupInfo.visibility }).label;
   dispatch({ 
@@ -20,25 +20,18 @@ const getGroupInfo = (groupId) => async (dispatch) => {
   });
 }
 
-const leaveGroup = (groupId, onLeave) => async (dispatch/*, getState*/) => {
+export const leaveGroup = (groupId, onLeave) => async (dispatch/*, getState*/) => {
   await server.leaveGroup(groupId);
   onLeave();
   await fetchOwnGroups(dispatch);
 }
 
-const joinGroup = (groupId, onJoin) => async (dispatch, getState) => {
+export const joinGroup = (groupId, onJoin) => async (dispatch, getState) => {
   await server.joinGroup(groupId);
   onJoin(getState().base.currentGroupInfo.name);
 }
 
-const setGroupPin = ({ groupId, pinned }) => async (dispatch/*, getState */) => {
+export const setGroupPin = ({ groupId, pinned }) => async (dispatch/*, getState */) => {
   await server.setGroupPin({ groupId, pinned });
   await fetchOwnGroups(dispatch);
 }
-
-module.exports = {
-  getGroupInfo,
-  leaveGroup,
-  joinGroup,
-  setGroupPin,
-};

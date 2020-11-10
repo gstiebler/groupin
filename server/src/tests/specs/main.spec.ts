@@ -27,10 +27,11 @@ import Message from '../../db/schema/Message';
 import TopicLatestRead from '../../db/schema/TopicLatestRead';
 import { messageTypes } from '../../lib/constants';
 
+import rootReducer from '../../../../mobile/reducers/rootReducer';
+
 const { ObjectId } = mongoose.Types;
 const { expect } = chai;
 
-import rootReducer = require('../../../../mobile/reducers/rootReducer');
 // const thunk = require('redux-thunk');
 const store = createStore(
   rootReducer,
@@ -38,11 +39,11 @@ const store = createStore(
   // , applyMiddleware(thunk)
 );
 
-import rootActions = require('../../../../mobile/actions/rootActions');
-import groupActions = require('../../../../mobile/actions/groupActions');
-import groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
-import newTopicActions = require('../../../../mobile/actions/newTopicActions');
-import topicActions = require('../../../../mobile/actions/topicActions');
+import * as rootActions from '../../../../mobile/actions/rootActions';
+import * as groupActions from '../../../../mobile/actions/groupActions';
+import * as groupsSearchActions from '../../../../mobile/actions/groupsSearchActions';
+import * as newTopicActions from '../../../../mobile/actions/newTopicActions';
+import * as topicActions from '../../../../mobile/actions/topicActions';
 
 const dispatch = store.dispatch.bind(store);
 // const getState = store.getState.bind(store);

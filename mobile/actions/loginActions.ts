@@ -9,7 +9,7 @@ import {
 } from "../constants/action-types";
 import { fetchOwnGroups } from './rootActions';
 import * as server from '../lib/server';
-const graphqlConnect = require('../lib/graphqlConnect');
+import * as graphqlConnect from '../lib/graphqlConnect';
 import { getAndUpdateFcmToken } from '../lib/fcm';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);

@@ -1,8 +1,8 @@
-const { 
+import { 
   LOGIN_PHONE_NUMBER,
   FB_CONFIRM_RESULT,
-} = require("../constants/action-types");
-const { mutationHelper, reducerMain } = require('../lib/helpers');
+} from "../constants/action-types";
+import { mutationHelper, reducerMain } from '../lib/helpers';
 
 const initialState = {
   phoneNumber: '',
@@ -14,4 +14,4 @@ const reducerFunctions = {
   [FB_CONFIRM_RESULT]: mutationHelper('confirmResult'),
 };
 
-module.exports = reducerMain(initialState, reducerFunctions);
+export default reducerMain(initialState, reducerFunctions);

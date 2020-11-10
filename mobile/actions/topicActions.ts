@@ -1,25 +1,25 @@
-const { 
+import { 
   SET_MESSAGES,
   HAS_OLDER_MESSAGES,
   CURRENTLY_VIEWED_TOPIC_ID,
   CHAT_TITLE,
   CHAT_TOPIC_ID,
-} = require("../constants/action-types");
-const server = require('../lib/server');
-const _ = require('lodash');
-const { 
+} from "../constants/action-types";
+import * as server from '../lib/server';
+import * as  _ from 'lodash';
+import { 
   mergeMessages, 
   getFirst,
   getLast, 
   removeFirst,
   getNNew,
-} = require('../lib/messages');
+} from '../lib/messages';
 
 const formatDataTopicId = (topicId) => `data.${topicId}`;
 
-const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
+import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 
-const onTopicOpened = ({topicId, topicName, storage, subscribeFn}) => async (dispatch) => {
+export const onTopicOpened = ({topicId, topicName, storage, subscribeFn}) => async (dispatch) => {
   dispatch({ type: CHAT_TITLE, payload: { title: topicName } });
   dispatch({ type: CHAT_TOPIC_ID, payload: { topicId } });
   // is `currentlyViewedTopicId` redundant with `topicId`?
@@ -51,7 +51,7 @@ const onTopicOpened = ({topicId, topicName, storage, subscribeFn}) => async (dis
   subscribeFn(formatDataTopicId(topicId));
 }
 
-const onTopicClosed = ({topicId, unsubscribeFn}) => async (dispatch, getState) => {
+export const onTopicClosed = ({topicId, unsubscribeFn}) => async (dispatch, getState) => {
   dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { currentlyViewedTopicId: null } });
   dispatch({ type: SET_MESSAGES, payload: { messages: [] } });
   server.setTopicLatestRead(topicId);
@@ -60,9 +60,4 @@ const onTopicClosed = ({topicId, unsubscribeFn}) => async (dispatch, getState) =
   if (!currentTopic.pinned) {
     unsubscribeFn(formatDataTopicId(topicId));
   }
-};
-
-module.exports = {
-  onTopicOpened,
-  onTopicClosed,
 };

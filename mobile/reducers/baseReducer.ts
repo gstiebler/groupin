@@ -1,4 +1,4 @@
-const { 
+import { 
   RESET_BASE,
   ADD_NEW_MESSAGES,
   SET_OWN_GROUPS,
@@ -10,9 +10,9 @@ const {
   CURRENTLY_VIEWED_GROUP_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
   HAS_OLDER_MESSAGES,
-} = require("../constants/action-types");
-const { mutationHelper, reducerMain } = require('../lib/helpers');
-const { mergeMessages } = require('../lib/messages');
+} from "../constants/action-types";
+import { mutationHelper, reducerMain } from '../lib/helpers';
+import { mergeMessages } from '../lib/messages';
 
 const initialState = {
   messages: [
@@ -56,4 +56,4 @@ const reducerFunctions = {
   [CURRENT_GROUP_INFO]: mutationHelper('currentGroupInfo'),
 };
 
-module.exports = reducerMain(initialState, reducerFunctions);
+export default reducerMain(initialState, reducerFunctions);

@@ -1,29 +1,21 @@
-const _ = require('lodash');
+import * as _ from 'lodash';
 
-function mergeMessages(olderMessages, newerMessages) {
+export function mergeMessages(olderMessages, newerMessages) {
   return [...newerMessages, ...olderMessages];
 }
 
-function getFirst(messages) {
+export function getFirst(messages): any {
   return _.last(messages);
 }
 
-function getLast(messages) {
+export function getLast(messages): any {
   return _.first(messages);
 }
 
-function removeFirst(messages) {
+export function removeFirst(messages) {
   return _.initial(messages);
 }
 
-function getNNew(messages, n) {
+export function getNNew(messages, n) {
   return messages.slice(0, n);
-}
-
-module.exports = {
-  mergeMessages,
-  getFirst,
-  getLast,
-  removeFirst,
-  getNNew,
 }

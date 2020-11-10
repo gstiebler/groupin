@@ -1,16 +1,15 @@
-const { combineReducers } = require('redux');
-const base = require('./baseReducer');
-const login = require('./loginReducer');
-const groupsSearch = require('./groupsSearchReducer');
-const chat = require('./chatReducer');
-const newTopic = require('./newTopicReducer');
+import { combineReducers } from 'redux';
+import base from './baseReducer';
+import login from './loginReducer';
+import groupsSearch from './groupsSearchReducer';
+import chat from './chatReducer';
+// import newTopic from './newTopicReducer';
 
 const rootReducer = combineReducers({
   base,
   login,
   groupsSearch,
   chat,
-  newTopic,
 });
 
-module.exports = rootReducer;
+export default rootReducer;

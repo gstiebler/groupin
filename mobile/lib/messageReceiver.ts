@@ -1,23 +1,22 @@
 import storage from './localStorage';
-const { 
+import { 
   getTopicsOfCurrentGroup,
   getMessagesOfCurrentTopic,
-} = require('../actions/rootActions');
+} from '../actions/rootActions';
 
-const { 
+import { 
   CURRENTLY_VIEWED_GROUP_ID,
   CURRENTLY_VIEWED_TOPIC_ID,
-} = require("../constants/action-types");
+} from "../constants/action-types";
 
-
-async function messageReceived(store/*, message*/) {
+export async function messageReceived(store/*, message*/) {
   await Promise.all([
     getTopicsOfCurrentGroup(store),
     getMessagesOfCurrentTopic(store, storage),
   ]);
 }
 
-async function onNewNotification({navigateFn, store, groupId, topicId, topicName}) {
+export async function onNewNotification({navigateFn, store, groupId, topicId, topicName}) {
   store.dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { 
     currentlyViewedGroupId: groupId 
   } });
@@ -36,7 +35,7 @@ async function onNewNotification({navigateFn, store, groupId, topicId, topicName
   ]);
 }
 
-async function onNotificationOpened(navigateFn, store, notificationOpen) {
+export async function onNotificationOpened(navigateFn, store, notificationOpen) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
     navigateFn, 
@@ -47,7 +46,7 @@ async function onNotificationOpened(navigateFn, store, notificationOpen) {
   });
 }
 
-async function onInitialNotification(navigateFn, store, notificationOpen) {
+export async function onInitialNotification(navigateFn, store, notificationOpen) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
     navigateFn, 
@@ -57,9 +56,3 @@ async function onInitialNotification(navigateFn, store, notificationOpen) {
     topicName,
   });
 }
-
-module.exports = {
-  messageReceived,
-  onNotificationOpened,
-  onInitialNotification,
-};

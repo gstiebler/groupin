@@ -1,16 +1,16 @@
-const axios = require('axios');
-const env = require('../env');
+import axios , { AxiosRequestConfig } from 'axios';
+import { SERVER_URL } from '../env';
 
-const url = env.SERVER_URL;
+const url = SERVER_URL;
 
-function setToken(token) {
+export function setToken(token) {
   axios.defaults.headers.common.authorization = token;
 }
 
-async function sendQuery(query, variables) {
+export async function sendQuery(query, variables?) {
   try {
     console.log(query, variables);
-    const requestConfig = {
+    const requestConfig: AxiosRequestConfig = {
       url,
       method: 'post',
       data: { 
@@ -34,8 +34,3 @@ async function sendQuery(query, variables) {
     throw new Error(err);
   }
 }
-
-module.exports = {
-  sendQuery,
-  setToken,
-};

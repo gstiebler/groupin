@@ -1,6 +1,6 @@
-const graphql = require('./graphqlConnect');
+import * as  graphql from './graphqlConnect';
 
-async function register({ name }) {
+export async function register({ name }) {
   const query = `
     mutation Register($name: String!) {
       register(name: $name) {
@@ -12,7 +12,7 @@ async function register({ name }) {
   return res.register;
 }
 
-async function sendMessage({ message, topicId }) {
+export async function sendMessage({ message, topicId }) {
   const query = `
     mutation SendMessage($message: String!, $topicId: String!) {
       sendMessage (
@@ -25,7 +25,7 @@ async function sendMessage({ message, topicId }) {
   return res.sendMessage;
 }
 
-async function createGroup({ groupName, visibility }) {
+export async function createGroup({ groupName, visibility }) {
   const query = `
     mutation CreateGroup($groupName: String!, $visibility: String!) {
       createGroup (
@@ -38,7 +38,7 @@ async function createGroup({ groupName, visibility }) {
   return res.createGroup;
 }
 
-async function joinGroup(groupId) {
+export async function joinGroup(groupId) {
   const query = `
     mutation JoinGroup($groupId: String!) {
       joinGroup (
@@ -50,7 +50,7 @@ async function joinGroup(groupId) {
   return res.joinGroup;
 }
 
-async function leaveGroup(groupId) {
+export async function leaveGroup(groupId) {
   const query = `
     mutation {
       leaveGroup (
@@ -62,7 +62,7 @@ async function leaveGroup(groupId) {
   return res.leaveGroup;
 }
 
-async function createTopic({ topicName, groupId }) {
+export async function createTopic({ topicName, groupId }) {
   const query = `
     mutation CreateTopic($topicName: String!, $groupId: String!) {
       createTopic (
@@ -75,7 +75,7 @@ async function createTopic({ topicName, groupId }) {
   return res.createTopic;
 }
 
-async function setTopicLatestRead(topicId) {
+export async function setTopicLatestRead(topicId) {
   const query = `
     mutation SetTopicLatestRead($topicId: String!) {
       setTopicLatestRead (
@@ -87,7 +87,7 @@ async function setTopicLatestRead(topicId) {
   return res.setTopicLatestRead;
 }
 
-async function getUserId() {
+export async function getUserId() {
   const query = `
     query {
       getUserId { id }
@@ -97,7 +97,7 @@ async function getUserId() {
   return res.getUserId;
 }
 
-async function getOwnGroups() {
+export async function getOwnGroups() {
   const query = `
     query {
       ownGroups {
@@ -113,7 +113,7 @@ async function getOwnGroups() {
   return res.ownGroups;
 }
 
-async function findGroups({ searchText, limit, startingId }) {
+export async function findGroups({ searchText, limit, startingId }) {
   const query = `
     query FindGroups($searchText: String!, $limit: Float!, $startingId: String!) {
       findGroups(
@@ -131,7 +131,7 @@ async function findGroups({ searchText, limit, startingId }) {
   return res.findGroups;
 }
 
-async function getTopicsOfGroup(groupId, limit, startingId) {
+export async function getTopicsOfGroup(groupId, limit, startingId) {
   const query = `
     query TopicsOfGroup($groupId: String!, $limit: Float!, $startingId: String!) {
       topicsOfGroup (
@@ -151,7 +151,13 @@ async function getTopicsOfGroup(groupId, limit, startingId) {
   return res.topicsOfGroup;
 }
 
-async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }) {
+export interface IgetMessagesOfTopic {
+  topicId: string;
+  limit: number;
+  beforeId?: string;
+  afterId?: string;
+}
+export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: IgetMessagesOfTopic) {
   const query = `
     query MessagesOfTopic($topicId: String!, $limit: Float!, $beforeId: String, $afterId: String) {
       messagesOfTopic (
@@ -175,7 +181,7 @@ async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }) {
   return res.messagesOfTopic;
 }
 
-async function updateFcmToken(fcmToken) {
+export async function updateFcmToken(fcmToken) {
   const query = `
     mutation UpdateFcmToken($fcmToken: String) {
       updateFcmToken (
@@ -187,7 +193,7 @@ async function updateFcmToken(fcmToken) {
   return res.updateFcmToken;
 }
 
-async function getGroupInfo(groupId) {
+export async function getGroupInfo(groupId) {
   const query = `
     query GetGroupInfo($groupId: String) {
       getGroupInfo (
@@ -209,7 +215,7 @@ async function getGroupInfo(groupId) {
   return res.getGroupInfo;
 }
 
-async function setGroupPin({ groupId, pinned }) {
+export async function setGroupPin({ groupId, pinned }) {
   const query = `
     mutation SetGroupPin($groupId: String, $pinned: Boolean) {
       setGroupPin (
@@ -222,7 +228,7 @@ async function setGroupPin({ groupId, pinned }) {
   return res.setGroupPin;
 }
 
-async function setTopicPin({ topicId, pinned }) {
+export async function setTopicPin({ topicId, pinned }) {
   const query = `
     mutation SetTopicPin($topicId: String, $pinned: Boolean) {
       setTopicPin (
@@ -234,23 +240,3 @@ async function setTopicPin({ topicId, pinned }) {
   const res = await graphql.sendQuery(query, { topicId, pinned });
   return res.setTopicPin;
 }
-
-
-module.exports = {
-  getUserId,
-  register,
-  sendMessage,
-  createGroup,
-  createTopic,
-  setTopicLatestRead,
-  getOwnGroups,
-  findGroups,
-  getTopicsOfGroup,
-  getMessagesOfTopic,
-  joinGroup,
-  leaveGroup,
-  updateFcmToken,
-  getGroupInfo,
-  setGroupPin,
-  setTopicPin,
-};

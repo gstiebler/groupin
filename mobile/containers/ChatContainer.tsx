@@ -9,7 +9,7 @@ import {
   onTopicOpened,
   onTopicClosed,
 } from "../actions/topicActions";
-const fcm = require('../lib/fcm');
+import * as fcm from '../lib/fcm';
 
 const mapStateToProps = state => {
   return { 
