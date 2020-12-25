@@ -1,8 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { graphql } from 'graphql';
 
-import * as sinon from 'sinon';
-import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import rootValue from '../../resolver';
 import * as mongooseConfig from '../../config/mongoose';
@@ -24,10 +22,10 @@ if (process.env.NODE_ENV !== 'test') {
       Current environment: ${process.env.NODE_ENV}`);
 }
 
-before(async () => {
+beforeAll(async () => {
   dotenv.config();
   await mongooseConfig.init();
-  sinon.stub(graphqlConnect, 'sendQuery').callsFake(async (query, variables) => {
+  graphqlConnect.sendQuery = async (query, variables) => {
     const user = await User.findById(currentUserHolder.currentUser._id);
     const firebaseId = 'dk49sdfjhk';
     const phoneNumber = '(21)999995555';
@@ -39,11 +37,11 @@ before(async () => {
       throw new Error(result.errors[0].stack);
     }
     return result.data;
-  });
+  };
   addMongooseLogger();
 });
 
-after(async () => {
+afterAll(async () => {
   await mongooseConfig.disconnect();
 });
 

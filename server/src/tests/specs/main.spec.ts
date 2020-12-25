@@ -2,13 +2,9 @@
 
 import { createStore } from 'redux';
 
-import * as sinon from 'sinon';
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 
-import * as chai from 'chai';
-import * as chaiAsPromised from "chai-as-promised";
-import * as chaiSubset from "chai-subset";
 import * as _ from 'lodash';
 import pushService from '../../lib/pushService';
 import { initFixtures } from '../fixtures';
@@ -28,7 +24,6 @@ import { messageTypes } from '../../lib/constants';
 const server = require('../../../../mobile/lib/server');
 
 const { ObjectId } = mongoose.Types;
-const { expect } = chai;
 
 import rootReducer = require('../../../../mobile/reducers/rootReducer');
 // const thunk = require('redux-thunk');
@@ -81,14 +76,11 @@ describe('main', () => {
     const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id);
     const localMessages50 = messages50.map((m) => ({ ...m, _id: m._id.toHexString() }));
 
-    before(async () => {
-      chai.should();
-      chai.use(chaiAsPromised);
-      chai.use(chaiSubset);
+    beforeAll(async () => {
       await initFixtures();
       await Message.insertMany(messages50);
-      subscribeStub = sinon.stub(pushService, 'subscribe');
-      unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
+      pushService.subscribe = jest.fn();
+      pushService.unsubscribe = jest.fn();
     });
 
     afterEach(() => {
@@ -497,7 +489,7 @@ describe('main', () => {
       const localStore = createStore(rootReducer, {});
       const localDispatch = localStore.dispatch.bind(localStore);
       const localGetState = localStore.getState.bind(localStore);
-      before(() => {
+      beforAll(() => {
         setCurrentUser(userFixtures.robert);
       });
 
