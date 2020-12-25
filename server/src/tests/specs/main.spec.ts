@@ -6,12 +6,10 @@ import * as sinon from 'sinon';
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 
-const server = require('../../../../mobile/lib/server');
-
 import * as chai from 'chai';
 import * as chaiAsPromised from "chai-as-promised";
 import * as chaiSubset from "chai-subset";
-import _ = require('lodash');
+import * as _ from 'lodash';
 import pushService from '../../lib/pushService';
 import { initFixtures } from '../fixtures';
 // const logger = require('../../config/winston');
@@ -26,6 +24,8 @@ import Topic, { ITopic } from '../../db/schema/Topic';
 import Message from '../../db/schema/Message';
 import TopicLatestRead from '../../db/schema/TopicLatestRead';
 import { messageTypes } from '../../lib/constants';
+
+const server = require('../../../../mobile/lib/server');
 
 const { ObjectId } = mongoose.Types;
 const { expect } = chai;
