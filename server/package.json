@@ -8,7 +8,12 @@
     "compile": "tsc --declaration",
     "lint": "tslint --project tsconfig.json",
     "prepublish": "npm run compile",
-    "test": "mocha"
+    "test": "mocha",
+    "build": "tsc && npm run copy",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "copy": "cp firebase_android_config.json dist && cp src/schema.gql dist/src"
   },
   "nyc": {
     "all": true,
