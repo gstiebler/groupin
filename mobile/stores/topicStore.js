@@ -12,7 +12,7 @@ const formatDataTopicId = (topicId) => `data.${topicId}`;
 
 const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
 
-class TopicActions {
+class TopicStore {
 
   constructor(rootActions) {
     this.rootActions = rootActions;
@@ -65,4 +65,4 @@ class TopicActions {
 
 }
 
-module.exports = TopicActions;
+module.exports = TopicStore;

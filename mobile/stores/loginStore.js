@@ -8,7 +8,7 @@ import { getAndUpdateFcmToken } from '../lib/fcm';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
-class LoginActions {
+class LoginStore {
 
   constructor(rootActions) {
     this.rootActions = rootActions;
@@ -153,4 +153,4 @@ class LoginActions {
 
 }
 
-module.exports = LoginActions;
+module.exports = LoginStore;

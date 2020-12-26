@@ -23,11 +23,11 @@ import Message from '../../db/schema/Message';
 import TopicLatestRead from '../../db/schema/TopicLatestRead';
 import { messageTypes } from '../../lib/constants';
 
-const RootActions = require('../../../../mobile/actions/rootActionsMobX');
-const GroupActions = require('../../../../mobile/actions/groupActionsMobX');
-const GroupSearchActions = require('../../../../mobile/actions/groupSearchActionsMobX');
+const RootStore = require('../../../../mobile/stores/rootStore');
+const GroupStore = require('../../../../mobile/stores/groupStore');
+const GroupSearchStore = require('../../../../mobile/stores/groupSearchStore');
 const newTopicActions = require('../../../../mobile/actions/newTopicActions');
-const TopicActions = require('../../../../mobile/actions/topicActionsMobX');
+// const TopicActions = require('../../../../mobile/actions/topicActionsMobX');
 const server = require('../../../../mobile/lib/server');
 
 const { ObjectId } = mongoose.Types;
@@ -90,7 +90,7 @@ describe('main', () => {
 
     it('getOwnGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      const groupActions = new GroupActions();
+      const groupActions = new GroupStore();
       await groupActions.fetchOwnGroups();
       expect(groupActions.ownGroups).eql([
         {
@@ -112,7 +112,7 @@ describe('main', () => {
 
     it('findGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      const groupsSearchActions = new GroupSearchActions();
+      const groupsSearchActions = new GroupSearchStore();
       await groupsSearchActions.findGroups('second');
       expect(groupsSearchActions.groups).eql([
         {
@@ -125,7 +125,7 @@ describe('main', () => {
 
     it('find by friendlyId', async () => {
       setCurrentUser(userFixtures.robert);
-      const groupsSearchActions = new GroupSearchActions();
+      const groupsSearchActions = new GroupSearchStore();
       await groupsSearchActions.findGroups('  S9hvTvIBWM ');
       expect(groupsSearchActions.groups).eql([
         {
@@ -138,7 +138,7 @@ describe('main', () => {
 
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);
-      const rootActions = new RootActions();
+      const rootActions = new RootStore();
       await rootActions.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString());
       expect(rootActions.topics).eql([
         {
@@ -160,7 +160,7 @@ describe('main', () => {
 
     it('getTopicsOfCurrentGroup', async () => {
       setCurrentUser(userFixtures.robert);
-      const rootActions = new RootActions();
+      const rootActions = new RootStore();
       rootActions.currentlyViewedGroupId = groupFixtures.firstGroup._id.toHexString();
       await rootActions.getTopicsOfCurrentGroup();
       expect(rootActions.topics).eql([
@@ -186,7 +186,7 @@ describe('main', () => {
         const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
-        const rootActions = new RootActions();
+        const rootActions = new RootStore();
         await rootActions.topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
@@ -224,7 +224,7 @@ describe('main', () => {
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(4, 24));
-        const rootActions = new RootActions();
+        const rootActions = new RootStore();
         await rootActions.topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
@@ -258,7 +258,7 @@ describe('main', () => {
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(25, 44));
-        const rootActions = new RootActions();
+        const rootActions = new RootStore();
         await rootActions.topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
@@ -289,7 +289,7 @@ describe('main', () => {
     it('onOlderMessagesRequested', async () => {
       const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
       setCurrentUser(userFixtures.robert);
-      const rootActions = new RootActions();
+      const rootActions = new RootStore();
       rootActions.messages = localMessages50.slice(0, 5);
       await rootActions.onOlderMessagesRequested(topicIdStr);
 
@@ -309,7 +309,7 @@ describe('main', () => {
 
     it('getMessagesOfCurrentTopic', async () => {
       setCurrentUser(userFixtures.robert);
-      const rootActions = new RootActions();
+      const rootActions = new RootStore();
       rootActions.currentlyViewedTopicId = topicFixtures.topic1Group1._id.toHexString();
       const storage = createStorage();
       await rootActions.getMessagesOfCurrentTopic(storage);
@@ -340,7 +340,7 @@ describe('main', () => {
     it('getGroupInfo', async () => {
       const groupId = groupFixtures.firstGroup._id.toHexString();
       setCurrentUser(userFixtures.robert);
-      const groupActions = new GroupActions();
+      const groupActions = new GroupStore();
       await groupActions.getGroupInfo(groupId);
       expect(groupActions.currentGroupInfo).to.eql({
         _id: '5c1c1e99e362b2ce8042faaa',
@@ -392,7 +392,7 @@ describe('main', () => {
 
       beforeEach(async () => {
         setCurrentUser(alice);
-        rootActions = new RootActions();
+        rootActions = new RootStore();
         rootActions.topicStore.topicId = topicId;
         await rootActions.sendMessages([{ text: messageText }]);
       });
@@ -524,7 +524,7 @@ describe('main', () => {
     it('leaveGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const groupId = groupIds.firstGroup.toHexString();
-      const groupActions = new GroupActions();
+      const groupActions = new GroupStore();
       await groupActions.leaveGroup(groupId, () => {});
       const groups = await server.getOwnGroups();
       const call0args = unsubscribeStub.args[0];
@@ -556,7 +556,7 @@ describe('main', () => {
         const groupId = groupFixtures.firstGroup._id.toHexString();
         // let navigatePath;
         // const navigation = { navigate: (path) => navigatePath = path };
-        const groupActions = new GroupActions();
+        const groupActions = new GroupStore();
         const joinGroupPromise = groupActions.joinGroup(groupId, () => {});
         await expect(joinGroupPromise).to.eventually.rejectedWith('User already participate in the group');
       });

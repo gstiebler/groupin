@@ -6,9 +6,9 @@ const {
 } = require('../lib/messages');
 
 const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
-const TopicActions = require('./topicActionsMobX');
+const TopicActions = require('./topicStore');
 
-class RootActions {
+class RootStore {
 
   constructor() {
     this.topicStore = new TopicActions(this);
@@ -94,4 +94,4 @@ class RootActions {
 
 }
 
-module.exports = RootActions;
+module.exports = RootStore;

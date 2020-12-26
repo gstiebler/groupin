@@ -2,7 +2,7 @@ const _ = require('lodash');
 const server = require('../lib/server');
 const { groupVisibility } = require('../constants/domainConstants');
 
-class GroupActions {
+class GroupStore {
 
   constructor() {
     this.ownGroups = [];
@@ -40,4 +40,4 @@ class GroupActions {
 
 }
 
-module.exports = GroupActions;
+module.exports = GroupStore;

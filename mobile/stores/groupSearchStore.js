@@ -1,7 +1,7 @@
 const server = require('../lib/server');
 const _ = require('lodash');
 
-class GroupSearch {
+class GroupSearchStore {
 
   constructor() {
     this.groups = [];
@@ -18,4 +18,4 @@ class GroupSearch {
 
 }
 
-module.exports = GroupSearch;
+module.exports = GroupSearchStore;
