@@ -54,10 +54,6 @@ function createStorage() {
 
 // TODO: test thrown exceptions
 
-let pushMessageStub;
-let subscribeStub;
-let unsubscribeStub;
-
 describe('main', () => {
   describe('reading', () => {
     const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id);
@@ -66,26 +62,24 @@ describe('main', () => {
     beforeAll(async () => {
       await initFixtures();
       await Message.insertMany(messages50);
-      pushService.subscribe = jest.fn();
-      pushService.unsubscribe = jest.fn();
     });
 
-    afterEach(() => {
-      subscribeStub.restore();
-      unsubscribeStub.restore();
+    beforeEach(() => {
+      pushService.subscribe = jest.fn();
+      pushService.unsubscribe = jest.fn();
     });
 
     it('getUserId', async () => {
       setCurrentUser(userFixtures.robert);
       const { id } = await server.getUserId();
-      expect(id).eql(userFixtures.robert._id.toHexString());
+      expect(id).toEqual(userFixtures.robert._id.toHexString());
     });
 
     it('getOwnGroups', async () => {
       setCurrentUser(userFixtures.robert);
       const groupActions = new GroupStore();
       await groupActions.fetchOwnGroups();
-      expect(groupActions.ownGroups).eql([
+      expect(groupActions.ownGroups).toEqual([
         {
           id: groupFixtures.firstGroup._id.toHexString(),
           name: 'First Group',
@@ -107,7 +101,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupsSearchActions = new GroupSearchStore();
       await groupsSearchActions.findGroups('second');
-      expect(groupsSearchActions.groups).eql([
+      expect(groupsSearchActions.groups).toEqual([
         {
           id: groupFixtures.secondGroup._id.toHexString(),
           name: 'Second Group',
@@ -120,7 +114,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupsSearchActions = new GroupSearchStore();
       await groupsSearchActions.findGroups('  S9hvTvIBWM ');
-      expect(groupsSearchActions.groups).eql([
+      expect(groupsSearchActions.groups).toEqual([
         {
           id: groupFixtures.firstGroup._id.toHexString(),
           name: 'First Group',
@@ -133,7 +127,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const rootActions = new RootStore();
       await rootActions.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString());
-      expect(rootActions.topics).eql([
+      expect(rootActions.topics).toEqual([
         {
           id: topicFixtures.topic1Group1._id.toHexString(),
           name: 'Topic 1 Group 1',
@@ -156,7 +150,7 @@ describe('main', () => {
       const rootActions = new RootStore();
       rootActions.currentlyViewedGroupId = groupFixtures.firstGroup._id.toHexString();
       await rootActions.getTopicsOfCurrentGroup();
-      expect(rootActions.topics).eql([
+      expect(rootActions.topics).toEqual([
         {
           id: topicFixtures.topic1Group1._id.toHexString(),
           name: 'Topic 1 Group 1',
@@ -208,8 +202,8 @@ describe('main', () => {
             },
           },
         ]);
-        expect(rootActions.messages).to.eql(expectedMessages);
-        expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
+        expect(rootActions.messages).toEqual(expectedMessages);
+        expect(storage.getItem(topicIdStr)).toEqual(expectedMessages);
       });
 
       it('3 extra messages to be fetched', async () => {
@@ -227,23 +221,23 @@ describe('main', () => {
 
         // store messages
         const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
-        expect(storeMessageTexts).to.have.lengthOf(24);
-        expect(storeMessageTexts[0]).to.eql('Message 26');
-        expect(storeMessageTexts[19]).to.eql('Message 45');
-        expect(storeMessageTexts[20]).to.eql('Message 46');
-        expect(storeMessageTexts[21]).to.eql('Message 47');
-        expect(storeMessageTexts[22]).to.eql('Message 48');
-        expect(storeMessageTexts[23]).to.eql('Message 49');
+        expect(storeMessageTexts).toHaveLength(24);
+        expect(storeMessageTexts[0]).toEqual('Message 26');
+        expect(storeMessageTexts[19]).toEqual('Message 45');
+        expect(storeMessageTexts[20]).toEqual('Message 46');
+        expect(storeMessageTexts[21]).toEqual('Message 47');
+        expect(storeMessageTexts[22]).toEqual('Message 48');
+        expect(storeMessageTexts[23]).toEqual('Message 49');
 
         // storage messages
         const storageMessageTexts = _.reverse(_.map(storage.getItem(topicIdStr), 'text'));
-        expect(storageMessageTexts).to.have.lengthOf(20);
-        expect(storageMessageTexts[0]).to.eql('Message 30');
-        expect(storageMessageTexts[15]).to.eql('Message 45');
-        expect(storageMessageTexts[16]).to.eql('Message 46');
-        expect(storageMessageTexts[17]).to.eql('Message 47');
-        expect(storageMessageTexts[18]).to.eql('Message 48');
-        expect(storageMessageTexts[19]).to.eql('Message 49');
+        expect(storageMessageTexts).toHaveLength(20);
+        expect(storageMessageTexts[0]).toEqual('Message 30');
+        expect(storageMessageTexts[15]).toEqual('Message 45');
+        expect(storageMessageTexts[16]).toEqual('Message 46');
+        expect(storageMessageTexts[17]).toEqual('Message 47');
+        expect(storageMessageTexts[18]).toEqual('Message 48');
+        expect(storageMessageTexts[19]).toEqual('Message 49');
       });
 
       it('hole between fetched and on storage', async () => {
@@ -261,21 +255,21 @@ describe('main', () => {
 
         // store messages
         const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
-        expect(storeMessageTexts).to.have.lengthOf(20);
-        expect(storeMessageTexts[0]).to.eql('Message 30');
-        expect(storeMessageTexts[1]).to.eql('Message 31');
-        expect(storeMessageTexts[18]).to.eql('Message 48');
-        expect(storeMessageTexts[19]).to.eql('Message 49');
+        expect(storeMessageTexts).toHaveLength(20);
+        expect(storeMessageTexts[0]).toEqual('Message 30');
+        expect(storeMessageTexts[1]).toEqual('Message 31');
+        expect(storeMessageTexts[18]).toEqual('Message 48');
+        expect(storeMessageTexts[19]).toEqual('Message 49');
 
         // storage messages
         const storageMessageTexts = _.reverse(_.map(storage.getItem(topicIdStr), 'text'));
-        expect(storageMessageTexts).to.have.lengthOf(20);
-        expect(storageMessageTexts[0]).to.eql('Message 30');
-        expect(storageMessageTexts[15]).to.eql('Message 45');
-        expect(storageMessageTexts[16]).to.eql('Message 46');
-        expect(storageMessageTexts[17]).to.eql('Message 47');
-        expect(storageMessageTexts[18]).to.eql('Message 48');
-        expect(storageMessageTexts[19]).to.eql('Message 49');
+        expect(storageMessageTexts).toHaveLength(20);
+        expect(storageMessageTexts[0]).toEqual('Message 30');
+        expect(storageMessageTexts[15]).toEqual('Message 45');
+        expect(storageMessageTexts[16]).toEqual('Message 46');
+        expect(storageMessageTexts[17]).toEqual('Message 47');
+        expect(storageMessageTexts[18]).toEqual('Message 48');
+        expect(storageMessageTexts[19]).toEqual('Message 49');
       });
     });
 
@@ -288,16 +282,16 @@ describe('main', () => {
 
       // store messages
       const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
-      expect(storeMessageTexts).to.have.lengthOf(25);
-      expect(storeMessageTexts[0]).to.eql('Message 25');
-      expect(storeMessageTexts[1]).to.eql('Message 26');
-      expect(storeMessageTexts[18]).to.eql('Message 43');
-      expect(storeMessageTexts[19]).to.eql('Message 44');
-      expect(storeMessageTexts[20]).to.eql('Message 45');
-      expect(storeMessageTexts[21]).to.eql('Message 46');
-      expect(storeMessageTexts[22]).to.eql('Message 47');
-      expect(storeMessageTexts[23]).to.eql('Message 48');
-      expect(storeMessageTexts[24]).to.eql('Message 49');
+      expect(storeMessageTexts).toHaveLength(25);
+      expect(storeMessageTexts[0]).toEqual('Message 25');
+      expect(storeMessageTexts[1]).toEqual('Message 26');
+      expect(storeMessageTexts[18]).toEqual('Message 43');
+      expect(storeMessageTexts[19]).toEqual('Message 44');
+      expect(storeMessageTexts[20]).toEqual('Message 45');
+      expect(storeMessageTexts[21]).toEqual('Message 46');
+      expect(storeMessageTexts[22]).toEqual('Message 47');
+      expect(storeMessageTexts[23]).toEqual('Message 48');
+      expect(storeMessageTexts[24]).toEqual('Message 49');
     });
 
     it('getMessagesOfCurrentTopic', async () => {
@@ -306,7 +300,7 @@ describe('main', () => {
       rootActions.currentlyViewedTopicId = topicFixtures.topic1Group1._id.toHexString();
       const storage = createStorage();
       await rootActions.getMessagesOfCurrentTopic(storage);
-      expect(rootActions.messages).eql(_.reverse([
+      expect(rootActions.messages).toEqual(_.reverse([
         {
           _id: messageFixtures.message1topic1._id.toHexString(),
           createdAt: Date.parse('2018-10-01'),
@@ -335,7 +329,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupActions = new GroupStore();
       await groupActions.getGroupInfo(groupId);
-      expect(groupActions.currentGroupInfo).to.eql({
+      expect(groupActions.currentGroupInfo).toEqual({
         _id: '5c1c1e99e362b2ce8042faaa',
         name: 'First Group',
         imgUrl: 'url1',
@@ -388,12 +382,12 @@ describe('main', () => {
       });
 
       it('push', async () => {
-        const call0args = pushMessageStub.args[0];
-        expect(call0args).to.have.lengthOf(2);
+        const call0args = pushService.pushMessage.mock.calls[0];
+        expect(call0args).toHaveLength(2);
         const [, pushParams] = call0args;
         expect(topicId).toBe(topicFixtures.topic1Group1._id.toHexString());
         const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });
-        expect(pushParams).to.eql({
+        expect(pushParams).toEqual({
           payload: {
             message: messageText,
             topicId: topicFixtures.topic1Group1._id.toHexString(),
@@ -408,11 +402,11 @@ describe('main', () => {
           sendNotification: true,
         });
 
-        const call1args = pushMessageStub.args[1];
+        const call1args = pushService.pushMessage.mock.calls[1];
         const [groupId] = call1args;
         expect(groupId).toBe(groupFixtures.firstGroup._id.toHexString());
 
-        expect(rootActions.messages).to.have.lengthOf(1);
+        expect(rootActions.messages).toHaveLength(1);
       });
 
       it('message was added to DB', async () => {
@@ -422,7 +416,7 @@ describe('main', () => {
           limit: 20,
           afterId: '507f1f77bcf86cd799439002',
         });
-        expect(messages).to.containSubset([{
+        expect(messages).arrayContaining([{
           _id: lastMessageOnStore._id,
           text: messageText,
           user: {
@@ -438,9 +432,9 @@ describe('main', () => {
           topicId: topicFixtures.topic1Group1._id.toHexString(),
           limit: 20,
         });
-        expect(messages).to.have.lengthOf(3);
+        expect(messages).toHaveLength(3);
         // the most recent message
-        expect(messages[0]).to.containSubset({
+        expect(messages[0]).objectContaining({
           text: messageText,
           user: {
             name: 'Alice',
@@ -450,16 +444,13 @@ describe('main', () => {
 
       it('topic sort order', async () => {
         const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
-        expect(_.map(topics, 'name')).to.eql(['Topic 1 Group 1', 'Topic 2 Group 1']);
+        expect(_.map(topics, 'name')).toEqual(['Topic 1 Group 1', 'Topic 2 Group 1']);
       });
     });
 
-    describe('createTopic', async () => {
+    describe('createTopic', () => {
       const topicName = 'new topic foca';
 
-      const localStore = createStore(rootReducer, {});
-      const localDispatch = localStore.dispatch.bind(localStore);
-      const localGetState = localStore.getState.bind(localStore);
       beforAll(() => {
         setCurrentUser(userFixtures.robert);
       });
@@ -467,14 +458,14 @@ describe('main', () => {
       beforeEach(async () => {
         const navigation = { goBack: emptyFunction };
         const groupId = groupFixtures.secondGroup._id.toHexString();
-        await newTopicActions.createTopic(navigation, groupId, topicName)(localDispatch, localGetState);
+        await newTopicActions.createTopic(navigation, groupId, topicName);
       });
 
       it('push', async () => {
-        const [topic, pushParams] = pushMessageStub.args[0];
+        const [topic, pushParams] = pushService.pushMessage.mock.calls[0];
         expect(topic).toBe(groupFixtures.secondGroup._id.toHexString());
         const newTopic = await Topic.findOne({}, {}, { sort: { _id: -1 } });
-        expect(pushParams).to.eql({
+        expect(pushParams).toEqual({
           payload: {
             type: messageTypes.NEW_TOPIC,
             topicId: newTopic._id.toHexString(),
@@ -490,15 +481,15 @@ describe('main', () => {
       it('topic created on DB', async () => {
         setCurrentUser(userFixtures.robert);
         const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup._id.toHexString(), 20, 'startingId1');
-        expect(topics).to.have.lengthOf(3);
+        expect(topics).toHaveLength(3);
         // test order
-        expect(_.map(topics, 'name')).to.eql([topicName, 'Topic 2 Group 2', 'Topic 1 Group 2']);
+        expect(_.map(topics, 'name')).toEqual([topicName, 'Topic 2 Group 2', 'Topic 1 Group 2']);
       });
 
       it('group sort order', async () => {
         setCurrentUser(userFixtures.robert);
         const groups = await server.getOwnGroups();
-        expect(_.map(groups, 'name')).to.eql(['Second Group', 'First Group']);
+        expect(_.map(groups, 'name')).toEqual(['Second Group', 'First Group']);
       });
     });
 
@@ -507,7 +498,7 @@ describe('main', () => {
       const result = await server.createGroup({ groupName: 'new group 1', visibility: 'SECRET' });
       expect(result).toBe('OK');
       const groups = await server.getOwnGroups();
-      expect(groups).to.have.lengthOf(3);
+      expect(groups).toHaveLength(3);
       expect(groups[0].name).toBe('new group 1');
     });
 
@@ -517,10 +508,9 @@ describe('main', () => {
       const groupActions = new GroupStore();
       await groupActions.leaveGroup(groupId, emptyFunction);
       const groups = await server.getOwnGroups();
-      const call0args = unsubscribeStub.args[0];
-      const [, unsubscribedGroup] = call0args;
+      const [, unsubscribedGroup] = pushService.unsubscribe.mock.calls[0];
       expect(unsubscribedGroup).toBe(groupId);
-      expect(groups).to.eql([
+      expect(groups).toEqual([
         {
           id: groupFixtures.secondGroup._id.toHexString(),
           imgUrl: 'url2',
@@ -529,7 +519,7 @@ describe('main', () => {
           pinned: true,
         },
       ]);
-      expect(groupActions.ownGroups).to.eql([
+      expect(groupActions.ownGroups).toEqual([
         {
           id: groupFixtures.secondGroup._id.toHexString(),
           imgUrl: 'url2',
@@ -542,13 +532,20 @@ describe('main', () => {
 
     describe('joinGroup', () => {
       it('User already joined the group', async () => {
+        expect.assertions(1);
         setCurrentUser(userFixtures.alice);
         const groupId = groupFixtures.firstGroup._id.toHexString();
         // let navigatePath;
         // const navigation = { navigate: (path) => navigatePath = path };
         const groupActions = new GroupStore();
-        const joinGroupPromise = groupActions.joinGroup(groupId, emptyFunction);
-        await expect(joinGroupPromise).to.eventually.rejectedWith('User already participate in the group');
+        try {
+          await groupActions.joinGroup(groupId, emptyFunction);
+        } catch (error) {
+          console.log(error);
+          expect(error).toEqual({
+            error: 'User with 2 not found.',
+          });
+        }
       });
 
       it('joined group', async () => {
