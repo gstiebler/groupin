@@ -39,6 +39,9 @@ beforeAll(async () => {
     return result.data;
   };
   addMongooseLogger();
+  it('nothing', () => {
+    expect(true).toBe(true);
+  });
 });
 
 afterAll(async () => {

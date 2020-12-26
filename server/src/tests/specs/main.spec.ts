@@ -352,16 +352,13 @@ describe('main', () => {
 
   describe('writting', () => {
     beforeEach(async () => {
-      pushMessageStub = sinon.stub(pushService, 'pushMessage');
-      subscribeStub = sinon.stub(pushService, 'subscribe');
-      unsubscribeStub = sinon.stub(pushService, 'unsubscribe');
+      pushService.pushMessage = jest.fn();
+      pushService.subscribe = jest.fn();
+      pushService.unsubscribe = jest.fn();
       await initFixtures();
     });
 
     afterEach(() => {
-      pushMessageStub.restore();
-      subscribeStub.restore();
-      unsubscribeStub.restore();
     });
 
     it('register', async () => {
@@ -371,9 +368,9 @@ describe('main', () => {
       });
 
       const userByUid = await User.findOne({ uid });
-      expect(userByUid.phoneNumber).to.equal('(21)999995555');
-      expect(userByUid.name).to.equal('Guilherme');
-      expect(userByUid.uid).to.equal(uid);
+      expect(userByUid.phoneNumber).toBe('(21)999995555');
+      expect(userByUid.name).toBe('Guilherme');
+      expect(userByUid.uid).toBe(uid);
     });
 
     describe('sendMessage', () => {
@@ -394,7 +391,7 @@ describe('main', () => {
         const call0args = pushMessageStub.args[0];
         expect(call0args).to.have.lengthOf(2);
         const [, pushParams] = call0args;
-        expect(topicId).to.equal(topicFixtures.topic1Group1._id.toHexString());
+        expect(topicId).toBe(topicFixtures.topic1Group1._id.toHexString());
         const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).to.eql({
           payload: {
@@ -413,7 +410,7 @@ describe('main', () => {
 
         const call1args = pushMessageStub.args[1];
         const [groupId] = call1args;
-        expect(groupId).to.equal(groupFixtures.firstGroup._id.toHexString());
+        expect(groupId).toBe(groupFixtures.firstGroup._id.toHexString());
 
         expect(rootActions.messages).to.have.lengthOf(1);
       });
@@ -475,7 +472,7 @@ describe('main', () => {
 
       it('push', async () => {
         const [topic, pushParams] = pushMessageStub.args[0];
-        expect(topic).to.equal(groupFixtures.secondGroup._id.toHexString());
+        expect(topic).toBe(groupFixtures.secondGroup._id.toHexString());
         const newTopic = await Topic.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).to.eql({
           payload: {
@@ -508,10 +505,10 @@ describe('main', () => {
     it('createGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const result = await server.createGroup({ groupName: 'new group 1', visibility: 'SECRET' });
-      expect(result).to.equal('OK');
+      expect(result).toBe('OK');
       const groups = await server.getOwnGroups();
       expect(groups).to.have.lengthOf(3);
-      expect(groups[0].name).to.equal('new group 1');
+      expect(groups[0].name).toBe('new group 1');
     });
 
     it('leaveGroup', async () => {
@@ -522,7 +519,7 @@ describe('main', () => {
       const groups = await server.getOwnGroups();
       const call0args = unsubscribeStub.args[0];
       const [, unsubscribedGroup] = call0args;
-      expect(unsubscribedGroup).to.equal(groupId);
+      expect(unsubscribedGroup).toBe(groupId);
       expect(groups).to.eql([
         {
           id: groupFixtures.secondGroup._id.toHexString(),
@@ -559,8 +556,8 @@ describe('main', () => {
         const groupId = groupFixtures.secondGroup._id.toHexString();
         await server.joinGroup(groupId);
         const groups = await server.getOwnGroups();
-        expect(groups).to.have.lengthOf(2);
-        expect(groups[1].name).to.equal('Second Group');
+        expect(groups).toHaveLength(2);
+        expect(groups[1].name).toBe('Second Group');
       });
     });
 
@@ -569,12 +566,11 @@ describe('main', () => {
       const fcmToken = 'robertFcmToken345873';
       await server.updateFcmToken(fcmToken);
       const robert = await User.findById(userFixtures.robert._id);
-      expect(robert.fcmToken).to.equal(fcmToken);
+      expect(robert.fcmToken).toBe(fcmToken);
 
-      const call0args = subscribeStub.args[0];
-      const [subscribedFcmToken, firstSubscribedGroupId] = call0args;
-      expect(subscribedFcmToken).to.equal(fcmToken);
-      expect(firstSubscribedGroupId).to.equal(userFixtures.robert.groups[1].id.toHexString());
+      const [subscribedFcmToken, firstSubscribedGroupId] = pushService.subscribe.mock.calls[0];
+      expect(subscribedFcmToken).toBe(fcmToken);
+      expect(firstSubscribedGroupId).toBe(userFixtures.robert.groups[1].id.toHexString());
     });
 
     it('setTopicLatestRead', async () => {
@@ -583,15 +579,15 @@ describe('main', () => {
       // Create
       const firstCount = await TopicLatestRead.countDocuments();
       const result1 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
-      expect(result1).to.equal('OK');
+      expect(result1).toBe('OK');
       const secoundCount = await TopicLatestRead.countDocuments();
-      expect(secoundCount - firstCount).to.eql(1);
+      expect(secoundCount - firstCount).toBe(1);
 
       // Update
       const result2 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
-      expect(result2).to.equal('OK');
+      expect(result2).toBe('OK');
       const thirdCount = await TopicLatestRead.countDocuments();
-      expect(thirdCount - secoundCount).to.eql(0);
+      expect(thirdCount - secoundCount).toBe(0);
     });
 
     describe('setGroupPin', () => {
@@ -604,9 +600,9 @@ describe('main', () => {
         });
 
         const user = await User.findById(userFixtures.robert._id);
-        expect(user.groups[0].pinned).to.eql(true);
-        const [, groupIdP] = subscribeStub.args[0];
-        expect(groupIdP).to.eql(groupId);
+        expect(user.groups[0].pinned).toBe(true);
+        const [, groupIdP] = pushService.subscribe.mock.calls[0];
+        expect(groupIdP).toBe(groupId);
       });
 
       it('unpin', async () => {
@@ -618,9 +614,9 @@ describe('main', () => {
         });
 
         const user = await User.findById(userFixtures.robert._id);
-        expect(user.groups[1].pinned).to.eql(false);
-        const [, groupIdP] = unsubscribeStub.args[0];
-        expect(groupIdP).to.eql(groupId);
+        expect(user.groups[1].pinned).toBe(false);
+        const [, groupIdP] = pushService.unsubscribe.mock.calls[0];
+        expect(groupIdP).toBe(groupId);
       });
     });
 
@@ -634,9 +630,9 @@ describe('main', () => {
         });
 
         const user = await User.findById(userFixtures.robert._id);
-        expect(user.pinnedTopics[2].toHexString()).to.eql(topicId);
-        const [/* fcmTokenP */, topicIdP] = subscribeStub.args[0];
-        expect(topicIdP).to.eql(topicId);
+        expect(user.pinnedTopics[2].toHexString()).toBe(topicId);
+        const [/* fcmTokenP */, topicIdP] = pushService.subscribe.mock.calls[0];
+        expect(topicIdP).toBe(topicId);
       });
 
       it('unpin', async () => {
@@ -648,9 +644,9 @@ describe('main', () => {
         });
 
         const user = await User.findById(userFixtures.robert._id);
-        expect(user.pinnedTopics).to.have.lengthOf(1);
-        const [, topicIdP] = unsubscribeStub.args[0];
-        expect(topicIdP).to.eql(topicId);
+        expect(user.pinnedTopics).toHaveLength(1);
+        const [, topicIdP] = pushService.unsubscribe.mock.calls[0];
+        expect(topicIdP).toBe(topicId);
       });
     });
   });
