@@ -63,7 +63,6 @@
     "nodemon": "^2.0.6",
     "nyc": "^14.1.1",
     "prettier": "^2.1.2",
-    "redux": "4",
     "serverless": "^1.79.0",
     "serverless-domain-manager": "^4.2.0",
     "serverless-offline": "^6.5.0",
