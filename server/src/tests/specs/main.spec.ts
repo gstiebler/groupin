@@ -1,7 +1,5 @@
 // @ts-nocheck
 
-import { createStore } from 'redux';
-
 import * as sinon from 'sinon';
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
@@ -25,27 +23,15 @@ import Message from '../../db/schema/Message';
 import TopicLatestRead from '../../db/schema/TopicLatestRead';
 import { messageTypes } from '../../lib/constants';
 
+const RootActions = require('../../../../mobile/actions/rootActionsMobX');
+const GroupActions = require('../../../../mobile/actions/groupActionsMobX');
+const GroupSearchActions = require('../../../../mobile/actions/groupSearchActionsMobX');
+const newTopicActions = require('../../../../mobile/actions/newTopicActions');
+const TopicActions = require('../../../../mobile/actions/topicActionsMobX');
 const server = require('../../../../mobile/lib/server');
 
 const { ObjectId } = mongoose.Types;
 const { expect } = chai;
-
-import rootReducer = require('../../../../mobile/reducers/rootReducer');
-// const thunk = require('redux-thunk');
-const store = createStore(
-  rootReducer,
-  {},
-  // , applyMiddleware(thunk)
-);
-
-import rootActions = require('../../../../mobile/actions/rootActions');
-import groupActions = require('../../../../mobile/actions/groupActions');
-import groupsSearchActions = require('../../../../mobile/actions/groupsSearchActions');
-import newTopicActions = require('../../../../mobile/actions/newTopicActions');
-import topicActions = require('../../../../mobile/actions/topicActions');
-
-const dispatch = store.dispatch.bind(store);
-// const getState = store.getState.bind(store);
 
 function createMessages(numMessages, user, topic) {
   const messages = [];
@@ -104,8 +90,9 @@ describe('main', () => {
 
     it('getOwnGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      await rootActions.fetchOwnGroups(dispatch);
-      expect(store.getState().base.ownGroups).eql([
+      const groupActions = new GroupActions();
+      await groupActions.fetchOwnGroups();
+      expect(groupActions.ownGroups).eql([
         {
           id: groupFixtures.firstGroup._id.toHexString(),
           name: 'First Group',
@@ -125,8 +112,9 @@ describe('main', () => {
 
     it('findGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      await groupsSearchActions.findGroups('second')(dispatch);
-      expect(store.getState().groupsSearch.groups).eql([
+      const groupsSearchActions = new GroupSearchActions();
+      await groupsSearchActions.findGroups('second');
+      expect(groupsSearchActions.groups).eql([
         {
           id: groupFixtures.secondGroup._id.toHexString(),
           name: 'Second Group',
@@ -137,8 +125,9 @@ describe('main', () => {
 
     it('find by friendlyId', async () => {
       setCurrentUser(userFixtures.robert);
-      await groupsSearchActions.findGroups('  S9hvTvIBWM ')(dispatch);
-      expect(store.getState().groupsSearch.groups).eql([
+      const groupsSearchActions = new GroupSearchActions();
+      await groupsSearchActions.findGroups('  S9hvTvIBWM ');
+      expect(groupsSearchActions.groups).eql([
         {
           id: groupFixtures.firstGroup._id.toHexString(),
           name: 'First Group',
@@ -149,8 +138,9 @@ describe('main', () => {
 
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);
-      await rootActions.getTopicsOfGroup(dispatch, groupFixtures.firstGroup._id.toHexString());
-      expect(store.getState().base.topics).eql([
+      const rootActions = new RootActions();
+      await rootActions.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString());
+      expect(rootActions.topics).eql([
         {
           id: topicFixtures.topic1Group1._id.toHexString(),
           name: 'Topic 1 Group 1',
@@ -170,12 +160,10 @@ describe('main', () => {
 
     it('getTopicsOfCurrentGroup', async () => {
       setCurrentUser(userFixtures.robert);
-      store.dispatch({
-        type: 'currently viewed group ID',
-        payload: { currentlyViewedGroupId: groupFixtures.firstGroup._id.toHexString() },
-      });
-      await rootActions.getTopicsOfCurrentGroup(store);
-      expect(store.getState().base.topics).eql([
+      const rootActions = new RootActions();
+      rootActions.currentlyViewedGroupId = groupFixtures.firstGroup._id.toHexString();
+      await rootActions.getTopicsOfCurrentGroup();
+      expect(rootActions.topics).eql([
         {
           id: topicFixtures.topic1Group1._id.toHexString(),
           name: 'Topic 1 Group 1',
@@ -195,17 +183,16 @@ describe('main', () => {
 
     describe('onTopicOpened', () => {
       it('no messages on storage', async () => {
-        const localStore = createStore(rootReducer, {});
-        const localDispatch = localStore.dispatch.bind(localStore);
         const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
-        await topicActions.onTopicOpened({
+        const rootActions = new RootActions();
+        await rootActions.topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
           storage,
           subscribeFn: () => {},
-        })(localDispatch);
+        });
         const expectedMessages = _.reverse([
           {
             _id: messageFixtures.message1topic1._id.toHexString(),
@@ -228,26 +215,25 @@ describe('main', () => {
             },
           },
         ]);
-        expect(localStore.getState().base.messages).to.eql(expectedMessages);
+        expect(rootActions.messages).to.eql(expectedMessages);
         expect(storage.getItem(topicIdStr)).to.eql(expectedMessages);
       });
 
       it('3 extra messages to be fetched', async () => {
-        const localStore = createStore(rootReducer, {});
-        const localDispatch = localStore.dispatch.bind(localStore);
         const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(4, 24));
-        await topicActions.onTopicOpened({
+        const rootActions = new RootActions();
+        await rootActions.topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
           storage,
           subscribeFn: () => {},
-        })(localDispatch);
+        });
 
         // store messages
-        const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));
+        const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
         expect(storeMessageTexts).to.have.lengthOf(24);
         expect(storeMessageTexts[0]).to.eql('Message 26');
         expect(storeMessageTexts[19]).to.eql('Message 45');
@@ -268,21 +254,20 @@ describe('main', () => {
       });
 
       it('hole between fetched and on storage', async () => {
-        const localStore = createStore(rootReducer, {});
-        const localDispatch = localStore.dispatch.bind(localStore);
         const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(25, 44));
-        await topicActions.onTopicOpened({
+        const rootActions = new RootActions();
+        await rootActions.topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
           storage,
           subscribeFn: () => {},
-        })(localDispatch);
+        });
 
         // store messages
-        const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));
+        const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
         expect(storeMessageTexts).to.have.lengthOf(20);
         expect(storeMessageTexts[0]).to.eql('Message 30');
         expect(storeMessageTexts[1]).to.eql('Message 31');
@@ -302,17 +287,14 @@ describe('main', () => {
     });
 
     it('onOlderMessagesRequested', async () => {
-      const localStore = createStore(rootReducer, {});
-      const localDispatch = localStore.dispatch.bind(localStore);
-      const localGetState = localStore.getState.bind(localStore);
       const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
       setCurrentUser(userFixtures.robert);
-      localDispatch({ type: 'set messages', payload: { messages: localMessages50.slice(0, 5) } });
-
-      await rootActions.onOlderMessagesRequested(topicIdStr)(localDispatch, localGetState);
+      const rootActions = new RootActions();
+      rootActions.messages = localMessages50.slice(0, 5);
+      await rootActions.onOlderMessagesRequested(topicIdStr);
 
       // store messages
-      const storeMessageTexts = _.reverse(_.map(localStore.getState().base.messages, 'text'));
+      const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
       expect(storeMessageTexts).to.have.lengthOf(25);
       expect(storeMessageTexts[0]).to.eql('Message 25');
       expect(storeMessageTexts[1]).to.eql('Message 26');
@@ -326,15 +308,12 @@ describe('main', () => {
     });
 
     it('getMessagesOfCurrentTopic', async () => {
-      const localStore = createStore(rootReducer, {});
       setCurrentUser(userFixtures.robert);
-      localStore.dispatch({
-        type: 'currently viewed topic ID',
-        payload: { currentlyViewedTopicId: topicFixtures.topic1Group1._id.toHexString() },
-      });
+      const rootActions = new RootActions();
+      rootActions.currentlyViewedTopicId = topicFixtures.topic1Group1._id.toHexString();
       const storage = createStorage();
-      await rootActions.getMessagesOfCurrentTopic(localStore, storage);
-      expect(localStore.getState().base.messages).eql(_.reverse([
+      await rootActions.getMessagesOfCurrentTopic(storage);
+      expect(rootActions.messages).eql(_.reverse([
         {
           _id: messageFixtures.message1topic1._id.toHexString(),
           createdAt: Date.parse('2018-10-01'),
@@ -359,12 +338,11 @@ describe('main', () => {
     });
 
     it('getGroupInfo', async () => {
-      const localStore = createStore(rootReducer, {});
-      const localDispatch = localStore.dispatch.bind(localStore);
       const groupId = groupFixtures.firstGroup._id.toHexString();
       setCurrentUser(userFixtures.robert);
-      await groupActions.getGroupInfo(groupId)(localDispatch);
-      expect(localStore.getState().base.currentGroupInfo).to.eql({
+      const groupActions = new GroupActions();
+      await groupActions.getGroupInfo(groupId);
+      expect(groupActions.currentGroupInfo).to.eql({
         _id: '5c1c1e99e362b2ce8042faaa',
         name: 'First Group',
         imgUrl: 'url1',
@@ -409,19 +387,14 @@ describe('main', () => {
       const { alice } = userFixtures;
       const messageText = 'new message 1 from Alice';
       const topicId = topicFixtures.topic1Group1._id.toHexString();
-
-      const localStore = createStore(rootReducer, {});
-      const localDispatch = localStore.dispatch.bind(localStore);
-      const localGetState = localStore.getState.bind(localStore);
+      let rootActions;
+      let topicActions;
 
       beforeEach(async () => {
         setCurrentUser(alice);
-        localDispatch({ type: 'reset base', payload: {} });
-        localDispatch({
-          type: 'chat topic ID',
-          payload: { topicId },
-        });
-        await rootActions.sendMessages([{ text: messageText }])(localDispatch, localGetState);
+        rootActions = new RootActions();
+        rootActions.topicStore.topicId = topicId;
+        await rootActions.sendMessages([{ text: messageText }]);
       });
 
       it('push', async () => {
@@ -449,11 +422,11 @@ describe('main', () => {
         const [groupId] = call1args;
         expect(groupId).to.equal(groupFixtures.firstGroup._id.toHexString());
 
-        expect(localGetState().base.messages).to.have.lengthOf(1);
+        expect(rootActions.messages).to.have.lengthOf(1);
       });
 
       it('message was added to DB', async () => {
-        const lastMessageOnStore = _.last(localGetState().base.messages);
+        const lastMessageOnStore = _.last(rootActions.messages);
         const messages = await server.getMessagesOfTopic({
           topicId: topicFixtures.topic1Group1._id.toHexString(),
           limit: 20,
@@ -549,13 +522,10 @@ describe('main', () => {
     });
 
     it('leaveGroup', async () => {
-      const localStore = createStore(rootReducer, {});
-      const localDispatch = localStore.dispatch.bind(localStore);
-      const localGetState = localStore.getState.bind(localStore);
-
       setCurrentUser(userFixtures.robert);
       const groupId = groupIds.firstGroup.toHexString();
-      await groupActions.leaveGroup(groupId, () => {})(localDispatch, localGetState);
+      const groupActions = new GroupActions();
+      await groupActions.leaveGroup(groupId, () => {});
       const groups = await server.getOwnGroups();
       const call0args = unsubscribeStub.args[0];
       const [, unsubscribedGroup] = call0args;
@@ -569,7 +539,7 @@ describe('main', () => {
           pinned: true,
         },
       ]);
-      expect(localGetState().base.ownGroups).to.eql([
+      expect(groupActions.ownGroups).to.eql([
         {
           id: groupFixtures.secondGroup._id.toHexString(),
           imgUrl: 'url2',
@@ -586,7 +556,8 @@ describe('main', () => {
         const groupId = groupFixtures.firstGroup._id.toHexString();
         // let navigatePath;
         // const navigation = { navigate: (path) => navigatePath = path };
-        const joinGroupPromise = groupActions.joinGroup(groupId, () => {})(dispatch);
+        const groupActions = new GroupActions();
+        const joinGroupPromise = groupActions.joinGroup(groupId, () => {});
         await expect(joinGroupPromise).to.eventually.rejectedWith('User already participate in the group');
       });
 
