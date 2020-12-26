@@ -6,12 +6,13 @@ const {
 } = require('../lib/messages');
 
 const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
-const TopicActions = require('./topicStore');
+const TopicStore = require('./topicStore');
 
 class RootStore {
 
-  constructor() {
-    this.topicStore = new TopicActions(this);
+  constructor(groupStore) {
+    this.groupStore = groupStore;
+    this.topicStore = new TopicStore(this);
     this.messages = [
       /*{
         _id: 1,

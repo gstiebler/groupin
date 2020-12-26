@@ -15,7 +15,7 @@ const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
 
 const currentUserHolder = { currentUser: null };
 
-function setCurrentUser(user) {
+export function setCurrentUser(user) {
   currentUserHolder.currentUser = user;
 }
 

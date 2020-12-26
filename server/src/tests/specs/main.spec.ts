@@ -33,6 +33,8 @@ const server = require('../../../../mobile/lib/server');
 const { ObjectId } = mongoose.Types;
 const { expect } = chai;
 
+const emptyFunction = () => {};
+
 function createMessages(numMessages, user, topic) {
   const messages = [];
   const baseMoment = moment();
@@ -191,7 +193,7 @@ describe('main', () => {
           topicId: topicIdStr,
           topicName: 'name',
           storage,
-          subscribeFn: () => {},
+          subscribeFn: emptyFunction,
         });
         const expectedMessages = _.reverse([
           {
@@ -229,7 +231,7 @@ describe('main', () => {
           topicId: topicIdStr,
           topicName: 'name',
           storage,
-          subscribeFn: () => {},
+          subscribeFn: emptyFunction,
         });
 
         // store messages
@@ -263,7 +265,7 @@ describe('main', () => {
           topicId: topicIdStr,
           topicName: 'name',
           storage,
-          subscribeFn: () => {},
+          subscribeFn: emptyFunction,
         });
 
         // store messages
@@ -475,7 +477,7 @@ describe('main', () => {
       });
 
       beforeEach(async () => {
-        const navigation = { goBack: () => {} };
+        const navigation = { goBack: emptyFunction };
         const groupId = groupFixtures.secondGroup._id.toHexString();
         await newTopicActions.createTopic(navigation, groupId, topicName)(localDispatch, localGetState);
       });
@@ -525,7 +527,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupId = groupIds.firstGroup.toHexString();
       const groupActions = new GroupStore();
-      await groupActions.leaveGroup(groupId, () => {});
+      await groupActions.leaveGroup(groupId, emptyFunction);
       const groups = await server.getOwnGroups();
       const call0args = unsubscribeStub.args[0];
       const [, unsubscribedGroup] = call0args;
@@ -557,7 +559,7 @@ describe('main', () => {
         // let navigatePath;
         // const navigation = { navigate: (path) => navigatePath = path };
         const groupActions = new GroupStore();
-        const joinGroupPromise = groupActions.joinGroup(groupId, () => {});
+        const joinGroupPromise = groupActions.joinGroup(groupId, emptyFunction);
         await expect(joinGroupPromise).to.eventually.rejectedWith('User already participate in the group');
       });
 

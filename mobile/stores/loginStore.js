@@ -1,17 +1,15 @@
-// TODO: remove include of React stuff
-import { Alert } from 'react-native';
-
-import auth from '@react-native-firebase/auth';
-import * as server from '../lib/server';
+const server = require('../lib/server');
 const graphqlConnect = require('../lib/graphqlConnect');
-import { getAndUpdateFcmToken } from '../lib/fcm';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
 class LoginStore {
 
-  constructor(rootActions) {
+  constructor(rootActions, Alert, auth, getAndUpdateFcmToken) {
     this.rootActions = rootActions;
+    this.Alert = Alert;
+    this.auth = auth;
+    this.getAndUpdateFcmToken = getAndUpdateFcmToken;
     this.phoneNumber = '';
     this.confirmResult = null;
   }
@@ -19,7 +17,7 @@ class LoginStore {
   async login(navigation, phoneNumber) {
     this.phoneNumber = phoneNumber;
     try {
-      this.confirmResult = await auth().signInWithPhoneNumber(phoneNumber);
+      this.confirmResult = await this.auth().signInWithPhoneNumber(phoneNumber);
       navigation.navigate('ConfirmationCode');
     } catch(error) {
       const msgByCode = {
@@ -31,7 +29,7 @@ class LoginStore {
       };
       const errorMessage = msgByCode[error.code] || 'Erro';
       console.error(error);
-      Alert.alert(
+      this.Alert.alert(
         'Erro',
         errorMessage,
         [
@@ -44,7 +42,7 @@ class LoginStore {
 
   async init(navigate) {
     try {
-      const firebaseUser = auth().currentUser;
+      const firebaseUser = this.auth().currentUser;
       // check if user is already logged in
       if (firebaseUser) {
         const fbUserToken = await firebaseUser.getIdToken(true);  
@@ -56,7 +54,7 @@ class LoginStore {
         await this.userLoggedIn({ navigate, userId });
       }
 
-      auth().onAuthStateChanged(async (fbUser) => {
+      this.auth().onAuthStateChanged(async (fbUser) => {
         if (fbUser) {
           const fbUserToken = await fbUser.getIdToken(true);
           updateFbUserToken(fbUserToken);
@@ -78,7 +76,7 @@ class LoginStore {
         'auth/missing-verification-code': 'Código de verificação vazio',
       };
       const errorMessage = msgByCode[error.code] || 'Erro';
-      Alert.alert(
+      this.Alert.alert(
         'Erro',
         errorMessage,
         [
@@ -91,7 +89,7 @@ class LoginStore {
     }
 
     // const fcmToken = await firebase.messaging().getToken();
-    const fbUser = auth().currentUser;
+    const fbUser = this.auth().currentUser;
     const fbUserToken = await fbUser.getIdToken(true);  
     console.log(`Confirmation code, token: ${fbUserToken}`);
 
@@ -108,16 +106,16 @@ class LoginStore {
   }
 
   async userLoggedIn({ navigate, userId }) {
-    this.rootActions.setUserId(userId);
-    await getAndUpdateFcmToken();
-    await this.rootActions.fetchOwnGroups();
+    this.rootActions.userId = userId;
+    await this.getAndUpdateFcmToken();
+    await this.rootActions.groupStore.fetchOwnGroups();
     navigate('TabNavigator');
   }
   
   async logout(navigation) {
     try {
       this.rootActions.setUserId('');
-      await auth().signOut();
+      await this.auth().signOut();
       navigation.navigate('Login');
     } catch (error) {
       console.error(error);
@@ -131,7 +129,7 @@ class LoginStore {
         phoneNumber: this.phoneNumber,
       });
       if (errorMessage) {
-        Alert.alert(
+        this.Alert.alert(
           'Erro',
           errorMessage,
           [
