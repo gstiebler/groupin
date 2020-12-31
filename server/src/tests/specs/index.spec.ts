@@ -34,7 +34,7 @@ beforeAll(async () => {
       for (const error of result.errors) {
         logger.error(error.stack);
       }
-      throw new Error(result.errors[0].stack);
+      throw new Error(result.errors[0].message);
     }
     return result.data;
   };

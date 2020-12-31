@@ -352,9 +352,6 @@ describe('main', () => {
       await initFixtures();
     });
 
-    afterEach(() => {
-    });
-
     it('register', async () => {
       const uid = 'dk49sdfjhk';
       await server.register({
@@ -372,7 +369,6 @@ describe('main', () => {
       const messageText = 'new message 1 from Alice';
       const topicId = topicFixtures.topic1Group1._id.toHexString();
       let rootActions;
-      let topicActions;
 
       beforeEach(async () => {
         setCurrentUser(alice);
@@ -416,15 +412,17 @@ describe('main', () => {
           limit: 20,
           afterId: '507f1f77bcf86cd799439002',
         });
-        expect(messages).arrayContaining([{
-          _id: lastMessageOnStore._id,
-          text: messageText,
-          user: {
-            _id: '507f1f77bcf86cd799430001',
-            avatar: 'alice_url',
-            name: 'Alice',
-          },
-        }]);
+        expect(messages).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            _id: lastMessageOnStore._id,
+            text: messageText,
+            user: expect.objectContaining({
+              _id: '507f1f77bcf86cd799430001',
+              avatar: 'alice_url',
+              name: 'Alice',
+            }),
+          }),
+        ]));
       });
 
       it('sendMessage, filtering by `startingId`', async () => {
@@ -434,12 +432,12 @@ describe('main', () => {
         });
         expect(messages).toHaveLength(3);
         // the most recent message
-        expect(messages[0]).objectContaining({
+        expect(messages[0]).toEqual(expect.objectContaining({
           text: messageText,
-          user: {
+          user: expect.objectContaining({
             name: 'Alice',
-          },
-        });
+          }),
+        }));
       });
 
       it('topic sort order', async () => {
@@ -451,14 +449,14 @@ describe('main', () => {
     describe('createTopic', () => {
       const topicName = 'new topic foca';
 
-      beforAll(() => {
+      beforeAll(() => {
         setCurrentUser(userFixtures.robert);
       });
 
       beforeEach(async () => {
         const navigation = { goBack: emptyFunction };
-        const groupId = groupFixtures.secondGroup._id.toHexString();
-        await newTopicActions.createTopic(navigation, groupId, topicName);
+        const secondGroupId = groupFixtures.secondGroup._id.toHexString();
+        await newTopicActions.createTopic(navigation, secondGroupId, topicName);
       });
 
       it('push', async () => {
@@ -541,10 +539,7 @@ describe('main', () => {
         try {
           await groupActions.joinGroup(groupId, emptyFunction);
         } catch (error) {
-          console.log(error);
-          expect(error).toEqual({
-            error: 'User with 2 not found.',
-          });
+          expect(error.message).toEqual('User already participate in the group');
         }
       });
 
