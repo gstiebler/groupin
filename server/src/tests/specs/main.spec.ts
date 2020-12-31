@@ -79,9 +79,9 @@ describe('main', () => {
 
     it('getOwnGroups', async () => {
       setCurrentUser(userFixtures.robert);
-      const groupActions = new GroupStore();
-      await groupActions.fetchOwnGroups();
-      expect(groupActions.ownGroups).toEqual([
+      const groupStore = new GroupStore();
+      await groupStore.fetchOwnGroups();
+      expect(groupStore.ownGroups).toEqual([
         {
           id: groupFixtures.firstGroup._id.toHexString(),
           name: 'First Group',

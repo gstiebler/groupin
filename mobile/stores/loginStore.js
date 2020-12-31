@@ -106,7 +106,7 @@ class LoginStore {
   }
 
   async userLoggedIn({ navigate, userId }) {
-    this.rootStore.userId = userId;
+    this.rootStore.setUserId(userId);
     await this.getAndUpdateFcmToken();
     await this.rootStore.groupStore.fetchOwnGroups();
     navigate('TabNavigator');
