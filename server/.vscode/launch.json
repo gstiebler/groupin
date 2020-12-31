@@ -10,22 +10,5 @@
       "name": "Attach",
       "port": 9229
     },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "test",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "./node_modules/mocha/bin/mocha"
-      ],
-      "cwd": "${workspaceFolder}",
-      "internalConsoleOptions": "openOnSessionStart",
-      "outputCapture": "std",
-      "env": {
-        "WINSTON_CONSOLE_LEVEL": "debug",
-        "NODE_ENV": "test",
-        "MONGODB_URL": "mongodb://localhost:27017/groupin_test"
-      }
-    },
   ]
 }
