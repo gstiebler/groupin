@@ -2,7 +2,7 @@ const RootStore = require('../../../../mobile/stores/rootStore');
 const LoginStore = require('../../../../mobile/stores/loginStore');
 const GroupStore = require('../../../../mobile/stores/groupStore');
 
-import { setCurrentUser } from './index.spec';
+import { setCurrentUser } from '../setup';
 import userFixtures from '../fixtures/userFixtures';
 
 const emptyFunction = () => {};

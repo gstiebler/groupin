@@ -11,7 +11,7 @@ import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import messageFixtures from '../fixtures/messageFixtures';
 import { groupIds } from '../fixtures/preIds';
-import { setCurrentUser } from './index.spec';
+import { setCurrentUser } from '../setup';
 import User from '../../db/schema/User';
 import Topic, { ITopic } from '../../db/schema/Topic';
 import Message from '../../db/schema/Message';

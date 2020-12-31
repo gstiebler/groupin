@@ -2,14 +2,14 @@
 import { graphql } from 'graphql';
 
 import * as dotenv from 'dotenv';
-import rootValue from '../../resolver';
-import * as mongooseConfig from '../../config/mongoose';
-import schema from '../../graphqlSchema';
-import logger from '../../config/winston';
-import addMongooseLogger from '../../dev/mongodbLogger';
-import User from '../../db/schema/User';
+import rootValue from '../resolver';
+import * as mongooseConfig from '../config/mongoose';
+import schema from '../graphqlSchema';
+import logger from '../config/winston';
+import addMongooseLogger from '../dev/mongodbLogger';
+import User from '../db/schema/User';
 
-const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
+const graphqlConnect = require('../../../mobile/lib/graphqlConnect');
 
 const currentUserHolder = { currentUser: null };
 
@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== 'test') {
       Current environment: ${process.env.NODE_ENV}`);
 }
 
-beforeAll(async () => {
+async function setup() {
   dotenv.config();
   await mongooseConfig.init();
   graphqlConnect.sendQuery = async (query, variables) => {
@@ -39,14 +39,9 @@ beforeAll(async () => {
     return result.data;
   };
   addMongooseLogger();
-  it('nothing', () => {
-    expect(true).toBe(true);
-  });
-});
+};
 
-afterAll(async () => {
-  await mongooseConfig.disconnect();
-});
+setup();
 
 module.exports = {
   setCurrentUser,
