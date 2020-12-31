@@ -11,7 +11,7 @@ import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import messageFixtures from '../fixtures/messageFixtures';
 import { groupIds } from '../fixtures/preIds';
-import { setCurrentUser } from '../setup';
+import { setup, setCurrentUser } from '../setup';
 import User from '../../db/schema/User';
 import Topic, { ITopic } from '../../db/schema/Topic';
 import Message from '../../db/schema/Message';
@@ -53,6 +53,10 @@ function createStorage() {
 // TODO: test thrown exceptions
 
 describe('main', () => {
+  beforeAll(async () => {
+    await setup();
+  });
+
   describe('reading', () => {
     const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id);
     const localMessages50 = messages50.map((m) => ({ ...m, _id: m._id.toHexString() }));

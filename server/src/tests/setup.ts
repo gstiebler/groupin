@@ -22,9 +22,10 @@ if (process.env.NODE_ENV !== 'test') {
       Current environment: ${process.env.NODE_ENV}`);
 }
 
-async function setup() {
+const mongooseInitPromise = mongooseConfig.init();
+export async function setup() {
   dotenv.config();
-  await mongooseConfig.init();
+  await mongooseInitPromise;
   graphqlConnect.sendQuery = async (query, variables) => {
     const user = await User.findById(currentUserHolder.currentUser._id);
     const firebaseId = 'dk49sdfjhk';
@@ -39,10 +40,4 @@ async function setup() {
     return result.data;
   };
   addMongooseLogger();
-};
-
-setup();
-
-module.exports = {
-  setCurrentUser,
 };

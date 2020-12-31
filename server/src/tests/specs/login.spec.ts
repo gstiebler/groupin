@@ -2,10 +2,14 @@ const RootStore = require('../../../../mobile/stores/rootStore');
 const LoginStore = require('../../../../mobile/stores/loginStore');
 const GroupStore = require('../../../../mobile/stores/groupStore');
 
-import { setCurrentUser } from '../setup';
+import { setCurrentUser, setup } from '../setup';
 import userFixtures from '../fixtures/userFixtures';
 
 describe('loginStore', () => {
+  beforeAll(async () => {
+    await setup();
+  });
+
   setCurrentUser(userFixtures.robert);
   const groupStore = new GroupStore();
   const rootStore = new RootStore(groupStore);
