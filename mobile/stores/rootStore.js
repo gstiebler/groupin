@@ -33,6 +33,10 @@ class RootStore {
     this.hasOlderMessages = false;
   }
 
+  setUserId(userId) {
+    this.userId = userId;
+  }
+
   addNewMessages(newMessages) {
     this.messages = mergeMessages(this.messages, newMessages);
   }

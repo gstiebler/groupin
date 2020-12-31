@@ -5,8 +5,8 @@ const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
 class LoginStore {
 
-  constructor(rootActions, Alert, auth, getAndUpdateFcmToken) {
-    this.rootActions = rootActions;
+  constructor(rootStore, Alert, auth, getAndUpdateFcmToken) {
+    this.rootStore = rootStore;
     this.Alert = Alert;
     this.auth = auth;
     this.getAndUpdateFcmToken = getAndUpdateFcmToken;
@@ -106,15 +106,15 @@ class LoginStore {
   }
 
   async userLoggedIn({ navigate, userId }) {
-    this.rootActions.userId = userId;
+    this.rootStore.userId = userId;
     await this.getAndUpdateFcmToken();
-    await this.rootActions.groupStore.fetchOwnGroups();
+    await this.rootStore.groupStore.fetchOwnGroups();
     navigate('TabNavigator');
   }
   
   async logout(navigation) {
     try {
-      this.rootActions.setUserId('');
+      this.rootStore.setUserId('');
       await this.auth().signOut();
       navigation.navigate('Login');
     } catch (error) {
