@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import * as logger from 'winston';
+import logger from './winston';
 
 let db;
 export async function init() {

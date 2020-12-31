@@ -30,7 +30,8 @@ describe('loginStore', () => {
 
   it('init', async () => {
     expect(true).toBe(true);
-    await loginStore.init();
+    const navigate = jest.fn();
+    await loginStore.init(navigate);
   });
 
   it('login', async () => {

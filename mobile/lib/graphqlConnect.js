@@ -9,7 +9,6 @@ function setToken(token) {
 
 async function sendQuery(query, variables) {
   try {
-    console.log(query, variables);
     const requestConfig = {
       url,
       method: 'post',
