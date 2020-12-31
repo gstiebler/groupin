@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const logger = require('./src/config/winston');
 const mongooseConfig = require('./src/config/mongoose');

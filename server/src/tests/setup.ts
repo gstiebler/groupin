@@ -1,7 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { graphql } from 'graphql';
-
 import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env.test' });
+
+import { graphql } from 'graphql';
 import rootValue from '../resolver';
 import * as mongooseConfig from '../config/mongoose';
 import schema from '../graphqlSchema';
@@ -24,7 +25,6 @@ if (process.env.NODE_ENV !== 'test') {
 
 const mongooseInitPromise = mongooseConfig.init();
 export async function setup() {
-  dotenv.config();
   await mongooseInitPromise;
   graphqlConnect.sendQuery = async (query, variables) => {
     const user = await User.findById(currentUserHolder.currentUser._id);

@@ -1,8 +1,10 @@
 // @ts-nocheck
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
-
 import * as _ from 'lodash';
+
+import { setup, setCurrentUser } from '../setup';
+
 import pushService from '../../lib/pushService';
 import { initFixtures } from '../fixtures';
 // const logger = require('../../config/winston');
@@ -11,7 +13,6 @@ import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import messageFixtures from '../fixtures/messageFixtures';
 import { groupIds } from '../fixtures/preIds';
-import { setup, setCurrentUser } from '../setup';
 import User from '../../db/schema/User';
 import Topic, { ITopic } from '../../db/schema/Topic';
 import Message from '../../db/schema/Message';

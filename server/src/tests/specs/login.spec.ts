@@ -1,5 +1,7 @@
 import * as _ from 'lodash';
-import { setCurrentUser, setup } from '../setup';
+
+import { setup, setCurrentUser } from '../setup';
+
 import userFixtures from '../fixtures/userFixtures';
 
 const RootStore = require('../../../../mobile/stores/rootStore');
