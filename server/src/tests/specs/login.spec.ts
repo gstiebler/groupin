@@ -25,14 +25,15 @@ function getInitializedStore() {
   const navigation = {
     navigate: jest.fn(),
   };
-  const Auth = () => authObj;
-  const alert = { alert: jest.fn() };
+  const auth = () => authObj;
+  const Alert = { alert: jest.fn() };
   const getAndUpdateFcmToken = jest.fn();
-  const loginStore = new LoginStore(rootStore, alert, Auth, getAndUpdateFcmToken);
+  const loginStore = new LoginStore(rootStore, Alert, auth, getAndUpdateFcmToken);
   return {
     rootStore,
     loginStore,
     navigation,
+    authObj,
     navigate: jest.fn(),
     getAndUpdateFcmToken,
   };
@@ -77,9 +78,13 @@ describe('loginStore', () => {
   });
 
   it('logout', async () => {
-    const { loginStore, navigation } = getInitializedStore();
-    expect(true).toBe(true);
+    const { rootStore, loginStore, navigation, navigate, authObj } = getInitializedStore();
+    await loginStore.init(navigate);
+    await loginStore.login(navigation, '555');
     await loginStore.logout(navigation);
+    expect(rootStore.userId).toEqual('');
+    expect(authObj.signOut).toHaveBeenCalled();
+    expect(navigation.navigate).toHaveBeenLastCalledWith('Login');
   });
 
   it('register', async () => {
