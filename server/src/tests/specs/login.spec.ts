@@ -5,26 +5,24 @@ const GroupStore = require('../../../../mobile/stores/groupStore');
 import { setCurrentUser } from '../setup';
 import userFixtures from '../fixtures/userFixtures';
 
-const emptyFunction = () => {};
-
 describe('loginStore', () => {
   setCurrentUser(userFixtures.robert);
   const groupStore = new GroupStore();
   const rootStore = new RootStore(groupStore);
   const authObj = {
-    signInWithPhoneNumber: () => ({ confirm: emptyFunction }),
+    signInWithPhoneNumber: () => ({ confirm: jest.fn() }),
     currentUser: {
       getIdToken: async () => 'id token',
     },
-    onAuthStateChanged: emptyFunction,
-    signOut: emptyFunction,
+    onAuthStateChanged: jest.fn(),
+    signOut: jest.fn(),
   };
   const navigation = {
-    navigate: emptyFunction,
+    navigate: jest.fn(),
   };
   const Auth = () => authObj;
-  const alert = { alert: emptyFunction };
-  const loginStore = new LoginStore(rootStore, alert, Auth, emptyFunction);
+  const alert = { alert: jest.fn() };
+  const loginStore = new LoginStore(rootStore, alert, Auth, jest.fn());
 
   it('init', async () => {
     expect(true).toBe(true);
@@ -44,7 +42,7 @@ describe('loginStore', () => {
 
   it('userLoggedIn', async () => {
     expect(true).toBe(true);
-    await loginStore.userLoggedIn({ navigate: emptyFunction, userId: 'userId1' });
+    await loginStore.userLoggedIn({ navigate: jest.fn(), userId: 'userId1' });
   });
 
   it('logout', async () => {

@@ -27,8 +27,6 @@ const server = require('../../../../mobile/lib/server');
 
 const { ObjectId } = mongoose.Types;
 
-const emptyFunction = () => {};
-
 function createMessages(numMessages, user, topic) {
   const messages = [];
   const baseMoment = moment();
@@ -178,7 +176,7 @@ describe('main', () => {
           topicId: topicIdStr,
           topicName: 'name',
           storage,
-          subscribeFn: emptyFunction,
+          subscribeFn: jest.fn(),
         });
         const expectedMessages = _.reverse([
           {
@@ -216,7 +214,7 @@ describe('main', () => {
           topicId: topicIdStr,
           topicName: 'name',
           storage,
-          subscribeFn: emptyFunction,
+          subscribeFn: jest.fn(),
         });
 
         // store messages
@@ -250,7 +248,7 @@ describe('main', () => {
           topicId: topicIdStr,
           topicName: 'name',
           storage,
-          subscribeFn: emptyFunction,
+          subscribeFn: jest.fn(),
         });
 
         // store messages
@@ -454,7 +452,7 @@ describe('main', () => {
       });
 
       beforeEach(async () => {
-        const navigation = { goBack: emptyFunction };
+        const navigation = { goBack: jest.fn() };
         const secondGroupId = groupFixtures.secondGroup._id.toHexString();
         await newTopicActions.createTopic(navigation, secondGroupId, topicName);
       });
@@ -504,7 +502,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupId = groupIds.firstGroup.toHexString();
       const groupActions = new GroupStore();
-      await groupActions.leaveGroup(groupId, emptyFunction);
+      await groupActions.leaveGroup(groupId, jest.fn());
       const groups = await server.getOwnGroups();
       const [, unsubscribedGroup] = pushService.unsubscribe.mock.calls[0];
       expect(unsubscribedGroup).toBe(groupId);
@@ -537,7 +535,7 @@ describe('main', () => {
         // const navigation = { navigate: (path) => navigatePath = path };
         const groupActions = new GroupStore();
         try {
-          await groupActions.joinGroup(groupId, emptyFunction);
+          await groupActions.joinGroup(groupId, jest.fn());
         } catch (error) {
           expect(error.message).toEqual('User already participate in the group');
         }
