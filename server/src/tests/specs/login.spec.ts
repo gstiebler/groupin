@@ -3,6 +3,8 @@ import * as _ from 'lodash';
 import { setup, setCurrentUser } from '../setup';
 
 import userFixtures from '../fixtures/userFixtures';
+const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
+const server = require('../../../../mobile/lib/server');
 
 const RootStore = require('../../../../mobile/stores/rootStore');
 const LoginStore = require('../../../../mobile/stores/loginStore');
@@ -14,8 +16,9 @@ function getInitializedStore() {
   setCurrentUser(userFixtures.robert);
   const groupStore = new GroupStore();
   const rootStore = new RootStore(groupStore);
+  const confirmResultObj = { confirm: jest.fn() };
   const authObj = {
-    signInWithPhoneNumber: () => ({ confirm: jest.fn() }),
+    signInWithPhoneNumber: () => confirmResultObj,
     currentUser: {
       getIdToken: async () => 'id token',
     },
@@ -34,6 +37,7 @@ function getInitializedStore() {
     loginStore,
     navigation,
     authObj,
+    confirmResultObj,
     navigate: jest.fn(),
     getAndUpdateFcmToken,
   };
@@ -57,12 +61,45 @@ describe('loginStore', () => {
     await loginStore.login(navigation, phoneNumber);
   });
 
-  it('confirmationCodeReceived', async () => {
-    const { loginStore, navigation, navigate } = getInitializedStore();
-    expect(true).toBe(true);
-    await loginStore.init(navigate);
-    await loginStore.login(navigation, '555');
-    await loginStore.confirmationCodeReceived({ navigation, confirmationCode: 'x34' });
+  describe('confirmationCodeReceived', () => {
+    const {
+      loginStore,
+      rootStore,
+      navigation,
+      navigate,
+      getAndUpdateFcmToken,
+      confirmResultObj,
+    } = getInitializedStore();
+    graphqlConnect.setToken = jest.fn();
+
+    beforeEach(async () => {
+      await loginStore.init(navigate);
+      await loginStore.login(navigation, '555');
+    });
+
+    it('not logged', async () => {
+      server.getUserId = jest.fn(async () => ({ id: 'NO USER' }));
+      await loginStore.confirmationCodeReceived({ navigation, confirmationCode: 'x34' });
+      expect(confirmResultObj.confirm).toHaveBeenCalledWith('x34');
+      expect(graphqlConnect.setToken).toHaveBeenCalledWith('id token');
+      expect(navigation.navigate).toHaveBeenCalledWith('Register');
+    });
+
+    it('logged', async () => {
+      server.getUserId = jest.fn(async () => ({ id: 'userId2' }));
+      await loginStore.confirmationCodeReceived({ navigation, confirmationCode: 'x34' });
+      expect(confirmResultObj.confirm).toHaveBeenCalledWith('x34');
+      expect(graphqlConnect.setToken).toHaveBeenCalledWith('id token');
+
+      // userLoggedIn call
+      expect(rootStore.userId).toEqual('userId2');
+      expect(getAndUpdateFcmToken).toHaveBeenCalled();
+      expect(_.map(rootStore.groupStore.ownGroups, 'id')).toEqual([
+        groupFixtures.firstGroup._id.toHexString(),
+        groupFixtures.secondGroup._id.toHexString(),
+      ]);
+      expect(navigate.mock.calls).toEqual([['TabNavigator']]);
+    });
   });
 
   it('userLoggedIn', async () => {
