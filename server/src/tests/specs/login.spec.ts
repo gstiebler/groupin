@@ -127,7 +127,8 @@ describe('loginStore', () => {
     const { loginStore, navigation } = getInitializedStore();
     server.register = jest.fn(async () => ({ id: 'id1' }));
     loginStore.userLoggedIn = jest.fn();
-    await loginStore.register({ navigation, name: 'Alice', phoneNumber: '1235' });
+    loginStore.phoneNumber = '1235';
+    await loginStore.register({ navigation, name: 'Alice' });
     expect(server.register).toHaveBeenCalledWith({
       name: 'Alice',
       phoneNumber: '1235',
@@ -138,4 +139,6 @@ describe('loginStore', () => {
     mockNavigate('route');
     expect(navigation.navigate).toHaveBeenCalledWith('route');
   });
+
+  // TODO: login flow and register flow
 });

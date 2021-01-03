@@ -4,9 +4,6 @@ const graphqlConnect = require('../lib/graphqlConnect');
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
 class LoginStore {
-  Alert
-  auth
-
   constructor(rootStore, Alert, auth, getAndUpdateFcmToken) {
     this.rootStore = rootStore;
     this.Alert = Alert;
@@ -124,11 +121,11 @@ class LoginStore {
     }
   }
 
-  async register({navigation, name, phoneNumber}) {
+  async register({navigation, name}) {
     try {
       const { errorMessage, id } = await server.register({
         name, 
-        phoneNumber,
+        phoneNumber: this.phoneNumber,
       });
       if (errorMessage) {
         this.Alert.alert(
@@ -142,7 +139,6 @@ class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
-      this.phoneNumber = phoneNumber;
       await this.userLoggedIn({
         navigate: (route) => navigation.navigate(route), 
         userId: id,
