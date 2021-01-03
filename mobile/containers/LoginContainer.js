@@ -1,17 +1,9 @@
 import LoginComponent from '../components/Login';
-import LoginStore from '../stores/loginStore';
+import { loginStore } from '../stores/storesFactory';
 
-const mapStateToProps = () => {
-  return { 
-  };
-};
+function onLogin(navigation, phoneNumber) {
+  loginStore.login(navigation, phoneNumber);
+}
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onLogin: (navigation, phoneNumber) => dispatch(login(navigation, phoneNumber)),
-  };
-};
-
-
-const LoginContainer = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
+const LoginContainer = LoginComponent({ onLogin });
 export default LoginContainer;
