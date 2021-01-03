@@ -122,11 +122,11 @@ class LoginStore {
     }
   }
 
-  async register({navigation, name}) {
+  async register({navigation, name, phoneNumber}) {
     try {
       const { errorMessage, id } = await server.register({
         name, 
-        phoneNumber: this.phoneNumber,
+        phoneNumber,
       });
       if (errorMessage) {
         this.Alert.alert(
@@ -140,6 +140,7 @@ class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
+      this.phoneNumber = phoneNumber;
       await this.userLoggedIn({
         navigate: (route) => navigation.navigate(route), 
         userId: id,

@@ -50,13 +50,11 @@ describe('loginStore', () => {
 
   it('init', async () => {
     const { loginStore, navigate } = getInitializedStore();
-    expect(true).toBe(true);
     await loginStore.init(navigate);
   });
 
   it('login', async () => {
     const { loginStore, navigation } = getInitializedStore();
-    expect(true).toBe(true);
     const phoneNumber = '222';
     await loginStore.login(navigation, phoneNumber);
   });
@@ -121,7 +119,17 @@ describe('loginStore', () => {
 
   it('register', async () => {
     const { loginStore, navigation } = getInitializedStore();
-    expect(true).toBe(true);
-    await loginStore.register({ navigation, name: 'Alice' });
+    server.register = jest.fn(async () => ({ id: 'id1' }));
+    loginStore.userLoggedIn = jest.fn();
+    await loginStore.register({ navigation, name: 'Alice', phoneNumber: '1235' });
+    expect(server.register).toHaveBeenCalledWith({
+      name: 'Alice',
+      phoneNumber: '1235',
+    });
+    expect(loginStore.phoneNumber).toEqual('1235');
+    const { userId, navigate: mockNavigate } = loginStore.userLoggedIn.mock.calls[0][0];
+    expect(userId).toEqual('id1');
+    mockNavigate('route');
+    expect(navigation.navigate).toHaveBeenCalledWith('route');
   });
 });
