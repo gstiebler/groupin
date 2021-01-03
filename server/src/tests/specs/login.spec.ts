@@ -64,10 +64,8 @@ describe('loginStore', () => {
   describe('confirmationCodeReceived', () => {
     const {
       loginStore,
-      rootStore,
       navigation,
       navigate,
-      getAndUpdateFcmToken,
       confirmResultObj,
     } = getInitializedStore();
     graphqlConnect.setToken = jest.fn();
@@ -87,18 +85,15 @@ describe('loginStore', () => {
 
     it('logged', async () => {
       server.getUserId = jest.fn(async () => ({ id: 'userId2' }));
+      loginStore.userLoggedIn = jest.fn();
       await loginStore.confirmationCodeReceived({ navigation, confirmationCode: 'x34' });
       expect(confirmResultObj.confirm).toHaveBeenCalledWith('x34');
       expect(graphqlConnect.setToken).toHaveBeenCalledWith('id token');
 
-      // userLoggedIn call
-      expect(rootStore.userId).toEqual('userId2');
-      expect(getAndUpdateFcmToken).toHaveBeenCalled();
-      expect(_.map(rootStore.groupStore.ownGroups, 'id')).toEqual([
-        groupFixtures.firstGroup._id.toHexString(),
-        groupFixtures.secondGroup._id.toHexString(),
-      ]);
-      expect(navigate.mock.calls).toEqual([['TabNavigator']]);
+      const { userId, navigate: mockNavigate } = loginStore.userLoggedIn.mock.calls[0][0];
+      expect(userId).toEqual('userId2');
+      mockNavigate('route');
+      expect(navigation.navigate).toHaveBeenCalledWith('route');
     });
   });
 
