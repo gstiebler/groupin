@@ -1,5 +1,5 @@
 import LoginComponent from '../components/Login';
-import { login } from '../actions/loginActions';
+import LoginStore from '../stores/loginStore';
 
 const mapStateToProps = () => {
   return { 
