@@ -1,18 +1,8 @@
 import RegisterComponent from '../components/Register';
-import { register } from '../actions/registerActions';
+import { loginStore } from '../stores/storesFactory';
 
-const mapStateToProps = () => {
-  return { 
-  };
-};
+const onRegister = ({navigation, name}) => loginStore.register({navigation, name});
+const onBack = (navigation) => navigation.navigate('Login');
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onRegister: ({navigation, name}) => dispatch(register({navigation, name})),
-    onBack: (navigation) => navigation.navigate('Login'),
-  };
-};
-
-
-const Register = connect(mapStateToProps, mapDispatchToProps)(RegisterComponent);
+const Register = ({ navigation }) => RegisterComponent({ navigation, onRegister, onBack });
 export default Register;

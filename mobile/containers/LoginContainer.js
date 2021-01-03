@@ -1,9 +1,7 @@
 import LoginComponent from '../components/Login';
 import { loginStore } from '../stores/storesFactory';
 
-function onLogin(navigation, phoneNumber) {
-  loginStore.login(navigation, phoneNumber);
-}
+const onLogin = (navigation, phoneNumber) => loginStore.login(navigation, phoneNumber);
 
-const LoginContainer = LoginComponent({ onLogin });
+const LoginContainer = ({ navigation }) => LoginComponent({ navigation, onLogin });
 export default LoginContainer;
