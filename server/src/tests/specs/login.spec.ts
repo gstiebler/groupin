@@ -50,7 +50,13 @@ describe('loginStore', () => {
 
   it('init', async () => {
     const { loginStore, navigate } = getInitializedStore();
+    graphqlConnect.setToken = jest.fn();
+    loginStore.userLoggedIn = jest.fn();
+    server.getUserId = jest.fn(async () => ({ id: 'userId453' }));
     await loginStore.init(navigate);
+    expect(graphqlConnect.setToken).toHaveBeenCalledWith('id token');
+    const { userId } = loginStore.userLoggedIn.mock.calls[0][0];
+    expect(userId).toEqual('userId453');
   });
 
   it('login', async () => {
