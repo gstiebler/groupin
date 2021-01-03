@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import ConfirmationCodeComponent from '../components/ConfirmationCode';
 import { 
   confirmationCodeReceived,

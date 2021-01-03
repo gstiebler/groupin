@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import storage from '../lib/localStorage';
 import { sendMessages } from '../actions/rootActions';
 import ChatComponent from '../components/Chat';

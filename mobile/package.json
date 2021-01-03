@@ -21,6 +21,8 @@
     "axios": "^0.19.2",
     "eslint-config-airbnb-base": "^14.2.0",
     "immutable": "3",
+    "mobx": "^6.0.4",
+    "mobx-react": "^7.0.5",
     "native-base": "^2.13.14",
     "react": "16.13.1",
     "react-native": "0.63.2",
@@ -32,9 +34,7 @@
     "react-native-screens": "^2.10.1",
     "react-native-search-box": "^0.0.19",
     "react-native-swipe-list-view": "^3.2.3",
-    "react-native-vector-icons": "^7.0.0",
-    "react-redux": "5",
-    "redux-thunk": "^2.3.0"
+    "react-native-vector-icons": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",

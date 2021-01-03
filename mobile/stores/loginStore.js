@@ -4,6 +4,8 @@ const graphqlConnect = require('../lib/graphqlConnect');
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
 class LoginStore {
+  Alert
+  auth
 
   constructor(rootStore, Alert, auth, getAndUpdateFcmToken) {
     this.rootStore = rootStore;

@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import NewTopicComponent from '../components/NewTopic';
 import { 
   // NEW_TOPIC_NAME,

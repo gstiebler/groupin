@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import GroupListComponent from '../components/GroupList';
 import { 
   fetchOwnGroups,

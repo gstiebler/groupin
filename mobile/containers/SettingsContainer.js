@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import SettingsComponent from '../components/Settings';
 import { logout } from '../actions/loginActions';
 

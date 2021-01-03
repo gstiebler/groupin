@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import GroupsSearchComponent from '../components/GroupsSearch';
 import { findGroups } from '../actions/groupsSearchActions';
 import { GROUPS_SEARCH_ITEMS } from "../constants/action-types";
