@@ -5,7 +5,7 @@ import styles from '../Style';
 
 const Confirmationcode = ({ navigation, onChangeNumber, onConfirm }) => {
 
-  const [confirmationCode, changeConfirmationCode] = useState(0);
+  const [confirmationCode, changeConfirmationCode] = useState('');
 
   return (
     <SafeAreaView style={{ flex: 1 }} >

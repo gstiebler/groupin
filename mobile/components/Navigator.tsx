@@ -23,11 +23,24 @@ export function navigate(name: string, params) {
   navigationRef.current.navigate(name, params);
 }
 
-const Stack = createStackNavigator();
+type RootStackParamList = {
+  GroupList: undefined;
+  GroupsSearch: undefined;
+  Chat: { topicName: string };
+  TopicsList: { groupName: string, groupId: string };
+  NewTopic: undefined;
+  NewGroup: undefined;
+  GroupInfo: undefined;
+  Login: undefined;
+  Register: undefined;
+  ConfirmationCode: undefined;
+  TabNavigator: undefined;
+};
+const Stack = createStackNavigator<RootStackParamList>();
 
 const appStackNavigator = () => (
-  <Stack.Navigator initialRouteName="GroupList" options={{ gestureEnabled: false }}>
-    <Stack.Screen name="GroupsSearch" component={GroupsSearch} screenOptions={{ headerTitle: 'Buscar grupos' }}/>
+  <Stack.Navigator initialRouteName="GroupList" >
+    <Stack.Screen name="GroupsSearch" component={GroupsSearch} />
     <Stack.Screen 
       name="GroupList" 
       key="GROUP_LIST"

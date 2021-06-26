@@ -25,7 +25,7 @@ const GroupInfoComponent = ({ navigation, route, groupInfo, willFocus, willLeave
 
   return (
     <SafeAreaView style={{ flex: 1 }} >
-      <Container padder contentContainerStyle={styles.container} >
+      <Container>
         <Content>
           <Text>{ groupInfo.name }</Text>
           <Text>{ groupInfo.description }</Text>

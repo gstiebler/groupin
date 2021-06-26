@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, TextInput } from 'react-native';
 import { 
   Container, 
   Button, 
@@ -14,10 +14,9 @@ const LoginComponent = ({
   onLogin,
 }) => {
   const [phoneNumber, changePhoneNumber] = useState('');
-  const [phoneRef, changePhoneRef] = useState(0);
+  const [phoneRef, changePhoneRef] = useState<PhoneInput>(null);
 
   const login = () => {
-    phoneRef.inputPhone.clear();
     onLogin(navigation, phoneNumber);
   }
   
@@ -27,10 +26,9 @@ const LoginComponent = ({
         <Content contentContainerStyle={styles.container}>
           <Text style={ styles.title1 }>Login</Text>
           <PhoneInput 
-            ref={changePhoneRef}
+            ref={(ref) => changePhoneRef(ref)}
             initialCountry='br'
             onChangePhoneNumber={changePhoneNumber}
-            autoFormat={true}
             style={{paddingTop: 30, paddingBottom: 30}}
             cancelText='Cancelar'
             confirmText='Confirmar'

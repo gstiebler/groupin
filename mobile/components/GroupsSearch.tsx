@@ -41,7 +41,7 @@ const GroupSearchComponent = ({
           cancelTitle='Cancelar'
           placeholder='Buscar'
         />
-        <List containerStyle={{marginBottom: 20}} 
+        <List 
           dataArray={groups} 
           renderRow={renderGroup}
         />
