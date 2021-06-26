@@ -1,19 +1,14 @@
 import _ from 'lodash';
-import { Message } from 'react-native-gifted-chat';
 
-    /*{
-      _id: 1,
-      text: 'Hello developer',
-      createdAt: new Date(),
-      user: {
-        _id: 2,
-        name: 'React Native',
-        avatar: 'https://placeimg.com/140/140/any',
-      },
-    },*/
-export interface GiMessage extends Message {
+export interface GiMessage {
   _id: string;
   text: string;
+  createdAt: Date;
+  user: {
+    _id: string;
+    name: string;
+    avatar: string;
+  }
 }
 
 export function mergeMessages(olderMessages: GiMessage[], newerMessages: GiMessage[]): GiMessage[] {
@@ -32,6 +27,6 @@ export function removeFirst(messages: GiMessage[]): GiMessage[] {
   return _.initial(messages);
 }
 
-export function getNNew(messages: Message[], n: number) {
+export function getNNew(messages: GiMessage[], n: number) {
   return messages.slice(0, n);
 }

@@ -1,5 +1,5 @@
 import * as server from '../lib/server';
-import graphqlConnect from '../lib/graphqlConnect';
+import * as graphqlConnect from '../lib/graphqlConnect';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 

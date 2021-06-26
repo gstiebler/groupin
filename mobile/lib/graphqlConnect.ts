@@ -1,23 +1,22 @@
-const axios = require('axios');
-const env = require('../env');
+import axios from 'axios';
+import env from '../env';
 
 const url = env.SERVER_URL;
 
-function setToken(token) {
+export function setToken(token) {
   axios.defaults.headers.common.authorization = token;
 }
 
-async function sendQuery(query, variables) {
+export async function sendQuery(query, variables) {
   try {
-    const requestConfig = {
+    const res = await axios.request({
       url,
       method: 'post',
       data: { 
         query, 
         variables,
       },
-    };
-    const res = await axios.request(requestConfig);
+    });
     if (!res.data) {
       throw new Error('No data returned from server');
     }
@@ -33,8 +32,3 @@ async function sendQuery(query, variables) {
     throw new Error(err);
   }
 }
-
-module.exports = {
-  sendQuery,
-  setToken,
-};

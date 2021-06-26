@@ -1,8 +1,8 @@
-import { Message } from "react-native-gifted-chat";
+import { GiMessage } from "./messages";
 
 const graphql = require('./graphqlConnect');
 
-export async function register({ name }) {
+export async function register({ name, phoneNumber }) {
   const query = `
     mutation Register($name: String!) {
       register(name: $name) {
@@ -14,7 +14,7 @@ export async function register({ name }) {
   return res.register;
 }
 
-export async function sendMessage({ message, topicId }) {
+export async function sendMessage({ message, topicId }): Promise<string> {
   const query = `
     mutation SendMessage($message: String!, $topicId: String!) {
       sendMessage (
@@ -99,7 +99,14 @@ export async function getUserId() {
   return res.getUserId;
 }
 
-export async function getOwnGroups() {
+export type Group = {
+  id: string;
+  name: string;
+  imgUrl: string;
+  unread: boolean;
+  pinned: boolean;
+}
+export async function getOwnGroups(): Promise<Group[]> {
   const query = `
     query {
       ownGroups {
@@ -159,7 +166,7 @@ type GetMessagesOfTopic = {
   beforeId? : string;
   afterId? : string;
 }
-export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: GetMessagesOfTopic): Promise<Message[]> {
+export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: GetMessagesOfTopic): Promise<GiMessage[]> {
   const query = `
     query MessagesOfTopic($topicId: String!, $limit: Float!, $beforeId: String, $afterId: String) {
       messagesOfTopic (
@@ -195,7 +202,18 @@ export async function updateFcmToken(fcmToken) {
   return res.updateFcmToken;
 }
 
-export async function getGroupInfo(groupId) {
+export type GroupInfo = {
+  _id: string;
+  friendlyId: string;
+  name: string;
+  imgUrl: string;
+  description: string;
+  visibility: string;
+  createdBy: string;
+  createdAt: string;
+  iBelong: boolean;
+}
+export async function getGroupInfo(groupId): Promise<GroupInfo> {
   const query = `
     query GetGroupInfo($groupId: String) {
       getGroupInfo (

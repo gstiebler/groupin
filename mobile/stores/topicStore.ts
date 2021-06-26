@@ -6,7 +6,7 @@ const formatDataTopicId = (topicId) => `data.${topicId}`;
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 
-class TopicStore {
+export class TopicStore {
   topicTitle: string;
   topicId: string;
 
@@ -60,7 +60,4 @@ class TopicStore {
       unsubscribeFn(formatDataTopicId(topicId));
     }
   }
-
 }
-
-module.exports = TopicStore;

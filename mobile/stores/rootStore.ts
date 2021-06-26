@@ -1,9 +1,9 @@
-import server from '../lib/server';
+import * as server from '../lib/server';
 import _ from 'lodash';
 import { mergeMessages, getFirst, GiMessage } from '../lib/messages';
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
-import TopicStore from './topicStore';
+import { TopicStore } from './topicStore';
 
 export class RootStore {
   topicStore: TopicStore = new TopicStore(this);

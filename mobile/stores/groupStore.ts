@@ -1,13 +1,16 @@
-const _ = require('lodash');
-const server = require('../lib/server');
-const { groupVisibility } = require('../constants/domainConstants');
+import _ from 'lodash';
+import * as server from '../lib/server';
+import { groupVisibility } from '../constants/domainConstants';
 
-class GroupStore {
+interface FeGroupInfo extends server.GroupInfo {
+  visibilityLabel: string;
+}
 
-  constructor() {
-    this.ownGroups = [];
-    this.currentGroupInfo = {};
-  }
+export class GroupStore {
+  ownGroups: server.Group[] = [];
+  currentGroupInfo: FeGroupInfo = null;
+
+  constructor() {}
 
   async getGroupInfo(groupId)  {
     const groupInfo = await server.getGroupInfo(groupId);
@@ -39,5 +42,3 @@ class GroupStore {
   }
 
 }
-
-module.exports = GroupStore;
