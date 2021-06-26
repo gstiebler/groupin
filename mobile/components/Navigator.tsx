@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import GroupList from '../containers/GroupListContainer';
@@ -17,7 +17,7 @@ import { Button, Icon, Text } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import init from '../appInit';
 
-export const navigationRef = React.createRef();
+export const navigationRef = React.createRef<NavigationContainerRef>();
 
 export function navigate(name: string, params) {
   navigationRef.current.navigate(name, params);

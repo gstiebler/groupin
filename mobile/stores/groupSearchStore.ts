@@ -1,13 +1,13 @@
-const server = require('../lib/server');
-const _ = require('lodash');
+import * as server from '../lib/server';
+import * as _ from 'lodash';
 
-class GroupSearchStore {
+export class GroupSearchStore {
 
-  constructor() {
-    this.groups = [];
-  }
+  constructor(
+    public groups: unknown[],
+  ) {}
 
-  async findGroups(searchText) {
+  public async findGroups(searchText) {
     const findGroups = () => server.findGroups({ 
       searchText, 
       limit: 20, 
@@ -17,5 +17,3 @@ class GroupSearchStore {
   }
 
 }
-
-module.exports = GroupSearchStore;

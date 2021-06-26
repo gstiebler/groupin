@@ -1,29 +1,25 @@
-const _ = require('lodash');
+import _ from 'lodash';
+import { Message } from 'react-native-gifted-chat';
 
-function mergeMessages(olderMessages, newerMessages) {
+interface GiMessage extends Message {
+  _id: string;
+}
+export function mergeMessages(olderMessages: GiMessage[], newerMessages: GiMessage[]): Message[] {
   return [...newerMessages, ...olderMessages];
 }
 
-function getFirst(messages) {
+export function getFirst(messages: GiMessage[]): GiMessage {
   return _.last(messages);
 }
 
-function getLast(messages) {
+export function getLast(messages: GiMessage[]): GiMessage {
   return _.first(messages);
 }
 
-function removeFirst(messages) {
+export function removeFirst(messages: GiMessage[]): GiMessage[] {
   return _.initial(messages);
 }
 
-function getNNew(messages, n) {
+export function getNNew(messages: Message[], n: number) {
   return messages.slice(0, n);
-}
-
-module.exports = {
-  mergeMessages,
-  getFirst,
-  getLast,
-  removeFirst,
-  getNNew,
 }

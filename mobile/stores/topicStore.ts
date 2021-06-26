@@ -1,20 +1,18 @@
-const server = require('../lib/server');
-const _ = require('lodash');
-const { 
-  mergeMessages, 
-  getFirst,
-  getLast, 
-  removeFirst,
-  getNNew,
-} = require('../lib/messages');
+import * as server from '../lib/server';
+import _ from 'lodash';
+import { mergeMessages, getFirst, getLast, removeFirst, getNNew } from '../lib/messages';
 
 const formatDataTopicId = (topicId) => `data.${topicId}`;
 
-const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
+import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 
 class TopicStore {
+  topicTitle: string;
+  topicId: string;
 
-  constructor(rootActions) {
+  constructor(
+    private rootActions
+  ) {
     this.rootActions = rootActions;
     this.topicTitle = '';
     this.topicId = '';
