@@ -33,7 +33,7 @@ const NewGroupComponent = ({ navigation, onCreate }) => {
             <Picker
               selectedValue={visibility}
               style={{height: 50, width: 100, paddingTop: 50}}
-              onValueChange={setVisibility}>
+              onValueChange={itemValue => setVisibility(itemValue as string)}>
               { visibilities }
             </Picker>
           </Item>

@@ -19,7 +19,7 @@ const RegisterComponent = ({
   onBack,
 }) => {
 
-  const [name, changeName] = useState(0);
+  const [name, changeName] = useState('');
 
   return (
     <SafeAreaView style={{ flex: 1 }} >
