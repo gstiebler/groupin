@@ -2,52 +2,43 @@
   "name": "groupin",
   "version": "0.0.1",
   "private": true,
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
-    "test": "jest",
-    "lint": "eslint ."
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/picker": "^1.6.6",
-    "@react-native-firebase/app": "^8.3.1",
-    "@react-native-firebase/auth": "^8.3.3",
-    "@react-native-firebase/messaging": "^7.7.1",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
-    "axios": "^0.19.2",
-    "eslint-config-airbnb-base": "^14.2.0",
+    "axios": "^0.21.1",
+    "expo": "~41.0.1",
+    "expo-status-bar": "~1.0.4",
     "immutable": "3",
     "mobx": "^6.0.4",
     "mobx-react": "^7.0.5",
     "native-base": "^2.13.14",
     "react": "16.13.1",
-    "react-native": "0.63.2",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
     "react-native-gesture-handler": "^1.7.0",
     "react-native-gifted-chat": "^0.16.3",
     "react-native-phone-input": "^0.2.4",
     "react-native-reanimated": "^1.13.0",
-    "react-native-safe-area-context": "^3.1.6",
     "react-native-screens": "^2.10.1",
     "react-native-search-box": "^0.0.19",
     "react-native-swipe-list-view": "^3.2.3",
-    "react-native-vector-icons": "^7.0.0"
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/runtime": "^7.11.2",
-    "@react-native-community/eslint-config": "^2.0.0",
-    "babel-jest": "^26.3.0",
-    "eslint": "^7.7.0",
-    "jest": "^26.4.0",
-    "metro-react-native-babel-preset": "^0.62.0",
-    "react-test-renderer": "16.13.1",
-    "remote-redux-devtools": "^0.5.16"
-  },
-  "jest": {
-    "preset": "react-native"
+    "@babel/core": "^7.9.0",
+    "@types/react": "~16.9.35",
+    "@types/react-native": "~0.63.2",
+    "typescript": "~4.0.0"
   }
 }
