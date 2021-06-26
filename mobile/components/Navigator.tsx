@@ -19,7 +19,7 @@ import init from '../appInit';
 
 export const navigationRef = React.createRef();
 
-export function navigate(name, params) {
+export function navigate(name: string, params) {
   navigationRef.current.navigate(name, params);
 }
 
