@@ -4,7 +4,7 @@ import {
 } from "../actions/rootActions";
 import store from "../store/rootStore";
 
-import messageReceiver from './messageReceiver';
+import * as messageReceiver from './messageReceiver';
 
 let tokenRefreshListener;
 let messagesListener;
