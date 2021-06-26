@@ -1,47 +1,33 @@
-const server = require('../lib/server');
-const _ = require('lodash');
-const { 
-  mergeMessages, 
-  getFirst,
-} = require('../lib/messages');
+import server from '../lib/server';
+import _ from 'lodash';
+import { mergeMessages, getFirst, GiMessage } from '../lib/messages';
 
-const { NUM_ITEMS_PER_FETCH } = require('../constants/domainConstants');
-const TopicStore = require('./topicStore');
+import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
+import TopicStore from './topicStore';
 
-class RootStore {
+export class RootStore {
+  topicStore: TopicStore = new TopicStore(this);
+  messages: GiMessage[] = [];
+  topics: unknown[] = []; // TODO: change name to `topicsOfGroup`
+  fcmToken: string = null;
+  userId = '';
+  currentlyViewedGroupId: string = null;
+  currentlyViewedTopicId: string = null;
+  hasOlderMessages = false;
 
-  constructor(groupStore) {
-    this.groupStore = groupStore;
-    this.topicStore = new TopicStore(this);
-    this.messages = [
-      /*{
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },*/
-    ];
-    this.topics = [], // TODO: change name to `topicsOfGroup`
-    this.fcmToken = null,
-    this.userId = '',
-    this.currentlyViewedGroupId = null;
-    this.currentlyViewedTopicId = null;
-    this.hasOlderMessages = false;
-  }
+  constructor(
+    public groupStore
+  ) {}
 
-  setUserId(userId) {
+  setUserId(userId: string) {
     this.userId = userId;
   }
 
-  addNewMessages(newMessages) {
+  addNewMessages(newMessages: GiMessage[]) {
     this.messages = mergeMessages(this.messages, newMessages);
   }
 
-  async sendMessages(messages) {
+  async sendMessages(messages: GiMessage[]) {
     const firstMessage = messages[0];
     const newMessageId = await server.sendMessage({
       message: firstMessage.text,
@@ -51,7 +37,7 @@ class RootStore {
     this.addNewMessages(newMessages);
   }
   
-  async getTopicsOfGroup(groupId) {
+  async getTopicsOfGroup(groupId: string) {
     this.topics = await server.getTopicsOfGroup(groupId, NUM_ITEMS_PER_FETCH, '');
   }
   
@@ -60,7 +46,7 @@ class RootStore {
     this.topics = await server.getTopicsOfGroup(this.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH, '');
   }
   
-  async onOlderMessagesRequested(topicId) {
+  async onOlderMessagesRequested(topicId: string) {
     if (_.isEmpty(this.messages)) { return }
     const firstMessage = getFirst(this.messages);
     const olderMessages = await server.getMessagesOfTopic({ 
@@ -86,7 +72,7 @@ class RootStore {
     await storage.setItem(topicId, this.messages);
   }
   
-  async updateFcmToken(fcmToken) {
+  async updateFcmToken(fcmToken: string) {
     this.fcmToken = fcmToken;
     await server.updateFcmToken(fcmToken);
   }
@@ -98,5 +84,3 @@ class RootStore {
   }
 
 }
-
-module.exports = RootStore;

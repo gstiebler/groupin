@@ -1,17 +1,18 @@
-const server = require('../lib/server');
-const graphqlConnect = require('../lib/graphqlConnect');
+import * as server from '../lib/server';
+import graphqlConnect from '../lib/graphqlConnect';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
-class LoginStore {
-  constructor(rootStore, Alert, auth, getAndUpdateFcmToken) {
-    this.rootStore = rootStore;
-    this.Alert = Alert;
-    this.auth = auth;
-    this.getAndUpdateFcmToken = getAndUpdateFcmToken;
-    this.phoneNumber = '';
-    this.confirmResult = null;
-  }
+export class LoginStore {
+  phoneNumber = '';
+  confirmResult = null;
+
+  constructor(
+    private rootStore,
+    private Alert,
+    private auth,
+    private getAndUpdateFcmToken
+  ) {}
 
   async login(navigation, phoneNumber) {
     this.phoneNumber = phoneNumber;
@@ -149,5 +150,3 @@ class LoginStore {
   }
 
 }
-
-module.exports = LoginStore;

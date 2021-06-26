@@ -1,10 +1,22 @@
 import _ from 'lodash';
 import { Message } from 'react-native-gifted-chat';
 
-interface GiMessage extends Message {
+    /*{
+      _id: 1,
+      text: 'Hello developer',
+      createdAt: new Date(),
+      user: {
+        _id: 2,
+        name: 'React Native',
+        avatar: 'https://placeimg.com/140/140/any',
+      },
+    },*/
+export interface GiMessage extends Message {
   _id: string;
+  text: string;
 }
-export function mergeMessages(olderMessages: GiMessage[], newerMessages: GiMessage[]): Message[] {
+
+export function mergeMessages(olderMessages: GiMessage[], newerMessages: GiMessage[]): GiMessage[] {
   return [...newerMessages, ...olderMessages];
 }
 
