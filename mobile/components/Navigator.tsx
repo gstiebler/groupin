@@ -17,10 +17,7 @@ import { Button, Icon, Text } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import init from '../appInit';
 
-export const navigationRef = React.createRef<NavigationContainerRef>();
-
-
-type RootStackParamList = {
+export type RootStackParamList = {
   GroupList: undefined;
   GroupsSearch: undefined;
   Chat: { topicId: string, topicName: string };
@@ -33,6 +30,8 @@ type RootStackParamList = {
   ConfirmationCode: undefined;
   TabNavigator: undefined;
 };
+
+export const navigationRef = React.createRef<NavigationContainerRef>();
 
 type StackPageName = keyof RootStackParamList;
 export function navigate<T extends StackPageName>(name: T, params: RootStackParamList[T]) {

@@ -1,5 +1,6 @@
 import * as server from '../lib/server';
 import * as graphqlConnect from '../lib/graphqlConnect';
+import { RegisterScreenNavigationProp } from '../components/Register';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
@@ -122,7 +123,7 @@ export class LoginStore {
     }
   }
 
-  async register({navigation, name}) {
+  async register({navigation, name}: { navigation: RegisterScreenNavigationProp, name: string }) {
     try {
       const { errorMessage, id } = await server.register({
         name, 

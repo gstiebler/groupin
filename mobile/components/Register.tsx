@@ -12,13 +12,22 @@ import {
   Input,
 } from 'native-base';
 import styles from '../Style';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './Navigator';
+
+export type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
+
+export type Props = {
+  navigation: RegisterScreenNavigationProp;
+  onRegister: (navigation: RegisterScreenNavigationProp, name: string) => void;
+  onBack: (navigation: RegisterScreenNavigationProp) => void;
+};
 
 const RegisterComponent = ({ 
   navigation,
   onRegister,
   onBack,
-}) => {
-
+}: Props) => {
   const [name, changeName] = useState('');
 
   return (
@@ -36,7 +45,7 @@ const RegisterComponent = ({
             </Item>
           </Form>
           <Button primary full 
-              onPress={() => onRegister({navigation, name})}
+              onPress={() => onRegister(navigation, name)}
               style={{ marginBottom: 20}} >
             <Text> Registrar </Text>
           </Button>

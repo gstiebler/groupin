@@ -1,8 +1,8 @@
-import RegisterComponent from '../components/Register';
+import RegisterComponent, { Props } from '../components/Register';
 import { loginStore } from '../stores/storesFactory';
 
-const onRegister = ({navigation, name}) => loginStore.register({navigation, name});
-const onBack = (navigation) => navigation.navigate('Login');
+const onRegister: Props['onRegister'] = (navigation, name) => loginStore.register({navigation, name});
+const onBack: Props['onBack'] = (navigation) => navigation.navigate('Login');
 
 const Register = ({ navigation }) => RegisterComponent({ navigation, onRegister, onBack });
 export default Register;
