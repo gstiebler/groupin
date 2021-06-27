@@ -19,9 +19,6 @@ import init from '../appInit';
 
 export const navigationRef = React.createRef<NavigationContainerRef>();
 
-export function navigate(name: string, params) {
-  navigationRef.current.navigate(name, params);
-}
 
 type RootStackParamList = {
   GroupList: undefined;
@@ -36,6 +33,12 @@ type RootStackParamList = {
   ConfirmationCode: undefined;
   TabNavigator: undefined;
 };
+
+export function navigate(name: keyof RootStackParamList, params) {
+  navigationRef.current.navigate(name, params);
+}
+export type NavFn = typeof navigate;
+
 const Stack = createStackNavigator<RootStackParamList>();
 
 const appStackNavigator = () => (

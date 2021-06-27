@@ -2,6 +2,7 @@ import messaging from '@react-native-firebase/messaging';
 import { 
   updateFcmToken,
 } from "../actions/rootActions";
+import { NavFn } from '../components/Navigator';
 import store from "../store/rootStore";
 
 import * as messageReceiver from './messageReceiver';
@@ -9,9 +10,9 @@ import * as messageReceiver from './messageReceiver';
 let tokenRefreshListener;
 let messagesListener;
 let notificationOpenedListener;
-let _navigateFn;
+let _navigateFn: NavFn;
 
-export async function init(navigateFn) {
+export async function init(navigateFn: NavFn) {
   _navigateFn = navigateFn;
   tokenRefreshListener = messaging().onTokenRefresh(fcmToken => {
     updateFcmToken(store, fcmToken);

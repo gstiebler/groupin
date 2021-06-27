@@ -2,6 +2,7 @@ import storage from './localStorage';
 import { getTopicsOfCurrentGroup, getMessagesOfCurrentTopic } from '../actions/rootActions';
 
 import { CURRENTLY_VIEWED_GROUP_ID, CURRENTLY_VIEWED_TOPIC_ID } from "../constants/action-types";
+import { NavFn } from '../components/Navigator';
 
 
 export async function messageReceived(store, message) {
@@ -11,7 +12,15 @@ export async function messageReceived(store, message) {
   ]);
 }
 
-export async function onNewNotification({navigateFn, store, groupId, topicId, topicName}) {
+type NewNotification = {
+  navigateFn: NavFn;
+  store: any;
+  groupId: string;
+  topicId: string;
+  topicName: string;
+}
+
+async function onNewNotification({navigateFn, store, groupId, topicId, topicName}: NewNotification) {
   store.dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { 
     currentlyViewedGroupId: groupId 
   } });
