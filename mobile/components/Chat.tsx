@@ -1,9 +1,8 @@
 import { GiftedChat } from 'react-native-gifted-chat';
-import React from 'react';
+import { useEffect } from 'react';
 import { 
   Container,
 } from 'native-base';
-
 
 const ChatComponent = ({ 
   navigation,
@@ -16,8 +15,8 @@ const ChatComponent = ({
   willFocus, 
   willLeave,
 }) => {  
-  React.useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
-  React.useEffect(() => navigation.addListener('blur', () => willLeave(route)), [navigation]);
+  useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
+  useEffect(() => navigation.addListener('blur', () => willLeave(route)), [navigation]);
 
   return (
     <Container>
