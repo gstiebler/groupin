@@ -1,7 +1,8 @@
-import LoginComponent from '../components/Login';
+import LoginComponent, { LoginProps, LoginScreenNavigationProp } from '../components/Login';
 import { loginStore } from '../stores/storesFactory';
 
-const onLogin = (navigation, phoneNumber) => loginStore.login(navigation, phoneNumber);
+const onLogin: LoginProps['onLogin'] = (navigation, phoneNumber) => loginStore.login(navigation, phoneNumber);
 
-const LoginContainer = ({ navigation }) => LoginComponent({ navigation, onLogin });
+type ContainerProp = { navigation: LoginScreenNavigationProp };
+const LoginContainer = ({ navigation }: ContainerProp) => LoginComponent({ navigation, onLogin });
 export default LoginContainer;

@@ -17,7 +17,7 @@ import { RootStackParamList } from './Navigator';
 
 export type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
 
-export type Props = {
+export type RegisterProps = {
   navigation: RegisterScreenNavigationProp;
   onRegister: (navigation: RegisterScreenNavigationProp, name: string) => void;
   onBack: (navigation: RegisterScreenNavigationProp) => void;
@@ -27,7 +27,7 @@ const RegisterComponent = ({
   navigation,
   onRegister,
   onBack,
-}: Props) => {
+}: RegisterProps) => {
   const [name, changeName] = useState('');
 
   return (
