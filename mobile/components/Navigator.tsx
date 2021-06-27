@@ -23,7 +23,7 @@ export const navigationRef = React.createRef<NavigationContainerRef>();
 type RootStackParamList = {
   GroupList: undefined;
   GroupsSearch: undefined;
-  Chat: { topicName: string };
+  Chat: { topicId: string, topicName: string };
   TopicsList: { groupName: string, groupId: string };
   NewTopic: undefined;
   NewGroup: undefined;
