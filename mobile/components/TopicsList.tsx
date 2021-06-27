@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TouchableHighlight, View, StyleSheet } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './Navigator';
+import { RouteProp } from '@react-navigation/native';
+import { Topic } from '../stores/rootStore';
 
-export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocus, willLeave }) => {
-  React.useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
-  React.useEffect(() => navigation.addListener('blur', willLeave), [navigation]);
+export type TopicsListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TopicsList'>;
+export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
+export type TopicsListProps = {
+  navigation: TopicsListScreenNavigationProp;
+  route: TopicsListScreenRouteProp;
+  topics: Topic[];
+  selectTopic: (navigation: TopicsListScreenNavigationProp, topicId: string, topicName: string) => void;
+  onPinClicked: (topic: Topic) => void;
+  willFocus: (route: TopicsListScreenRouteProp) => void;
+  willLeave: () => void;
+};
+
+export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocus, willLeave }: TopicsListProps) => {
+  useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
+  useEffect(() => navigation.addListener('blur', willLeave), [navigation]);
 
   const renderTopic = ({ item: topic }) => {
     const fontWeight = topic.unread ? 'bold' : 'normal';

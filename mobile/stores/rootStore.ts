@@ -5,10 +5,15 @@ import { mergeMessages, getFirst, GiMessage } from '../lib/messages';
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { TopicStore } from './topicStore';
 
+export type Topic = {
+  id: string;
+  pinned: boolean;
+};
+
 export class RootStore {
   topicStore: TopicStore = new TopicStore(this);
   messages: GiMessage[] = [];
-  topics: unknown[] = []; // TODO: change name to `topicsOfGroup`
+  topics: Topic[] = []; // TODO: change name to `topicsOfGroup`
   fcmToken: string = null;
   userId = '';
   currentlyViewedGroupId: string = null;
@@ -83,4 +88,13 @@ export class RootStore {
     await this.getTopicsOfGroup(this.currentlyViewedGroupId);
   }
 
+  async setCurrentlyViewedGroup(groupId: string) {
+    this.currentlyViewedGroupId = groupId;
+    this.getTopicsOfGroup(groupId);
+  }
+
+  async leaveGroup() {
+    this.currentlyViewedGroupId = null;
+    this.topics = [];
+  }
 }

@@ -1,6 +1,6 @@
 import { GiMessage } from "./messages";
 
-const graphql = require('./graphqlConnect');
+import * as graphql from './graphqlConnect';
 
 export async function register({ name, phoneNumber }) {
   const query = `
