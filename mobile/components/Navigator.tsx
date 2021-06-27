@@ -34,7 +34,8 @@ type RootStackParamList = {
   TabNavigator: undefined;
 };
 
-export function navigate(name: keyof RootStackParamList, params) {
+type StackPageName = keyof RootStackParamList;
+export function navigate<T extends StackPageName>(name: T, params: RootStackParamList[T]) {
   navigationRef.current.navigate(name, params);
 }
 export type NavFn = typeof navigate;

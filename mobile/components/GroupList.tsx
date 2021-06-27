@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { TouchableHighlight, View, StyleSheet } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -12,7 +12,7 @@ const GroupListComponent = ({
   onPinClicked,
   willFocus,
 }) => {
-  React.useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
+  useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
   
   const renderGroup = ({ item: group }) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
