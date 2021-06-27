@@ -1,7 +1,5 @@
 import storage from './localStorage';
 import { getTopicsOfCurrentGroup, getMessagesOfCurrentTopic } from '../actions/rootActions';
-
-import { CURRENTLY_VIEWED_GROUP_ID, CURRENTLY_VIEWED_TOPIC_ID } from "../constants/action-types";
 import { NavFn } from '../components/Navigator';
 
 

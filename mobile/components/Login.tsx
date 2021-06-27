@@ -12,11 +12,11 @@ import { RootStackParamList } from './Navigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 export type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-
 export type LoginProps = {
   navigation: LoginScreenNavigationProp;
   onLogin: (navigation: LoginScreenNavigationProp, phoneNumber: string) => void;
 };
+
 const LoginComponent = ({ 
   navigation,
   onLogin,

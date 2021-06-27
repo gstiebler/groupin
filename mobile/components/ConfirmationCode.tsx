@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { Container, Content, Button, Text, Input, Form, Item } from 'native-base';
 import styles from '../Style';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './Navigator';
 
-const Confirmationcode = ({ navigation, onChangeNumber, onConfirm }) => {
+export type ConfirmationCodeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ConfirmationCode'>;
+export type ConfirmationCodeProps = {
+  navigation: ConfirmationCodeScreenNavigationProp;
+  onChangeNumber: (navigation: ConfirmationCodeScreenNavigationProp) => void;
+  onConfirm: (navigation: ConfirmationCodeScreenNavigationProp, confirmationCode: string) => void;
+};
 
+const ConfirmationCode = ({ navigation, onChangeNumber, onConfirm }: ConfirmationCodeProps) => {
   const [confirmationCode, changeConfirmationCode] = useState('');
 
   return (
@@ -37,4 +45,4 @@ const Confirmationcode = ({ navigation, onChangeNumber, onConfirm }) => {
   );
 }
 
-export default Confirmationcode;
+export default ConfirmationCode;

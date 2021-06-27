@@ -1,20 +1,10 @@
-import ConfirmationCodeComponent from '../components/ConfirmationCode';
-import { 
-  confirmationCodeReceived,
-} from '../actions/loginActions';
+import ConfirmationCodeComponent, { ConfirmationCodeProps, ConfirmationCodeScreenNavigationProp } from '../components/ConfirmationCode';
+import { loginStore } from '../stores/storesFactory';
 
-const mapStateToProps = () => {
-  return { 
-  };
-};
+const onChangeNumber: ConfirmationCodeProps['onChangeNumber'] = (navigation) => navigation.navigate('Login');
+const onConfirm: ConfirmationCodeProps['onConfirm'] = (navigation, confirmationCode) =>
+  loginStore.confirmationCodeReceived({ navigation, confirmationCode});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onChangeNumber: (navigation) => navigation.navigate('Login'),
-    onConfirm: (navigation, confirmationCode) => dispatch(confirmationCodeReceived({ navigation, confirmationCode })),
-  };
-};
-
-
-const ConfirmationCodeContainer = connect(mapStateToProps, mapDispatchToProps)(ConfirmationCodeComponent);
+type ContainerProp = { navigation: ConfirmationCodeScreenNavigationProp };
+const ConfirmationCodeContainer = ({ navigation }: ContainerProp) => ConfirmationCodeComponent({ navigation, onChangeNumber, onConfirm });
 export default ConfirmationCodeContainer;
