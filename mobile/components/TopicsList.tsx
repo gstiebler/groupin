@@ -11,24 +11,17 @@ import { Topic } from '../stores/rootStore';
 export type TopicsListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TopicsList'>;
 export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
 export type TopicsListProps = {
-  navigation: TopicsListScreenNavigationProp;
-  route: TopicsListScreenRouteProp;
   topics: Topic[];
-  selectTopic: (navigation: TopicsListScreenNavigationProp, topicId: string, topicName: string) => void;
+  selectTopic: (topicId: string, topicName: string) => void;
   onPinClicked: (topic: Topic) => void;
-  willFocus: (route: TopicsListScreenRouteProp) => void;
-  willLeave: () => void;
 };
 
-export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocus, willLeave }: TopicsListProps) => {
-  useEffect(() => navigation.addListener('focus', () => willFocus(route)), [navigation]);
-  useEffect(() => navigation.addListener('blur', willLeave), [navigation]);
-
+const TopicListComponent: React.FC<TopicsListProps> =  ({ topics, selectTopic, onPinClicked }) => {
   const renderTopic = ({ item: topic }) => {
     const fontWeight = topic.unread ? 'bold' : 'normal';
     return (
       <TouchableHighlight
-      onPress={() => selectTopic(navigation, topic.id, topic.name) }
+      onPress={() => selectTopic(topic.id, topic.name) }
         style={styles.rowFront}
         underlayColor={'#AAA'}
       >
@@ -36,7 +29,7 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
           { topic.pinned ? <Icon name="md-arrow-up" /> : <View style={{ paddingLeft: 10 }}/> }
           <Text 
             style={{ fontWeight }}
-            onPress={() => selectTopic(navigation, topic.id, topic.name) }
+            onPress={() => selectTopic(topic.id, topic.name) }
           >{ topic.name } </Text>
         </View>
       </TouchableHighlight>
@@ -71,6 +64,7 @@ export default ({ navigation, route, topics, selectTopic, onPinClicked, willFocu
     </Container>
   );
 }
+export default TopicListComponent;
 
 const styles = StyleSheet.create({
   frontView: {
