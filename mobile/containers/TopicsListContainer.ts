@@ -3,7 +3,7 @@ import TopicsListComponent, { TopicsListScreenNavigationProp, TopicsListScreenRo
 import { rootStore } from '../stores/storesFactory';
 
 type ContainerProp = { navigation: TopicsListScreenNavigationProp, route: TopicsListScreenRouteProp };
-const TopicsListContainerContainer: React.FC<ContainerProp> = ({ navigation, route }: ContainerProp) => {
+const TopicsListContainerContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
   const willFocus = () => rootStore.setCurrentlyViewedGroup(route.params.groupId);
   const willLeave = () => rootStore.leaveGroup();
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
