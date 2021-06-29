@@ -1,40 +1,30 @@
-import storage from './localStorage';
-import { getTopicsOfCurrentGroup, getMessagesOfCurrentTopic } from '../actions/rootActions';
+import * as storage from './localStorage';
+import { rootStore } from '../stores/storesFactory';
 import { NavFn } from '../components/Navigator';
 
 
-export async function messageReceived(store, message) {
+export async function messageReceived(message?) {
   await Promise.all([
-    getTopicsOfCurrentGroup(store),
-    getMessagesOfCurrentTopic(store, storage),
+    rootStore.getTopicsOfCurrentGroup(),
+    rootStore.getMessagesOfCurrentTopic(storage),
   ]);
 }
 
-type NewNotification = {
+async function onNewNotification(params: {
   navigateFn: NavFn;
   store: any;
   groupId: string;
   topicId: string;
   topicName: string;
-}
-
-async function onNewNotification({navigateFn, store, groupId, topicId, topicName}: NewNotification) {
-  store.dispatch({ type: CURRENTLY_VIEWED_GROUP_ID, payload: { 
-    currentlyViewedGroupId: groupId 
-  } });
-
-  store.dispatch({ type: CURRENTLY_VIEWED_TOPIC_ID, payload: { 
-    currentlyViewedTopicId: topicId
-  } });
+}) {
+  rootStore.setCurrentlyViewedGroup(params.groupId);
+  rootStore.setCurrentViewedTopicId(params.topicId);
 
   // TODO: push topic list screen
   // navigation.navigate('TopicsList', { groupId, groupName });
-  navigateFn('Chat', { topicId, topicName });
+  params.navigateFn('Chat', { topicId: params.topicId, topicName: params.topicName });
   
-  await Promise.all([
-    getTopicsOfCurrentGroup(store),
-    getMessagesOfCurrentTopic(store, storage),
-  ]);
+  await messageReceived();
 }
 
 export async function onNotificationOpened(navigateFn, store, notificationOpen) {

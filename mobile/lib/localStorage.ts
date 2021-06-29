@@ -1,14 +1,10 @@
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native'; // TODO: replace by @react-native-async-storage/async-storage
 
-export default {
+export async function getItem(key: string) {
+  const res = await AsyncStorage.getItem(key);
+  return res ? JSON.parse(res) : null;
+}
 
-  async getItem(key) {
-    const res = await AsyncStorage.getItem(key);
-    return res ? JSON.parse(res) : null;
-  },
-
-  async setItem(key, value) {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
-  },
-
-};
+export async function setItem(key: string, value: unknown) {
+  await AsyncStorage.setItem(key, JSON.stringify(value));
+}

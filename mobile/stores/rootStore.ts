@@ -90,7 +90,11 @@ export class RootStore {
 
   async setCurrentlyViewedGroup(groupId: string) {
     this.currentlyViewedGroupId = groupId;
-    this.getTopicsOfGroup(groupId);
+    await this.getTopicsOfGroup(groupId);
+  }
+  
+  setCurrentViewedTopicId(topicId: string) {
+    this.currentlyViewedTopicId = topicId;
   }
 
   async leaveGroup() {
