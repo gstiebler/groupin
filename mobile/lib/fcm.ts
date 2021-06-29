@@ -1,9 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
-import { 
-  updateFcmToken,
-} from "../actions/rootActions";
 import { NavFn } from '../components/Navigator';
-import store from "../store/rootStore";
+import { rootStore } from '../stores/storesFactory';
 
 import * as messageReceiver from './messageReceiver';
 
@@ -15,7 +12,7 @@ let _navigateFn: NavFn;
 export async function init(navigateFn: NavFn) {
   _navigateFn = navigateFn;
   tokenRefreshListener = messaging().onTokenRefresh(fcmToken => {
-    updateFcmToken(store, fcmToken);
+    rootStore.updateFcmToken(fcmToken);
   });
 
   const hasPermission = await messaging().hasPermission();
@@ -37,7 +34,7 @@ export async function init(navigateFn: NavFn) {
 export async function getAndUpdateFcmToken() {
   const fcmToken = await messaging().getToken();
   if (fcmToken) {
-    await updateFcmToken(store, fcmToken);
+    await rootStore.updateFcmToken(fcmToken);
   } else {
     console.log('no firebase token');
   }  
@@ -47,17 +44,17 @@ async function startMessageListener() {
   await getAndUpdateFcmToken();
   messagesListener = messaging().onMessage((message) => {
     console.log('received message: ', message);
-    messageReceiver.messageReceived(store, message);
+    messageReceiver.messageReceived(message);
   });
 
   notificationOpenedListener = messaging().onNotificationOpenedApp(notificationOpen => {
     console.log('onNotificationOpenedApp');
-    messageReceiver.onNotificationOpened(_navigateFn, store, notificationOpen);
+    messageReceiver.onNotificationOpened(_navigateFn, notificationOpen);
   });
 
   messaging().getInitialNotification().then(notificationOpen => {
     console.log('getInitialNotification');
-    messageReceiver.onInitialNotification(_navigateFn, store, notificationOpen);
+    messageReceiver.onInitialNotification(_navigateFn, notificationOpen);
   });
 }
 
