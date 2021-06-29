@@ -1,31 +1,39 @@
 import * as server from '../lib/server';
 import _ from 'lodash';
-import { mergeMessages, getFirst, getLast, removeFirst, getNNew } from '../lib/messages';
+import { mergeMessages, getFirst, getLast, removeFirst, getNNew, GiMessage } from '../lib/messages';
 
-const formatDataTopicId = (topicId) => `data.${topicId}`;
+const formatDataTopicId = (topicId: string) => `data.${topicId}`;
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
+import { LocalStorage } from '../lib/localStorage';
+import { RootStore } from './rootStore';
 
 export class TopicStore {
   topicTitle: string;
   topicId: string;
 
   constructor(
-    private rootActions
+    private rootActions: RootStore
   ) {
     this.rootActions = rootActions;
     this.topicTitle = '';
     this.topicId = '';
   }
 
-  async onTopicOpened({topicId, topicName, storage, subscribeFn}) {
+  async onTopicOpened(params: {
+    topicId: string,
+    topicName: string,
+    storage: LocalStorage,
+    subscribeFn: (formattedTopicId: string) => void
+  }) {
+    const { topicId, topicName, storage, subscribeFn } = params;
     this.topicTitle = topicName;
     this.topicId = topicId;
     // is `currentlyViewedTopicId` redundant with `topicId`?
     this.rootActions.currentlyViewedTopicId = topicId;
     this.rootActions.hasOlderMessages = true;
   
-    const currentMessages = await storage.getItem(topicId);
+    const currentMessages = (await storage.getItem(topicId)) as GiMessage[];
     this.rootActions.messages = currentMessages;
     const messagesEmpty = _.isEmpty(currentMessages);
     let messages;
@@ -50,7 +58,11 @@ export class TopicStore {
     subscribeFn(formatDataTopicId(topicId));
   }
   
-  async onTopicClosed({topicId, unsubscribeFn}) {
+  async onTopicClosed(params: {
+    topicId: string,
+    unsubscribeFn: (formattedTopicId: string) => void
+  }) {
+    const { topicId, unsubscribeFn } = params;
     this.rootActions.currentlyViewedTopicId = null;
     this.rootActions.messages = [];
     server.setTopicLatestRead(topicId);

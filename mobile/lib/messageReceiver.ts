@@ -2,7 +2,6 @@ import * as storage from './localStorage';
 import { rootStore } from '../stores/storesFactory';
 import { NavFn } from '../components/Navigator';
 
-
 export async function messageReceived(message?) {
   await Promise.all([
     rootStore.getTopicsOfCurrentGroup(),
@@ -22,7 +21,7 @@ async function onNewNotification(params: {
 
   // TODO: push topic list screen
   // navigation.navigate('TopicsList', { groupId, groupName });
-  navigateFn('Chat', { topicId: topicId, topicName: topicName });
+  navigateFn('Chat', { topicId, topicName });
   
   await messageReceived();
 }
