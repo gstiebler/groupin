@@ -1,16 +1,8 @@
-import SettingsComponent from '../components/Settings';
-import { logout } from '../actions/loginActions';
+import SettingsComponent, { SettingsScreenNavigationProp } from '../components/Settings';
+import { loginStore } from '../stores/storesFactory';
 
-const mapStateToProps = () => {
-  return { 
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    logout: navigation => dispatch(logout(navigation)),
-  };
-};
-
-const SettingsContainer = connect(mapStateToProps, mapDispatchToProps)(SettingsComponent);
+type ContainerProp = { navigation: SettingsScreenNavigationProp };
+const SettingsContainer = ({ navigation }: ContainerProp) => SettingsComponent({
+  onLogout: () => loginStore.logout(navigation)
+});
 export default SettingsContainer;

@@ -3,6 +3,7 @@ import * as graphqlConnect from '../lib/graphqlConnect';
 import { RegisterScreenNavigationProp } from '../components/Register';
 import { LoginScreenNavigationProp } from '../components/Login';
 import { ConfirmationCodeScreenNavigationProp } from '../components/ConfirmationCode';
+import { SettingsScreenNavigationProp } from '../components/Settings';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
@@ -115,7 +116,7 @@ export class LoginStore {
     navigate('TabNavigator');
   }
   
-  async logout(navigation) {
+  async logout(navigation: SettingsScreenNavigationProp) {
     try {
       this.rootStore.setUserId('');
       await this.auth().signOut();

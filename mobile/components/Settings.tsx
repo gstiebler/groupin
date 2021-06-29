@@ -9,6 +9,8 @@ import {
   Text,
   Button,
 } from 'native-base';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './Navigator';
 
 const styles = StyleSheet.create({
   button: {
@@ -16,10 +18,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const SettingsComponent = ({ 
-  navigation,
-  logout,
-}) => {
+export type SettingsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
+
+export type SettingsProps = {
+  onLogout: () => void;
+};
+
+const SettingsComponent: React.FC<SettingsProps> = ({ onLogout }) => {
   const header = (
     <Header>
       <Body>
@@ -32,7 +37,7 @@ const SettingsComponent = ({
   return (
     <Container>
       { header }
-      <Button onPress={() => logout(navigation)} style={styles.button} >
+      <Button onPress={onLogout} style={styles.button} >
         <Text>Sair</Text>
       </Button>
     </Container>
