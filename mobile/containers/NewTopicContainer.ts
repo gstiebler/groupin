@@ -1,20 +1,11 @@
-import NewTopicComponent from '../components/NewTopic';
-import { 
-  // NEW_TOPIC_NAME,
-} from "../constants/action-types";
-import { createTopic } from '../actions/newTopicActions';
+import NewTopicComponent, { NewTopicScreenNavigationProp, NewTopicScreenRouteProp } from '../components/NewTopic';
+import { rootStore } from '../stores/storesFactory';
 
-const mapStateToProps = () => {
-  return { 
-  };
+type ContainerProp = { navigation: NewTopicScreenNavigationProp, route: NewTopicScreenRouteProp };
+const NewTopicContainerContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
+  return NewTopicComponent({
+    onCreate: (name) => rootStore.topicStore.createTopic({ groupId: route.params.groupId, name, navigation })
+  });
 };
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onCreate: (navigator, { params }, name) => dispatch(createTopic(navigator, params.groupId, name)),
-  };
-};
-
-const NewTopicContainer = connect(mapStateToProps, mapDispatchToProps)(NewTopicComponent);
-export default NewTopicContainer;
+export default NewTopicContainerContainer;
 

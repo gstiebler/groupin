@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export type SettingsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
+export type SettingsScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 export type SettingsProps = {
   onLogout: () => void;

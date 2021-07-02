@@ -7,6 +7,7 @@ const formatDataTopicId = (topicId: string) => `data.${topicId}`;
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { LocalStorage } from '../lib/localStorage';
 import { RootStore } from './rootStore';
+import { NewTopicScreenNavigationProp } from '../components/NewTopic';
 
 export class TopicStore {
   topicTitle: string;
@@ -71,5 +72,10 @@ export class TopicStore {
     if (!currentTopic.pinned) {
       unsubscribeFn(formatDataTopicId(topicId));
     }
+  }
+
+  async createTopic(params: { groupId: string, name: string, navigation: NewTopicScreenNavigationProp }) {
+    await server.createTopic({ topicName: params.name, groupId: params.groupId });
+    params.navigation.goBack();
   }
 }

@@ -1,34 +1,19 @@
-import GroupInfoComponent from '../components/GroupInfo';
-import { 
-  getGroupInfo,
-  leaveGroup,
-  joinGroup,
-} from '../actions/groupActions';
-import { CURRENT_GROUP_INFO } from "../constants/action-types";
+import React, { useEffect } from 'react';
+import GroupInfoComponent, { GroupInfoScreenNavigationProp, GroupInfoScreenRouteProp } from '../components/GroupInfo';
+import { groupStore } from '../stores/storesFactory';
 
-const mapStateToProps = state => {
-  return { 
-    groupInfo: state.base.currentGroupInfo,
-  };
+type ContainerProp = { navigation: GroupInfoScreenNavigationProp, route: GroupInfoScreenRouteProp };
+const GroupInfoContainer: React.FC<ContainerProp> = ({ navigation, route }: ContainerProp) => {
+  const willFocus = () => groupStore.getGroupInfo(route.params.groupId);
+  const willLeave = () => groupStore.setCurrentGroupInfo(null);
+
+  useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
+  useEffect(() => navigation.addListener('blur', () => willLeave()), [navigation]);
+
+  return GroupInfoComponent({
+    groupInfo: groupStore.currentGroupInfo,
+    onJoinGroup: () => groupStore.joinGroup(navigation),
+    onLeaveGroup: () => groupStore.leaveGroup(navigation),
+  });
 };
-
-const mapDispatchToProps = dispatch => {
-  return {
-    willFocus: ({ params }) => dispatch(getGroupInfo(params.groupId)),
-    onLeaveGroup: (navigation, groupId) => {
-      const onLeave = () => navigation.navigate('GroupList');
-      dispatch(leaveGroup(groupId, onLeave));
-    },
-    onJoinGroup: (navigation, groupId) => {
-      const onJoin = groupName => navigation.navigate('TopicsList', { groupId, groupName });
-      dispatch(joinGroup(groupId, onJoin));
-    },
-    willLeave: () => { 
-      dispatch({ type: CURRENT_GROUP_INFO, payload: { currentGroupInfo: {} } });
-    },
-  };
-};
-
-
-const GroupInfoContainer = connect(mapStateToProps, mapDispatchToProps)(GroupInfoComponent);
 export default GroupInfoContainer;

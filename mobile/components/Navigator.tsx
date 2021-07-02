@@ -22,9 +22,9 @@ export type RootStackParamList = {
   GroupsSearch: undefined;
   Chat: { topicId: string, topicName: string };
   TopicsList: { groupName: string, groupId: string };
-  NewTopic: undefined;
+  NewTopic: { groupId: string };
   NewGroup: undefined;
-  GroupInfo: undefined;
+  GroupInfo: { groupId: string }  ;
   Login: undefined;
   Register: undefined;
   ConfirmationCode: undefined;

@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import * as server from '../lib/server';
 import { groupVisibility } from '../constants/domainConstants';
+import { GroupInfoScreenNavigationProp } from '../components/GroupInfo';
 
-interface FeGroupInfo extends server.GroupInfo {
+export interface FeGroupInfo extends server.GroupInfo {
   visibilityLabel: string;
 }
 
@@ -12,7 +13,7 @@ export class GroupStore {
 
   constructor() {}
 
-  async getGroupInfo(groupId)  {
+  async getGroupInfo(groupId: string)  {
     const groupInfo = await server.getGroupInfo(groupId);
     const groupVisibilityLocal = _.find(groupVisibility, { value: groupInfo.visibility });
     this.currentGroupInfo = {
@@ -21,15 +22,18 @@ export class GroupStore {
     };
   }
   
-  async leaveGroup(groupId, onLeave) {
-    await server.leaveGroup(groupId);
-    onLeave();
+  async leaveGroup(navigation: GroupInfoScreenNavigationProp) {
+    await server.leaveGroup(this.currentGroupInfo._id);
+    navigation.navigate('GroupList');
     await this.fetchOwnGroups();
   }
   
-  async joinGroup(groupId, onJoin)  {
-    await server.joinGroup(groupId);
-    onJoin(this.currentGroupInfo.name);
+  async joinGroup(navigation: GroupInfoScreenNavigationProp)  {
+    await server.joinGroup(this.currentGroupInfo._id);
+    navigation.navigate('TopicsList', {
+      groupId: this.currentGroupInfo._id,
+      groupName: this.currentGroupInfo.name
+    });
   }
   
   async setGroupPin({ groupId, pinned }) {
@@ -39,6 +43,10 @@ export class GroupStore {
   
   async fetchOwnGroups() {
     this.ownGroups = await server.getOwnGroups();
+  }
+
+  setCurrentGroupInfo(currentGroupInfo: FeGroupInfo) {
+    this.currentGroupInfo = currentGroupInfo;
   }
 
 }

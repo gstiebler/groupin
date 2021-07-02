@@ -64,7 +64,8 @@ export async function leaveGroup(groupId) {
   return res.leaveGroup;
 }
 
-export async function createTopic({ topicName, groupId }) {
+export async function createTopic(params: { topicName: string, groupId: string }) {
+  const { topicName, groupId } = params;
   const query = `
     mutation CreateTopic($topicName: String!, $groupId: String!) {
       createTopic (

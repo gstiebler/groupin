@@ -13,20 +13,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 export type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 export type LoginProps = {
-  navigation: LoginScreenNavigationProp;
-  onLogin: (navigation: LoginScreenNavigationProp, phoneNumber: string) => void;
+  onLogin: (phoneNumber: string) => void;
 };
 
-const LoginComponent = ({ 
-  navigation,
-  onLogin,
-}: LoginProps) => {
+const LoginComponent = ({ onLogin }: LoginProps) => {
   const [phoneNumber, changePhoneNumber] = useState('');
   const [phoneRef, changePhoneRef] = useState<PhoneInput>(null);
-
-  const login = () => {
-    onLogin(navigation, phoneNumber);
-  }
   
   return (
     <SafeAreaView style={{ flex: 1 }} >
@@ -41,7 +33,7 @@ const LoginComponent = ({
             cancelText='Cancelar'
             confirmText='Confirmar'
           />
-          <Button primary full onPress={login}>
+          <Button primary full onPress={() => onLogin(phoneNumber)}>
             <Text> Enviar </Text>
           </Button>
         </Content>
