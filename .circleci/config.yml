@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:12.14.0
+      - image: circleci/node:15.14.0
       - image: mongo:4.0
     environment:
       NODE_ENV: test
@@ -31,22 +31,16 @@ jobs:
           key: npm-dependencies
             
       - run:
-          name: Running Tests
-          command: |
-            cp ./mobile/config/env.js.example ./mobile/env.js
-            cd server
-            npm run coverage
-            
-      - run:
           name: ESLint Server
           command: |
             cd server
-            npm run lint
+            npm run compile
             
       - run:
           name: ESLint Mobile
           command: |
             cd mobile
+            npm run compile
             npm run lint
 
       - store_artifacts:
