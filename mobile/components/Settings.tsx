@@ -9,16 +9,12 @@ import {
   Text,
   Button,
 } from 'native-base';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
 
 const styles = StyleSheet.create({
   button: {
     margin: 20,
   },
 });
-
-export type SettingsScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 export type SettingsProps = {
   onLogout: () => void;

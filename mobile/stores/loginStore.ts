@@ -1,8 +1,5 @@
 import * as server from '../lib/server';
 import * as graphqlConnect from '../lib/graphqlConnect';
-import { RegisterScreenNavigationProp } from '../components/Register';
-import { ConfirmationCodeScreenNavigationProp } from '../components/ConfirmationCode';
-import { SettingsScreenNavigationProp } from '../components/Settings';
 import { RootStackParamList } from '../components/Navigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -72,7 +69,7 @@ export class LoginStore {
     }
   }
 
-  async confirmationCodeReceived({ navigation, confirmationCode }: { navigation: ConfirmationCodeScreenNavigationProp, confirmationCode: string }) {
+  async confirmationCodeReceived({ navigation, confirmationCode }: { navigation: StackNavigationProp<RootStackParamList>, confirmationCode: string }) {
     try {
       await this.confirmResult.confirm(confirmationCode);
     } catch (error) {
@@ -117,7 +114,7 @@ export class LoginStore {
     navigate('TabNavigator');
   }
   
-  async logout(navigation: SettingsScreenNavigationProp) {
+  async logout(navigation: StackNavigationProp<RootStackParamList>) {
     try {
       this.rootStore.setUserId('');
       await this.auth().signOut();
@@ -127,7 +124,7 @@ export class LoginStore {
     }
   }
 
-  async register({navigation, name}: { navigation: RegisterScreenNavigationProp, name: string }) {
+  async register({navigation, name}: { navigation: StackNavigationProp<RootStackParamList>, name: string }) {
     try {
       const { errorMessage, id } = await server.register({
         name, 
