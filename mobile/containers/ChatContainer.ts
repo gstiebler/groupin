@@ -1,10 +1,13 @@
 import { localStorage as storage } from '../lib/localStorage';
 import { rootStore } from '../stores/storesFactory';
-import ChatComponent, { ChatScreenNavigationProp, ChatScreenRouteProp } from '../components/Chat';
+import ChatComponent from '../components/Chat';
 import React, { useEffect } from 'react';
-const fcm = require('../lib/fcm');
+import { Navigation, RootStackParamList } from '../components/Navigator.types';
+import { RouteProp } from '@react-navigation/native';
+import * as fcm from '../lib/fcm';
 
-type ContainerProp = { navigation: ChatScreenNavigationProp, route: ChatScreenRouteProp };
+export type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
+type ContainerProp = { navigation: Navigation, route: ChatScreenRouteProp };
 const ChatContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
   const willFocus = () => {
     rootStore.topicStore.onTopicOpened({ 
@@ -18,7 +21,7 @@ const ChatContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
   const willLeave = () => {
     rootStore.topicStore.onTopicClosed({
       topicId: route.params.topicId,
-      unsubscribeFn: (formattedTopicId) => { fcm.unsubscribeToTopic(formattedTopicId); },
+      unsubscribeFn: (formattedTopicId) => { fcm.unsubscribeFromTopic(formattedTopicId); },
     });
   };
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);

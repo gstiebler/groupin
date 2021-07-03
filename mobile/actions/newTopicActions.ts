@@ -1,4 +1,4 @@
-const server = require('../lib/server');
+import * as server  from '../lib/server';
 
 const createTopic = async (navigation, groupId, name) => {
   const topicName = name;

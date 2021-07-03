@@ -1,15 +1,7 @@
 import { GiftedChat } from 'react-native-gifted-chat';
-import { useEffect } from 'react';
-import { 
-  Container,
-} from 'native-base';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
-import { RouteProp } from '@react-navigation/native';
+import { Container } from 'native-base';
 import { GiMessage } from '../lib/messages';
 
-export type ChatScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Chat'>;
-export type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
 export type ChatProps = {
   messages: GiMessage[],
   userId: string, 
