@@ -8,6 +8,7 @@ export type NewGroupScreenNavigationProp = StackNavigationProp<RootStackParamLis
 type ContainerProp = { navigation: NewGroupScreenNavigationProp };
 const NewGroupContainer: React.FC<ContainerProp> = ({ navigation }) => NewGroupComponent({
   onCreate: ({ name, visibility }) => createGroup({
+    navigation,
     groupName: name,
     visibility,
   }),
