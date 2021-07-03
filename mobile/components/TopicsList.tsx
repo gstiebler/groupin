@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableHighlight, View, StyleSheet } from 'react-native';
+import { TouchableHighlight, View, StyleSheet, ListRenderItemInfo } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
@@ -12,7 +12,7 @@ export type TopicsListProps = {
 };
 
 const TopicListComponent: React.FC<TopicsListProps> =  ({ topics, selectTopic, onPinClicked }) => {
-  const renderTopic = ({ item: topic }) => {
+  const renderTopic = ({ item: topic }: { item: Topic }) => {
     const fontWeight = topic.unread ? 'bold' : 'normal';
     return (
       <TouchableHighlight
@@ -31,15 +31,14 @@ const TopicListComponent: React.FC<TopicsListProps> =  ({ topics, selectTopic, o
     );
   };
 
-  const renderHiddenItem = (data) => {
-    const group = data.item;
-    const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
+  const renderHiddenItem = ({ item: topic }: ListRenderItemInfo<Topic>) => {
+    const pinIconName = topic.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
       <View style={styles.rowBack}>
         <View />
         <Button 
           style={styles.backRightBtn}
-          full onPress={() => onPinClicked(group) }>
+          full onPress={() => onPinClicked(topic) }>
           <Icon active name={pinIconName} />
         </Button>
       </View>
@@ -50,7 +49,7 @@ const TopicListComponent: React.FC<TopicsListProps> =  ({ topics, selectTopic, o
 
   return _.isEmpty(topics) ? getEmpty() : (
     <Container>
-      <SwipeListView
+      <SwipeListView<Topic>
         data={topics}
         rightOpenValue={-50} 
         renderItem={renderTopic}

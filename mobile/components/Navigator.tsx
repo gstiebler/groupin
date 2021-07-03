@@ -14,7 +14,6 @@ import Settings from '../containers/SettingsContainer';
 import ConfirmationCode from '../containers/ConfirmationCodeContainer';
 import * as React from 'react';
 import { Button, Icon, Text } from 'native-base';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import init from '../appInit';
 import { RootStackParamList } from './Navigator.types';
 

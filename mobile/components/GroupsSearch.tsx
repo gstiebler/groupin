@@ -21,7 +21,7 @@ const GroupSearchComponent: React.FC<GroupSearchProps> = ({
   changeSearchText, 
   onGroupSelected,
 }) => {
-  const renderGroup = (group) => (
+  const renderGroup = (group: Group) => (
     <ListItem button onPress={ () => onGroupSelected(group.id) }>
       <Body>
         <Text>{group.name}</Text>

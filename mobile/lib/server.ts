@@ -2,7 +2,8 @@ import { GiMessage } from "./messages";
 
 import * as graphql from './graphqlConnect';
 
-export async function register({ name, phoneNumber }) {
+export async function register(params: { name: string, phoneNumber: string }) {
+  const { name, phoneNumber } = params;
   const query = `
     mutation Register($name: String!) {
       register(name: $name) {
@@ -14,7 +15,8 @@ export async function register({ name, phoneNumber }) {
   return res.register;
 }
 
-export async function sendMessage({ message, topicId }): Promise<string> {
+export async function sendMessage(params: { message: string, topicId: string }): Promise<string> {
+  const { message, topicId } = params;
   const query = `
     mutation SendMessage($message: String!, $topicId: String!) {
       sendMessage (
@@ -124,7 +126,8 @@ export async function getOwnGroups(): Promise<Group[]> {
   return res.ownGroups;
 }
 
-export async function findGroups({ searchText, limit, startingId }) {
+export async function findGroups(params: { searchText: string, limit: number, startingId: string }) {
+  const { searchText, limit, startingId } = params;
   const query = `
     query FindGroups($searchText: String!, $limit: Float!, $startingId: String!) {
       findGroups(
@@ -142,7 +145,7 @@ export async function findGroups({ searchText, limit, startingId }) {
   return res.findGroups;
 }
 
-export async function getTopicsOfGroup(groupId, limit, startingId) {
+export async function getTopicsOfGroup(groupId: string, limit: number, startingId: string) {
   const query = `
     query TopicsOfGroup($groupId: String!, $limit: Float!, $startingId: String!) {
       topicsOfGroup (
@@ -192,7 +195,7 @@ export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: 
   return res.messagesOfTopic;
 }
 
-export async function updateFcmToken(fcmToken) {
+export async function updateFcmToken(fcmToken: string) {
   const query = `
     mutation UpdateFcmToken($fcmToken: String) {
       updateFcmToken (
@@ -215,7 +218,7 @@ export type GroupInfo = {
   createdAt: string;
   iBelong: boolean;
 }
-export async function getGroupInfo(groupId): Promise<GroupInfo> {
+export async function getGroupInfo(groupId: string): Promise<GroupInfo> {
   const query = `
     query GetGroupInfo($groupId: String) {
       getGroupInfo (
@@ -237,7 +240,8 @@ export async function getGroupInfo(groupId): Promise<GroupInfo> {
   return res.getGroupInfo;
 }
 
-export async function setGroupPin({ groupId, pinned }) {
+export async function setGroupPin(params: { groupId: string, pinned: boolean }) {
+  const { groupId, pinned } = params;
   const query = `
     mutation SetGroupPin($groupId: String, $pinned: Boolean) {
       setGroupPin (
@@ -250,7 +254,8 @@ export async function setGroupPin({ groupId, pinned }) {
   return res.setGroupPin;
 }
 
-export async function setTopicPin({ topicId, pinned }) {
+export async function setTopicPin(params: { topicId: string, pinned: boolean }) {
+  const { topicId, pinned } = params;
   const query = `
     mutation SetTopicPin($topicId: String, $pinned: Boolean) {
       setTopicPin (

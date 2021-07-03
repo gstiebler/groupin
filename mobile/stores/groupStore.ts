@@ -36,7 +36,8 @@ export class GroupStore {
     });
   }
   
-  async setGroupPin({ groupId, pinned }) {
+  async setGroupPin(params: { groupId: string, pinned: boolean }) {
+    const { groupId, pinned } = params;
     await server.setGroupPin({ groupId, pinned });
     await this.fetchOwnGroups();
   }

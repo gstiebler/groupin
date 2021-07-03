@@ -1,11 +1,12 @@
-import * as storage from './localStorage';
+import { localStorage } from './localStorage';
 import { rootStore } from '../stores/storesFactory';
 import { NavFn } from '../components/Navigator';
+import { GiNotification } from './fcm';
 
-export async function messageReceived(message?) {
+export async function messageReceived(message?: string) {
   await Promise.all([
     rootStore.getTopicsOfCurrentGroup(),
-    rootStore.getMessagesOfCurrentTopic(storage),
+    rootStore.getMessagesOfCurrentTopic(localStorage),
   ]);
 }
 
@@ -26,7 +27,7 @@ async function onNewNotification(params: {
   await messageReceived();
 }
 
-export async function onNotificationOpened(navigateFn: NavFn, notificationOpen) {
+export async function onNotificationOpened(navigateFn: NavFn, notificationOpen: GiNotification) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
     navigateFn,
@@ -36,7 +37,7 @@ export async function onNotificationOpened(navigateFn: NavFn, notificationOpen) 
   });
 }
 
-export async function onInitialNotification(navigateFn: NavFn, notificationOpen) {
+export async function onInitialNotification(navigateFn: NavFn, notificationOpen: GiNotification) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
     navigateFn,

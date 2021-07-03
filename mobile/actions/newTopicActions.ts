@@ -1,6 +1,7 @@
+import { Navigation } from '../components/Navigator.types';
 import * as server  from '../lib/server';
 
-const createTopic = async (navigation, groupId, name) => {
+const createTopic = async (navigation: Navigation, groupId: string, name: string) => {
   const topicName = name;
   await server.createTopic({ topicName, groupId });
   navigation.goBack();

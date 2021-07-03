@@ -1,4 +1,4 @@
-import { TouchableHighlight, View, StyleSheet } from 'react-native';
+import { TouchableHighlight, View, StyleSheet, ListRenderItemInfo } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
@@ -17,7 +17,7 @@ const GroupListComponent: React.FC<GroupListProps> = ({
   onLeaveGroup, 
   onPinClicked,
 }) => {
-  const renderGroup = ({ item: group }) => {
+  const renderGroup = ({ item: group }: ListRenderItemInfo<Group>) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
       <TouchableHighlight
@@ -36,8 +36,7 @@ const GroupListComponent: React.FC<GroupListProps> = ({
     );
   };
 
-  const renderHiddenItem = (data: { item: Group }) => {
-    const { item: group } = data;
+  const renderHiddenItem = ({ item: group }: ListRenderItemInfo<Group>) => {
     const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
       <View style={styles.rowBack}>
@@ -59,7 +58,7 @@ const GroupListComponent: React.FC<GroupListProps> = ({
 
   return _.isEmpty(ownGroups) ? getEmpty() : (
     <Container>
-      <SwipeListView
+      <SwipeListView<Group>
         data={ownGroups}
         leftOpenValue={50}
         rightOpenValue={-50} 

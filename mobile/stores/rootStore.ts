@@ -4,10 +4,14 @@ import { mergeMessages, getFirst, GiMessage } from '../lib/messages';
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { TopicStore } from './topicStore';
+import { GroupStore } from './groupStore';
+import { LocalStorage } from '../lib/localStorage';
 
 export type Topic = {
   id: string;
+  name: string;
   pinned: boolean;
+  unread: boolean
 };
 
 export class RootStore {
@@ -21,7 +25,7 @@ export class RootStore {
   hasOlderMessages = false;
 
   constructor(
-    public groupStore
+    public groupStore: GroupStore
   ) {}
 
   setUserId(userId: string) {
@@ -66,7 +70,7 @@ export class RootStore {
     }
   }
   
-  async getMessagesOfCurrentTopic(storage) {
+  async getMessagesOfCurrentTopic(storage: LocalStorage) {
     if (!this.currentlyViewedTopicId) { return }
     const topicId = this.currentlyViewedTopicId;
     this.messages = await server.getMessagesOfTopic({
@@ -82,7 +86,8 @@ export class RootStore {
     await server.updateFcmToken(fcmToken);
   }
 
-  async setTopicPin({ topicId, pinned }) {
+  async setTopicPin(params: { topicId: string, pinned: boolean }) {
+    const { topicId, pinned } = params;
     await server.setTopicPin({ topicId, pinned });
     if (!this.currentlyViewedGroupId) { return }
     await this.getTopicsOfGroup(this.currentlyViewedGroupId);

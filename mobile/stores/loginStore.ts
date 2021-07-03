@@ -1,18 +1,21 @@
 import * as server from '../lib/server';
 import * as graphqlConnect from '../lib/graphqlConnect';
 import { Navigation } from '../components/Navigator.types';
+import { RootStore } from './rootStore';
+import { AlertStatic } from 'react-native';
+import { NavFn } from '../components/Navigator';
 
-const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
+const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
 export class LoginStore {
   phoneNumber = '';
   confirmResult = null;
 
   constructor(
-    private rootStore,
-    private Alert,
+    private rootStore: RootStore,
+    private Alert: AlertStatic,
     private auth,
-    private getAndUpdateFcmToken
+    private getAndUpdateFcmToken: () => Promise<void>
   ) {}
 
   async login(navigation: Navigation, phoneNumber: string) {
@@ -41,7 +44,7 @@ export class LoginStore {
     }
   }
 
-  async init(navigate) {
+  async init(navigate: NavFn) {
     try {
       const firebaseUser = this.auth().currentUser;
       // check if user is already logged in
@@ -106,7 +109,8 @@ export class LoginStore {
     }
   }
 
-  async userLoggedIn({ navigate, userId }) {
+  async userLoggedIn(params: { navigate: NavFn, userId: string }) {
+    const { navigate, userId } = params;
     this.rootStore.setUserId(userId);
     await this.getAndUpdateFcmToken();
     await this.rootStore.groupStore.fetchOwnGroups();

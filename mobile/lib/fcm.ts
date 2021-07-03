@@ -4,14 +4,24 @@ import { rootStore } from '../stores/storesFactory';
 
 import * as messageReceiver from './messageReceiver';
 
-let tokenRefreshListener;
-let messagesListener;
-let notificationOpenedListener;
+let tokenRefreshListener: () => void;
+let messagesListener: () => void;
+let notificationOpenedListener: () => void;
 let _navigateFn: NavFn;
+
+export type GiNotification = {
+  notification: {
+    data: { 
+      groupId: string;
+      topicId: string;
+      topicName: string
+    }
+  }
+}
 
 export async function init(navigateFn: NavFn) {
   _navigateFn = navigateFn;
-  tokenRefreshListener = messaging().onTokenRefresh(fcmToken => {
+  tokenRefreshListener = messaging().onTokenRefresh((fcmToken: string) => {
     rootStore.updateFcmToken(fcmToken);
   });
 
@@ -42,12 +52,12 @@ export async function getAndUpdateFcmToken() {
 
 async function startMessageListener() { 
   await getAndUpdateFcmToken();
-  messagesListener = messaging().onMessage((message) => {
+  messagesListener = messaging().onMessage((message: string) => {
     console.log('received message: ', message);
     messageReceiver.messageReceived(message);
   });
 
-  notificationOpenedListener = messaging().onNotificationOpenedApp(notificationOpen => {
+  notificationOpenedListener = messaging().onNotificationOpenedApp((notificationOpen: GiNotification) => {
     console.log('onNotificationOpenedApp');
     messageReceiver.onNotificationOpened(_navigateFn, notificationOpen);
   });
@@ -58,11 +68,11 @@ async function startMessageListener() {
   });
 }
 
-export async function subscribeToTopic(topic) {
+export async function subscribeToTopic(topic: string) {
   messaging().subscribeToTopic(topic);
 }
 
-export async function unsubscribeFromTopic(topic) {
+export async function unsubscribeFromTopic(topic: string) {
   messaging().unsubscribeFromTopic(topic);
 }
 
