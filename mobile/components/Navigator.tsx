@@ -6,7 +6,7 @@ import TopicsList from '../containers/TopicsListContainer';
 import NewTopic from '../containers/NewTopicContainer';
 import NewGroup from '../containers/NewGroupContainer';
 import Chat from '../containers/ChatContainer';
-import Register from '../containers/RegisterContainer';
+import RegisterContainer from '../containers/RegisterContainer';
 import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
 import GroupInfo from '../containers/GroupInfoContainer';
@@ -16,20 +16,8 @@ import * as React from 'react';
 import { Button, Icon, Text } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import init from '../appInit';
+import { RootStackParamList } from './Navigator.types';
 
-export type RootStackParamList = {
-  GroupList: undefined;
-  GroupsSearch: undefined;
-  Chat: { topicId: string, topicName: string };
-  TopicsList: { groupName: string, groupId: string };
-  NewTopic: { groupId: string };
-  NewGroup: undefined;
-  GroupInfo: { groupId: string }  ;
-  Login: undefined;
-  Register: undefined;
-  ConfirmationCode: undefined;
-  TabNavigator: undefined;
-};
 
 export const navigationRef = React.createRef<NavigationContainerRef>();
 
@@ -38,8 +26,6 @@ export function navigate<T extends StackPageName>(name: T, params: RootStackPara
   navigationRef.current.navigate(name, params);
 }
 export type NavFn = typeof navigate;
-
-export type Navigation = StackNavigationProp<RootStackParamList>;
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -131,7 +117,7 @@ const App = () => {
   return (
     <NavigationContainer ref={ navigationRef } >
       <Stack.Navigator initialRouteName="Login" headerMode="none" screenOptions={{ gestureEnabled: false }}>
-        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Register" component={RegisterContainer} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen 
           name="ConfirmationCode" 

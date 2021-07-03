@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
-import { RouteProp } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   basic: {
@@ -11,8 +8,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export type NewTopicScreenNavigationProp = StackNavigationProp<RootStackParamList, 'NewTopic'>;
-export type NewTopicScreenRouteProp = RouteProp<RootStackParamList, 'NewTopic'>;
 export type NewTopicProps = {
   onCreate: (name: string) => void;
 };

@@ -1,14 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import { RootStackParamList } from '../components/Navigator';
+import { Navigation, RootStackParamList } from '../components/Navigator.types';
 import TopicsListComponent from '../components/TopicsList';
 import { rootStore } from '../stores/storesFactory';
 
-export type TopicsListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TopicsList'>;
 export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
 
-type ContainerProp = { navigation: TopicsListScreenNavigationProp, route: TopicsListScreenRouteProp };
+type ContainerProp = { navigation: Navigation, route: TopicsListScreenRouteProp };
 const TopicsListContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
   const willFocus = () => rootStore.setCurrentlyViewedGroup(route.params.groupId);
   const willLeave = () => rootStore.leaveGroup();

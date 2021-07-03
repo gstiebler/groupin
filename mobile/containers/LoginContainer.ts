@@ -1,11 +1,9 @@
-import { StackNavigationProp } from '@react-navigation/stack';
+import React from 'react';
 import LoginComponent from '../components/Login';
-import { RootStackParamList } from '../components/Navigator';
+import { Navigation } from '../components/Navigator.types';
 import { loginStore } from '../stores/storesFactory';
 
-export type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-type ContainerProp = { navigation: LoginScreenNavigationProp };
-const LoginContainer = ({ navigation }: ContainerProp) => LoginComponent({
+const LoginContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => LoginComponent({
   onLogin: (phoneNumber) => loginStore.login(navigation, phoneNumber)
 });
 export default LoginContainer;

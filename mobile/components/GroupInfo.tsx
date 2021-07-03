@@ -2,13 +2,8 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { Container, Content, Button, Text } from 'native-base';
 import styles from '../Style';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
-import { RouteProp } from '@react-navigation/native';
 import { FeGroupInfo } from '../stores/groupStore';
 
-export type GroupInfoScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GroupInfo'>;
-export type GroupInfoScreenRouteProp = RouteProp<RootStackParamList, 'GroupInfo'>;
 export type GroupInfoProps = {
   groupInfo: FeGroupInfo;
   onJoinGroup: () => void;

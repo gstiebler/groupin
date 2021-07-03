@@ -1,6 +1,6 @@
 import * as server from '../lib/server';
 import * as graphqlConnect from '../lib/graphqlConnect';
-import { Navigation } from '../components/Navigator';
+import { Navigation } from '../components/Navigator.types';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 

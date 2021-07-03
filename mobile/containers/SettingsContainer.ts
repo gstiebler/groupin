@@ -1,9 +1,8 @@
-import { Navigation } from '../components/Navigator';
+import { Navigation } from '../components/Navigator.types';
 import SettingsComponent from '../components/Settings';
 import { loginStore } from '../stores/storesFactory';
 
-type ContainerProp = { navigation: Navigation };
-const SettingsContainer = ({ navigation }: ContainerProp) => SettingsComponent({
+const SettingsContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => SettingsComponent({
   onLogout: () => loginStore.logout(navigation)
 });
 export default SettingsContainer;

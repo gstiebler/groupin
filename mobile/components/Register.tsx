@@ -12,19 +12,13 @@ import {
   Input,
 } from 'native-base';
 import styles from '../Style';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
-
-export type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
 
 export type RegisterProps = {
-  navigation: RegisterScreenNavigationProp;
-  onRegister: (navigation: RegisterScreenNavigationProp, name: string) => void;
-  onBack: (navigation: RegisterScreenNavigationProp) => void;
+  onRegister: (name: string) => void;
+  onBack: () => void;
 };
 
-const RegisterComponent = ({ 
-  navigation,
+const RegisterComponent = ({
   onRegister,
   onBack,
 }: RegisterProps) => {
@@ -45,11 +39,11 @@ const RegisterComponent = ({
             </Item>
           </Form>
           <Button primary full 
-              onPress={() => onRegister(navigation, name)}
+              onPress={() => onRegister(name)}
               style={{ marginBottom: 20}} >
             <Text> Registrar </Text>
           </Button>
-          <Button primary full onPress={() => onBack(navigation)}>
+          <Button primary full onPress={() => onBack()}>
             <Text> Editar número de telefone </Text>
           </Button>
         </Content>

@@ -1,9 +1,10 @@
-import RegisterComponent, { RegisterProps, RegisterScreenNavigationProp } from '../components/Register';
+import React from 'react';
+import { Navigation } from '../components/Navigator.types';
+import RegisterComponent from '../components/Register';
 import { loginStore } from '../stores/storesFactory';
 
-const onRegister: RegisterProps['onRegister'] = (navigation, name) => loginStore.register({navigation, name});
-const onBack: RegisterProps['onBack'] = (navigation) => navigation.navigate('Login');
-
-type ContainerProp = { navigation: RegisterScreenNavigationProp };
-const Register = ({ navigation }: ContainerProp) => RegisterComponent({ navigation, onRegister, onBack });
-export default Register;
+const RegisterContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => RegisterComponent({ 
+  onRegister: (name) => loginStore.register({ navigation, name }),
+  onBack: () => navigation.navigate('Login'),
+});
+export default RegisterContainer;

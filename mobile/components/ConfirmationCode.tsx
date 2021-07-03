@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { Container, Content, Button, Text, Input, Form, Item } from 'native-base';
 import styles from '../Style';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
 
-export type ConfirmationCodeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ConfirmationCode'>;
 export type ConfirmationCodeProps = {
-  navigation: ConfirmationCodeScreenNavigationProp;
-  onChangeNumber: (navigation: ConfirmationCodeScreenNavigationProp) => void;
-  onConfirm: (navigation: ConfirmationCodeScreenNavigationProp, confirmationCode: string) => void;
+  onChangeNumber: () => void;
+  onConfirm: (confirmationCode: string) => void;
 };
 
-const ConfirmationCode = ({ navigation, onChangeNumber, onConfirm }: ConfirmationCodeProps) => {
+const ConfirmationCode = ({ onChangeNumber, onConfirm }: ConfirmationCodeProps) => {
   const [confirmationCode, changeConfirmationCode] = useState('');
 
   return (
@@ -31,12 +27,12 @@ const ConfirmationCode = ({ navigation, onChangeNumber, onConfirm }: Confirmatio
               />
             </Item>
           </Form>
-          <Button block success onPress={() => onConfirm(navigation, confirmationCode)} >
+          <Button block success onPress={() => onConfirm(confirmationCode)} >
             <Text>Confirmar</Text>
           </Button>
           <Button block success 
               style={{ marginTop: 20, marginBottom: 20 }}
-              onPress={() => onChangeNumber(navigation)} >
+              onPress={() => onChangeNumber()} >
             <Text>Editar número</Text>
           </Button>
         </Content>

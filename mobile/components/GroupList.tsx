@@ -1,13 +1,8 @@
-import { useEffect } from 'react';
 import { TouchableHighlight, View, StyleSheet } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
 import { Group } from '../lib/server';
-
-export type GroupListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GroupList'>;
 
 export type GroupListProps = {
   ownGroups: Group[];

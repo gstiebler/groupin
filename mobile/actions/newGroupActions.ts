@@ -1,4 +1,4 @@
-import { Navigation } from '../components/Navigator';
+import { Navigation } from '../components/Navigator.types';
 import * as server from '../lib/server';
 
 export const createGroup = async (params: { navigation: Navigation, groupName: string, visibility: string }) => {

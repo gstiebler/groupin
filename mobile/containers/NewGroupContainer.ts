@@ -1,12 +1,8 @@
 import NewGroupComponent from '../components/NewGroup';
 import { createGroup } from '../actions/newGroupActions';
-import { RootStackParamList } from '../components/Navigator';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { Navigation } from '../components/Navigator.types';
 
-export type NewGroupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'NewGroup'>;
-
-type ContainerProp = { navigation: NewGroupScreenNavigationProp };
-const NewGroupContainer: React.FC<ContainerProp> = ({ navigation }) => NewGroupComponent({
+const NewGroupContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => NewGroupComponent({
   onCreate: ({ name, visibility }) => createGroup({
     navigation,
     groupName: name,

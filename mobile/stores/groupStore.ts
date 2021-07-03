@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as server from '../lib/server';
 import { groupVisibility } from '../constants/domainConstants';
-import { Navigation } from '../components/Navigator';
+import { Navigation } from '../components/Navigator.types';
 
 export interface FeGroupInfo extends server.GroupInfo {
   visibilityLabel: string;
