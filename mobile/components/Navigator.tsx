@@ -1,6 +1,8 @@
-import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
+/* eslint-disable react/display-name */
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 import SplashScreenContainer from '../containers/SplashScreenContainer';
 import GroupList from '../containers/GroupListContainer';
 import TopicsList from '../containers/TopicsListContainer';
@@ -83,12 +85,12 @@ const tabNavigator = () => (
     initialRouteName="AppStack"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
-        const iconByRoute = {
-          'AppStack': `group`,
-          'Settings': `settings`,
-        };
+        const iconName =
+          route.name === 'AppStack' ? 'people-circle-outline' :
+          route.name === 'Settings' ? 'settings-outline' :
+          'people';
   
-        return <MaterialIcons name={iconByRoute[route.name]} size={size} color={color} />;
+        return <Ionicons name={iconName} size={size} color={color} />;
       },
     })}
     tabBarOptions={{
