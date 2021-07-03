@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc --declaration",
-    "lint": "tslint --project tsconfig.json",
+    "lint": "eslint . --ext .ts",
     "prepublish": "npm run compile",
     "test": "jest",
     "build": "tsc && npm run copy",
@@ -72,7 +72,7 @@
     "typescript": "^4.0.5"
   },
   "engines": {
-    "node": "12.14",
+    "node": ">=15.0.0",
     "npm": "6.13.1"
   }
 }

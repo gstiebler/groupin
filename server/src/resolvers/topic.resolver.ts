@@ -1,9 +1,8 @@
 import * as bluebird from 'bluebird';
-import Topic from '../db/schema/Topic';
-import _ = require('lodash');
+import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Types } from 'mongoose';
-const { ObjectId } = Types;
+import Topic from '../db/schema/Topic';
 
 import Group from '../db/schema/Group';
 import User from '../db/schema/User';
@@ -15,6 +14,8 @@ import pushService from '../lib/pushService';
 import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 
 import { messageTypes } from '../lib/constants';
+
+const { ObjectId } = Types;
 
 const oldDate = moment('2015-01-01').toDate();
 
