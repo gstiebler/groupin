@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Content, Form, Item, Input, Button, Text } from 'native-base';
-import {Picker} from '@react-native-community/picker';
+import { Container, Content, Form, Item, Input, Button, Text, Picker } from 'native-base';
 import { groupVisibility } from '../constants/domainConstants';
 
 const styles = StyleSheet.create({
