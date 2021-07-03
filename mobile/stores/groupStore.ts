@@ -11,8 +11,6 @@ export class GroupStore {
   ownGroups: server.Group[] = [];
   currentGroupInfo: FeGroupInfo = null;
 
-  constructor() {}
-
   async getGroupInfo(groupId: string)  {
     const groupInfo = await server.getGroupInfo(groupId);
     const groupVisibilityLocal = _.find(groupVisibility, { value: groupInfo.visibility });

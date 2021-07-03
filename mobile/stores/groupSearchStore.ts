@@ -5,8 +5,6 @@ import { Group } from '../lib/server';
 export class GroupSearchStore {
   public groups: Group[];
 
-  constructor() {}
-
   public async findGroups(searchText: string) {
     const findGroups = () => server.findGroups({ 
       searchText, 

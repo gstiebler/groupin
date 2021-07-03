@@ -28,15 +28,15 @@ export class RootStore {
     public groupStore: GroupStore
   ) {}
 
-  setUserId(userId: string) {
+  setUserId(userId: string): void {
     this.userId = userId;
   }
 
-  addNewMessages(newMessages: GiMessage[]) {
+  addNewMessages(newMessages: GiMessage[]): void {
     this.messages = mergeMessages(this.messages, newMessages);
   }
 
-  async sendMessages(messages: GiMessage[]) {
+  async sendMessages(messages: GiMessage[]): Promise<void> {
     const firstMessage = messages[0];
     const newMessageId = await server.sendMessage({
       message: firstMessage.text,
@@ -46,16 +46,16 @@ export class RootStore {
     this.addNewMessages(newMessages);
   }
   
-  async getTopicsOfGroup(groupId: string) {
+  async getTopicsOfGroup(groupId: string): Promise<void> {
     this.topics = await server.getTopicsOfGroup(groupId, NUM_ITEMS_PER_FETCH, '');
   }
   
-  async getTopicsOfCurrentGroup() {
+  async getTopicsOfCurrentGroup(): Promise<void> {
     if (!this.currentlyViewedGroupId) { return }
     this.topics = await server.getTopicsOfGroup(this.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH, '');
   }
   
-  async onOlderMessagesRequested(topicId: string) {
+  async onOlderMessagesRequested(topicId: string): Promise<void> {
     if (_.isEmpty(this.messages)) { return }
     const firstMessage = getFirst(this.messages);
     const olderMessages = await server.getMessagesOfTopic({ 
@@ -70,7 +70,7 @@ export class RootStore {
     }
   }
   
-  async getMessagesOfCurrentTopic(storage: LocalStorage) {
+  async getMessagesOfCurrentTopic(storage: LocalStorage): Promise<void> {
     if (!this.currentlyViewedTopicId) { return }
     const topicId = this.currentlyViewedTopicId;
     this.messages = await server.getMessagesOfTopic({
