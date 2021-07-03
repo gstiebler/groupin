@@ -1,19 +1,16 @@
 import NewGroupComponent from '../components/NewGroup';
 import { createGroup } from '../actions/newGroupActions';
+import { RootStackParamList } from '../components/Navigator';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const mapStateToProps = () => {
-  return {};
-};
+export type NewGroupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'NewGroup'>;
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onCreate: ({ navigation, name, visibility }) => dispatch(createGroup({
-      navigation, 
-      groupName: name,
-      visibility,
-    })),
-  };
-};
-
-const NewGroupContainer = connect(mapStateToProps, mapDispatchToProps)(NewGroupComponent);
+type ContainerProp = { navigation: NewGroupScreenNavigationProp };
+const NewGroupContainer: React.FC<ContainerProp> = ({ navigation }) => NewGroupComponent({
+  onCreate: ({ name, visibility }) => createGroup({
+    navigation, 
+    groupName: name,
+    visibility,
+  }),
+});
 export default NewGroupContainer;

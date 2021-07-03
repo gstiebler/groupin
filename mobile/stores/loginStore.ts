@@ -1,7 +1,6 @@
 import * as server from '../lib/server';
 import * as graphqlConnect from '../lib/graphqlConnect';
-import { RootStackParamList } from '../components/Navigator';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { Navigation } from '../components/Navigator';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
@@ -16,7 +15,7 @@ export class LoginStore {
     private getAndUpdateFcmToken
   ) {}
 
-  async login(navigation: StackNavigationProp<RootStackParamList>, phoneNumber: string) {
+  async login(navigation: Navigation, phoneNumber: string) {
     this.phoneNumber = phoneNumber;
     try {
       this.confirmResult = await this.auth().signInWithPhoneNumber(phoneNumber);
@@ -69,7 +68,7 @@ export class LoginStore {
     }
   }
 
-  async confirmationCodeReceived({ navigation, confirmationCode }: { navigation: StackNavigationProp<RootStackParamList>, confirmationCode: string }) {
+  async confirmationCodeReceived({ navigation, confirmationCode }: { navigation: Navigation, confirmationCode: string }) {
     try {
       await this.confirmResult.confirm(confirmationCode);
     } catch (error) {
@@ -114,7 +113,7 @@ export class LoginStore {
     navigate('TabNavigator');
   }
   
-  async logout(navigation: StackNavigationProp<RootStackParamList>) {
+  async logout(navigation: Navigation) {
     try {
       this.rootStore.setUserId('');
       await this.auth().signOut();
@@ -124,7 +123,7 @@ export class LoginStore {
     }
   }
 
-  async register({navigation, name}: { navigation: StackNavigationProp<RootStackParamList>, name: string }) {
+  async register({navigation, name}: { navigation: Navigation, name: string }) {
     try {
       const { errorMessage, id } = await server.register({
         name, 

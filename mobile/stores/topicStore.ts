@@ -7,8 +7,7 @@ const formatDataTopicId = (topicId: string) => `data.${topicId}`;
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { LocalStorage } from '../lib/localStorage';
 import { RootStore } from './rootStore';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../components/Navigator';
+import { Navigation } from '../components/Navigator';
 
 export class TopicStore {
   topicTitle: string;
@@ -75,7 +74,7 @@ export class TopicStore {
     }
   }
 
-  async createTopic(params: { groupId: string, name: string, navigation: StackNavigationProp<RootStackParamList> }) {
+  async createTopic(params: { groupId: string, name: string, navigation: Navigation }) {
     await server.createTopic({ topicName: params.name, groupId: params.groupId });
     params.navigation.goBack();
   }

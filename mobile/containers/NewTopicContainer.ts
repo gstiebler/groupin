@@ -2,10 +2,10 @@ import NewTopicComponent, { NewTopicScreenNavigationProp, NewTopicScreenRoutePro
 import { rootStore } from '../stores/storesFactory';
 
 type ContainerProp = { navigation: NewTopicScreenNavigationProp, route: NewTopicScreenRouteProp };
-const NewTopicContainerContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
+const NewTopicContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
   return NewTopicComponent({
     onCreate: (name) => rootStore.topicStore.createTopic({ groupId: route.params.groupId, name, navigation })
   });
 };
-export default NewTopicContainerContainer;
+export default NewTopicContainer;
 

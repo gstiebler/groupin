@@ -10,8 +10,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const NewGroupComponent = ({ navigation, onCreate }) => {
+interface NewGroupProps {
+  onCreate: (params: { name: string, visibility: string }) => void;
+}
 
+const NewGroupComponent: React.FC<NewGroupProps> = ({ onCreate }) => {
   const [name, setName] = useState('');
   const [visibility, setVisibility] = useState(groupVisibility[0].value);
 
@@ -38,7 +41,7 @@ const NewGroupComponent = ({ navigation, onCreate }) => {
             </Picker>
           </Item>
         </Form>
-        <Button block success onPress={() => onCreate({ navigation, name, visibility })} >
+        <Button block success onPress={() => onCreate({ name, visibility })} >
           <Text>Criar grupo</Text>
         </Button>
       </Content>

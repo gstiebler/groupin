@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import * as server from '../lib/server';
 import { groupVisibility } from '../constants/domainConstants';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../components/Navigator';
+import { Navigation } from '../components/Navigator';
 
 export interface FeGroupInfo extends server.GroupInfo {
   visibilityLabel: string;
@@ -23,13 +22,13 @@ export class GroupStore {
     };
   }
   
-  async leaveGroup(groupId: string, navigation: StackNavigationProp<RootStackParamList>) {
+  async leaveGroup(groupId: string, navigation: Navigation) {
     await server.leaveGroup(groupId);
     navigation.navigate('GroupList');
     await this.fetchOwnGroups();
   }
   
-  async joinGroup(navigation: StackNavigationProp<RootStackParamList>)  {
+  async joinGroup(navigation: Navigation)  {
     await server.joinGroup(this.currentGroupInfo._id);
     navigation.navigate('TopicsList', {
       groupId: this.currentGroupInfo._id,

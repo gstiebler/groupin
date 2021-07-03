@@ -9,7 +9,7 @@ export type TopicsListScreenNavigationProp = StackNavigationProp<RootStackParamL
 export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
 
 type ContainerProp = { navigation: TopicsListScreenNavigationProp, route: TopicsListScreenRouteProp };
-const TopicsListContainerContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
+const TopicsListContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
   const willFocus = () => rootStore.setCurrentlyViewedGroup(route.params.groupId);
   const willLeave = () => rootStore.leaveGroup();
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
@@ -21,4 +21,4 @@ const TopicsListContainerContainer: React.FC<ContainerProp> = ({ navigation, rou
     onPinClicked: (topic) => rootStore.setTopicPin({ topicId: topic.id, pinned: !topic.pinned }),
   });
 }
-export default TopicsListContainerContainer;
+export default TopicsListContainer;

@@ -1,5 +1,5 @@
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import GroupList from '../containers/GroupListContainer';
 import TopicsList from '../containers/TopicsListContainer';
@@ -38,6 +38,8 @@ export function navigate<T extends StackPageName>(name: T, params: RootStackPara
   navigationRef.current.navigate(name, params);
 }
 export type NavFn = typeof navigate;
+
+export type Navigation = StackNavigationProp<RootStackParamList>;
 
 const Stack = createStackNavigator<RootStackParamList>();
 
