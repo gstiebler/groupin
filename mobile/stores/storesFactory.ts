@@ -6,7 +6,9 @@ import auth from '@react-native-firebase/auth';
 import { RootStore } from './rootStore';
 import { LoginStore } from './loginStore';
 import { GroupStore } from './groupStore';
+import { GroupSearchStore } from "./groupSearchStore";
 
 export const groupStore = makeAutoObservable(new GroupStore());
+export const groupSearchStore = makeAutoObservable(new GroupSearchStore());
 export const rootStore = makeAutoObservable(new RootStore(groupStore));
 export const loginStore = makeAutoObservable(new LoginStore(rootStore, Alert, auth, getAndUpdateFcmToken));

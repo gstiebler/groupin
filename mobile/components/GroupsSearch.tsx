@@ -8,19 +8,21 @@ import {
   Content,
 } from 'native-base';
 import Search from 'react-native-search-box';
+import { Group } from '../lib/server';
 
-const GroupSearchComponent = ({ 
-  navigation,
+interface GroupSearchProps {
+  groups: Group[];
+  changeSearchText: (searchText: string) => void;
+  onGroupSelected: (groupId: string) => void;
+}
+
+const GroupSearchComponent: React.FC<GroupSearchProps> = ({
   groups,
   changeSearchText, 
   onGroupSelected,
-  willLeave,
-  // onBack,
 }) => {
-  navigation.addListener('blur', willLeave);
-
   const renderGroup = (group) => (
-    <ListItem button onPress={ () => onGroupSelected(navigation, group.id) }>
+    <ListItem button onPress={ () => onGroupSelected(group.id) }>
       <Body>
         <Text>{group.name}</Text>
       </Body>

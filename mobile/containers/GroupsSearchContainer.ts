@@ -1,25 +1,20 @@
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useEffect } from 'react';
 import GroupsSearchComponent from '../components/GroupsSearch';
-import { findGroups } from '../actions/groupsSearchActions';
-import { GROUPS_SEARCH_ITEMS } from "../constants/action-types";
+import { RootStackParamList } from '../components/Navigator';
+import { groupSearchStore } from '../stores/storesFactory';
 
-const mapStateToProps = state => {
-  return { 
-    groups: state.groupsSearch.groups,
-  };
-};
+export type GroupsSearchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GroupsSearch'>;
 
-const mapDispatchToProps = dispatch => {
-  return {
-    changeSearchText: searchText => dispatch(findGroups(searchText)),
-    onGroupSelected: (navigation, groupId) => {
-      navigation.push('GroupInfo', { groupId });
-    },
-    onBack: (navigation) => navigation.goBack(),
-    willLeave: () => { 
-      dispatch({ type: GROUPS_SEARCH_ITEMS, payload: { groups: [] } });
-    },
-  };
-};
+type ContainerProp = { navigation: GroupsSearchScreenNavigationProp };
+const GroupsSearchContainer: React.FC<ContainerProp> = ({ navigation }) => {
+  const willLeave = () => groupSearchStore.reset();
+  useEffect(() => navigation.addListener('blur', willLeave), [navigation]);
 
-const GroupsSearchContainer = connect(mapStateToProps, mapDispatchToProps)(GroupsSearchComponent);
+  return GroupsSearchComponent({
+    groups: groupSearchStore.groups,
+    changeSearchText: (searchText) => groupSearchStore.findGroups(searchText),
+    onGroupSelected: (groupId) => navigation.push('GroupInfo', { groupId }),
+  });
+}
 export default GroupsSearchContainer;

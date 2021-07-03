@@ -1,11 +1,11 @@
 import * as server from '../lib/server';
 import * as _ from 'lodash';
+import { Group } from '../lib/server';
 
 export class GroupSearchStore {
+  public groups: Group[];
 
-  constructor(
-    public groups: unknown[],
-  ) {}
+  constructor() {}
 
   public async findGroups(searchText) {
     const findGroups = () => server.findGroups({ 
@@ -14,6 +14,10 @@ export class GroupSearchStore {
       startingId: '',
     });
     this.groups = _.isEmpty(searchText) ? [] : await findGroups();
+  }
+
+  public reset() {
+    this.groups = [];
   }
 
 }
