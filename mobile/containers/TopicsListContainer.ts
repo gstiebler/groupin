@@ -1,6 +1,12 @@
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import TopicsListComponent, { TopicsListScreenNavigationProp, TopicsListScreenRouteProp } from '../components/TopicsList';
+import { RootStackParamList } from '../components/Navigator';
+import TopicsListComponent from '../components/TopicsList';
 import { rootStore } from '../stores/storesFactory';
+
+export type TopicsListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TopicsList'>;
+export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
 
 type ContainerProp = { navigation: TopicsListScreenNavigationProp, route: TopicsListScreenRouteProp };
 const TopicsListContainerContainer: React.FC<ContainerProp> = ({ navigation, route }) => {

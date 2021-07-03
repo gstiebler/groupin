@@ -3,13 +3,8 @@ import { TouchableHighlight, View, StyleSheet } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './Navigator';
-import { RouteProp } from '@react-navigation/native';
 import { Topic } from '../stores/rootStore';
 
-export type TopicsListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TopicsList'>;
-export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
 export type TopicsListProps = {
   topics: Topic[];
   selectTopic: (topicId: string, topicName: string) => void;
