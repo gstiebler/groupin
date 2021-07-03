@@ -31,7 +31,8 @@ export class LoginStore {
         'auth/user-disabled': 'Usuário desabilitado',
         'auth/operation-not-allowed': 'Operação não permitida',
       };
-      const errorMessage = msgByCode[error.code] || 'Erro';
+      type errorCode = keyof (typeof msgByCode);
+      const errorMessage = msgByCode[error.code as errorCode] || 'Erro';
       console.error(error);
       this.Alert.alert(
         'Erro',
@@ -79,7 +80,8 @@ export class LoginStore {
         'auth/invalid-verification-code': 'Código de verificação inválido',
         'auth/missing-verification-code': 'Código de verificação vazio',
       };
-      const errorMessage = msgByCode[error.code] || 'Erro';
+      type errorCode = keyof (typeof msgByCode);
+      const errorMessage = msgByCode[error.code as errorCode] || 'Erro';
       this.Alert.alert(
         'Erro',
         errorMessage,
