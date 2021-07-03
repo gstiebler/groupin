@@ -27,7 +27,8 @@ export async function sendMessage({ message, topicId }): Promise<string> {
   return res.sendMessage;
 }
 
-export async function createGroup({ groupName, visibility }) {
+export async function createGroup(params: { groupName: string, visibility: string }) {
+  const { groupName, visibility } = params;
   const query = `
     mutation CreateGroup($groupName: String!, $visibility: String!) {
       createGroup (
@@ -40,7 +41,7 @@ export async function createGroup({ groupName, visibility }) {
   return res.createGroup;
 }
 
-export async function joinGroup(groupId) {
+export async function joinGroup(groupId: string) {
   const query = `
     mutation JoinGroup($groupId: String!) {
       joinGroup (
@@ -52,7 +53,7 @@ export async function joinGroup(groupId) {
   return res.joinGroup;
 }
 
-export async function leaveGroup(groupId) {
+export async function leaveGroup(groupId: string) {
   const query = `
     mutation {
       leaveGroup (
@@ -78,7 +79,7 @@ export async function createTopic(params: { topicName: string, groupId: string }
   return res.createTopic;
 }
 
-export async function setTopicLatestRead(topicId) {
+export async function setTopicLatestRead(topicId: string) {
   const query = `
     mutation SetTopicLatestRead($topicId: String!) {
       setTopicLatestRead (
