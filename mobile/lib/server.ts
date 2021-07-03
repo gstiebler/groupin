@@ -2,8 +2,7 @@ import { GiMessage } from "./messages";
 
 import * as graphql from './graphqlConnect';
 
-export async function register(params: { name: string, phoneNumber: string }) {
-  const { name, phoneNumber } = params;
+export async function register(name: string) {
   const query = `
     mutation Register($name: String!) {
       register(name: $name) {

@@ -3,7 +3,7 @@ import { rootStore } from '../stores/storesFactory';
 import { GiNotification } from './fcm';
 import { Navigation } from '../components/Navigator.types';
 
-export async function messageReceived(message?: string) {
+export async function messageReceived() {
   await Promise.all([
     rootStore.getTopicsOfCurrentGroup(),
     rootStore.getMessagesOfCurrentTopic(localStorage),

@@ -7,7 +7,7 @@ import { AlertStatic } from 'react-native';
 const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
 export class LoginStore {
-  phoneNumber = '';
+  // phoneNumber = '';
   confirmResult = null;
 
   constructor(
@@ -18,7 +18,7 @@ export class LoginStore {
   ) {}
 
   async login(navigation: Navigation, phoneNumber: string) {
-    this.phoneNumber = phoneNumber;
+    // this.phoneNumber = phoneNumber;
     try {
       this.confirmResult = await this.auth().signInWithPhoneNumber(phoneNumber);
       navigation.navigate('ConfirmationCode');
@@ -127,10 +127,7 @@ export class LoginStore {
 
   async register({navigation, name}: { navigation: Navigation, name: string }) {
     try {
-      const { errorMessage, id } = await server.register({
-        name, 
-        phoneNumber: this.phoneNumber,
-      });
+      const { errorMessage, id } = await server.register(name);
       if (errorMessage) {
         this.Alert.alert(
           'Erro',

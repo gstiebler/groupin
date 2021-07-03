@@ -7,7 +7,7 @@ export function setToken(token: string) {
   axios.defaults.headers.common.authorization = token;
 }
 
-export async function sendQuery(query: string, variables?: any) {
+export async function sendQuery(query: string, variables?: unknown) {
   try {
     const res = await axios.request({
       url,
