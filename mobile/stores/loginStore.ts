@@ -3,6 +3,7 @@ import * as graphqlConnect from '../lib/graphqlConnect';
 import { Navigation } from '../components/Navigator.types';
 import { RootStore } from './rootStore';
 import { AlertStatic } from 'react-native';
+// import { notifications } from '../lib/notifications';
 
 const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
@@ -13,8 +14,7 @@ export class LoginStore {
   constructor(
     private rootStore: RootStore,
     private Alert: AlertStatic,
-    // private auth,
-    private getAndUpdateFcmToken: () => Promise<void>
+    // private auth
   ) { }
 
   async login(navigation: Navigation, phoneNumber: string) {
@@ -113,7 +113,7 @@ export class LoginStore {
   async userLoggedIn(params: { navigation: Navigation, userId: string }) {
     const { navigation, userId } = params;
     this.rootStore.setUserId(userId);
-    await this.getAndUpdateFcmToken();
+    // await notifications.getAndUpdateFcmToken();
     await this.rootStore.groupStore.fetchOwnGroups();
     navigation.navigate('TabNavigator');
   }
