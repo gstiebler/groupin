@@ -1,7 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Navigation } from '../components/Navigator.types';
-import { rootStore } from '../stores/storesFactory';
 
 import * as messageReceiver from './messageReceiver';
 import { Platform } from 'react-native';
@@ -41,7 +40,7 @@ export class GiNotifications {
   responseListener: Subscription;
   navigation: Navigation;
 
-  public async init(navigation: Navigation) {
+  public async init(navigation: Navigation, updateNotificationToken: (notificationToken: string) => void) {
     this.navigation = navigation;
 
     const { token: notificationToken, status } = await registerForPushNotificationsAsync();
@@ -50,22 +49,13 @@ export class GiNotifications {
       console.error('User has not authorized messaging');
       return;
     }
-    rootStore.updateNotificationToken(notificationToken);
+    updateNotificationToken(notificationToken);
 
     if (status === 'granted') {
       console.log('Notification has permission');
       await this.startMessageListener();
     } else {
       console.error('User has not authorized messaging');
-    }
-  }
-
-  async getAndUpdateFcmToken() {
-    const notificationToken = await Notifications.getExpoPushTokenAsync();
-    if (notificationToken) {
-      await rootStore.updateNotificationToken(notificationToken.data);
-    } else {
-      console.log('no notification token');
     }
   }
 
