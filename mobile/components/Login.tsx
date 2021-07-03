@@ -12,17 +12,6 @@ import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-fi
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
-// Initialize Firebase JS SDK
-// https://firebase.google.com/docs/web/setup
-/*try {
-  firebase.initializeApp({
-    ...
-  });
-} catch (err) {
-  // ignore app already initialized error in snack
-}*/
-
-
 export type LoginProps = {
   onLogin: (phoneNumber: string) => void;
 };
