@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { Alert } from 'react-native';
-import { getAndUpdateFcmToken } from '../lib/fcm';
+import { fcm } from '../lib/fcm';
 import auth from '@react-native-firebase/auth';
 
 import { RootStore } from './rootStore';
@@ -11,4 +11,4 @@ import { GroupSearchStore } from "./groupSearchStore";
 export const groupStore = makeAutoObservable(new GroupStore());
 export const groupSearchStore = makeAutoObservable(new GroupSearchStore());
 export const rootStore = makeAutoObservable(new RootStore(groupStore));
-export const loginStore = makeAutoObservable(new LoginStore(rootStore, Alert, auth, getAndUpdateFcmToken));
+export const loginStore = makeAutoObservable(new LoginStore(rootStore, Alert, auth, () => fcm.getAndUpdateFcmToken()));

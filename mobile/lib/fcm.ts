@@ -1,84 +1,85 @@
 import messaging from '@react-native-firebase/messaging';
-import { NavFn } from '../components/Navigator';
 import { Navigation } from '../components/Navigator.types';
 import { rootStore } from '../stores/storesFactory';
 
 import * as messageReceiver from './messageReceiver';
 
-let tokenRefreshListener: () => void;
-let messagesListener: () => void;
-let notificationOpenedListener: () => void;
-let _navigateFn: NavFn;
-
 export type GiNotification = {
   notification: {
-    data: { 
+    data: {
       groupId: string;
       topicId: string;
       topicName: string
     }
   }
 }
+export class GiFcm {
+  tokenRefreshListener: () => void;
+  messagesListener: () => void;
+  notificationOpenedListener: () => void;
+  navigation: Navigation;
 
-export async function init(navigation: Navigation) {
-  _navigateFn = navigateFn;
-  tokenRefreshListener = messaging().onTokenRefresh((fcmToken: string) => {
-    rootStore.updateFcmToken(fcmToken);
-  });
+  public async init(navigation: Navigation) {
+    this.navigation = navigation;
+    this.tokenRefreshListener = messaging().onTokenRefresh((fcmToken: string) => {
+      rootStore.updateFcmToken(fcmToken);
+    });
 
-  const hasPermission = await messaging().hasPermission();
-  if (hasPermission) {
-    console.log('FCM has permission');
-    await startMessageListener();
-  } else {
-    try {
-      await messaging().requestPermission();
-      console.log('User has authorized messaging');
-      startMessageListener();
-    } catch (error) {
-      console.error('User has not authorized messaging');
+    const hasPermission = await messaging().hasPermission();
+    if (hasPermission) {
+      console.log('FCM has permission');
+      await this.startMessageListener();
+    } else {
+      try {
+        await messaging().requestPermission();
+        console.log('User has authorized messaging');
+        this.startMessageListener();
+      } catch (error) {
+        console.error('User has not authorized messaging');
+      }
     }
   }
 
+  async getAndUpdateFcmToken() {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      await rootStore.updateFcmToken(fcmToken);
+    } else {
+      console.log('no firebase token');
+    }
+  }
+
+  async startMessageListener() {
+    await this.getAndUpdateFcmToken();
+    this.messagesListener = messaging().onMessage((message: string) => {
+      console.log('received message: ', message);
+      messageReceiver.messageReceived(message);
+    });
+
+    this.notificationOpenedListener = messaging().onNotificationOpenedApp((notificationOpen: GiNotification) => {
+      console.log('onNotificationOpenedApp');
+      messageReceiver.onNotificationOpened(this.navigation, notificationOpen);
+    });
+
+    messaging().getInitialNotification().then((notificationOpen: GiNotification) => {
+      console.log('getInitialNotification');
+      messageReceiver.onInitialNotification(this.navigation, notificationOpen);
+    });
+  }
+
+  async subscribeToTopic(topic: string) {
+    messaging().subscribeToTopic(topic);
+  }
+
+  async unsubscribeFromTopic(topic: string) {
+    messaging().unsubscribeFromTopic(topic);
+  }
+
+  releaseListeners() {
+    this.tokenRefreshListener();
+    this.messagesListener();
+    this.notificationOpenedListener();
+  }
 }
 
-export async function getAndUpdateFcmToken() {
-  const fcmToken = await messaging().getToken();
-  if (fcmToken) {
-    await rootStore.updateFcmToken(fcmToken);
-  } else {
-    console.log('no firebase token');
-  }  
-}
-
-async function startMessageListener() { 
-  await getAndUpdateFcmToken();
-  messagesListener = messaging().onMessage((message: string) => {
-    console.log('received message: ', message);
-    messageReceiver.messageReceived(message);
-  });
-
-  notificationOpenedListener = messaging().onNotificationOpenedApp((notificationOpen: GiNotification) => {
-    console.log('onNotificationOpenedApp');
-    messageReceiver.onNotificationOpened(_navigateFn, notificationOpen);
-  });
-
-  messaging().getInitialNotification().then((notificationOpen: GiNotification) => {
-    console.log('getInitialNotification');
-    messageReceiver.onInitialNotification(_navigateFn, notificationOpen);
-  });
-}
-
-export async function subscribeToTopic(topic: string) {
-  messaging().subscribeToTopic(topic);
-}
-
-export async function unsubscribeFromTopic(topic: string) {
-  messaging().unsubscribeFromTopic(topic);
-}
-
-export function releaseListeners() {
-  tokenRefreshListener();
-  messagesListener();
-  notificationOpenedListener();
-}
+export const fcm = new GiFcm();

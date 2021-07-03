@@ -17,15 +17,6 @@ import * as React from 'react';
 import { Button, Icon, Text } from 'native-base';
 import { RootStackParamList } from './Navigator.types';
 
-
-export const navigationRef = React.createRef<NavigationContainerRef>();
-
-type StackPageName = keyof RootStackParamList;
-export function navigate<T extends StackPageName>(name: T, params?: RootStackParamList[T]) {
-  navigationRef.current.navigate(name, params);
-}
-export type NavFn = typeof navigate;
-
 const Stack = createStackNavigator<RootStackParamList>();
 
 const appStackNavigator = () => (
@@ -112,7 +103,7 @@ const tabNavigator = () => (
 );
 
 const App = () => (
-  <NavigationContainer ref={ navigationRef } >
+  <NavigationContainer>
     <Stack.Navigator initialRouteName="SplashScreen" headerMode="none" screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen name="SplashScreen" component={SplashScreenContainer} />
       <Stack.Screen name="Register" component={RegisterContainer} />

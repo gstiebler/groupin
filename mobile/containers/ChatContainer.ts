@@ -4,7 +4,7 @@ import ChatComponent from '../components/Chat';
 import React, { useEffect } from 'react';
 import { Navigation, RootStackParamList } from '../components/Navigator.types';
 import { RouteProp } from '@react-navigation/native';
-import * as fcm from '../lib/fcm';
+import { fcm } from '../lib/fcm';
 
 export type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
 type ContainerProp = { navigation: Navigation, route: ChatScreenRouteProp };

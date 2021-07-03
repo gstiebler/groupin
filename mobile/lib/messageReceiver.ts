@@ -1,7 +1,7 @@
 import { localStorage } from './localStorage';
 import { rootStore } from '../stores/storesFactory';
-import { NavFn } from '../components/Navigator';
 import { GiNotification } from './fcm';
+import { Navigation } from '../components/Navigator.types';
 
 export async function messageReceived(message?: string) {
   await Promise.all([
@@ -11,36 +11,34 @@ export async function messageReceived(message?: string) {
 }
 
 async function onNewNotification(params: {
-  navigateFn: NavFn;
+  navigation: Navigation;
   groupId: string;
   topicId: string;
   topicName: string;
 }) {
-  const { navigateFn, groupId, topicId, topicName } = params;
+  const { navigation, groupId, topicId, topicName } = params;
   rootStore.setCurrentlyViewedGroup(groupId);
   rootStore.setCurrentViewedTopicId(topicId);
 
-  // TODO: push topic list screen
-  // navigation.navigate('TopicsList', { groupId, groupName });
-  navigateFn('Chat', { topicId, topicName });
+  navigation.navigate('Chat', { topicId, topicName });
   
   await messageReceived();
 }
 
-export async function onNotificationOpened(navigateFn: NavFn, notificationOpen: GiNotification) {
+export async function onNotificationOpened(navigation: Navigation, notificationOpen: GiNotification) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
-    navigateFn,
+    navigation,
     groupId, 
     topicId,
     topicName,
   });
 }
 
-export async function onInitialNotification(navigateFn: NavFn, notificationOpen: GiNotification) {
+export async function onInitialNotification(navigation: Navigation, notificationOpen: GiNotification) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
-    navigateFn,
+    navigation,
     groupId, 
     topicId,
     topicName,
