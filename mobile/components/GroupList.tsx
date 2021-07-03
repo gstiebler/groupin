@@ -3,22 +3,30 @@ import { TouchableHighlight, View, StyleSheet } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './Navigator';
+import { Group } from '../lib/server';
 
-const GroupListComponent = ({ 
-  navigation, 
+export type GroupListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GroupList'>;
+
+export type GroupListProps = {
+  ownGroups: Group[];
+  selectGroup: (groupId: string, groupName: string) => void;
+  onLeaveGroup: (groupId: string) => void;
+  onPinClicked: (group: Group) => void;
+};
+
+const GroupListComponent: React.FC<GroupListProps> = ({
   ownGroups, 
   selectGroup, 
   onLeaveGroup, 
   onPinClicked,
-  willFocus,
 }) => {
-  useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
-  
   const renderGroup = ({ item: group }) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
       <TouchableHighlight
-        onPress={() => selectGroup(navigation, group.id, group.name) }
+        onPress={() => selectGroup(group.id, group.name) }
         style={styles.rowFront}
         underlayColor={'#AAA'}
       >
@@ -26,15 +34,15 @@ const GroupListComponent = ({
           { group.pinned ? <Icon name="md-arrow-up" /> : <View style={{ paddingLeft: 10 }}/> }
           <Text 
             style={{ fontWeight }}
-            onPress={() => selectGroup(navigation, group.id, group.name) }
+            onPress={() => selectGroup(group.id, group.name) }
           >{ group.name } </Text>
         </View>
       </TouchableHighlight>
     );
   };
 
-  const renderHiddenItem = (data) => {
-    const group = data.item;
+  const renderHiddenItem = (data: { item: Group }) => {
+    const { item: group } = data;
     const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
       <View style={styles.rowBack}>

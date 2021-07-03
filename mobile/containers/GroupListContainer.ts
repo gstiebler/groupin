@@ -1,30 +1,19 @@
-import GroupListComponent from '../components/GroupList';
-import { 
-  fetchOwnGroups,
-} from "../actions/rootActions";
-import { 
-  leaveGroup,
-  setGroupPin,
-} from "../actions/groupActions";
+import GroupListComponent, { GroupListScreenNavigationProp } from '../components/GroupList';
+import { useEffect } from 'react';
+import { groupStore } from '../stores/storesFactory';
+import { Group } from '../lib/server';
 
-const mapStateToProps = state => {
-  return { 
-    ownGroups: state.base.ownGroups 
-  };
+type ContainerProp = { navigation: GroupListScreenNavigationProp };
+const GroupListContainer: React.FC<ContainerProp> = ({ navigation }) => {
+
+  const willFocus = () => groupStore.fetchOwnGroups();
+  useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
+
+  return GroupListComponent({
+    ownGroups: groupStore.ownGroups, 
+    selectGroup: (groupId, groupName) => navigation.navigate('TopicsList', { groupId, groupName }), 
+    onLeaveGroup: (groupId) => groupStore.leaveGroup(groupId, navigation), 
+    onPinClicked: (group: Group) => groupStore.setGroupPin({ groupId: group.id, pinned: !group.pinned }),
+  });
 };
-
-const mapDispatchToProps = dispatch => {
-  return {
-    selectGroup: (navigation, groupId, groupName) => { 
-      navigation.navigate('TopicsList', { groupId, groupName });
-    },
-    onLeaveGroup: (groupId) => dispatch(leaveGroup(groupId)),
-    onPinClicked: (group) => dispatch(setGroupPin({ groupId: group.id, pinned: !group.pinned })),
-    willFocus: () => {
-      fetchOwnGroups(dispatch);
-    },
-  };
-};
-
-const GroupListContainer = connect(mapStateToProps, mapDispatchToProps)(GroupListComponent);
 export default GroupListContainer;

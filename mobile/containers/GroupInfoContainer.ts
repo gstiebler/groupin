@@ -13,7 +13,7 @@ const GroupInfoContainer: React.FC<ContainerProp> = ({ navigation, route }: Cont
   return GroupInfoComponent({
     groupInfo: groupStore.currentGroupInfo,
     onJoinGroup: () => groupStore.joinGroup(navigation),
-    onLeaveGroup: () => groupStore.leaveGroup(navigation),
+    onLeaveGroup: () => groupStore.leaveGroup(groupStore.currentGroupInfo._id, navigation),
   });
 };
 export default GroupInfoContainer;
