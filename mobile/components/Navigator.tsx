@@ -21,7 +21,7 @@ import { RootStackParamList } from './Navigator.types';
 export const navigationRef = React.createRef<NavigationContainerRef>();
 
 type StackPageName = keyof RootStackParamList;
-export function navigate<T extends StackPageName>(name: T, params: RootStackParamList[T]) {
+export function navigate<T extends StackPageName>(name: T, params?: RootStackParamList[T]) {
   navigationRef.current.navigate(name, params);
 }
 export type NavFn = typeof navigate;
