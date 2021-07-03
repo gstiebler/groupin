@@ -8,19 +8,19 @@ const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUse
 
 export class LoginStore {
   // phoneNumber = '';
-  confirmResult = null;
+  // confirmResult = null;
 
   constructor(
     private rootStore: RootStore,
     private Alert: AlertStatic,
-    private auth,
+    // private auth,
     private getAndUpdateFcmToken: () => Promise<void>
-  ) {}
+  ) { }
 
   async login(navigation: Navigation, phoneNumber: string) {
     // this.phoneNumber = phoneNumber;
     try {
-      this.confirmResult = await this.auth().signInWithPhoneNumber(phoneNumber);
+      // this.confirmResult = await this.auth().signInWithPhoneNumber(phoneNumber);
       navigation.navigate('ConfirmationCode');
     } catch(error) {
       const msgByCode = {
@@ -45,6 +45,7 @@ export class LoginStore {
   }
 
   async init(navigation: Navigation) {
+    /*
     try {
       const firebaseUser = this.auth().currentUser;
       // check if user is already logged in
@@ -68,10 +69,11 @@ export class LoginStore {
       });
     } catch (error) {
       console.error(error);
-    }
+    }*/
   }
 
   async confirmationCodeReceived({ navigation, confirmationCode }: { navigation: Navigation, confirmationCode: string }) {
+    /*
     try {
       await this.confirmResult.confirm(confirmationCode);
     } catch (error) {
@@ -105,6 +107,7 @@ export class LoginStore {
     } else {
       await this.userLoggedIn({ navigation, userId });
     }
+    */
   }
 
   async userLoggedIn(params: { navigation: Navigation, userId: string }) {
@@ -116,6 +119,7 @@ export class LoginStore {
   }
   
   async logout(navigation: Navigation) {
+    /*
     try {
       this.rootStore.setUserId('');
       await this.auth().signOut();
@@ -123,9 +127,11 @@ export class LoginStore {
     } catch (error) {
       console.error(error);
     }
+    */
   }
 
   async register({navigation, name}: { navigation: Navigation, name: string }) {
+    /*
     try {
       const { errorMessage, id } = await server.register(name);
       if (errorMessage) {
@@ -144,6 +150,6 @@ export class LoginStore {
     } catch (error) {
       console.error(error);
     }
+  */
   }
-
 }

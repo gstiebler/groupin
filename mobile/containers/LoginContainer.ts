@@ -4,6 +4,6 @@ import { Navigation } from '../components/Navigator.types';
 import { loginStore } from '../stores/storesFactory';
 
 const LoginContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => LoginComponent({
-  onLogin: (phoneNumber) => loginStore.login(navigation, phoneNumber)
+  onLogin: (phoneNumber) => { return; } //loginStore.login(navigation, phoneNumber)
 });
 export default LoginContainer;

@@ -4,7 +4,10 @@ import { Navigation } from '../components/Navigator.types';
 import appInit from '../appInit';
 
 const SplashScreenContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => {
-  const willFocus = () => appInit(navigation);
+  const willFocus = () => {
+    appInit(navigation);
+    navigation.navigate('Login');
+  };
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
 
   return SplashScreenComponent();
