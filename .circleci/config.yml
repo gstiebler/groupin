@@ -3,7 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:15.14.0
-      - image: mongo:4.0
     environment:
       NODE_ENV: test
     steps:
@@ -11,12 +10,6 @@ jobs:
 
       - restore_cache:
           key: npm-dependencies
-
-      - run:
-          name: Installing server packages
-          command: |
-            cd server
-            yarn
 
       - run:
           name: Installing client packages
@@ -29,12 +22,6 @@ jobs:
             - server/node_modules
             - mobile/node_modules
           key: npm-dependencies
-            
-      - run:
-          name: ESLint Server
-          command: |
-            cd server
-            npm run compile
             
       - run:
           name: ESLint Mobile
