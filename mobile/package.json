@@ -22,7 +22,9 @@
     "@types/react-native-phone-input": "^0.2.1",
     "axios": "^0.21.1",
     "expo": "~41.0.1",
+    "expo-firebase-recaptcha": "^1.4.2",
     "expo-status-bar": "~1.0.4",
+    "firebase": "^8.7.0",
     "immutable": "3",
     "mobx": "^6.0.4",
     "mobx-react": "^7.0.5",
@@ -35,7 +37,8 @@
     "react-native-reanimated": "^1.13.0",
     "react-native-screens": "^2.10.1",
     "react-native-swipe-list-view": "^3.2.3",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "react-native-webview": "11.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
