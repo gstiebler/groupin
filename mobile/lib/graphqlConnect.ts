@@ -3,7 +3,7 @@ import env from '../env';
 
 const url = env.SERVER_URL;
 
-export function setToken(token) {
+export function setToken(token: string) {
   axios.defaults.headers.common.authorization = token;
 }
 

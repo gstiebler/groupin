@@ -62,7 +62,7 @@ async function startMessageListener() {
     messageReceiver.onNotificationOpened(_navigateFn, notificationOpen);
   });
 
-  messaging().getInitialNotification().then(notificationOpen => {
+  messaging().getInitialNotification().then((notificationOpen: GiNotification) => {
     console.log('getInitialNotification');
     messageReceiver.onInitialNotification(_navigateFn, notificationOpen);
   });
