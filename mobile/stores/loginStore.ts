@@ -3,7 +3,6 @@ import * as graphqlConnect from '../lib/graphqlConnect';
 import { Navigation } from '../components/Navigator.types';
 import { RootStore } from './rootStore';
 import { AlertStatic } from 'react-native';
-import { NavFn } from '../components/Navigator';
 
 const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
@@ -45,7 +44,7 @@ export class LoginStore {
     }
   }
 
-  async init(navigate: NavFn) {
+  async init(navigation: Navigation) {
     try {
       const firebaseUser = this.auth().currentUser;
       // check if user is already logged in
@@ -56,7 +55,7 @@ export class LoginStore {
         if (!userId) {
           throw new Error('Error getting user ID');
         }
-        await this.userLoggedIn({ navigate, userId });
+        await this.userLoggedIn({ navigation, userId });
       }
 
       this.auth().onAuthStateChanged(async (fbUser) => {
@@ -104,19 +103,16 @@ export class LoginStore {
     if (userId === 'NO USER') {
       navigation.navigate('Register');
     } else {
-      await this.userLoggedIn({  
-        navigate: (route) => navigation.navigate(route), 
-        userId,
-      });
+      await this.userLoggedIn({ navigation, userId });
     }
   }
 
-  async userLoggedIn(params: { navigate: NavFn, userId: string }) {
-    const { navigate, userId } = params;
+  async userLoggedIn(params: { navigation: Navigation, userId: string }) {
+    const { navigation, userId } = params;
     this.rootStore.setUserId(userId);
     await this.getAndUpdateFcmToken();
     await this.rootStore.groupStore.fetchOwnGroups();
-    navigate('TabNavigator');
+    navigation.navigate('TabNavigator');
   }
   
   async logout(navigation: Navigation) {
@@ -147,10 +143,7 @@ export class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
-      await this.userLoggedIn({
-        navigate: (route) => navigation.navigate(route), 
-        userId: id,
-      });
+      await this.userLoggedIn({ navigation, userId: id });
     } catch (error) {
       console.error(error);
     }

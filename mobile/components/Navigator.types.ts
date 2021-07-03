@@ -1,6 +1,7 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export type RootStackParamList = {
+  SplashScreen: undefined;
   GroupList: undefined;
   GroupsSearch: undefined;
   Chat: { topicId: string, topicName: string };

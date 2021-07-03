@@ -1,6 +1,7 @@
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
-import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import SplashScreenContainer from '../containers/SplashScreenContainer';
 import GroupList from '../containers/GroupListContainer';
 import TopicsList from '../containers/TopicsListContainer';
 import NewTopic from '../containers/NewTopicContainer';
@@ -14,7 +15,6 @@ import Settings from '../containers/SettingsContainer';
 import ConfirmationCode from '../containers/ConfirmationCodeContainer';
 import * as React from 'react';
 import { Button, Icon, Text } from 'native-base';
-import init from '../appInit';
 import { RootStackParamList } from './Navigator.types';
 
 
@@ -111,22 +111,20 @@ const tabNavigator = () => (
   </Tab.Navigator>
 );
 
-const App = () => {
-  init(navigate);
-  return (
-    <NavigationContainer ref={ navigationRef } >
-      <Stack.Navigator initialRouteName="Login" headerMode="none" screenOptions={{ gestureEnabled: false }}>
-        <Stack.Screen name="Register" component={RegisterContainer} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen 
-          name="ConfirmationCode" 
-          component={ConfirmationCode} 
-          options={{ title: 'Confirme o código' }}
-        />
-        <Stack.Screen name="TabNavigator" component={tabNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
+const App = () => (
+  <NavigationContainer ref={ navigationRef } >
+    <Stack.Navigator initialRouteName="SplashScreen" headerMode="none" screenOptions={{ gestureEnabled: false }}>
+      <Stack.Screen name="SplashScreen" component={SplashScreenContainer} />
+      <Stack.Screen name="Register" component={RegisterContainer} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen 
+        name="ConfirmationCode" 
+        component={ConfirmationCode} 
+        options={{ title: 'Confirme o código' }}
+      />
+      <Stack.Screen name="TabNavigator" component={tabNavigator} />
+    </Stack.Navigator>
+  </NavigationContainer>
+);
 
 export default App;

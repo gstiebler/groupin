@@ -1,5 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import { NavFn } from '../components/Navigator';
+import { Navigation } from '../components/Navigator.types';
 import { rootStore } from '../stores/storesFactory';
 
 import * as messageReceiver from './messageReceiver';
@@ -19,7 +20,7 @@ export type GiNotification = {
   }
 }
 
-export async function init(navigateFn: NavFn) {
+export async function init(navigation: Navigation) {
   _navigateFn = navigateFn;
   tokenRefreshListener = messaging().onTokenRefresh((fcmToken: string) => {
     rootStore.updateFcmToken(fcmToken);
