@@ -8,10 +8,7 @@ import {
 } from 'native-base';
 import PhoneInput from 'react-native-phone-input'
 import styles from '../Style';
-import { RootStackParamList } from './Navigator';
-import { StackNavigationProp } from '@react-navigation/stack';
 
-export type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 export type LoginProps = {
   onLogin: (phoneNumber: string) => void;
 };

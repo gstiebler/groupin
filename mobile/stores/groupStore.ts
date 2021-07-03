@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import * as server from '../lib/server';
 import { groupVisibility } from '../constants/domainConstants';
-import { GroupInfoScreenNavigationProp } from '../components/GroupInfo';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../components/Navigator';
 
@@ -30,7 +29,7 @@ export class GroupStore {
     await this.fetchOwnGroups();
   }
   
-  async joinGroup(navigation: GroupInfoScreenNavigationProp)  {
+  async joinGroup(navigation: StackNavigationProp<RootStackParamList>)  {
     await server.joinGroup(this.currentGroupInfo._id);
     navigation.navigate('TopicsList', {
       groupId: this.currentGroupInfo._id,

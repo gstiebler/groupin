@@ -1,9 +1,10 @@
 import * as server from '../lib/server';
 import * as graphqlConnect from '../lib/graphqlConnect';
 import { RegisterScreenNavigationProp } from '../components/Register';
-import { LoginScreenNavigationProp } from '../components/Login';
 import { ConfirmationCodeScreenNavigationProp } from '../components/ConfirmationCode';
 import { SettingsScreenNavigationProp } from '../components/Settings';
+import { RootStackParamList } from '../components/Navigator';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const updateFbUserToken = fbUserToken => graphqlConnect.setToken(fbUserToken);
 
@@ -18,7 +19,7 @@ export class LoginStore {
     private getAndUpdateFcmToken
   ) {}
 
-  async login(navigation: LoginScreenNavigationProp, phoneNumber: string) {
+  async login(navigation: StackNavigationProp<RootStackParamList>, phoneNumber: string) {
     this.phoneNumber = phoneNumber;
     try {
       this.confirmResult = await this.auth().signInWithPhoneNumber(phoneNumber);
