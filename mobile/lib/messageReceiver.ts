@@ -1,7 +1,17 @@
 import { localStorage } from './localStorage';
 import { rootStore } from '../stores/storesFactory';
-import { GiNotification } from './fcm';
 import { Navigation } from '../components/Navigator.types';
+
+
+export type GiNotification = {
+  notification: {
+    data: {
+      groupId: string;
+      topicId: string;
+      topicName: string
+    }
+  }
+}
 
 export async function messageReceived() {
   await Promise.all([

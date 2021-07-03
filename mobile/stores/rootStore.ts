@@ -18,7 +18,7 @@ export class RootStore {
   topicStore: TopicStore = new TopicStore(this);
   messages: GiMessage[] = [];
   topics: Topic[] = []; // TODO: change name to `topicsOfGroup`
-  fcmToken: string = null;
+  notificationToken: string = null;
   userId = '';
   currentlyViewedGroupId: string = null;
   currentlyViewedTopicId: string = null;
@@ -81,9 +81,9 @@ export class RootStore {
     await storage.setItem(topicId, this.messages);
   }
   
-  async updateFcmToken(fcmToken: string) {
-    this.fcmToken = fcmToken;
-    await server.updateFcmToken(fcmToken);
+  async updateNotificationToken(notificationToken: string) {
+    this.notificationToken = notificationToken;
+    await server.updateFcmToken(notificationToken);
   }
 
   async setTopicPin(params: { topicId: string, pinned: boolean }) {

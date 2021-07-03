@@ -4,7 +4,7 @@ import ChatComponent from '../components/Chat';
 import React, { useEffect } from 'react';
 import { Navigation, RootStackParamList } from '../components/Navigator.types';
 import { RouteProp } from '@react-navigation/native';
-import { fcm } from '../lib/fcm';
+import { notifications } from '../lib/notifications';
 
 export type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
 type ContainerProp = { navigation: Navigation, route: ChatScreenRouteProp };
@@ -14,14 +14,14 @@ const ChatContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
       topicId: route.params.topicId, 
       topicName: route.params.topicName, 
       storage,
-      subscribeFn: (topicId) => { fcm.subscribeToTopic(topicId); },
+      subscribeFn: (topicId) => { notifications.subscribeToTopic(topicId); },
     });
   };
       
   const willLeave = () => {
     rootStore.topicStore.onTopicClosed({
       topicId: route.params.topicId,
-      unsubscribeFn: (formattedTopicId) => { fcm.unsubscribeFromTopic(formattedTopicId); },
+      unsubscribeFn: (formattedTopicId) => { notifications.unsubscribeFromTopic(formattedTopicId); },
     });
   };
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);

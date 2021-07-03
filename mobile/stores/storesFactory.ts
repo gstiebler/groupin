@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { Alert } from 'react-native';
-import { fcm } from '../lib/fcm';
+import { notifications } from '../lib/notifications';
 
 import { RootStore } from './rootStore';
 import { LoginStore } from './loginStore';
@@ -10,4 +10,4 @@ import { GroupSearchStore } from "./groupSearchStore";
 export const groupStore = makeAutoObservable(new GroupStore());
 export const groupSearchStore = makeAutoObservable(new GroupSearchStore());
 export const rootStore = makeAutoObservable(new RootStore(groupStore));
-export const loginStore = makeAutoObservable(new LoginStore(rootStore, Alert, () => fcm.getAndUpdateFcmToken()));
+export const loginStore = makeAutoObservable(new LoginStore(rootStore, Alert, () => notifications.getAndUpdateFcmToken()));
