@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import {
   Text,
   View,
@@ -12,27 +13,24 @@ import firebase from 'firebase/app';
 
 export type LoginProps = {
   firebaseConfig: unknown;
-  phoneNumber: string;
   verificationId: string;
   message: { text: string, color: string };
-  setPhoneNumber: (phoneNumber: string) => void;
-  setVerificationCode: (verificationCode: string) => void;
   setMessage: (message: { text: string, color: string }) => void;
-  onSendVerificationCode: (applicationVerifier: firebase.auth.ApplicationVerifier) => void;
-  onConfirmVerificationCode: () => void;
+  onSendVerificationCode: (phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) => void;
+  onConfirmVerificationCode: (verificationCode: string) => void;
 };
 const LoginComponent: React.FC<LoginProps> = ({
   firebaseConfig,
-  phoneNumber,
   verificationId,
   message,
-  setPhoneNumber,
-  setVerificationCode,
   setMessage,
   onSendVerificationCode,
   onConfirmVerificationCode,
 }) => {
   const recaptchaVerifier = React.useRef(null);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+
   const attemptInvisibleVerification = false;
 
   return (
@@ -55,7 +53,7 @@ const LoginComponent: React.FC<LoginProps> = ({
       <Button
         title="Send Verification Code"
         disabled={!phoneNumber}
-        onPress={() => onSendVerificationCode(recaptchaVerifier.current)}
+        onPress={() => onSendVerificationCode(phoneNumber, recaptchaVerifier.current)}
       />
       <Text style={{ marginTop: 20 }}>Enter Verification code</Text>
       <TextInput
@@ -67,7 +65,7 @@ const LoginComponent: React.FC<LoginProps> = ({
       <Button
         title="Confirm Verification Code"
         disabled={!verificationId}
-        onPress={onConfirmVerificationCode}
+        onPress={() => onConfirmVerificationCode(verificationCode)}
       />
       {message ? (
         <TouchableOpacity

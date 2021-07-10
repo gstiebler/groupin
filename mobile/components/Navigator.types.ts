@@ -11,7 +11,6 @@ export type RootStackParamList = {
   GroupInfo: { groupId: string }  ;
   Login: undefined;
   Register: undefined;
-  ConfirmationCode: undefined;
   TabNavigator: undefined;
 };
 

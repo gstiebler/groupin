@@ -73,12 +73,12 @@ export class GiNotifications {
   }
 
   async subscribeToTopic(topic: string) {
-    console.log('subscribeToTopic not implemented');
+    console.error('subscribeToTopic not implemented');
     // messaging().subscribeToTopic(topic);
   }
 
   async unsubscribeFromTopic(topic: string) {
-    console.log('unsubscribeFromTopic not implemented');
+    console.error('unsubscribeFromTopic not implemented');
     // messaging().unsubscribeFromTopic(topic);
   }
 

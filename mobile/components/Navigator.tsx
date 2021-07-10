@@ -14,7 +14,6 @@ import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
 import GroupInfo from '../containers/GroupInfoContainer';
 import Settings from '../containers/SettingsContainer';
-import ConfirmationCode from '../containers/ConfirmationCodeContainer';
 import * as React from 'react';
 import { Button, Icon, Text } from 'native-base';
 import { RootStackParamList } from './Navigator.types';
@@ -110,11 +109,6 @@ const App = () => (
       <Stack.Screen name="SplashScreen" component={SplashScreenContainer} />
       <Stack.Screen name="Register" component={RegisterContainer} />
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen 
-        name="ConfirmationCode" 
-        component={ConfirmationCode} 
-        options={{ title: 'Confirme o código' }}
-      />
       <Stack.Screen name="TabNavigator" component={tabNavigator} />
     </Stack.Navigator>
   </NavigationContainer>
