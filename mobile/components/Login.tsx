@@ -13,7 +13,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 
 export type LoginProps = {
-  onLogin: (phoneNumber: string) => void;
+  onLogin: (fbUserToken: string) => void;
 };
 const LoginComponent = ({ onLogin }: LoginProps) => {
   const recaptchaVerifier = React.useRef(null);
@@ -87,8 +87,11 @@ const LoginComponent = ({ onLogin }: LoginProps) => {
               verificationId,
               verificationCode
             );
-            await firebase.auth().signInWithCredential(credential);
+            const userCredential = await firebase.auth().signInWithCredential(credential);
+            const firebaseUser = userCredential.user;
+            const fbUserToken = await firebaseUser.getIdToken(true);
             showMessage({ text: 'Phone authentication successful 👍', color: 'green' });
+            onLogin(fbUserToken);
           } catch (err) {
             showMessage({ text: `Error: ${err.message}`, color: 'red' });
           }

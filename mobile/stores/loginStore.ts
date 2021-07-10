@@ -8,7 +8,6 @@ import { AlertStatic } from 'react-native';
 const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
 export class LoginStore {
-  // phoneNumber = '';
   // confirmResult = null;
 
   constructor(
@@ -17,7 +16,7 @@ export class LoginStore {
     // private auth
   ) { }
 
-  async login(navigation: Navigation, phoneNumber: string) {
+  async login(navigation: Navigation, fbUserToken: string) {
     // this.phoneNumber = phoneNumber;
     try {
       // this.confirmResult = await this.auth().signInWithPhoneNumber(phoneNumber);
