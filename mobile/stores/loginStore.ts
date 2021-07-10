@@ -77,15 +77,6 @@ export class LoginStore {
   registerNewUser() {
     this.navigation.navigate('Register');
   }
-  
-  async logout() {
-    try {
-      this.rootStore.setUserId('');
-      this.navigation.navigate('Login');
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   async register(name: string) {
     try {
@@ -102,7 +93,16 @@ export class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
-      await this.loginRegisteredUser(userId);
+      this.loginRegisteredUser(userId);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async logout() {
+    try {
+      this.rootStore.setUserId('');
+      this.navigation.navigate('Login');
     } catch (error) {
       console.error(error);
     }
