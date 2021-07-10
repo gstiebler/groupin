@@ -6,30 +6,33 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  Platform,
 } from 'react-native';
 import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 import firebase from 'firebase/app';
-import 'firebase/auth';
 
 export type LoginProps = {
-  onLogin: (fbUserToken: string) => void;
+  firebaseConfig: unknown;
+  phoneNumber: string;
+  verificationId: string;
+  message: { text: string, color: string };
+  setPhoneNumber: (phoneNumber: string) => void;
+  setVerificationCode: (verificationCode: string) => void;
+  setMessage: (message: { text: string, color: string }) => void;
+  onSendVerificationCode: (applicationVerifier: firebase.auth.ApplicationVerifier) => void;
+  onConfirmVerificationCode: () => void;
 };
-const LoginComponent = ({ onLogin }: LoginProps) => {
+const LoginComponent: React.FC<LoginProps> = ({
+  firebaseConfig,
+  phoneNumber,
+  verificationId,
+  message,
+  setPhoneNumber,
+  setVerificationCode,
+  setMessage,
+  onSendVerificationCode,
+  onConfirmVerificationCode,
+}) => {
   const recaptchaVerifier = React.useRef(null);
-  const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [verificationId, setVerificationId] = React.useState('');
-  const [verificationCode, setVerificationCode] = React.useState('');
-  const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
-  const [message, showMessage] = React.useState(
-    !firebaseConfig || Platform.OS === 'web'
-      ? {
-          text:
-            'To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.',
-            color: 'green'
-        }
-      : undefined
-  );
   const attemptInvisibleVerification = false;
 
   return (
@@ -52,24 +55,7 @@ const LoginComponent = ({ onLogin }: LoginProps) => {
       <Button
         title="Send Verification Code"
         disabled={!phoneNumber}
-        onPress={async () => {
-          // The FirebaseRecaptchaVerifierModal ref implements the
-          // FirebaseAuthApplicationVerifier interface and can be
-          // passed directly to `verifyPhoneNumber`.
-          try {
-            const phoneProvider = new firebase.auth.PhoneAuthProvider();
-            const verificationId = await phoneProvider.verifyPhoneNumber(
-              phoneNumber,
-              recaptchaVerifier.current
-            );
-            setVerificationId(verificationId);
-            showMessage({
-              text: 'Verification code has been sent to your phone.', color: 'green'
-            });
-          } catch (err) {
-            showMessage({ text: `Error: ${err.message}`, color: 'red' });
-          }
-        }}
+        onPress={() => onSendVerificationCode(recaptchaVerifier.current)}
       />
       <Text style={{ marginTop: 20 }}>Enter Verification code</Text>
       <TextInput
@@ -81,21 +67,7 @@ const LoginComponent = ({ onLogin }: LoginProps) => {
       <Button
         title="Confirm Verification Code"
         disabled={!verificationId}
-        onPress={async () => {
-          try {
-            const credential = firebase.auth.PhoneAuthProvider.credential(
-              verificationId,
-              verificationCode
-            );
-            const userCredential = await firebase.auth().signInWithCredential(credential);
-            const firebaseUser = userCredential.user;
-            const fbUserToken = await firebaseUser.getIdToken(true);
-            showMessage({ text: 'Phone authentication successful 👍', color: 'green' });
-            onLogin(fbUserToken);
-          } catch (err) {
-            showMessage({ text: `Error: ${err.message}`, color: 'red' });
-          }
-        }}
+        onPress={onConfirmVerificationCode}
       />
       {message ? (
         <TouchableOpacity
@@ -103,7 +75,7 @@ const LoginComponent = ({ onLogin }: LoginProps) => {
             StyleSheet.absoluteFill,
             { backgroundColor: 'gray', justifyContent: 'center' },
           ]}
-          onPress={() => showMessage(undefined)}>
+          onPress={() => setMessage(undefined)}>
           <Text
             style={{
               color: message.color || 'blue',
