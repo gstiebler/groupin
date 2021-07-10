@@ -54,7 +54,7 @@ export class LoginStore {
       const fbUserToken = await firebaseUser.getIdToken(true);
       this.message = { text: 'Phone authentication successful 👍', color: 'green' };
       await this.confirmationCodeReceived(fbUserToken);
-    }catch(err) {
+    } catch(err) {
       this.message = { text: `Error: ${err.message}`, color: 'red' };
     }
   }
