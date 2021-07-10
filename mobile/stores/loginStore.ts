@@ -63,15 +63,19 @@ export class LoginStore {
     updateFbUserToken(fbUserToken);
     const { id: userId } = await server.getUserId();
     if (userId === 'NO USER') {
-      this.navigation.navigate('Register');
+      this.registerNewUser();
     } else {
-      await this.userLoggedIn(userId);
+      this.loginRegisteredUser(userId);
     }
   }
 
-  async userLoggedIn(userId: string) {
+  loginRegisteredUser(userId: string) {
     this.rootStore.setUserId(userId);
     this.navigation.navigate('TabNavigator');
+  }
+
+  registerNewUser() {
+    this.navigation.navigate('Register');
   }
   
   async logout() {
@@ -98,7 +102,7 @@ export class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
-      await this.userLoggedIn(userId);
+      await this.loginRegisteredUser(userId);
     } catch (error) {
       console.error(error);
     }
