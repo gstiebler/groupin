@@ -30,7 +30,7 @@ export interface IGroup extends Document {
   createdBy: Types.ObjectId;
   createdAt?: number;
   updatedAt?: number;
-};
+}
 
 const Group = model<IGroup>('Group', groupSchema);
 

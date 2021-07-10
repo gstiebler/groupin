@@ -1,16 +1,13 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
 import { graphql } from 'graphql';
 import rootValue from '../resolver';
-import * as mongooseConfig from '../config/mongoose';
 import schema from '../graphqlSchema';
 import logger from '../config/winston';
-import addMongooseLogger from '../dev/mongodbLogger';
 import User from '../db/schema/User';
 
-const graphqlConnect = require('../../../mobile/lib/graphqlConnect');
+import * as graphqlConnect from '../../../mobile/lib/graphqlConnect';
 
 const currentUserHolder = { currentUser: null };
 
@@ -39,5 +36,4 @@ export async function setup() {
     }
     return result.data;
   };
-  addMongooseLogger();
-};
+}

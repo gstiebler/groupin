@@ -21,7 +21,7 @@ export interface IGroupLatestRead extends Document {
   userId: Types.ObjectId;
   groupId: Types.ObjectId;
   latestMoment: Date;
-};
+}
 
 const GroupLatestRead = model<IGroupLatestRead>('GroupLatestRead', groupLatestReadSchema);
 

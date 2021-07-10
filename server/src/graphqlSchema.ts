@@ -1,6 +1,6 @@
 import { buildSchema } from 'graphql';
-import fs = require('fs');
-import path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 
 const gqlPath = path.join(__dirname, '../src/schema.gql');
 const schema = buildSchema(fs.readFileSync(gqlPath, 'utf8'));

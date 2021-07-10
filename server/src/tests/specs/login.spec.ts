@@ -3,12 +3,6 @@ import * as _ from 'lodash';
 import { setup, setCurrentUser } from '../setup';
 
 import userFixtures from '../fixtures/userFixtures';
-const graphqlConnect = require('../../../../mobile/lib/graphqlConnect');
-const server = require('../../../../mobile/lib/server');
-
-const RootStore = require('../../../../mobile/stores/rootStore');
-const LoginStore = require('../../../../mobile/stores/loginStore');
-const GroupStore = require('../../../../mobile/stores/groupStore');
 
 import groupFixtures from '../fixtures/groupFixtures';
 

@@ -3,9 +3,9 @@ import User, { IUser } from './db/schema/User';
 
 import { subscribeToAll } from './lib/subscription';
 
-import messageResolver = require('./resolvers/message.resolver');
-import groupResolver = require('./resolvers/group.resolver');
-import topicResolver = require('./resolvers/topic.resolver');
+import * as messageResolver from './resolvers/message.resolver';
+import * as groupResolver from './resolvers/group.resolver';
+import * as topicResolver from './resolvers/topic.resolver';
 
 async function getHello({ pass }) {
   return pass === 'foca' ? 'OK' : 'ERROR';

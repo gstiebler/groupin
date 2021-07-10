@@ -1,6 +1,6 @@
-const admin = require('firebase-admin');
-const logger = require('../config/winston');
-const firebaseConfig = require('../../firebase_android_config.json');
+import * as admin from 'firebase-admin';
+import logger from '../config/winston';
+import * as firebaseConfig from '../../firebase_android_config.json';
 
 const pushService = {
 

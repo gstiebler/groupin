@@ -7,24 +7,16 @@ import { setup, setCurrentUser } from '../setup';
 
 import pushService from '../../lib/pushService';
 import { initFixtures } from '../fixtures';
-// const logger = require('../../config/winston');
 import userFixtures from '../fixtures/userFixtures';
 import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import messageFixtures from '../fixtures/messageFixtures';
 import { groupIds } from '../fixtures/preIds';
 import User from '../../db/schema/User';
-import Topic, { ITopic } from '../../db/schema/Topic';
+import Topic from '../../db/schema/Topic';
 import Message from '../../db/schema/Message';
 import TopicLatestRead from '../../db/schema/TopicLatestRead';
 import { messageTypes } from '../../lib/constants';
-
-const RootStore = require('../../../../mobile/stores/rootStore');
-const GroupStore = require('../../../../mobile/stores/groupStore');
-const GroupSearchStore = require('../../../../mobile/stores/groupSearchStore');
-const newTopicActions = require('../../../../mobile/actions/newTopicActions');
-// const TopicActions = require('../../../../mobile/actions/topicActionsMobX');
-const server = require('../../../../mobile/lib/server');
 
 const { ObjectId } = mongoose.Types;
 
