@@ -5,7 +5,7 @@
   "types": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc --declaration",
+    "compile": "tsc",
     "lint": "eslint . --ext .ts",
     "prepublish": "npm run compile",
     "test": "jest",

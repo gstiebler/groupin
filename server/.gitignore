@@ -2,6 +2,7 @@ node_modules
 .serverless
 .vscode
 .nyc_output
+.build
 coverage
 log
 .env.*
