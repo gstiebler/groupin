@@ -6,7 +6,7 @@ import schema from './graphqlSchema';
 import logger from './config/winston';
 import User from './db/schema/User';
 
-async function main({ query, variables }, authFbToken) {
+async function main({ query, variables }: { query: string, variables: unknown }, authFbToken: string) {
   try {
     // TODO: return only basic fields from the user, review all places that reads user.groups
     let user = null;

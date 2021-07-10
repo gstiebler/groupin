@@ -5,7 +5,7 @@ import { Types } from 'mongoose';
 import Topic from '../db/schema/Topic';
 
 import Group from '../db/schema/Group';
-import User from '../db/schema/User';
+import User, { UserModel } from '../db/schema/User';
 import TopicLatestRead, { ITopicLatestRead } from '../db/schema/TopicLatestRead';
 import GroupLatestRead from '../db/schema/GroupLatestRead';
 
@@ -19,7 +19,7 @@ const { ObjectId } = Types;
 
 const oldDate = moment('2015-01-01').toDate();
 
-async function topicsOfGroup({ groupId, limit }, { user }) {
+async function topicsOfGroup({ groupId, limit }: { groupId: string, limit: number }, { user }) {
   if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
     throw new Error('User does not participate in the group');
   }
@@ -46,7 +46,7 @@ async function topicsOfGroup({ groupId, limit }, { user }) {
   });
 }
 
-async function createTopic({ topicName, groupId }, { user }) {
+async function createTopic({ topicName, groupId }: { topicName: string, groupId: string }, { user }) {
   if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
     throw new Error('User does not participate in the group');
   }
@@ -89,7 +89,7 @@ async function createTopic({ topicName, groupId }, { user }) {
   return 'OK';
 }
 
-async function setTopicLatestRead({ topicId }, { user }) {
+async function setTopicLatestRead({ topicId }: { topicId: string }, { user }) {
   const topic = await Topic.findById(topicId);
   const updateObj = {
     latestMoment: new Date(),

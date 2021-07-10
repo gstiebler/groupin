@@ -18,7 +18,7 @@ const pushService = {
     this.messaging = admin.messaging();
   },
 
-  async pushMessage(fcmTopic, { payload, title, body, sendNotification }) {
+  async pushMessage(fcmTopic: string, { payload, title, body, sendNotification }) {
     const message = {
       data: payload,
       // token: registrationToken, Only used when sending to an specific device
@@ -41,14 +41,14 @@ const pushService = {
     }
   },
 
-  async subscribe(fcmToken, fcmTopic) {
+  async subscribe(fcmToken: string, fcmTopic: string) {
     const response = await this.messaging.subscribeToTopic([fcmToken], fcmTopic);
     // See the MessagingTopicManagementResponse reference documentation
     // for the contents of response.
     logger.debug(`Successfully subscribed to topic: ${fcmTopic}, ${response}`);
   },
 
-  async unsubscribe(fcmToken, fcmTopic) {
+  async unsubscribe(fcmToken: string, fcmTopic: string) {
     const response = await this.messaging.unsubscribeFromTopic([fcmToken], fcmTopic);
     logger.debug('Successfully unsubscribed from topic:', response);
   },
@@ -59,7 +59,7 @@ const pushService = {
    * @param {*} fcmTopic
    * @param {*} subscribed
    */
-  async setSubscription(fcmToken, fcmTopic, subscribed) {
+  async setSubscription(fcmToken: string, fcmTopic: string, subscribed: boolean) {
     if (subscribed) {
       this.subscribe(fcmToken, fcmTopic);
     } else {
