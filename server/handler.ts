@@ -1,18 +1,18 @@
-require('dotenv').config();
-const logger = require('./src/config/winston');
-const mongooseConfig = require('./src/config/mongoose');
-const graphqlMain = require('./src/graphqlMain');
-const pushService = require('./src/lib/pushService');
+import dotenv from 'dotenv';
+dotenv.config();
+import logger from './src/config/winston';
+import * as graphqlMain from './src/graphqlMain';
+import pushService from './src/lib/pushService';
+import { connectionPromise } from './src/db/createTypeormConnection';
 
 pushService.init();
-const mongooseInitPromise = mongooseConfig.init();
 
 async function main(event) {
   try {
-    await mongooseInitPromise;
+    const connection = await connectionPromise;
     // It seems the case of A depends on the platform
     const authorization = event.headers.Authorization || event.headers.authorization;
-    const result = await graphqlMain.main(JSON.parse(event.body), authorization);
+    const result = await graphqlMain.main(JSON.parse(event.body), authorization, connection);
 
     return {
       statusCode: 200,
