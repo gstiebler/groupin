@@ -16,7 +16,6 @@ export async function main(
     connection: Connection
 ) {
   try {
-    // TODO: return only basic fields from the user, review all places that reads user.groups
     let user: User | undefined = undefined;
     let firebaseId: string | null = null;
     // ***

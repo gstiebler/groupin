@@ -21,10 +21,13 @@ export class User {
   id: string;
 
   @Column()
+  name: string;
+
+  @Column()
   externalId: string;
 
   @Column()
-  name: string;
+  notificationToken: string;
 
   @Column({ nullable: true})
   imgUrl?: string;
