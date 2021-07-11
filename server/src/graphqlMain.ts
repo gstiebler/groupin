@@ -5,7 +5,6 @@ import rootValue from './resolver';
 import schema from './graphqlSchema';
 import logger from './config/winston';
 import User from './db/schema/User';
-import "reflect-metadata";
 
 async function main({ query, variables }: { query: string, variables: unknown }, authFbToken: string) {
   try {
