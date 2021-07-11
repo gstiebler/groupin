@@ -11,6 +11,7 @@ import {
 import { Group } from "./Group";
 import { GroupLatestRead } from "./GroupLatestRead";
 import { Message } from "./Message";
+import { Topic } from "./Topic";
 import { TopicLatestRead } from "./TopicLatestRead";
 
 @Entity()
@@ -25,8 +26,9 @@ export class User {
   @Column({ nullable: true})
   imgUrl?: string;
 
-  @Column('text', { array: true })
-  pinnedTopics: string[];
+  @ManyToMany(() => Topic)
+  @JoinTable()
+  pinnedTopics: Promise<Topic[]>;
 
   @OneToMany(
     () => Group,
@@ -40,6 +42,10 @@ export class User {
   )
   messages: Promise<Message[]>;
 
+  @ManyToMany(() => Group)
+  @JoinTable()
+  joinedGroups: Promise<Group[]>;
+
   @OneToMany(
     () => GroupLatestRead,
     groupLatestRead => groupLatestRead.user
@@ -51,10 +57,6 @@ export class User {
     topicLatestRead => topicLatestRead.user
   )
   topicsLatestRead: Promise<TopicLatestRead[]>;
-
-  @ManyToMany(() => Group)
-  @JoinTable()
-  joinedGroups: Promise<Group[]>;
 
   @CreateDateColumn({ type: 'timestamp without time zone' })
   createdAt: Date;
