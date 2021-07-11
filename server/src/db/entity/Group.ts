@@ -1,4 +1,6 @@
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToOne } from "typeorm";
+import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToOne, OneToMany } from "typeorm";
+import { GroupLatestRead } from "./GroupLatestRead";
+import { Topic } from "./Topic";
 import { User } from "./User";
 
 @Entity()
@@ -17,13 +19,25 @@ export class Group {
   description: string;
 
   @Column()
-  visibility: string;
+  visibility: string; // ['SECRET', 'PUBLIC']
 
   @ManyToOne(
     () => User,
     user => user.joinedGroups
   )
-  creator: Promise<User>; // ['SECRET', 'PUBLIC']
+  creator: Promise<User>;
+
+  @OneToMany(
+    () => Topic,
+    topic => topic.group
+  )
+  topics: Promise<Topic[]>;
+
+  @OneToMany(
+    () => GroupLatestRead,
+    groupLatestRead => groupLatestRead.group
+  )
+  usersLatestRead: Promise<GroupLatestRead[]>;
 
   @CreateDateColumn({ type: 'timestamp without time zone' })
   createdAt: Date;

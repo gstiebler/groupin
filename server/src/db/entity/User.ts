@@ -9,6 +9,9 @@ import {
   JoinTable,
 } from "typeorm";
 import { Group } from "./Group";
+import { GroupLatestRead } from "./GroupLatestRead";
+import { Message } from "./Message";
+import { TopicLatestRead } from "./TopicLatestRead";
 
 @Entity()
 export class User {
@@ -31,7 +34,25 @@ export class User {
   )
   createdGroups: Promise<Group[]>;
 
-  @ManyToMany(type => Group)
+  @OneToMany(
+    () => Message,
+    message => message.user
+  )
+  messages: Promise<Message[]>;
+
+  @OneToMany(
+    () => GroupLatestRead,
+    groupLatestRead => groupLatestRead.user
+  )
+  groupsLatestRead: Promise<GroupLatestRead[]>;
+
+  @OneToMany(
+    () => TopicLatestRead,
+    topicLatestRead => topicLatestRead.user
+  )
+  topicsLatestRead: Promise<TopicLatestRead[]>;
+
+  @ManyToMany(() => Group)
   @JoinTable()
   joinedGroups: Promise<Group[]>;
 
