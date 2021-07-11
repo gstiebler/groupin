@@ -16,7 +16,7 @@ import { messageTypes } from '../lib/constants';
 
 const oldDate = moment('2015-01-01').toDate();
 
-async function topicsOfGroup({ groupId, limit }: { groupId: string, limit: number }, { user }) {
+export async function topicsOfGroup({ groupId, limit }: { groupId: string, limit: number }, { user }) {
   if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
     throw new Error('User does not participate in the group');
   }
@@ -43,7 +43,7 @@ async function topicsOfGroup({ groupId, limit }: { groupId: string, limit: numbe
   });
 }
 
-async function createTopic({ topicName, groupId }: { topicName: string, groupId: string }, { user }) {
+export async function createTopic({ topicName, groupId }: { topicName: string, groupId: string }, { user }) {
   if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
     throw new Error('User does not participate in the group');
   }
@@ -86,7 +86,7 @@ async function createTopic({ topicName, groupId }: { topicName: string, groupId:
   return 'OK';
 }
 
-async function setTopicLatestRead({ topicId }: { topicId: string }, { user }) {
+export async function setTopicLatestRead({ topicId }: { topicId: string }, { user }) {
   const topic = await Topic.findById(topicId);
   const updateObj = {
     latestMoment: new Date(),
@@ -116,7 +116,7 @@ async function setTopicLatestRead({ topicId }: { topicId: string }, { user }) {
   return 'OK';
 }
 
-async function setTopicPin({ topicId, pinned }, { user }) {
+export async function setTopicPin({ topicId, pinned }, { user }) {
   const updateOperation = pinned ? '$push' : '$pull';
   await User.updateOne(
     { _id: user._id },
@@ -129,10 +129,3 @@ async function setTopicPin({ topicId, pinned }, { user }) {
   }
   return 'OK';
 }
-
-module.exports = {
-  topicsOfGroup,
-  createTopic,
-  setTopicLatestRead,
-  setTopicPin,
-};

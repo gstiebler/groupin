@@ -21,6 +21,9 @@ export class User {
   id: string;
 
   @Column()
+  externalId: string;
+
+  @Column()
   name: string;
 
   @Column({ nullable: true})

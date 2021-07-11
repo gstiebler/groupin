@@ -12,7 +12,7 @@ import logger from '../config/winston';
 
 const { ObjectId } = Types;
 
-async function messagesOfTopic({ topicId, limit, afterId, beforeId }, { user }) {
+export async function messagesOfTopic({ topicId, limit, afterId, beforeId }, { user }) {
   const topic = await Topic.findById(topicId);
   if (!_.find(user.groups, (g) => g.id.equals(topic.groupId))) {
     throw new Error('User does not participate in the group');
@@ -59,7 +59,7 @@ async function messagesOfTopic({ topicId, limit, afterId, beforeId }, { user }) 
   return messages;
 }
 
-async function sendMessage({ message, topicId }, { user }) {
+export async function sendMessage({ message, topicId }, { user }) {
   // TODO: make calls to DB in parallel when possible
 
   const topic = await Topic.findById(topicId);
@@ -113,8 +113,3 @@ async function sendMessage({ message, topicId }, { user }) {
 
   return createdMessage._id.toHexString();
 }
-
-module.exports = {
-  messagesOfTopic,
-  sendMessage,
-};

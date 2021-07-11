@@ -16,7 +16,7 @@ const { ObjectId } = Types;
 
 const oldDate = moment('2015-01-01').toDate();
 
-async function ownGroups(args, { user }) {
+export async function ownGroups(args, { user }) {
   if (!user) {
     throw new Error('Method only available with a user');
   }
@@ -46,7 +46,7 @@ async function ownGroups(args, { user }) {
   });
 }
 
-async function getGroupInfo({ groupId }, { user }) {
+export async function getGroupInfo({ groupId }, { user }) {
   if (!user) {
     throw new Error('Method only available with a user');
   }
@@ -67,7 +67,7 @@ async function getGroupInfo({ groupId }, { user }) {
   };
 }
 
-async function findGroups({ searchText, limit }, { user }) {
+export async function findGroups({ searchText, limit }, { user }) {
   if (!user) {
     throw new Error('Only logged in users can search for groups');
   }
@@ -86,7 +86,7 @@ async function findGroups({ searchText, limit }, { user }) {
   return groups.map((group) => ({ ...group, id: group._id }));
 }
 
-async function createGroup({ groupName, visibility }, { user }) {
+export async function createGroup({ groupName, visibility }, { user }) {
   const newGroup = await Group.create({
     name: groupName,
     imgUrl: 'temp',
@@ -111,7 +111,7 @@ async function createGroup({ groupName, visibility }, { user }) {
   return 'OK';
 }
 
-async function joinGroup({ groupId }, { user }) {
+export async function joinGroup({ groupId }, { user }) {
   const hasGroup = _.find(user.groups, (g) => g.id.toHexString() === groupId);
   if (hasGroup) {
     throw new Error('User already participate in the group');
@@ -122,7 +122,7 @@ async function joinGroup({ groupId }, { user }) {
   return 'OK';
 }
 
-async function leaveGroup({ groupId }, { user }) {
+export async function leaveGroup({ groupId }, { user }) {
   await User.updateOne(
     { _id: user._id },
     { $pull: { groups: { id: ObjectId(groupId) } } },
@@ -133,7 +133,7 @@ async function leaveGroup({ groupId }, { user }) {
   return 'OK';
 }
 
-async function setGroupPin({ groupId, pinned }, { user }) {
+export async function setGroupPin({ groupId, pinned }, { user }) {
   await User.updateOne(
     { _id: user._id, 'groups.id': ObjectId(groupId) },
     { $set: { 'groups.$.pinned': pinned } },
@@ -145,13 +145,3 @@ async function setGroupPin({ groupId, pinned }, { user }) {
   }
   return 'OK';
 }
-
-module.exports = {
-  ownGroups,
-  getGroupInfo,
-  findGroups,
-  createGroup,
-  joinGroup,
-  leaveGroup,
-  setGroupPin,
-};
