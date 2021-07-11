@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
 import { graphql } from 'graphql';
-import rootValue from '../resolver';
+import rootValue from '../resolvers/rootResolver';
 import schema from '../graphqlSchema';
 import logger from '../config/winston';
 import User from '../db/schema/User';
