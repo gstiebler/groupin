@@ -1,9 +1,12 @@
-import { UpdateDateColumn, Entity, ManyToOne } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from "typeorm";
 import { Topic } from "./Topic";
 import { User } from "./User";
 
 @Entity()
 export class TopicLatestRead {
+
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(
     () => User,
@@ -17,6 +20,6 @@ export class TopicLatestRead {
   )
   topic: Promise<Topic>;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @Column({ type: 'timestamp' })
   latestMoment: Date;
 }
