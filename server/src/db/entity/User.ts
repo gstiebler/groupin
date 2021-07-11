@@ -1,4 +1,14 @@
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity } from "typeorm";
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Entity,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
+import { Group } from "./Group";
 
 @Entity()
 export class User {
@@ -9,14 +19,21 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
-  imgUrl: string;
-
-  @Column('jsonb', { array: true })
-  groups: object[];
+  @Column({ nullable: true})
+  imgUrl?: string;
 
   @Column('text', { array: true })
   pinnedTopics: string[];
+
+  @OneToMany(
+    () => Group,
+    group => group.creator
+  )
+  createdGroups: Promise<Group[]>;
+
+  @ManyToMany(type => Group)
+  @JoinTable()
+  joinedGroups: Promise<Group[]>;
 
   @CreateDateColumn({ type: 'timestamp without time zone' })
   createdAt: Date;
