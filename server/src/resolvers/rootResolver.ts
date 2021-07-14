@@ -1,11 +1,7 @@
 import { subscribeToAll } from '../lib/subscription';
-
 import { User } from '../db/entity/User';
-import { Connection } from 'typeorm';
-
 import { Query, Resolver, Mutation, Arg, Field, InputType } from 'type-graphql'
 import { Context } from '../graphqlMain';
-import { stringifyKey } from 'mobx/dist/internal';
 
 @InputType()
 export class HelloInput {
@@ -19,7 +15,7 @@ export class RootResolver {
   @Query(() => String)
   async getHello(
     @Arg('todoInput') { pass }: HelloInput
-  ): Promise<string> {
+  ): String {
     return pass === 'foca' ? 'OK' : 'ERROR';
   }
 
@@ -28,15 +24,15 @@ export class RootResolver {
     return user ? user.id : 'NO USER';
   }
 
-  @Mutation(() => )
+  @Mutation(() => ({ errorMessage: string, id: string }))
   async register(
     @Arg('todoInput') { name }: HelloInput,
-    { user, externalId, connection }: Context
+    { user, externalId, db }: Context
   ) {
     if (user) {
       throw new Error('User is already registered');
     }
-    const newUser = await connection.getRepository(User).save({
+    const newUser = await db.getRepository(User).save({
       name,
       externalId,
     });
@@ -46,13 +42,14 @@ export class RootResolver {
       id: newUser.id,
     };
   }
-}
 
-export async function updateFcmToken({ fcmToken }, { user, connection }: { user: User, connection: Connection }) {
-  if (!user) {
-    throw new Error('A user is required to update FCM token');
+  @Mutation(() => void)
+  async updateNotificationToken({ notificationToken }, { user, db }: Context) {
+    if (!user) {
+      throw new Error('A user is required to update FCM token');
+    }
+    user.notificationToken = notificationToken;
+    await db.getRepository(User).save(user);
+    await subscribeToAll(user, notificationToken);
   }
-  user.notificationToken = fcmToken;
-  await connection.getRepository(User).save(user);
-  await subscribeToAll(user, fcmToken);
 }

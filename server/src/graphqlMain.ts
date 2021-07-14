@@ -23,7 +23,7 @@ export async function getContext(
     firebaseId = decodedToken.uid;
     const userRepository = connection.getRepository(User);
     user = await userRepository.findOne({ externalId: firebaseId });
-    return { user, externalId, connection };
+    return { user, externalId, db: connection };
   }
-  return { user: undefined, externalId: undefined, connection };
+  return { user: undefined, externalId: undefined, db: connection };
 }
