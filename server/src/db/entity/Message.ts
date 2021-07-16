@@ -23,6 +23,8 @@ export class Message {
   )
   topic: Promise<Topic>;
 
+  topicId: string;
+
   @CreateDateColumn({ type: 'timestamp without time zone' })
   createdAt: Date;
 }

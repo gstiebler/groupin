@@ -1,20 +1,17 @@
 import * as _ from 'lodash';
-import { Types } from 'mongoose';
-
-import Group from '../db/schema/Group';
-import Message from '../db/schema/Message';
-import Topic from '../db/schema/Topic';
 
 import { messageTypes } from '../lib/constants';
 
 import pushService from '../lib/pushService';
 import logger from '../config/winston';
+import { Topic } from '../db/entity/Topic';
+import { Context } from '../graphqlMain';
+import { Message } from '../db/entity/Message';
 
-const { ObjectId } = Types;
-
-export async function messagesOfTopic({ topicId, limit, afterId, beforeId }, { user }) {
-  const topic = await Topic.findById(topicId);
-  if (!_.find(user.groups, (g) => g.id.equals(topic.groupId))) {
+export async function messagesOfTopic({ topicId, limit, afterId, beforeId }, { user, db }: Context) {
+  const topic = await db.getRepository(Topic).findOne(topicId);
+  const groups = await user?.joinedGroups;
+  if (!_.find(groups, { id: topic?.groupId })) {
     throw new Error('User does not participate in the group');
   }
   const beforeIdMessages = !_.isEmpty(beforeId);
@@ -23,46 +20,23 @@ export async function messagesOfTopic({ topicId, limit, afterId, beforeId }, { u
   if (beforeIdMessages && afterIdMessages) {
     throw new Error('Only one start of end filter is allowed');
   }
-  // eslint-disable-next-line no-nested-ternary
-  const idMatch = newestMessages ? {}
-    : afterIdMessages ? { _id: { $gte: ObjectId(afterId) } }
-      : { _id: { $lt: ObjectId(beforeId) } };
-  const messages = await Message.aggregate([
-    {
-      $match: {
-        topic: topic._id,
-        ...idMatch,
-      },
+  const messages = await db.getRepository(Message).find({
+    where: {
+      topicId
     },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'user',
-        foreignField: '_id',
-        as: 'user',
-      },
-    },
-    { $unwind: '$user' },
-    {
-      $project: {
-        text: '$text',
-        createdAt: '$createdAt',
-        'user._id': '$user._id',
-        'user.name': '$user.name',
-        'user.avatar': '$user.imgUrl',
-      },
-    },
-    { $sort: { _id: -1 } },
-    { $limit: limit },
-    // { $sort: { _id: -1 } },
-  ]);
+    order: {
+      createdAt: 'DESC'
+    }
+  });
+
+  // TODO: join users
   return messages;
 }
 
-export async function sendMessage({ message, topicId }, { user }) {
+export async function sendMessage({ message, topicId }, { user, db }: Context) {
   // TODO: make calls to DB in parallel when possible
 
-  const topic = await Topic.findById(topicId);
+  const topic = await db.getRepository(Topic).findOne(topicId);
   if (!_.find(user.groups, (g) => g.id.equals(topic.groupId))) {
     throw new Error('User does not participate in the group');
   }

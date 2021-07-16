@@ -21,6 +21,8 @@ export class Topic {
   )
   group: Promise<Group>;
 
+  groupId: string;
+
   @OneToMany(
     () => Message,
     message => message.user
