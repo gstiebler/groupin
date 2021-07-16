@@ -1,6 +1,7 @@
 import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToOne, OneToMany } from "typeorm";
 import { Group } from "./Group";
 import { Message } from "./Message";
+import { PinnedTopic } from "./PinnedTopic";
 import { TopicLatestRead } from "./TopicLatestRead";
 
 @Entity()
@@ -28,6 +29,12 @@ export class Topic {
     message => message.user
   )
   messages: Promise<Message[]>;
+
+  @OneToMany(
+    () => PinnedTopic,
+    pinnedTopic => pinnedTopic.topic
+  )
+  usersPinned: Promise<PinnedTopic[]>;
 
   @OneToMany(
     () => TopicLatestRead,

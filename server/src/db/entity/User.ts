@@ -9,6 +9,7 @@ import {
 import { Group } from "./Group";
 import { GroupLatestRead } from "./GroupLatestRead";
 import { Message } from "./Message";
+import { PinnedTopic } from "./PinnedTopic";
 import { TopicLatestRead } from "./TopicLatestRead";
 import { UserGroupPinned } from "./UserGroupPinned";
 
@@ -47,6 +48,12 @@ export class User {
     joinedGroup => joinedGroup.user
   )
   joinedGroups: Promise<UserGroupPinned[]>;
+
+  @OneToMany(
+    () => PinnedTopic,
+    pinnedTopic => pinnedTopic.user
+  )
+  pinnedTopics: Promise<PinnedTopic[]>;
 
   @OneToMany(
     () => GroupLatestRead,
