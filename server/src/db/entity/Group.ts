@@ -2,6 +2,7 @@ import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Ent
 import { GroupLatestRead } from "./GroupLatestRead";
 import { Topic } from "./Topic";
 import { User } from "./User";
+import { UserGroupPinned } from "./UserGroupPinned";
 
 @Entity()
 export class Group {
@@ -32,6 +33,12 @@ export class Group {
     topic => topic.group
   )
   topics: Promise<Topic[]>;
+
+  @OneToMany(
+    () => UserGroupPinned,
+    user => user.group
+  )
+  users: Promise<UserGroupPinned[]>;
 
   @OneToMany(
     () => GroupLatestRead,

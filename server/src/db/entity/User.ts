@@ -5,14 +5,12 @@ import {
   UpdateDateColumn,
   Entity,
   OneToMany,
-  ManyToMany,
-  JoinTable,
 } from "typeorm";
 import { Group } from "./Group";
 import { GroupLatestRead } from "./GroupLatestRead";
 import { Message } from "./Message";
-import { Topic } from "./Topic";
 import { TopicLatestRead } from "./TopicLatestRead";
+import { UserGroupPinned } from "./UserGroupPinned";
 
 @Entity()
 export class User {
@@ -32,10 +30,6 @@ export class User {
   @Column({ nullable: true})
   imgUrl?: string;
 
-  @ManyToMany(() => Topic)
-  @JoinTable()
-  pinnedTopics: Promise<Topic[]>;
-
   @OneToMany(
     () => Group,
     group => group.creator
@@ -48,9 +42,11 @@ export class User {
   )
   messages: Promise<Message[]>;
 
-  @ManyToMany(() => Group)
-  @JoinTable()
-  joinedGroups: Promise<Group[]>;
+  @OneToMany(
+    () => UserGroupPinned,
+    joinedGroup => joinedGroup.user
+  )
+  joinedGroups: Promise<UserGroupPinned[]>;
 
   @OneToMany(
     () => GroupLatestRead,
