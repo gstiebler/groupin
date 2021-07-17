@@ -10,13 +10,19 @@ export class HelloInput {
   pass: string
 }
 
+@InputType()
+export class RegisterInput {
+  @Field()
+  name: string
+}
+
 @Resolver(() => User)
 export class RootResolver {
 
   @Query(() => String)
   async getHello(
     @Arg('todoInput') { pass }: HelloInput
-  ): String {
+  ): Promise<String> {
     return pass === 'foca' ? 'OK' : 'ERROR';
   }
 
@@ -25,9 +31,9 @@ export class RootResolver {
     return user ? user.id : 'NO USER';
   }
 
-  @Mutation(() => ({ errorMessage: string, id: string }))
+  @Mutation(() => ({ errorMessage: String, id: String }))
   async register(
-    @Arg('todoInput') { name }: HelloInput,
+    @Arg('todoInput') { name }: RegisterInput,
     { user, externalId, db }: Context
   ) {
     if (user) {
@@ -51,6 +57,6 @@ export class RootResolver {
     }
     user.notificationToken = notificationToken;
     await db.getRepository(User).save(user);
-    await subscribeToAll(user, notificationToken);
+    await subscribeToAll(db, user, notificationToken);
   }
 }

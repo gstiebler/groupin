@@ -20,6 +20,8 @@ export class PinnedTopic {
   )
   topic: Promise<Topic>;
 
+  topicId: string;
+
   @Column(() => Boolean)
   pinned: boolean;
 

@@ -14,11 +14,15 @@ export class UserGroupPinned {
   )
   user: Promise<User>;
 
+  userId: string;
+
   @ManyToOne(
     () => Group,
     group => group.users
   )
   group: Promise<Group>;
+
+  groupId: string;
 
   @Column(() => Boolean)
   pinned: boolean;

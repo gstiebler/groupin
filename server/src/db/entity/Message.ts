@@ -17,6 +17,8 @@ export class Message {
   )
   user: Promise<User>;
 
+  userId: string;
+
   @ManyToOne(
     () => Topic,
     topic => topic.messages

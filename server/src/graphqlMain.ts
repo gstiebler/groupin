@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-import { graphql } from 'graphql';
 import * as _ from 'lodash';
 import logger from './config/winston';
 import { User } from './db/entity/User';
@@ -23,7 +22,7 @@ export async function getContext(
     firebaseId = decodedToken.uid;
     const userRepository = connection.getRepository(User);
     user = await userRepository.findOne({ externalId: firebaseId });
-    return { user, externalId, db: connection };
+    return { user, externalId: firebaseId, db: connection };
   }
   return { user: undefined, externalId: undefined, db: connection };
 }

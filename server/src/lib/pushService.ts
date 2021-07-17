@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import logger from '../config/winston';
-import * as firebaseConfig from '../../firebase_android_config.json';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const firebaseConfig = require('../../firebase_android_config.json');
 
 const pushService = {
 
@@ -23,14 +24,8 @@ const pushService = {
       data: payload,
       // token: registrationToken, Only used when sending to an specific device
       topic: fcmTopic,
-      notification: undefined,
+      notification: sendNotification ? { title, body } : undefined
     };
-    if (sendNotification) {
-      message.notification = {
-        title,
-        body,
-      };
-    }
     try {
       logger.debug(`Sending push message to topic "${fcmTopic}", ${JSON.stringify(message)}`);
       const response = await this.messaging.send(message);

@@ -20,6 +20,8 @@ export class GroupLatestRead {
   )
   group: Promise<Group>;
 
+  groupId: string;
+
   @Column({ type: 'timestamp' })
   latestMoment: Date;
 }

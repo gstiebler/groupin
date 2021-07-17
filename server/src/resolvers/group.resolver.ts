@@ -83,7 +83,7 @@ export class RootResolver {
       });
     return groups;
   }
-
+/*
   async createGroup({ groupName, visibility }, { user, db }: Context) {
     const newGroup = await db.getRepository(Group).save({
       description: groupName,
@@ -93,7 +93,6 @@ export class RootResolver {
     });
 
     // TODO: pin added group
-    /*
     await User.updateOne(
       { _id: ObjectId(user._id) },
       {
@@ -105,7 +104,6 @@ export class RootResolver {
         },
       },
     );
-    */
 
     // TODO: add groupLatestRead
 
@@ -113,37 +111,31 @@ export class RootResolver {
   }
 
   async joinGroup({ groupId }, { user, db }: Context) {
-    /*
     const hasGroup = _.find(user.groups, (g) => g.id.toHexString() === groupId);
     if (hasGroup) {
       throw new Error('User already participate in the group');
     }
     user.groups.push({ id: ObjectId(groupId) });
     await user.save();
-    */
     return 'OK';
   }
 
   async leaveGroup({ groupId }, { user, db }: Context) {
-    /*
     await User.updateOne(
       { _id: user._id },
       { $pull: { groups: { id: ObjectId(groupId) } } },
     );
 
-    */
     // unsubscribe user from the group on FCM
     await unsubscribeFromGroup(user, user?.notificationToken, groupId);
     return 'OK';
   }
 
   async setGroupPin({ groupId, pinned }, { user, db }: Context) {
-    /*
     await User.updateOne(
       { _id: user._id, 'groups.id': ObjectId(groupId) },
       { $set: { 'groups.$.pinned': pinned } },
     );
-    */
     if (pinned) {
       await subscribeToGroup(user, user?.notificationToken, groupId);
     } else {
@@ -151,6 +143,6 @@ export class RootResolver {
     }
     return 'OK';
   }
-
+*/
 
 }
