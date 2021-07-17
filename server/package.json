@@ -31,6 +31,7 @@
     "report-dir": ".coverage"
   },
   "dependencies": {
+    "@types/express-serve-static-core": "^4.17.24",
     "@types/lodash": "^4.14.165",
     "@types/node": "^16.3.1",
     "apollo-server-azure-functions": "^2.25.2",
