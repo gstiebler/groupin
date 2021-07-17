@@ -2,6 +2,7 @@
  * This file was created to avoid circular dependencies among fixture files
  */
 
+/*
 import * as mongoose from 'mongoose';
 
 const { ObjectId } = mongoose.Types;
@@ -16,3 +17,4 @@ export const topicIds = {
   topic2Group2: new ObjectId('5dd1637bf1b0a52641cc03d3'),
   topic2Group1: new ObjectId('5dd1637bf1b0a52641cc03d4'),
 };
+*/

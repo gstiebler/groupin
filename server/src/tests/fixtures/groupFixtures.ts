@@ -1,3 +1,4 @@
+/*
 import userFixtures from './userFixtures';
 import { groupIds } from './preIds';
 
@@ -26,3 +27,4 @@ const groups = {
 };
 
 export default groups;
+*/

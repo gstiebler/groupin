@@ -1,3 +1,4 @@
+/*
 import * as moment from 'moment';
 import userFixtures from './userFixtures';
 import { groupIds } from './preIds';
@@ -11,3 +12,4 @@ const groupLatestReads = [
 ];
 
 export default groupLatestReads;
+*/

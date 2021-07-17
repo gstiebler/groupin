@@ -1,3 +1,4 @@
+/*
 import * as mongoose from 'mongoose';
 import { groupIds, topicIds } from './preIds';
 
@@ -42,3 +43,4 @@ const users = {
 };
 
 export default users;
+*/

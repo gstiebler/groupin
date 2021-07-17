@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": [
+      "es2018",
+      "esnext.asynciterable"
+    ],
     "experimentalDecorators": true,
-    "preserveConstEnums": true,
     "strictNullChecks": true,
     "emitDecoratorMetadata": true,
     "outDir": ".build",

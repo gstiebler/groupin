@@ -1,12 +1,7 @@
+/*
 import * as bluebird from 'bluebird';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import Topic from '../db/schema/Topic';
-
-import Group from '../db/schema/Group';
-import User from '../db/schema/User';
-import TopicLatestRead, { ITopicLatestRead } from '../db/schema/TopicLatestRead';
-import GroupLatestRead from '../db/schema/GroupLatestRead';
 
 import pushService from '../lib/pushService';
 
@@ -129,3 +124,4 @@ export async function setTopicPin({ topicId, pinned }, { user }) {
   }
   return 'OK';
 }
+*/

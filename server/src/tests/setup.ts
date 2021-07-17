@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
+/*
 import { graphql } from 'graphql';
 import rootValue from '../resolvers/rootResolver';
 import schema from '../graphqlSchema';
@@ -37,3 +38,4 @@ export async function setup() {
     return result.data;
   };
 }
+*/

@@ -1,3 +1,4 @@
+/*
 import * as mongoose from 'mongoose';
 import topicFixtures from './topicFixtures';
 import userFixtures from './userFixtures';
@@ -35,3 +36,4 @@ const messages = {
 };
 
 export default messages;
+*/

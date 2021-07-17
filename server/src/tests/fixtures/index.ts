@@ -1,3 +1,4 @@
+/*
 import groupFixtures from './groupFixtures';
 import userFixtures from './userFixtures';
 import topicFixtures from './topicFixtures';
@@ -33,3 +34,4 @@ async function initFixtures() {
 module.exports = {
   initFixtures,
 };
+*/

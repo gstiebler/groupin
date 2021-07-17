@@ -1,3 +1,4 @@
+/*
 import * as mongoose from 'mongoose';
 import groupFixtures from './groupFixtures';
 import userFixtures from './userFixtures';
@@ -45,3 +46,4 @@ const topics = {
 };
 
 export default topics;
+*/

@@ -2,6 +2,7 @@ import { subscribeToAll } from '../lib/subscription';
 import { User } from '../db/entity/User';
 import { Query, Resolver, Mutation, Arg, Field, InputType } from 'type-graphql'
 import { Context } from '../graphqlMain';
+import 'reflect-metadata';
 
 @InputType()
 export class HelloInput {
@@ -43,7 +44,7 @@ export class RootResolver {
     };
   }
 
-  @Mutation(() => void)
+  @Mutation(() => String)
   async updateNotificationToken({ notificationToken }, { user, db }: Context) {
     if (!user) {
       throw new Error('A user is required to update FCM token');
