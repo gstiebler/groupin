@@ -5,7 +5,7 @@ import { messageTypes } from '../lib/constants';
 import pushService from '../lib/pushService';
 import logger from '../config/winston';
 import { Topic } from '../db/entity/Topic';
-import { Context } from '../graphqlMain';
+import { Context } from '../graphqlContext';
 import { Message } from '../db/entity/Message';
 import { Resolver } from 'type-graphql';
 import { UserGroupPinned } from '../db/entity/UserGroupPinned';

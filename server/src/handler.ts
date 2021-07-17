@@ -3,13 +3,12 @@ dotenv.config();
 import pushService from './lib/pushService';
 import { ApolloServer } from 'apollo-server-azure-functions';
 import { RootResolver } from './resolvers/rootResolver';
-import { buildSchema } from 'type-graphql'
-import { getContext } from './graphqlMain';
-
+import { getContext } from './graphqlContext';
+import { buildSchemaSync } from 'type-graphql';
 
 pushService.init();
 
-const schema = await buildSchema({
+const schema = buildSchemaSync({
   resolvers: [RootResolver],
   emitSchemaFile: true,
 });

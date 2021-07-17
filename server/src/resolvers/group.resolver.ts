@@ -4,7 +4,7 @@ import { Resolver } from 'type-graphql';
 import { In, Like } from 'typeorm';
 import { Group } from '../db/entity/Group';
 import { GroupLatestRead } from '../db/entity/GroupLatestRead';
-import { Context } from '../graphqlMain';
+import { Context } from '../graphqlContext';
 
 import { numMaxReturnedItems } from '../lib/constants';
 

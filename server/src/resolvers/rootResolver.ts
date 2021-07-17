@@ -1,7 +1,7 @@
 import { subscribeToAll } from '../lib/subscription';
 import { User } from '../db/entity/User';
 import { Query, Resolver, Mutation, Arg, Field, InputType, ObjectType } from 'type-graphql'
-import { Context } from '../graphqlMain';
+import { Context } from '../graphqlContext';
 import 'reflect-metadata';
 
 @InputType()
