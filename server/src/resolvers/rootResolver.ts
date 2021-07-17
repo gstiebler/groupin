@@ -1,19 +1,28 @@
 import { subscribeToAll } from '../lib/subscription';
 import { User } from '../db/entity/User';
-import { Query, Resolver, Mutation, Arg, Field, InputType } from 'type-graphql'
+import { Query, Resolver, Mutation, Arg, Field, InputType, ObjectType } from 'type-graphql'
 import { Context } from '../graphqlMain';
 import 'reflect-metadata';
 
 @InputType()
-export class HelloInput {
+class HelloInput {
   @Field()
   pass: string
 }
 
 @InputType()
-export class RegisterInput {
+class RegisterInput {
   @Field()
   name: string
+}
+
+@ObjectType()
+class RegisterResult {
+  @Field()
+  errorMessage: string;
+  
+  @Field()
+  id: string;
 }
 
 @Resolver(() => User)
@@ -31,7 +40,7 @@ export class RootResolver {
     return user ? user.id : 'NO USER';
   }
 
-  @Mutation(() => ({ errorMessage: String, id: String }))
+  @Mutation(() => RegisterResult)
   async register(
     @Arg('todoInput') { name }: RegisterInput,
     { user, externalId, db }: Context

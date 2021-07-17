@@ -10,6 +10,7 @@
     "prepublish": "npm run compile",
     "test": "jest",
     "build": "tsc && npm run copy",
+    "build:schema": "ts-node ./src/buildSchema.ts",
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
