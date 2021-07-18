@@ -1,12 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga'
-import { buildSchemaSync } from 'type-graphql';
 import { getContext } from './graphqlContext';
-import { RootResolver } from './resolvers/rootResolver';
-
-const schema = buildSchemaSync({
-  resolvers: [RootResolver],
-  emitSchemaFile: true,
-});
+import schema from './buildSchema';
 
 const server = new GraphQLServer({
   schema,

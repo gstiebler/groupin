@@ -1,7 +1,8 @@
-import { buildSchema } from "type-graphql";
+import { buildSchemaSync } from "type-graphql";
 import { RootResolver } from "./resolvers/rootResolver";
 
-buildSchema({
-  resolvers: [RootResolver],
-  emitSchemaFile: __dirname + '/../.build/schema.gql',
+const schema = buildSchemaSync({
+  resolvers: [RootResolver]
 });
+
+export default schema;

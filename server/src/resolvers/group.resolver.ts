@@ -17,7 +17,7 @@ const oldDate = moment('2015-01-01').toDate();
 
 
 @Resolver(() => Group)
-export class RootResolver {
+export class GroupResolver {
 
   async ownGroups(args, { user, db }: Context) {
     if (!user) {

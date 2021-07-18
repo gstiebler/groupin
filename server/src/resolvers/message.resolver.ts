@@ -11,7 +11,6 @@ import { Resolver } from 'type-graphql';
 import { UserGroupPinned } from '../db/entity/UserGroupPinned';
 import { Group } from '../db/entity/Group';
 
-
 @Resolver(() => Message)
 export class MessageResolver {
 
