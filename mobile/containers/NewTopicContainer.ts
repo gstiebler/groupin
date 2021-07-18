@@ -7,7 +7,10 @@ export type NewTopicScreenRouteProp = RouteProp<RootStackParamList, 'NewTopic'>;
 type ContainerProp = { navigation: Navigation, route: NewTopicScreenRouteProp };
 const NewTopicContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
   return NewTopicComponent({
-    onCreate: (name) => rootStore.topicStore.createTopic({ groupId: route.params.groupId, name, navigation })
+    onCreate: async (name) => {
+      await rootStore.topicStore.createTopic({ groupId: route.params.groupId, name })
+      navigation.goBack();
+    }
   });
 };
 export default NewTopicContainer;

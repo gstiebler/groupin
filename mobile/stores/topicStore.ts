@@ -6,7 +6,6 @@ const formatDataTopicId = (topicId: string) => `data.${topicId}`;
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { RootStore } from './rootStore';
-import { Navigation } from '../types/Navigator.types';
 import { IStorage } from '../types/Storage.types';
 
 export class TopicStore {
@@ -74,8 +73,7 @@ export class TopicStore {
     }
   }
 
-  async createTopic(params: { groupId: string, name: string, navigation: Navigation }) {
+  async createTopic(params: { groupId: string, name: string }) {
     await server.createTopic({ topicName: params.name, groupId: params.groupId });
-    params.navigation.goBack();
   }
 }

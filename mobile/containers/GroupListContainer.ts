@@ -11,7 +11,10 @@ const GroupListContainer: React.FC<{ navigation: Navigation }> = ({ navigation }
   return GroupListComponent({
     ownGroups: groupStore.ownGroups, 
     selectGroup: (groupId, groupName) => navigation.navigate('TopicsList', { groupId, groupName }), 
-    onLeaveGroup: (groupId) => groupStore.leaveGroup(groupId, navigation), 
+    onLeaveGroup: async (groupId) => {
+      await groupStore.leaveGroup(groupId);
+      navigation.navigate('GroupList');
+    }, 
     onPinClicked: (group: Group) => groupStore.setGroupPin({ groupId: group.id, pinned: !group.pinned }),
   });
 };

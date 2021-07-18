@@ -15,8 +15,17 @@ const GroupInfoContainer: React.FC<ContainerProp> = ({ navigation, route }: Cont
 
   return GroupInfoComponent({
     groupInfo: groupStore.currentGroupInfo,
-    onJoinGroup: () => groupStore.joinGroup(navigation),
-    onLeaveGroup: () => groupStore.leaveGroup(groupStore.currentGroupInfo?.id ?? '', navigation),
+    onJoinGroup: async () => {
+      await groupStore.joinGroup(),
+      navigation.navigate('TopicsList', {
+        groupId: groupStore.currentGroupInfo.id,
+        groupName: groupStore.currentGroupInfo.name
+      });
+    },
+    onLeaveGroup: async () => {
+      await groupStore.leaveGroup(groupStore.currentGroupInfo?.id ?? '');
+      navigation.navigate('GroupList');
+    },
   });
 };
 export default GroupInfoContainer;

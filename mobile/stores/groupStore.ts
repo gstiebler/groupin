@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import * as server from '../lib/server';
 import { groupVisibility } from '../constants/domainConstants';
-import { Navigation } from '../types/Navigator.types';
 
 export interface FeGroupInfo extends server.GroupInfo {
   visibilityLabel: string;
@@ -23,21 +22,16 @@ export class GroupStore {
     };
   }
   
-  async leaveGroup(groupId: string, navigation: Navigation) {
+  async leaveGroup(groupId: string) {
     await server.leaveGroup(groupId);
-    navigation.navigate('GroupList');
     await this.fetchOwnGroups();
   }
   
-  async joinGroup(navigation: Navigation)  {
+  async joinGroup()  {
     if (!this.currentGroupInfo) {
       throw new Error('Group info expected here');
     }
     await server.joinGroup(this.currentGroupInfo.id);
-    navigation.navigate('TopicsList', {
-      groupId: this.currentGroupInfo.id,
-      groupName: this.currentGroupInfo.name
-    });
   }
   
   async setGroupPin(params: { groupId: string, pinned: boolean }) {
