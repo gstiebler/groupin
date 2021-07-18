@@ -1,6 +1,7 @@
 import { AsyncStorage } from 'react-native'; // TODO: replace by @react-native-async-storage/async-storage
+import { IStorage } from '../types/Storage.types';
 
-export class LocalStorage {
+export class LocalStorage implements IStorage {
   async getItem(key: string): Promise<unknown> {
     const res = await AsyncStorage.getItem(key);
     return res ? JSON.parse(res) : null;

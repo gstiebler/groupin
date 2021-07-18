@@ -5,7 +5,7 @@ import { mergeMessages, getFirst, GiMessage } from '../lib/messages';
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { TopicStore } from './topicStore';
 import { GroupStore } from './groupStore';
-import { LocalStorage } from '../rn_lib/localStorage';
+import { IStorage } from '../types/Storage.types';
 
 export type Topic = {
   id: string;
@@ -25,6 +25,7 @@ export class RootStore {
   hasOlderMessages = false;
 
   constructor(
+    private storage: IStorage,
     public groupStore: GroupStore
   ) {}
 
@@ -70,7 +71,7 @@ export class RootStore {
     }
   }
   
-  async getMessagesOfCurrentTopic(storage: LocalStorage): Promise<void> {
+  async getMessagesOfCurrentTopic(): Promise<void> {
     if (!this.currentlyViewedTopicId) { return }
     const topicId = this.currentlyViewedTopicId;
     this.messages = await server.getMessagesOfTopic({
@@ -78,7 +79,7 @@ export class RootStore {
       limit: NUM_ITEMS_PER_FETCH,
     });
     // TODO: test line below
-    await storage.setItem(topicId, this.messages);
+    await this.storage.setItem(topicId, this.messages);
   }
   
   async updateNotificationToken(notificationToken: string) {

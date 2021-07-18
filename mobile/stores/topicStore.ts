@@ -5,9 +5,9 @@ import { mergeMessages, getFirst, getLast, removeFirst, getNNew, GiMessage } fro
 const formatDataTopicId = (topicId: string) => `data.${topicId}`;
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
-import { LocalStorage } from '../rn_lib/localStorage';
 import { RootStore } from './rootStore';
 import { Navigation } from '../types/Navigator.types';
+import { IStorage } from '../types/Storage.types';
 
 export class TopicStore {
   topicTitle: string;
@@ -24,7 +24,7 @@ export class TopicStore {
   async onTopicOpened(params: {
     topicId: string,
     topicName: string,
-    storage: LocalStorage,
+    storage: IStorage,
     subscribeFn: (formattedTopicId: string) => void
   }) {
     const { topicId, topicName, storage, subscribeFn } = params;

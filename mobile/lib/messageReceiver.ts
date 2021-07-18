@@ -1,4 +1,3 @@
-import { localStorage } from '../rn_lib/localStorage';
 import { rootStore } from '../stores/storesFactory';
 import { Navigation } from '../types/Navigator.types';
 
@@ -16,7 +15,7 @@ export type GiNotification = {
 export async function messageReceived() {
   await Promise.all([
     rootStore.getTopicsOfCurrentGroup(),
-    rootStore.getMessagesOfCurrentTopic(localStorage),
+    rootStore.getMessagesOfCurrentTopic(),
   ]);
 }
 
