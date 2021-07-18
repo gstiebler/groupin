@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import GroupsSearchComponent from '../components/GroupsSearch';
 import { Navigation } from '../types/Navigator.types';
-import { groupSearchStore } from '../stores/storesFactory';
+import { groupSearchStore } from '../rn_lib/storesFactory';
 
 const GroupsSearchContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => {
   const willLeave = () => groupSearchStore.reset();

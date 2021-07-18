@@ -1,6 +1,6 @@
 import GroupListComponent from '../components/GroupList';
 import { useEffect } from 'react';
-import { groupStore } from '../stores/storesFactory';
+import { groupStore } from '../rn_lib/storesFactory';
 import { Group } from '../lib/server';
 import { Navigation } from '../types/Navigator.types';
 

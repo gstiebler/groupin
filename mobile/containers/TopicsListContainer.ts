@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { Navigation, RootStackParamList } from '../types/Navigator.types';
 import TopicsListComponent from '../components/TopicsList';
-import { rootStore } from '../stores/storesFactory';
+import { rootStore } from '../rn_lib/storesFactory';
 
 export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
 

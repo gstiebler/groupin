@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import GroupInfoComponent from '../components/GroupInfo';
 import { Navigation, RootStackParamList } from '../types/Navigator.types';
-import { groupStore } from '../stores/storesFactory';
+import { groupStore } from '../rn_lib/storesFactory';
 
 export type GroupInfoScreenRouteProp = RouteProp<RootStackParamList, 'GroupInfo'>;
 type ContainerProp = { navigation: Navigation, route: GroupInfoScreenRouteProp };

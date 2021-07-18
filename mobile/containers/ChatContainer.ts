@@ -1,5 +1,5 @@
 import { localStorage as storage } from '../rn_lib/localStorage';
-import { rootStore } from '../stores/storesFactory';
+import { rootStore } from '../rn_lib/storesFactory';
 import ChatComponent from '../components/Chat';
 import React, { useEffect } from 'react';
 import { Navigation, RootStackParamList } from '../types/Navigator.types';

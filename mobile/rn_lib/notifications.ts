@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Navigation } from '../types/Navigator.types';
+import { rootStore } from './storesFactory';
 
 import * as messageReceiver from '../lib/messageReceiver';
 import { Platform } from 'react-native';
@@ -62,13 +63,13 @@ export class GiNotifications {
   async startMessageListener() {
     this.notificationListener = Notifications.addNotificationReceivedListener(notification => {
       console.log(notification);
-      messageReceiver.messageReceived();
+      messageReceiver.messageReceived(rootStore);
     });
 
     this.responseListener = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
       console.log('onNotificationOpenedApp');
-      messageReceiver.onNotificationOpened(this.navigation, response.notification.request.content.data as messageReceiver.GiNotification);
+      messageReceiver.onNotificationOpened(this.navigation, response.notification.request.content.data as messageReceiver.GiNotification, rootStore);
     });
   }
 
