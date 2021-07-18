@@ -1,6 +1,6 @@
 import { subscribeToAll } from '../lib/subscription';
 import { User } from '../db/entity/User';
-import { Query, Resolver, Mutation, Arg, Field, InputType, ObjectType } from 'type-graphql'
+import { Query, Resolver, Mutation, Arg, Field, InputType, ObjectType, Ctx } from 'type-graphql'
 import { Context } from '../graphqlContext';
 import 'reflect-metadata';
 
@@ -30,20 +30,22 @@ export class RootResolver {
 
   @Query(() => String)
   async getHello(
-    @Arg('todoInput') { pass }: HelloInput
+    @Arg('todoInput') { pass }: HelloInput,
+    @Ctx() ctx: Context
   ): Promise<String> {
+    console.log(ctx);
     return pass === 'foca' ? 'OK' : 'ERROR';
   }
 
   @Query(() => String)
-  async getUserId(args, { user }: Context) {
+  async getUserId(args, @Ctx() { user }: Context) {
     return user ? user.id : 'NO USER';
   }
 
   @Mutation(() => RegisterResult)
   async register(
     @Arg('todoInput') { name }: RegisterInput,
-    { user, externalId, db }: Context
+    @Ctx() { user, externalId, db }: Context
   ) {
     if (user) {
       throw new Error('User is already registered');
@@ -60,7 +62,7 @@ export class RootResolver {
   }
 
   @Mutation(() => String)
-  async updateNotificationToken({ notificationToken }, { user, db }: Context) {
+  async updateNotificationToken({ notificationToken }, @Ctx() { user, db }: Context) {
     if (!user) {
       throw new Error('A user is required to update FCM token');
     }
