@@ -1,11 +1,13 @@
-import * as admin from 'firebase-admin';
 import logger from '../config/winston';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const firebaseConfig = require('../../firebase_android_config.json');
+const firebaseConfig = require('../firebase_android_config.json');
+
+console.log(firebaseConfig);
 
 const pushService = {
 
   init() {
+    /*
     const serviceAccount = {
       ...firebaseConfig,
       private_key: JSON.parse(`"${process.env.FIREBASE_PRIVATE_KEY}"`),
@@ -15,8 +17,9 @@ const pushService = {
       databaseURL: process.env.FIREBASE_DATABASE_URL,
     };
     admin.initializeApp(config);
+    */
 
-    this.messaging = admin.messaging();
+    // this.messaging = admin.messaging();
   },
 
   async pushMessage(fcmTopic: string, { payload, title, body, sendNotification }) {
