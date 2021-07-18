@@ -5,7 +5,7 @@ import { localStorage } from './localStorage';
 // import { notifications } from '../lib/notifications';
 
 import { RootStore } from '../stores/rootStore';
-import { LoginStore } from '../stores/loginStore';
+import { LoginStore } from './loginStore';
 import { GroupStore } from '../stores/groupStore';
 import { GroupSearchStore } from "../stores/groupSearchStore";
 

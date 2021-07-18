@@ -22,7 +22,7 @@ const ChatComponent: React.FC<ChatProps> = ({
   <Container>
     <GiftedChat
       messages={messages}
-      user={{ id: userId }}
+      user={{ _id: userId }}
       loadEarlier={hasOlderMessages}
       renderUsernameOnMessage={true}
       onSend={newMessages => onSend(newMessages)}

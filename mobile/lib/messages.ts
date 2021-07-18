@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
 export interface GiMessage {
-  id: string;
+  _id: string;
   text: string;
   createdAt: Date;
   user: {
-    id: string;
+    _id: string;
     name: string;
     avatar: string;
   }

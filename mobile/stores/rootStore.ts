@@ -62,7 +62,7 @@ export class RootStore {
     const olderMessages = await server.getMessagesOfTopic({ 
       topicId, 
       limit: NUM_ITEMS_PER_FETCH, 
-      beforeId: firstMessage?.id,
+      beforeId: firstMessage?._id,
     });
   
     this.messages = mergeMessages(olderMessages, this.messages);
