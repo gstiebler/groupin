@@ -2,6 +2,17 @@
 import * as bluebird from 'bluebird';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+*/
+
+import { Resolver } from "type-graphql";
+import { Topic } from "../db/entity/Topic";
+
+
+@Resolver(() => Topic)
+export class TopicResolver {
+}
+
+/*
 
 import pushService from '../lib/pushService';
 
