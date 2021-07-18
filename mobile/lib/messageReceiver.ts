@@ -1,4 +1,4 @@
-import { localStorage } from './localStorage';
+import { localStorage } from '../rn_lib/localStorage';
 import { rootStore } from '../stores/storesFactory';
 import { Navigation } from '../types/Navigator.types';
 
