@@ -64,12 +64,12 @@ export class TopicStore {
     unsubscribeFn: (formattedTopicId: string) => void
   }) {
     const { topicId, unsubscribeFn } = params;
-    this.rootActions.currentlyViewedTopicId = null;
+    this.rootActions.currentlyViewedTopicId = undefined;
     this.rootActions.messages = [];
     server.setTopicLatestRead(topicId);
     const currentTopic = _.find(this.rootActions.topics, { id: topicId });
     // TODO: move this logic to the server?
-    if (!currentTopic.pinned) {
+    if (!currentTopic?.pinned) {
       unsubscribeFn(formatDataTopicId(topicId));
     }
   }

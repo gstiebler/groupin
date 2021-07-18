@@ -18,10 +18,10 @@ export class RootStore {
   topicStore: TopicStore = new TopicStore(this);
   messages: GiMessage[] = [];
   topics: Topic[] = []; // TODO: change name to `topicsOfGroup`
-  notificationToken: string = null;
+  notificationToken: string;
   userId = '';
-  currentlyViewedGroupId: string = null;
-  currentlyViewedTopicId: string = null;
+  currentlyViewedGroupId?: string;
+  currentlyViewedTopicId?: string;
   hasOlderMessages = false;
 
   constructor(
@@ -104,7 +104,7 @@ export class RootStore {
   }
 
   async leaveGroup() {
-    this.currentlyViewedGroupId = null;
+    this.currentlyViewedGroupId = undefined;
     this.topics = [];
   }
 }
