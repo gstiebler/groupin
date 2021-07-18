@@ -6,3 +6,8 @@ node_modules
 coverage
 log
 .env.*
+src/mobile/actions
+src/mobile/constants
+src/mobile/lib
+src/mobile/stores
+src/mobile/types
