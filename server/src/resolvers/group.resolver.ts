@@ -9,10 +9,12 @@ import { Context } from '../graphqlContext';
 
 import { numMaxReturnedItems } from '../lib/constants';
 
+/*
 import {
   subscribeToGroup,
   unsubscribeFromGroup,
 } from '../lib/subscription';
+*/
 
 const oldDate = moment('2015-01-01').toDate();
 

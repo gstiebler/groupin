@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-import * as _ from 'lodash';
 import logger from './config/winston';
 import { User } from './db/entity/User';
 import { connectionPromise } from './db/createTypeormConnection';
