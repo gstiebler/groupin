@@ -1,7 +1,7 @@
 // import _ from 'lodash';
 import { notifications } from './lib/notifications';
 import { loginStore, rootStore } from './stores/storesFactory';
-import { Navigation } from './components/Navigator.types';
+import { Navigation } from './types/Navigator.types';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from './config/firebaseConfig';

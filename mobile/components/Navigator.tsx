@@ -16,7 +16,7 @@ import GroupInfo from '../containers/GroupInfoContainer';
 import Settings from '../containers/SettingsContainer';
 import * as React from 'react';
 import { Button, Icon, Text } from 'native-base';
-import { RootStackParamList } from './Navigator.types';
+import { RootStackParamList } from '../types/Navigator.types';
 
 const Stack = createStackNavigator<RootStackParamList>();
 

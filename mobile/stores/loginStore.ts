@@ -1,6 +1,6 @@
 import * as server from '../lib/server';
 import * as graphqlConnect from '../lib/graphqlConnect';
-import { Navigation } from '../components/Navigator.types';
+import { Navigation } from '../types/Navigator.types';
 import { RootStore } from './rootStore';
 import { AlertStatic } from 'react-native';
 import firebase from 'firebase/app';

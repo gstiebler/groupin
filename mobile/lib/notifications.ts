@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import { Navigation } from '../components/Navigator.types';
+import { Navigation } from '../types/Navigator.types';
 
 import * as messageReceiver from './messageReceiver';
 import { Platform } from 'react-native';

@@ -1,6 +1,6 @@
 import { localStorage } from './localStorage';
 import { rootStore } from '../stores/storesFactory';
-import { Navigation } from '../components/Navigator.types';
+import { Navigation } from '../types/Navigator.types';
 
 
 export type GiNotification = {

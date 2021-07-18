@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import SplashScreenComponent from '../components/SplashScreen';
-import { Navigation } from '../components/Navigator.types';
+import { Navigation } from '../types/Navigator.types';
 import appInit from '../appInit';
 
 const SplashScreenContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => {

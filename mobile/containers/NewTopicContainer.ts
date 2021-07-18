@@ -1,5 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
-import { Navigation, RootStackParamList } from '../components/Navigator.types';
+import { Navigation, RootStackParamList } from '../types/Navigator.types';
 import NewTopicComponent from '../components/NewTopic';
 import { rootStore } from '../stores/storesFactory';
 
