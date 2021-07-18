@@ -3,10 +3,12 @@ import { createGroup } from '../actions/newGroupActions';
 import { Navigation } from '../types/Navigator.types';
 
 const NewGroupContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => NewGroupComponent({
-  onCreate: ({ name, visibility }) => createGroup({
-    navigation,
-    groupName: name,
-    visibility,
-  }),
+  onCreate: async ({ name, visibility }) => {
+    await createGroup({
+      groupName: name,
+      visibility,
+    });
+    navigation.goBack();
+  },
 });
 export default NewGroupContainer;
