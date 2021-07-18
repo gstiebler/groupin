@@ -1,10 +1,10 @@
-import { localStorage as storage } from '../lib/localStorage';
+import { localStorage as storage } from '../rn_lib/localStorage';
 import { rootStore } from '../stores/storesFactory';
 import ChatComponent from '../components/Chat';
 import React, { useEffect } from 'react';
 import { Navigation, RootStackParamList } from '../types/Navigator.types';
 import { RouteProp } from '@react-navigation/native';
-import { notifications } from '../lib/notifications';
+import { notifications } from '../rn_lib/notifications';
 
 export type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
 type ContainerProp = { navigation: Navigation, route: ChatScreenRouteProp };

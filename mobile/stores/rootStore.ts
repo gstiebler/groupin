@@ -5,7 +5,7 @@ import { mergeMessages, getFirst, GiMessage } from '../lib/messages';
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { TopicStore } from './topicStore';
 import { GroupStore } from './groupStore';
-import { LocalStorage } from '../lib/localStorage';
+import { LocalStorage } from '../rn_lib/localStorage';
 
 export type Topic = {
   id: string;

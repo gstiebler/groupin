@@ -5,7 +5,7 @@ import { mergeMessages, getFirst, getLast, removeFirst, getNNew, GiMessage } fro
 const formatDataTopicId = (topicId: string) => `data.${topicId}`;
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
-import { LocalStorage } from '../lib/localStorage';
+import { LocalStorage } from '../rn_lib/localStorage';
 import { RootStore } from './rootStore';
 import { Navigation } from '../types/Navigator.types';
 
