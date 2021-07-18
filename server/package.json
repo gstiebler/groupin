@@ -17,7 +17,7 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "copy": "cp .env .build",
     "link": "ln -s ../mobile ./src/mobile",
-    "start:local": "ts-node ./src/localServer"
+    "start:local": "node --inspect ./.build/localServer.js"
   },
   "nyc": {
     "all": true,
