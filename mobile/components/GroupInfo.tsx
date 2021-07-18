@@ -5,7 +5,7 @@ import styles from '../Style';
 import { FeGroupInfo } from '../stores/groupStore';
 
 export type GroupInfoProps = {
-  groupInfo: FeGroupInfo;
+  groupInfo?: FeGroupInfo;
   onJoinGroup: () => void;
   onLeaveGroup: () => void;
 };
@@ -31,10 +31,10 @@ const GroupInfoComponent: React.FC<GroupInfoProps> = ({ groupInfo, onJoinGroup, 
     <SafeAreaView style={{ flex: 1 }} >
       <Container>
         <Content>
-          <Text>{ groupInfo.name }</Text>
-          <Text>{ groupInfo.description }</Text>
-          <Text>{ groupInfo.visibilityLabel }</Text>
-          <Text>Identificador: "{ groupInfo.friendlyId }"</Text>
+          <Text>{ groupInfo?.name }</Text>
+          <Text>{ groupInfo?.description }</Text>
+          <Text>{ groupInfo?.visibilityLabel }</Text>
+          <Text>{ `Identificador: "${ groupInfo?.friendlyId }"` }</Text>
           { button }
         </Content>
       </Container>

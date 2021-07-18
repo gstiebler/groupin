@@ -43,7 +43,7 @@ export class RootStore {
       message: firstMessage.text,
       topicId: this.topicStore.topicId,
     });
-    const newMessages = [{ ...firstMessage, _id: newMessageId }];
+    const newMessages = [{ ...firstMessage, id: newMessageId }];
     this.addNewMessages(newMessages);
   }
   
@@ -62,7 +62,7 @@ export class RootStore {
     const olderMessages = await server.getMessagesOfTopic({ 
       topicId, 
       limit: NUM_ITEMS_PER_FETCH, 
-      beforeId: firstMessage._id,
+      beforeId: firstMessage?.id,
     });
   
     this.messages = mergeMessages(olderMessages, this.messages);

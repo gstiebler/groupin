@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
 export interface GiMessage {
-  _id: string;
+  id: string;
   text: string;
   createdAt: Date;
   user: {
-    _id: string;
+    id: string;
     name: string;
     avatar: string;
   }
@@ -15,11 +15,11 @@ export function mergeMessages(olderMessages: GiMessage[], newerMessages: GiMessa
   return [...newerMessages, ...olderMessages];
 }
 
-export function getFirst(messages: GiMessage[]): GiMessage {
+export function getFirst(messages: GiMessage[]): GiMessage | undefined {
   return _.last(messages);
 }
 
-export function getLast(messages: GiMessage[]): GiMessage {
+export function getLast(messages: GiMessage[]): GiMessage | undefined {
   return _.first(messages);
 }
 

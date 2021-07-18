@@ -7,7 +7,7 @@ import * as messageReceiver from '../lib/messageReceiver';
 import { Platform } from 'react-native';
 
 async function registerForPushNotificationsAsync() {
-  let token: string;
+  let token = '';
   let status = 'no_device';
   if (Constants.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();

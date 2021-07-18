@@ -179,11 +179,11 @@ export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: 
         beforeId: $beforeId,
         afterId: $afterId
       ) {
-        _id,
+        id,
         text,
         createdAt,
         user {
-          _id,
+          id,
           name,
           avatar
         }
@@ -207,7 +207,7 @@ export async function updateFcmToken(fcmToken: string) {
 }
 
 export type GroupInfo = {
-  _id: string;
+  id: string;
   friendlyId: string;
   name: string;
   imgUrl: string;

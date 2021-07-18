@@ -14,7 +14,7 @@ import firebase from 'firebase/app';
 export type LoginProps = {
   firebaseConfig: unknown;
   verificationId: string;
-  message: { text: string, color: string };
+  message?: { text: string, color: string };
   setMessage: (message: { text: string, color: string }) => void;
   onSendVerificationCode: (phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) => void;
   onConfirmVerificationCode: (verificationCode: string) => void;

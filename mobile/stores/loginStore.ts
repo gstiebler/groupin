@@ -10,7 +10,7 @@ const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUse
 
 export class LoginStore {
   navigation: Navigation;
-  message: { text: string, color: string };
+  message?: { text: string, color: string };
   verificationId: string;
   firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
 
@@ -51,6 +51,9 @@ export class LoginStore {
       );
       const userCredential = await firebase.auth().signInWithCredential(credential);
       const firebaseUser = userCredential.user;
+      if (!firebaseUser) {
+        throw new Error('Firebase user not found');
+      }
       const fbUserToken = await firebaseUser.getIdToken(true);
       this.message = { text: 'Phone authentication successful 👍', color: 'green' };
       await this.confirmationCodeReceived(fbUserToken);

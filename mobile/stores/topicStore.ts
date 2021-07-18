@@ -41,14 +41,14 @@ export class TopicStore {
     if (messagesEmpty) {
       messages = await server.getMessagesOfTopic({ topicId, limit: NUM_ITEMS_PER_FETCH });
     } else {
-      const lastCurrMessageId = getLast(currentMessages)._id;
+      const lastCurrMessageId = getLast(currentMessages)?.id;
       messages = await server.getMessagesOfTopic({ 
         topicId, 
         limit: NUM_ITEMS_PER_FETCH,
         afterId: lastCurrMessageId,
       });
       if (_.isEmpty(messages)) { return }
-      const firstNewMessageId = getFirst(messages)._id;
+      const firstNewMessageId = getFirst(messages)?.id;
       // there's no hole, then messages can be merged
       if (lastCurrMessageId === firstNewMessageId) {
         messages = mergeMessages(currentMessages, removeFirst(messages));
