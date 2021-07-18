@@ -5,7 +5,7 @@ import * as path from 'path';
 const typeOrmConfig: ConnectionOptions = {
   type: "postgres",
   host: "localhost",
-  port: 3306,
+  port: 5432,
   username: "",
   password: "",
   database: "groupin_dev",

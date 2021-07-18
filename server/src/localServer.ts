@@ -1,18 +1,16 @@
 import { GraphQLServer } from 'graphql-yoga'
-// ... or using `require()`
-// const { GraphQLServer } = require('graphql-yoga')
+import { buildSchemaSync } from 'type-graphql';
+import { getContext } from './graphqlContext';
+import { RootResolver } from './resolvers/rootResolver';
 
-const typeDefs = `
-  type Query {
-    hello(name: String): String!
-  }
-`
+const schema = buildSchemaSync({
+  resolvers: [RootResolver],
+  emitSchemaFile: true,
+});
 
-const resolvers = {
-  Query: {
-    hello: (_, { name }) => `Hello ${name || 'World'}`,
-  },
-}
-
-const server = new GraphQLServer({ typeDefs, resolvers })
+const server = new GraphQLServer({
+  schema,
+  context: (params) => {
+    return getContext(params.request.headers.authorization ?? '');
+  } })
 server.start(() => console.log('Server is running on localhost:4000'))

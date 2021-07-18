@@ -16,7 +16,8 @@
     "start": "func start",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "copy": "cp .env .build",
-    "link": "ln -s ../mobile ./src/mobile"
+    "link": "ln -s ../mobile ./src/mobile",
+    "start:local": "ts-node ./src/localServer"
   },
   "nyc": {
     "all": true,

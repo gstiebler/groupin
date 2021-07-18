@@ -1,8 +1,8 @@
 import logger from '../config/winston';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const firebaseConfig = require('../firebase_android_config.json');
+// const firebaseConfig = require('../firebase_android_config.json');
 
-console.log(firebaseConfig);
+// console.log(firebaseConfig);
 
 const pushService = {
 
