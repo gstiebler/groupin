@@ -17,6 +17,12 @@ jobs:
             cd mobile
             yarn
 
+      - run:
+          name: Installing server packages
+          command: |
+            cd server
+            yarn
+
       - save_cache:
           paths:
             - server/node_modules
@@ -27,8 +33,15 @@ jobs:
           name: ESLint Mobile
           command: |
             cd mobile
-            npm run compile
-            npm run lint
+            yarn run compile
+            yarn run lint
+                        
+      - run:
+          name: ESLint Server
+          command: |
+            cd server
+            yarn run compile
+            yarn run lint
 
       - store_artifacts:
           path: server/log
