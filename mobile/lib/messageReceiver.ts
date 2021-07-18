@@ -1,5 +1,5 @@
 import { RootStore } from '../stores/rootStore';
-import { Navigation } from '../types/Navigator.types';
+import { Navigation } from '../rn_lib/Navigator.types';
 
 
 export type GiNotification = {

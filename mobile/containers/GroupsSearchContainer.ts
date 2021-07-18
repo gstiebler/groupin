@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import GroupsSearchComponent from '../components/GroupsSearch';
-import { Navigation } from '../types/Navigator.types';
+import { Navigation } from '../rn_lib/Navigator.types';
 import { groupSearchStore } from '../rn_lib/storesFactory';
 
 const GroupsSearchContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => {

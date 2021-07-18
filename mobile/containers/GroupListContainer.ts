@@ -2,7 +2,7 @@ import GroupListComponent from '../components/GroupList';
 import { useEffect } from 'react';
 import { groupStore } from '../rn_lib/storesFactory';
 import { Group } from '../lib/server';
-import { Navigation } from '../types/Navigator.types';
+import { Navigation } from '../rn_lib/Navigator.types';
 
 const GroupListContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => {
   const willFocus = () => groupStore.fetchOwnGroups();

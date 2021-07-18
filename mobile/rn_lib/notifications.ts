@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import { Navigation } from '../types/Navigator.types';
+import { Navigation } from './Navigator.types';
 import { rootStore } from './storesFactory';
 
 import * as messageReceiver from '../lib/messageReceiver';

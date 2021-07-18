@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigation } from '../types/Navigator.types';
+import { Navigation } from '../rn_lib/Navigator.types';
 import RegisterComponent from '../components/Register';
 import { loginStore } from '../rn_lib/storesFactory';
 

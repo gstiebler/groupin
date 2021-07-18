@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { Navigation, RootStackParamList } from '../types/Navigator.types';
+import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
 import TopicsListComponent from '../components/TopicsList';
 import { rootStore } from '../rn_lib/storesFactory';
 

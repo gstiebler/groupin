@@ -2,7 +2,7 @@ import { localStorage as storage } from '../rn_lib/localStorage';
 import { rootStore } from '../rn_lib/storesFactory';
 import ChatComponent from '../components/Chat';
 import React, { useEffect } from 'react';
-import { Navigation, RootStackParamList } from '../types/Navigator.types';
+import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
 import { RouteProp } from '@react-navigation/native';
 import { notifications } from '../rn_lib/notifications';
 

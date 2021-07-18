@@ -1,6 +1,6 @@
 import NewGroupComponent from '../components/NewGroup';
 import { createGroup } from '../actions/newGroupActions';
-import { Navigation } from '../types/Navigator.types';
+import { Navigation } from '../rn_lib/Navigator.types';
 
 const NewGroupContainer: React.FC<{ navigation: Navigation }> = ({ navigation }) => NewGroupComponent({
   onCreate: async ({ name, visibility }) => {
