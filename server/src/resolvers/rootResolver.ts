@@ -10,12 +10,6 @@ class HelloInput {
   pass: string
 }
 
-@InputType()
-class RegisterInput {
-  @Field()
-  name: string
-}
-
 @ObjectType()
 class RegisterResult {
   @Field()
@@ -44,14 +38,14 @@ export class RootResolver {
 
   @Mutation(() => RegisterResult)
   async register(
-    @Arg('todoInput') { name }: RegisterInput,
+    @Arg('name') name: string,
     @Ctx() { user, externalId, db }: Context
   ) {
     if (user) {
       throw new Error('User is already registered');
     }
     const newUser = await db.getRepository(User).save({
-      name,
+      name: name,
       externalId,
     });
 
@@ -62,7 +56,10 @@ export class RootResolver {
   }
 
   @Mutation(() => String)
-  async updateNotificationToken({ notificationToken }, @Ctx() { user, db }: Context) {
+  async updateNotificationToken(
+    @Arg('notificationToken') notificationToken: string,
+    @Ctx() { user, db }: Context
+  ) {
     if (!user) {
       throw new Error('A user is required to update FCM token');
     }

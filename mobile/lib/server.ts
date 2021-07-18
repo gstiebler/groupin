@@ -223,7 +223,7 @@ export async function getGroupInfo(groupId: string): Promise<GroupInfo> {
       getGroupInfo (
         groupId: $groupId
       ) {
-        _id,
+        id,
         friendlyId,
         name,
         imgUrl,

@@ -1,6 +1,7 @@
+import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, ObjectType, Query, Resolver } from 'type-graphql';
 import { In, Like } from 'typeorm';
 import { Group } from '../db/entity/Group';
 import { GroupLatestRead } from '../db/entity/GroupLatestRead';
@@ -15,11 +16,35 @@ import {
 
 const oldDate = moment('2015-01-01').toDate();
 
+@ObjectType()
+class OwnGroupsResult {
+  @Field()
+  id: string;
+
+  @Field()
+  unread: boolean;
+
+  @Field()
+  pinned: boolean;
+
+  @Field()
+  name: string;
+
+  @Field({ nullable: true })
+  imgUrl?: string;
+}
+
+@ObjectType()
+class GroupInfo extends Group {
+  @Field()
+  iBelong: boolean;
+}
 
 @Resolver(() => Group)
 export class GroupResolver {
 
-  async ownGroups(args, { user, db }: Context) {
+  @Query(() => [OwnGroupsResult])
+  async ownGroups(args, @Ctx() { user, db }: Context): Promise<OwnGroupsResult[]> {
     if (!user) {
       throw new Error('Method only available with a user');
     }
@@ -36,25 +61,30 @@ export class GroupResolver {
     });
     const latestReadById = _.keyBy(groupLatestRead, (l) => l.groupId);
 
-    return groups.map((group) => {
-      const latestReadObj = latestReadById[group.id];
+    return Bluebird.map(groups, async (userGroup) => {
+      const latestReadObj = latestReadById[userGroup.id];
+      const group = await userGroup.group;
       // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
       const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
       return {
-        ...group,
-        id: group.id,
-        unread: moment(latestReadMoment).isBefore(group.updatedAt),
-        pinned: pinnedByGroupId.get(group.id),
+        ...userGroup,
+        name: group.description,
+        id: userGroup.id,
+        unread: moment(latestReadMoment).isBefore(userGroup.updatedAt),
+        pinned: pinnedByGroupId.get(userGroup.id)!,
       };
     });
   }
 
-  async getGroupInfo({ groupId }, { user, db }: Context) {
+  @Query(() => GroupInfo)
+  async getGroupInfo(
+    @Arg('groupId') groupId: string,
+    @Ctx() { user, db }: Context): Promise<GroupInfo> {
     if (!user) {
       throw new Error('Method only available with a user');
     }
 
-    const group = await db.getRepository(Group).findOne(groupId)
+    const group = await db.getRepository(Group).findOneOrFail(groupId)
     const iBelong = !!_.find(await user.joinedGroups, (group_) => group_.id === groupId);
     return {
       ...group,
