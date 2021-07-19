@@ -69,7 +69,10 @@ export class GiNotifications {
     this.responseListener = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
       console.log('onNotificationOpenedApp');
-      messageReceiver.onNotificationOpened(this.navigation, response.notification.request.content.data as messageReceiver.GiNotification, rootStore);
+      messageReceiver.onNotificationOpened(response.notification.request.content.data as messageReceiver.GiNotification, rootStore);
+      const notificationOpen = response.notification.request.content.data as messageReceiver.GiNotification;
+      const { topicId, topicName } = notificationOpen.notification.data;
+      this.navigation.navigate('Chat', { topicId, topicName });
     });
   }
 
