@@ -1,7 +1,7 @@
 import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Arg, Ctx, Field, ObjectType, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, ObjectType, Query, Resolver } from 'type-graphql';
 import { In, Like } from 'typeorm';
 import { Group } from '../db/entity/Group';
 import { GroupLatestRead } from '../db/entity/GroupLatestRead';
@@ -34,6 +34,16 @@ class OwnGroupsResult {
 
   @Field({ nullable: true })
   imgUrl?: string;
+}
+
+@InputType()
+class FindGroupsInput {
+  @Field()
+  searchText: string;
+  
+
+  @Field()
+  limit: number;
 }
 
 @ObjectType()
@@ -94,7 +104,11 @@ export class GroupResolver {
     };
   }
 
-  async findGroups({ searchText, limit }, { user, db }: Context) {
+  @Query(() => [Group])
+  async findGroups(
+    @Arg('findGroupsInput') { searchText, limit }: FindGroupsInput,
+    @Ctx() { user, db }: Context
+  ): Promise<Group[]> {
     if (!user) {
       throw new Error('Only logged in users can search for groups');
     }
