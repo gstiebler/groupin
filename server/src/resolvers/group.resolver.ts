@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { Like } from 'typeorm';
-import { Group } from '../db/entity/Group';
+import { Group } from '../db/entity/Group.entity';
 import { Context } from '../graphqlContext';
 
 import { numMaxReturnedItems } from '../lib/constants';

@@ -2,7 +2,7 @@ import * as Bluebird from 'bluebird';
 
 import pushService from './pushService';
 import logger from '../config/winston';
-import { User } from '../db/entity/User';
+import { User } from '../db/entity/User.entity';
 import { ConnCtx } from '../graphqlContext';
 import { In } from 'typeorm';
 

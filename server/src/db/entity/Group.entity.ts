@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { Field, ObjectType, registerEnumType } from "type-graphql";
 import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToOne, OneToMany } from "typeorm";
-import { Topic } from "./Topic";
-import { User } from "./User";
-import { UserGroup } from "./UserGroup";
+import { Topic } from "./Topic.entity";
+import { User } from "./User.entity";
+import { UserGroup } from "./UserGroup.entity";
 
 enum Visibility {
   SECRET = 'SECRET',

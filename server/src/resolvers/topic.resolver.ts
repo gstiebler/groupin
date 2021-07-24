@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { Topic } from "../db/entity/Topic";
+import { Topic } from "../db/entity/Topic.entity";
 import pushService from '../lib/pushService';
 import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';

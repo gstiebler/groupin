@@ -3,7 +3,7 @@ import { messageTypes } from '../lib/constants';
 import pushService from '../lib/pushService';
 import logger from '../config/winston';
 import { Context } from '../graphqlContext';
-import { Message } from '../db/entity/Message';
+import { Message } from '../db/entity/Message.entity';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { LessThan, MoreThan } from 'typeorm';
 

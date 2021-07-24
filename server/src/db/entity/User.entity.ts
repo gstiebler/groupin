@@ -6,11 +6,11 @@ import {
   Entity,
   OneToMany,
 } from "typeorm";
-import { Group } from "./Group";
-import { Message } from "./Message";
-import { PinnedTopic } from "./PinnedTopic";
-import { TopicLatestRead } from "./TopicLatestRead";
-import { UserGroup } from "./UserGroup";
+import { Group } from "./Group.entity";
+import { Message } from "./Message.entity";
+import { PinnedTopic } from "./PinnedTopic.entity";
+import { TopicLatestRead } from "./TopicLatestRead.entity";
+import { UserGroup } from "./UserGroup.entity";
 
 @Entity()
 export class User {

@@ -1,13 +1,13 @@
 import * as admin from 'firebase-admin';
 import logger from './config/winston';
-import { User } from './db/entity/User';
+import { User } from './db/entity/User.entity';
 import createConnection from './db/createTypeormConnection';
-import { Topic } from './db/entity/Topic';
-import { UserGroup } from './db/entity/UserGroup';
-import { Group } from './db/entity/Group';
-import { Message } from './db/entity/Message';
-import { TopicLatestRead } from './db/entity/TopicLatestRead';
-import { PinnedTopic } from './db/entity/PinnedTopic';
+import { Topic } from './db/entity/Topic.entity';
+import { UserGroup } from './db/entity/UserGroup.entity';
+import { Group } from './db/entity/Group.entity';
+import { Message } from './db/entity/Message.entity';
+import { TopicLatestRead } from './db/entity/TopicLatestRead.entity';
+import { PinnedTopic } from './db/entity/PinnedTopic.entity';
 
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
