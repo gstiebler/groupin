@@ -1,13 +1,11 @@
-import * as bluebird from 'bluebird';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Arg, Ctx, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Topic } from "../db/entity/Topic";
 import pushService from '../lib/pushService';
 import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
-import { TopicLatestRead } from '../db/entity/TopicLatestRead';
 import { In } from 'typeorm';
 
 const oldDate = moment('2015-01-01').toDate();
@@ -39,7 +37,6 @@ export class TopicResolver {
     const pinnedTopics = await db.pinnedTopicRepository.find({
       userId: user!.id,
       topicId: In(topicIds),
-      pinned: true,
     });
     const pinnedTopicsIds = pinnedTopics.map(pinnedTopic => pinnedTopic.topicId);
     const pinnedTopicsSet = new Set(pinnedTopicsIds);
@@ -55,93 +52,101 @@ export class TopicResolver {
     });
   }
 
-}
+  @Mutation(() => String)
+  async createTopic(
+    @Arg('groupId') groupId: string,
+    @Arg('topicName') topicName: string,
+    @Ctx() { user, db }: Context
+  ): Promise<string> {
+    await db.userGroupRepository.findOneOrFail({ userId: user!.id, groupId });
 
+    const createdTopic = await db.topicRepository.save({
+      name: topicName,
+      groupId,
+      createdById: user!.id,
+      imgUrl: 'TODO url',
+    });
 
-
-export async function createTopic({ topicName, groupId }: { topicName: string, groupId: string }, { user }) {
-  if (!_.find(user.groups, (g) => g.id.toHexString() === groupId)) {
-    throw new Error('User does not participate in the group');
-  }
-  const topicCreatePromise = Topic.create({
-    name: topicName,
-    groupId: ObjectId(groupId),
-    createdBy: ObjectId(user._id),
-    imgUrl: 'TODO url',
-  });
-
-  const groupUpdatePromise = Group.updateOne(
-    { _id: ObjectId(groupId) },
-    {
-      $set: {
+    await db.groupRepository.update(
+      { 
+        id: groupId
+      }, {
         updatedAt: Date.now(),
       },
-    },
-  );
+    );
 
-  const [createdTopic] = await bluebird.all([
-    topicCreatePromise,
-    groupUpdatePromise,
-  ]);
+    await db.topicLatestReadRepository.save({
+      topicId: createdTopic.id,
+      userId: user!.id,
+      latestMoment: Date.now(),
+    });
 
-  // TODO: add topicLatestRead
-
-  const pushPayload = {
-    type: messageTypes.NEW_TOPIC,
-    groupId,
-    topicName,
-    topicId: createdTopic._id.toHexString(),
-  };
-  const pushParams = {
-    payload: pushPayload,
-    title: 'Novo tópico',
-    body: topicName.slice(0, 50),
-    sendNotification: true,
-  };
-  await pushService.pushMessage(groupId, pushParams);
-  return 'OK';
-}
-
-export async function setTopicLatestRead({ topicId }: { topicId: string }, { user }) {
-  const topic = await Topic.findById(topicId);
-  const updateObj = {
-    latestMoment: new Date(),
-  };
-  const opts = {
-    new: true,
-    upsert: true,
-  };
-  // TODO: replace for `update` when is garanteed to have always a LatestMoment for every user/topic
-  await TopicLatestRead.findOneAndUpdate(
-    {
-      userId: user._id,
-      topicId: ObjectId(topicId),
-    },
-    updateObj,
-    opts,
-  );
-  // TODO: replace for `update` when is garanteed to have always a LatestMoment for every user/topic
-  await GroupLatestRead.findOneAndUpdate(
-    {
-      userId: user._id,
-      groupId: topic.groupId,
-    },
-    updateObj,
-    opts,
-  );
-  return 'OK';
-}
-
-export async function setTopicPin({ topicId, pinned }, { user }) {
-  const updateOperation = pinned ? '$push' : '$pull';
-  await User.updateOne(
-    { _id: user._id },
-    { [updateOperation]: { pinnedTopics: ObjectId(topicId) } },
-  );
-  if (pinned) {
-    await subscribeToTopic(user, user.fcmToken, topicId);
-  } else {
-    await unsubscribeFromTopic(user.fcmToken, topicId);
+    const pushPayload = {
+      type: messageTypes.NEW_TOPIC,
+      groupId,
+      topicName,
+      topicId: createdTopic.id,
+    };
+    const pushParams = {
+      payload: pushPayload,
+      title: 'Novo tópico',
+      body: topicName.slice(0, 50),
+      sendNotification: true,
+    };
+    await pushService.pushMessage(groupId, pushParams);
+    return 'OK';
   }
-  return 'OK';
+
+  @Mutation(() => String)
+  async setTopicLatestRead(
+    @Arg('topicId') topicId: string,
+    @Ctx() { user, db }: Context
+  ): Promise<string> {
+    const topicLatestRead = await db.topicLatestReadRepository.findOne({
+      userId: user!.id,
+      topicId,
+    });
+    await db.topicLatestReadRepository.save({
+      id: topicLatestRead?.id,
+      userId: user!.id,
+      topicId,
+      latestMoment: Date.now(),
+    });
+
+    const topic = await db.topicRepository.findOneOrFail(topicId);
+    const userGroup = await db.userGroupRepository.findOne({
+      userId: user!.id,
+      group: topic.group,
+    });
+    await db.userGroupRepository.save({
+      id: userGroup?.id,
+      userId: user!.id,
+      groupId,
+      latestMoment: Date.now(),
+    });
+
+    return 'OK';
+  }
+
+  @Mutation(() => String)
+  async setTopicPin(
+    @Arg('topicId') topicId: string,
+    @Arg('pinned') pinned: boolean,
+    @Ctx() { user, db }: Context
+  ) {
+    if (pinned) {
+      await db.pinnedTopicRepository.save({
+        userId: user!.id,
+        topicId,
+      });
+      await subscribeToTopic(db, user!, user!.notificationToken, topicId);
+    } else {
+      await db.pinnedTopicRepository.delete({
+        userId: user!.id,
+        topicId,
+      });
+      await unsubscribeFromTopic(user!.notificationToken, topicId);
+    }
+    return 'OK';
+  }
 }

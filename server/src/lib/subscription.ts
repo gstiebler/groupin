@@ -7,21 +7,21 @@ import { User } from '../db/entity/User';
 import { ConnCtx } from '../graphqlContext';
 import { In } from 'typeorm';
 
-export function unsubscribeFromTopic(fcmToken, topicId) {
-  return pushService.unsubscribe(fcmToken, topicId.toString());
+export function unsubscribeFromTopic(notificationToken: string, topicId: string) {
+  return pushService.unsubscribe(notificationToken, topicId);
 }
 
-export async function subscribeToTopic(db: ConnCtx, user, fcmToken, topicId: string) {
+export async function subscribeToTopic(db: ConnCtx, user: User, notificationToken: string, topicId: string) {
   const topic = await db.topicRepository.findOneOrFail(topicId);
   const groupId = topic.groupId;
-  const groups = _.find(user.groups, (group) => group.id.toHexString() === groupId && group.pinned);
+  const groups = _.find(user.groups, (group) => group.id === groupId && group.pinned);
   // true if the group of the topic is pinned by the user
   if (!_.isEmpty(groups)) {
-    await pushService.subscribe(fcmToken, topicId.toString());
+    await pushService.subscribe(notificationToken, topicId);
   }
 }
 
-export async function subscribeToGroup(db: ConnCtx, user: User, fcmToken, groupId) {
+export async function subscribeToGroup(db: ConnCtx, user: User, notificationToken: string, groupId: string) {
   const pinnedTopics = await user.pinnedTopics;
   const topics = await db.topicRepository.find({
     where: {
@@ -29,11 +29,11 @@ export async function subscribeToGroup(db: ConnCtx, user: User, fcmToken, groupI
       groupId,
     }
   });
-  await Bluebird.map(topics, (topic) => pushService.unsubscribe(fcmToken, topic.id));
-  await pushService.subscribe(fcmToken, groupId.toString());
+  await Bluebird.map(topics, (topic) => pushService.unsubscribe(notificationToken, topic.id));
+  await pushService.subscribe(notificationToken, groupId);
 }
 
-export async function unsubscribeFromGroup(db: ConnCtx, user: User, fcmToken, groupId) {
+export async function unsubscribeFromGroup(db: ConnCtx, user: User, notificationToken: string, groupId: string) {
   const pinnedTopics = await user.pinnedTopics;
   const topics = await db.topicRepository.find({
     where: {
@@ -41,11 +41,11 @@ export async function unsubscribeFromGroup(db: ConnCtx, user: User, fcmToken, gr
       groupId,
     }
   });
-  await Bluebird.map(topics, (topic) => pushService.subscribe(fcmToken, topic.id));
-  await pushService.unsubscribe(fcmToken, groupId.toString());
+  await Bluebird.map(topics, (topic) => pushService.subscribe(notificationToken, topic.id));
+  await pushService.unsubscribe(notificationToken, groupId);
 }
 
-export async function subscribeToAll(db: ConnCtx, user: User, fcmToken) {
+export async function subscribeToAll(db: ConnCtx, user: User, notificationToken: string) {
   logger.debug('Subscribing to all');
   const pinnedGroups = await db.userGroupRepository.find({
     where: {
@@ -53,6 +53,6 @@ export async function subscribeToAll(db: ConnCtx, user: User, fcmToken) {
       pinned: true,
     }
   });
-  await Bluebird.map(pinnedGroups, (group) => subscribeToGroup(db, user, fcmToken, group.groupId));
-  await Bluebird.map(user.pinnedTopics, (pinnedTopic) => subscribeToTopic(db, user, fcmToken, pinnedTopic.topicId));
+  await Bluebird.map(pinnedGroups, (group) => subscribeToGroup(db, user, notificationToken, group.groupId));
+  await Bluebird.map(user.pinnedTopics, (pinnedTopic) => subscribeToTopic(db, user, notificationToken, pinnedTopic.topicId));
 }

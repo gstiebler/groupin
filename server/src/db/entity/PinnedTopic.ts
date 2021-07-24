@@ -22,9 +22,6 @@ export class PinnedTopic {
   topic: Promise<Topic>;
   topicId: string;
 
-  @Column(() => Boolean)
-  pinned: boolean;
-
   @CreateDateColumn({ type: 'timestamp without time zone' })
   createdAt: Date;
 
