@@ -2,9 +2,9 @@ import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Arg, Ctx, Field, InputType, ObjectType, Query, Resolver } from 'type-graphql';
-import { In, Like } from 'typeorm';
+import { Like } from 'typeorm';
 import { Group } from '../db/entity/Group';
-import { GroupLatestRead } from '../db/entity/GroupLatestRead';
+import { UserGroup } from '../db/entity/UserGroup';
 import { Context } from '../graphqlContext';
 
 import { numMaxReturnedItems } from '../lib/constants';
@@ -15,8 +15,6 @@ import {
   unsubscribeFromGroup,
 } from '../lib/subscription';
 */
-
-const oldDate = moment('2015-01-01').toDate();
 
 @ObjectType()
 class OwnGroupsResult {
@@ -61,29 +59,19 @@ export class GroupResolver {
       throw new Error('Method only available with a user');
     }
 
-    const groups = await user.joinedGroups;
-    const joinedGroupIds = _.map(groups, group => group.id);
+    const ownGroups = await user.joinedGroups;
 
-    const pinnedByGroupId = new Map(_.map(groups, (group) => [group.id, group.pinned]));
-    const groupLatestRead = await db.getRepository(GroupLatestRead).find({ 
-      where: {
-        groupId: In(joinedGroupIds),
-        userId: user.id,
-      }
-    });
-    const latestReadById = _.keyBy(groupLatestRead, (l) => l.groupId);
+    const ownGroupsById = new Map(_.map(ownGroups, (group) => [group.id, group]));
 
-    return Bluebird.map(groups, async (userGroup) => {
-      const latestReadObj = latestReadById[userGroup.id];
+    return Bluebird.map(ownGroups, async (userGroup) => {
+      const groupRelationship = ownGroupsById.get(userGroup.id)!;
       const group = await userGroup.group;
-      // TODO: remove when is garanteed to have always a LatestMoment for every user/topic
-      const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
       return {
         ...userGroup,
         name: group.description,
         id: userGroup.id,
-        unread: moment(latestReadMoment).isBefore(userGroup.updatedAt),
-        pinned: pinnedByGroupId.get(userGroup.id)!,
+        unread: moment(groupRelationship.latestRead).isBefore(userGroup.updatedAt),
+        pinned: groupRelationship.pinned,
       };
     });
   }
@@ -129,33 +117,40 @@ export class GroupResolver {
       });
     return groups;
   }
-/*
-  async createGroup({ groupName, visibility }, { user, db }: Context) {
+
+  @Query(() => String)
+  async createGroup(
+    @Arg('groupName') groupName: string,
+    @Arg('visibility') visibility: string,
+    @Ctx() { user, db }: Context
+  ) {
+    if (!user) {
+      throw new Error('A user is required');
+    }
     const newGroup = await db.getRepository(Group).save({
-      description: groupName,
+      name: groupName,
       imgUrl: 'temp',
       visibility,
-      createdBy: user?.id,
+      createdById: user.id,
     });
 
-    // TODO: pin added group
-    await User.updateOne(
-      { _id: ObjectId(user._id) },
-      {
-        $push: {
-          groups: {
-            id: newGroup._id,
-            pinned: false,
-          },
-        },
-      },
-    );
+    await db.getRepository(UserGroup).save({
+      userId: user.id,
+      groupId: newGroup.id,
+      pinned: true,
+    });
 
-    // TODO: add groupLatestRead
+    await db.getRepository(UserGroup).save({
+      userId: user.id,
+      groupId: newGroup.id,
+      pinned: true,
+      latestRead: Date.now(),
+    });
 
     return 'OK';
   }
 
+/*
   async joinGroup({ groupId }, { user, db }: Context) {
     const hasGroup = _.find(user.groups, (g) => g.id.toHexString() === groupId);
     if (hasGroup) {

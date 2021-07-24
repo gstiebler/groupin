@@ -6,7 +6,7 @@ import logger from '../config/winston';
 import { Topic } from '../db/entity/Topic';
 import { Connection, In } from 'typeorm';
 import { User } from '../db/entity/User';
-import { UserGroupPinned } from '../db/entity/UserGroupPinned';
+import { UserGroup } from '../db/entity/UserGroup';
 
 export function unsubscribeFromTopic(fcmToken, topicId) {
   return pushService.unsubscribe(fcmToken, topicId.toString());
@@ -48,7 +48,7 @@ export async function unsubscribeFromGroup(db: Connection, user: User, fcmToken,
 
 export async function subscribeToAll(db: Connection, user: User, fcmToken) {
   logger.debug('Subscribing to all');
-  const pinnedGroups = await db.getRepository(UserGroupPinned).find({
+  const pinnedGroups = await db.getRepository(UserGroup).find({
     where: {
       userId: user.id,
       pinned: true,

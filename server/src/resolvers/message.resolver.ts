@@ -8,7 +8,7 @@ import { Topic } from '../db/entity/Topic';
 import { Context } from '../graphqlContext';
 import { Message } from '../db/entity/Message';
 import { Resolver } from 'type-graphql';
-import { UserGroupPinned } from '../db/entity/UserGroupPinned';
+import { UserGroup } from '../db/entity/UserGroup';
 import { Group } from '../db/entity/Group';
 
 @Resolver(() => Message)
@@ -45,7 +45,7 @@ export class MessageResolver {
 
     const topic = await db.getRepository(Topic).findOne(topicId);
     try {
-      await db.getRepository(UserGroupPinned).findOneOrFail({ userId: user?.id, groupId: topic?.groupId });
+      await db.getRepository(UserGroup).findOneOrFail({ userId: user?.id, groupId: topic?.groupId });
     } catch (err) {
       throw new Error('User does not participate in the group');
     }

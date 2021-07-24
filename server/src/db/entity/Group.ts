@@ -1,9 +1,18 @@
-import { Field, ObjectType } from "type-graphql";
+/* eslint-disable no-unused-vars */
+import { Field, ObjectType, registerEnumType } from "type-graphql";
 import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToOne, OneToMany } from "typeorm";
-import { GroupLatestRead } from "./GroupLatestRead";
 import { Topic } from "./Topic";
 import { User } from "./User";
-import { UserGroupPinned } from "./UserGroupPinned";
+import { UserGroup } from "./UserGroup";
+
+enum Visibility {
+  SECRET = 'SECRET',
+  PUBLIC = 'PUBLIC',
+}
+
+registerEnumType(Visibility, {
+  name: "Visibility",
+});
 
 @Entity()
 @ObjectType()
@@ -30,14 +39,16 @@ export class Group {
   description: string;
 
   @Column()
-  @Field()
-  visibility: string; // ['SECRET', 'PUBLIC']
+  @Field(() => Visibility)
+  visibility: string;
 
   @ManyToOne(
     () => User,
     user => user.joinedGroups
   )
-  creator: Promise<User>;
+  createdBy: Promise<User>;
+
+  createdById: string;
 
   @OneToMany(
     () => Topic,
@@ -46,16 +57,10 @@ export class Group {
   topics: Promise<Topic[]>;
 
   @OneToMany(
-    () => UserGroupPinned,
+    () => UserGroup,
     user => user.group
   )
-  users: Promise<UserGroupPinned[]>;
-
-  @OneToMany(
-    () => GroupLatestRead,
-    groupLatestRead => groupLatestRead.group
-  )
-  usersLatestRead: Promise<GroupLatestRead[]>;
+  users: Promise<UserGroup[]>;
 
   @CreateDateColumn({ type: 'timestamp without time zone' })
   @Field()

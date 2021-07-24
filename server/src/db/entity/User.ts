@@ -7,11 +7,10 @@ import {
   OneToMany,
 } from "typeorm";
 import { Group } from "./Group";
-import { GroupLatestRead } from "./GroupLatestRead";
 import { Message } from "./Message";
 import { PinnedTopic } from "./PinnedTopic";
 import { TopicLatestRead } from "./TopicLatestRead";
-import { UserGroupPinned } from "./UserGroupPinned";
+import { UserGroup } from "./UserGroup";
 
 @Entity()
 export class User {
@@ -33,7 +32,7 @@ export class User {
 
   @OneToMany(
     () => Group,
-    group => group.creator
+    group => group.createdBy
   )
   createdGroups: Promise<Group[]>;
 
@@ -44,22 +43,16 @@ export class User {
   messages: Promise<Message[]>;
 
   @OneToMany(
-    () => UserGroupPinned,
+    () => UserGroup,
     joinedGroup => joinedGroup.user
   )
-  joinedGroups: Promise<UserGroupPinned[]>;
+  joinedGroups: Promise<UserGroup[]>;
 
   @OneToMany(
     () => PinnedTopic,
     pinnedTopic => pinnedTopic.user
   )
   pinnedTopics: Promise<PinnedTopic[]>;
-
-  @OneToMany(
-    () => GroupLatestRead,
-    groupLatestRead => groupLatestRead.user
-  )
-  groupsLatestRead: Promise<GroupLatestRead[]>;
 
   @OneToMany(
     () => TopicLatestRead,
