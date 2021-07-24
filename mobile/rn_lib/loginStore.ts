@@ -1,5 +1,5 @@
 import * as server from '../lib/server';
-import * as graphqlConnect from '../lib/graphqlConnect';
+import graphqlConnect from '../lib/graphqlConnect';
 import { Navigation } from './Navigator.types';
 import { RootStore } from '../stores/rootStore';
 import { AlertStatic } from 'react-native';
