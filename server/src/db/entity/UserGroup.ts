@@ -3,7 +3,7 @@ import { Group } from "./Group";
 import { User } from "./User";
 
 @Entity()
-export class UserGroupPinned {
+export class UserGroup {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -13,7 +13,6 @@ export class UserGroupPinned {
     user => user.joinedGroups
   )
   user: Promise<User>;
-
   userId: string;
 
   @ManyToOne(
@@ -21,11 +20,13 @@ export class UserGroupPinned {
     group => group.users
   )
   group: Promise<Group>;
-
   groupId: string;
 
   @Column(() => Boolean)
   pinned: boolean;
+
+  @Column({ type: 'timestamp' })
+  latestRead: Date;
 
   @CreateDateColumn({ type: 'timestamp without time zone' })
   createdAt: Date;
