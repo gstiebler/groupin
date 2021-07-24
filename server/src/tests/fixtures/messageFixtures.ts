@@ -1,39 +1,38 @@
-/*
-import * as mongoose from 'mongoose';
 import topicFixtures from './topicFixtures';
 import userFixtures from './userFixtures';
-const { ObjectId } = mongoose.Types;
+import { v4 as uuidv4 } from 'uuid';
+import { Message } from '../../db/entity/Message.entity';
+import { convertFixedDate } from './fixtureHelper';
 
-const messages = {
+const messages: { [message: string]: Partial<Message> } = {
   message1topic1: {
-    _id: new ObjectId('507f1f77bcf86cd799439001'),
+    id: uuidv4(),
     text: 'Topic 1 Group 1 Alice',
-    user: userFixtures.alice._id,
-    topic: topicFixtures.topic1Group1._id,
-    createdAt: Date.parse('2018-10-01'),
+    userId: userFixtures.alice.id,
+    topicId: topicFixtures.topic1Group1.id,
+    createdAt: convertFixedDate('2018-10-01'),
   },
   message2topic1: {
-    _id: new ObjectId('507f1f77bcf86cd799439002'),
+    id: uuidv4(),
     text: 'Topic 1 Group 1 Robert',
-    user: userFixtures.robert._id,
-    topic: topicFixtures.topic1Group1._id,
-    createdAt: Date.parse('2018-10-02'),
+    userId: userFixtures.robert.id,
+    topicId: topicFixtures.topic1Group1.id,
+    createdAt: convertFixedDate('2018-10-02'),
   },
   message1topic2: {
-    _id: new ObjectId('507f1f77bcf86cd799439003'),
+    id: uuidv4(),
     text: 'Topic 2 Group 1 Alice',
-    user: userFixtures.alice._id,
-    topic: topicFixtures.topic2Group1._id,
-    createdAt: Date.parse('2018-10-03'),
+    userId: userFixtures.alice.id,
+    topicId: topicFixtures.topic2Group1.id,
+    createdAt: convertFixedDate('2018-10-03'),
   },
   message1topic1Group2: {
-    _id: new ObjectId('507f1f77bcf86cd799439004'),
+    id: uuidv4(),
     text: 'Topic 1 Group 2 Robert elvis',
-    user: userFixtures.robert._id,
-    topic: topicFixtures.topic1Group2._id,
-    createdAt: Date.parse('2018-09-12'),
+    userId: userFixtures.robert.id,
+    topicId: topicFixtures.topic1Group2.id,
+    createdAt: convertFixedDate('2018-09-12'),
   },
 };
 
 export default messages;
-*/

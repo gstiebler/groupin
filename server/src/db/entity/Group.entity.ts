@@ -47,7 +47,6 @@ export class Group {
     user => user.joinedGroups
   )
   createdBy: Promise<User>;
-
   createdById: string;
 
   @OneToMany(

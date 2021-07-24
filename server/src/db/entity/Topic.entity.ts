@@ -4,6 +4,7 @@ import { Group } from "./Group.entity";
 import { Message } from "./Message.entity";
 import { PinnedTopic } from "./PinnedTopic.entity";
 import { TopicLatestRead } from "./TopicLatestRead.entity";
+import { User } from "./User.entity";
 
 @Entity()
 @ObjectType()
@@ -35,6 +36,13 @@ export class Topic {
     message => message.user
   )
   messages: Promise<Message[]>;
+
+  @ManyToOne(
+    () => User,
+    user => user.createdTopics
+  )
+  createdBy: Promise<User>;
+  createdById: string;
 
   @OneToMany(
     () => PinnedTopic,

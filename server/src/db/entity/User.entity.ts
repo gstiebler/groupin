@@ -9,6 +9,7 @@ import {
 import { Group } from "./Group.entity";
 import { Message } from "./Message.entity";
 import { PinnedTopic } from "./PinnedTopic.entity";
+import { Topic } from "./Topic.entity";
 import { TopicLatestRead } from "./TopicLatestRead.entity";
 import { UserGroup } from "./UserGroup.entity";
 
@@ -47,6 +48,12 @@ export class User {
     joinedGroup => joinedGroup.user
   )
   joinedGroups: Promise<UserGroup[]>;
+
+  @OneToMany(
+    () => Topic,
+    createdTopic => createdTopic.createdBy
+  )
+  createdTopics: Promise<Topic[]>;
 
   @OneToMany(
     () => PinnedTopic,
