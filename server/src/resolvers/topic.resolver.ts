@@ -121,7 +121,7 @@ export class TopicResolver {
     await db.userGroupRepository.save({
       id: userGroup?.id,
       userId: user!.id,
-      groupId,
+      group: topic.group,
       latestMoment: Date.now(),
     });
 

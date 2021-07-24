@@ -44,7 +44,7 @@ export class RootResolver {
     if (user) {
       throw new Error('User is already registered');
     }
-    const newUser = await db.getRepository(User).save({
+    const newUser = await db.userRepository.save({
       name: name,
       externalId,
     });
@@ -64,7 +64,7 @@ export class RootResolver {
       throw new Error('A user is required to update FCM token');
     }
     user.notificationToken = notificationToken;
-    await db.getRepository(User).save(user);
+    await db.userRepository.save(user);
     await subscribeToAll(db, user, notificationToken);
   }
 }

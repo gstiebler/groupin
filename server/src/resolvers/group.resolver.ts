@@ -174,7 +174,7 @@ export class GroupResolver {
     });
 
     // unsubscribe user from the group on FCM
-    await unsubscribeFromGroup(db, user!, user?.notificationToken, groupId);
+    await unsubscribeFromGroup(db, user!, user!.notificationToken, groupId);
     return 'OK';
   }
 
@@ -191,9 +191,9 @@ export class GroupResolver {
       pinned,
     });
     if (pinned) {
-      await subscribeToGroup(db, user!, user?.notificationToken, groupId);
+      await subscribeToGroup(db, user!, user!.notificationToken, groupId);
     } else {
-      await unsubscribeFromGroup(db, user!, user?.notificationToken, groupId);
+      await unsubscribeFromGroup(db, user!, user!.notificationToken, groupId);
     }
     return 'OK';
   }

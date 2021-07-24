@@ -13,10 +13,12 @@ export function unsubscribeFromTopic(notificationToken: string, topicId: string)
 
 export async function subscribeToTopic(db: ConnCtx, user: User, notificationToken: string, topicId: string) {
   const topic = await db.topicRepository.findOneOrFail(topicId);
-  const groupId = topic.groupId;
-  const groups = _.find(user.groups, (group) => group.id === groupId && group.pinned);
+  const userGroup = await db.userGroupRepository.findOne({
+    group: topic.group,
+    userId: user.id
+  });
   // true if the group of the topic is pinned by the user
-  if (!_.isEmpty(groups)) {
+  if (userGroup?.pinned) {
     await pushService.subscribe(notificationToken, topicId);
   }
 }
