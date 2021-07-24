@@ -1,14 +1,16 @@
 import _ from 'lodash';
 
-export interface GiMessage {
+export type MessageUser = {
+  _id: string;
+  name: string;
+  avatar: string;
+}
+
+export type GiMessage = {
   _id: string;
   text: string;
   createdAt: Date;
-  user: {
-    _id: string;
-    name: string;
-    avatar: string;
-  }
+  user: MessageUser;
 }
 
 export function mergeMessages(olderMessages: GiMessage[], newerMessages: GiMessage[]): GiMessage[] {
