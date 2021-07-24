@@ -9,7 +9,10 @@ export type Context = {
   db: ConnCtx;
 };
 
-const connectionContextPromise = createConnectionContext();
+const connectionContextPromise = createConnectionContext({
+  host: 'localhost',
+  database: 'groupin_dev',
+});
 
 export async function getContext(
   authFbToken: string

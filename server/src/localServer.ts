@@ -4,7 +4,6 @@ import schema from './buildSchema';
 
 const server = new GraphQLServer({
   schema,
-  context: (params) => {
-    return getContext(params.request.headers.authorization ?? '');
-  } })
+  context: (params) => getContext(params.request.headers.authorization ?? ''), 
+})
 server.start(() => console.log('Server is running on localhost:4000'))

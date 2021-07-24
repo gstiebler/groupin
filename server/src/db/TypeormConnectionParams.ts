@@ -1,8 +1,8 @@
 import "reflect-metadata";
-import { createConnection, ConnectionOptions } from "typeorm";
 import * as path from 'path';
+import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
-const typeOrmConfig: ConnectionOptions = {
+export const defaultTypeOrmConfig: PostgresConnectionOptions = {
   type: "postgres",
   host: "localhost",
   port: 5432,
@@ -17,5 +17,3 @@ const typeOrmConfig: ConnectionOptions = {
   migrationsRun: true,
   logging: ['error']
 };
-
-export default () => createConnection(typeOrmConfig);
