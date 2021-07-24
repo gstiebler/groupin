@@ -82,7 +82,10 @@ export class GroupResolver {
     }
 
     const group = await db.groupRepository.findOneOrFail(groupId)
-    const iBelong = !!_.find(await user.joinedGroups, (group_) => group_.id === groupId);
+    const iBelong = !!await db.userGroupRepository.findOne({
+      userId: user?.id,
+      groupId
+    });
     return {
       ...group,
       iBelong,

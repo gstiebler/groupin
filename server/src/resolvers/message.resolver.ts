@@ -1,12 +1,11 @@
 import * as _ from 'lodash';
-
 import { messageTypes } from '../lib/constants';
-
 import pushService from '../lib/pushService';
 import logger from '../config/winston';
 import { Context } from '../graphqlContext';
 import { Message } from '../db/entity/Message';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { LessThan, MoreThan } from 'typeorm';
 
 @Resolver(() => Message)
 export class MessageResolver {
@@ -15,29 +14,32 @@ export class MessageResolver {
   async messagesOfTopic(
     @Arg('topicId') topicId: string,
     @Arg('limit') limit: number,
-    @Arg('afterId') afterId: string,
-    @Arg('beforeId') beforeId: string,
+    @Arg('afterMoment') afterMoment: Date,
+    @Arg('beforeMoment') beforeMoment: Date,
     @Ctx() { user, db }: Context
   ): Promise<Message[]> {
     const topic = await db.topicRepository.findOne(topicId);
-    const groups = await user?.joinedGroups;
-    if (!_.find(groups, { id: topic?.groupId })) {
-      throw new Error('User does not participate in the group');
-    }
-    const beforeIdMessages = !_.isEmpty(beforeId);
-    const afterIdMessages = !_.isEmpty(afterId);
-    const newestMessages = !beforeIdMessages && !afterIdMessages;
-    if (beforeIdMessages && afterIdMessages) {
+    await db.userGroupRepository.findOneOrFail({
+      userId: user?.id,
+      group: topic?.group
+    });
+    const beforeMomentMessages = !_.isEmpty(afterMoment);
+    const afterMomentMessages = !_.isEmpty(beforeMoment);
+    const newestMessages = !beforeMomentMessages && !afterMomentMessages;
+    if (beforeMomentMessages && afterMomentMessages) {
       throw new Error('Only one start of end filter is allowed');
     }
+    const idComparisonOperator = newestMessages ? {} :
+      beforeMomentMessages ? { createdAt: LessThan(beforeMoment) } : { createdAt: MoreThan(afterMoment) };
     const messages = await db.messageRepository.find({
       where: {
-        topicId
+        topicId,
+        ...idComparisonOperator,
       },
       order: {
         createdAt: 'DESC'
       },
-      take: limit
+      take: limit,
     });
 
     // TODO: join users
