@@ -5,7 +5,7 @@ import topicFixtures from './topicFixtures';
 import messageFixtures from './messageFixtures';
 import userGroupFixtures from './userGroup.fixtures';
 import pinnedTopicFixtures from './pinnedTopic.fixtures';
-import { ConnCtx } from '../../graphqlContext';
+import { ConnCtx } from '../../db/ConnectionContext';
 
 export async function initFixtures(db: ConnCtx) {
   await Promise.all([

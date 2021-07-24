@@ -6,9 +6,9 @@ import { createConnectionContext } from '../db/ConnectionContext';
 import { User } from '../db/entity/User.entity';
 import { Context } from '../graphqlContext';
 import schema from './../buildSchema';
+import graphqlConnect from '../mobile/lib/graphqlConnect';
 import { ApolloServer } from 'apollo-server';
 import { VariableValues } from 'apollo-server-types';
-import graphqlConnect from '../mobile/lib/graphqlConnect';
 
 const currentUserHolder: { currentUser?: Partial<User> } = { currentUser: undefined };
 
