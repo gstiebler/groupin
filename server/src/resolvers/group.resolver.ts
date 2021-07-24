@@ -9,12 +9,10 @@ import { Context } from '../graphqlContext';
 
 import { numMaxReturnedItems } from '../lib/constants';
 
-/*
 import {
   subscribeToGroup,
   unsubscribeFromGroup,
 } from '../lib/subscription';
-*/
 
 @ObjectType()
 class OwnGroupsResult {
@@ -134,15 +132,10 @@ export class GroupResolver {
       createdById: user.id,
     });
 
-    await db.getRepository(UserGroup).save({
+    await db.getRepository(UserGroup).update({
       userId: user.id,
       groupId: newGroup.id,
-      pinned: true,
-    });
-
-    await db.getRepository(UserGroup).save({
-      userId: user.id,
-      groupId: newGroup.id,
+    }, {
       pinned: true,
       latestRead: Date.now(),
     });
@@ -150,37 +143,57 @@ export class GroupResolver {
     return 'OK';
   }
 
-/*
-  async joinGroup({ groupId }, { user, db }: Context) {
-    const hasGroup = _.find(user.groups, (g) => g.id.toHexString() === groupId);
-    if (hasGroup) {
+  @Query(() => String)
+  async joinGroup(
+    @Arg('groupId') groupId: string,
+    @Ctx() { user, db }: Context
+  ) {
+    const previousGroupRelationship = await db.getRepository(UserGroup).findOne({
+      userId: user!.id,
+      groupId,
+    });
+    if (previousGroupRelationship) {
       throw new Error('User already participate in the group');
     }
-    user.groups.push({ id: ObjectId(groupId) });
-    await user.save();
+    await db.getRepository(UserGroup).save({
+      userId: user!.id,
+      groupId,
+      pinned: true,
+      latestRead: Date.now(),
+    });
     return 'OK';
   }
 
-  async leaveGroup({ groupId }, { user, db }: Context) {
-    await User.updateOne(
-      { _id: user._id },
-      { $pull: { groups: { id: ObjectId(groupId) } } },
-    );
+  @Query(() => String)
+  async leaveGroup(
+    @Arg('groupId') groupId: string,
+    @Ctx() { user, db }: Context
+  ) {
+    await db.getRepository(UserGroup).delete({
+      userId: user!.id,
+      groupId,
+    });
 
     // unsubscribe user from the group on FCM
-    await unsubscribeFromGroup(user, user?.notificationToken, groupId);
+    await unsubscribeFromGroup(db, user!, user?.notificationToken, groupId);
     return 'OK';
   }
 
-  async setGroupPin({ groupId, pinned }, { user, db }: Context) {
-    await User.updateOne(
-      { _id: user._id, 'groups.id': ObjectId(groupId) },
-      { $set: { 'groups.$.pinned': pinned } },
-    );
+  async setGroupPin(
+    @Arg('groupId') groupId: string,
+    @Arg('pinned') pinned: boolean,
+    @Ctx() { user, db }: Context
+  ) {
+    await db.getRepository(UserGroup).update({
+      userId: user!.id,
+      groupId,
+    }, {
+      pinned,
+    });
     if (pinned) {
-      await subscribeToGroup(user, user?.notificationToken, groupId);
+      await subscribeToGroup(db, user!, user?.notificationToken, groupId);
     } else {
-      await unsubscribeFromGroup(user, user?.notificationToken, groupId);
+      await unsubscribeFromGroup(db, user!, user?.notificationToken, groupId);
     }
     return 'OK';
   }
