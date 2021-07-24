@@ -9,10 +9,10 @@ const typeOrmConfig: ConnectionOptions = {
   username: "",
   password: "",
   database: "groupin_dev",
-  entities: [path.join(__dirname, './entity/*.entity{.ts}')],
+  entities: [path.join(__dirname, '/entity/*.entity{.ts,.js}')],
   synchronize: false,
   migrations: [
-    path.join(__dirname, './migration/shared/*{.ts}'),
+    path.join(__dirname, '/migration/shared/*{.ts,.js}'),
   ],
   migrationsRun: true,
   logging: ['error']
