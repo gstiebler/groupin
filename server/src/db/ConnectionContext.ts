@@ -19,7 +19,7 @@ const contextFromConnection = (connection: Connection) => ({
   pinnedTopicRepository: connection.getRepository(PinnedTopic),
 });
 
-export type ConnectionContext = ReturnType<typeof contextFromConnection>;
+export type ConnCtx = ReturnType<typeof contextFromConnection>;
 
 export async function createConnectionContext() {
   const connection = await createConnection();

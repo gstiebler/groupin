@@ -3,8 +3,8 @@ import * as Bluebird from 'bluebird';
 import pushService from './pushService';
 import logger from '../config/winston';
 import { User } from '../db/entity/User.entity';
-import { ConnCtx } from '../graphqlContext';
 import { In } from 'typeorm';
+import { ConnCtx } from '../db/ConnectionContext';
 
 export function unsubscribeFromTopic(notificationToken: string, topicId: string) {
   return pushService.unsubscribe(notificationToken, topicId);

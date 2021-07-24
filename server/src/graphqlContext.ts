@@ -1,12 +1,12 @@
 import * as admin from 'firebase-admin';
 import logger from './config/winston';
-import { ConnectionContext, createConnectionContext } from './db/ConnectionContext';
+import { ConnCtx, createConnectionContext } from './db/ConnectionContext';
 import { User } from './db/entity/User.entity';
 
 export type Context = {
   user?: User;
   externalId?: string;
-  db: ConnectionContext;
+  db: ConnCtx;
 };
 
 const connectionContextPromise = createConnectionContext();
