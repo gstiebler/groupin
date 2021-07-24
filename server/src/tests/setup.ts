@@ -1,18 +1,13 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
-/*
 import { graphql } from 'graphql';
-import rootValue from '../resolvers/rootResolver';
-import schema from '../graphqlSchema';
 import logger from '../config/winston';
-import User from '../db/schema/User';
-
-import * as graphqlConnect from '../../../mobile/lib/graphqlConnect';
+import { User } from '../db/entity/User.entity';
 
 const currentUserHolder = { currentUser: null };
 
-export function setCurrentUser(user) {
+export function setCurrentUser(user: Partial<User>) {
   currentUserHolder.currentUser = user;
 }
 
@@ -21,10 +16,9 @@ if (process.env.NODE_ENV !== 'test') {
       Current environment: ${process.env.NODE_ENV}`);
 }
 
-const mongooseInitPromise = mongooseConfig.init();
 export async function setup() {
   await mongooseInitPromise;
-  graphqlConnect.sendQuery = async (query, variables) => {
+  graphqlConnect.sendQuery = async (query: string, variables: unknown) => {
     const user = await User.findById(currentUserHolder.currentUser._id);
     const firebaseId = 'dk49sdfjhk';
     const phoneNumber = '(21)999995555';
@@ -38,4 +32,4 @@ export async function setup() {
     return result.data;
   };
 }
-*/
+

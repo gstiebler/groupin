@@ -1,31 +1,27 @@
-// @ts-nocheck
-import * as moment from 'moment';
-import * as mongoose from 'mongoose';
 import * as _ from 'lodash';
 
 import { setup, setCurrentUser } from '../setup';
 
 import pushService from '../../lib/pushService';
-import { initFixtures } from '../fixtures';
 import userFixtures from '../fixtures/userFixtures';
 import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import messageFixtures from '../fixtures/messageFixtures';
 import { groupIds } from '../fixtures/preIds';
-import User from '../../db/schema/User';
-import Topic from '../../db/schema/Topic';
-import Message from '../../db/schema/Message';
-import TopicLatestRead from '../../db/schema/TopicLatestRead';
 import { messageTypes } from '../../lib/constants';
+import { User } from '../../db/entity/User.entity';
+import { Topic } from '../../db/entity/Topic.entity';
+import { Message } from '../../db/entity/Message.entity';
+import { v4 as uuidv4 } from 'uuid';
+import { initFixtures } from '../fixtures/fixtureHelper';
 
-const { ObjectId } = mongoose.Types;
 
-function createMessages(numMessages, user, topic) {
-  const messages = [];
+function createMessages(numMessages: number, user: Partial<User>, topic: Partial<Topic>) {
+  const messages: Message[] = [];
   const baseMoment = moment();
   for (let i = 0; i < numMessages; i++) {
     messages.push({
-      _id: ObjectId(),
+      id: uuidv4(),
       text: `Message ${i}`,
       user,
       topic,
@@ -38,8 +34,8 @@ function createMessages(numMessages, user, topic) {
 function createStorage() {
   return {
     messagesByTopic: new Map([]),
-    getItem(topicId) { return this.messagesByTopic.get(topicId); },
-    setItem(topicId, messages) { this.messagesByTopic.set(topicId, messages); },
+    getItem(topicId: string) { return this.messagesByTopic.get(topicId); },
+    setItem(topicId: string, messages: Message[]) { this.messagesByTopic.set(topicId, messages); },
   };
 }
 
@@ -52,7 +48,7 @@ describe('main', () => {
 
   describe('reading', () => {
     const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id);
-    const localMessages50 = messages50.map((m) => ({ ...m, _id: m._id.toHexString() }));
+    const localMessages50 = messages50.map((m) => ({ ...m, _id: m.id }));
 
     beforeAll(async () => {
       await initFixtures();
@@ -67,7 +63,7 @@ describe('main', () => {
     it('getUserId', async () => {
       setCurrentUser(userFixtures.robert);
       const { id } = await server.getUserId();
-      expect(id).toEqual(userFixtures.robert._id.toHexString());
+      expect(id).toEqual(userFixtures.robert.id);
     });
 
     it('getOwnGroups', async () => {
@@ -76,14 +72,14 @@ describe('main', () => {
       await groupStore.fetchOwnGroups();
       expect(groupStore.ownGroups).toEqual([
         {
-          id: groupFixtures.firstGroup._id.toHexString(),
+          id: groupFixtures.firstGroup.id,
           name: 'First Group',
           imgUrl: 'url1',
           unread: false,
           pinned: false,
         },
         {
-          id: groupFixtures.secondGroup._id.toHexString(),
+          id: groupFixtures.secondGroup.id,
           name: 'Second Group',
           imgUrl: 'url2',
           unread: true,
@@ -98,7 +94,7 @@ describe('main', () => {
       await groupsSearchActions.findGroups('second');
       expect(groupsSearchActions.groups).toEqual([
         {
-          id: groupFixtures.secondGroup._id.toHexString(),
+          id: groupFixtures.secondGroup.id,
           name: 'Second Group',
           imgUrl: 'url2',
         },
@@ -111,7 +107,7 @@ describe('main', () => {
       await groupsSearchActions.findGroups('  S9hvTvIBWM ');
       expect(groupsSearchActions.groups).toEqual([
         {
-          id: groupFixtures.firstGroup._id.toHexString(),
+          id: groupFixtures.firstGroup.id,
           name: 'First Group',
           imgUrl: 'url1',
         },
@@ -121,17 +117,17 @@ describe('main', () => {
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const rootActions = new RootStore();
-      await rootActions.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString());
+      await rootActions.getTopicsOfGroup(groupFixtures.firstGroup.id);
       expect(rootActions.topics).toEqual([
         {
-          id: topicFixtures.topic1Group1._id.toHexString(),
+          id: topicFixtures.topic1Group1.id,
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
           unread: true,
           pinned: false,
         },
         {
-          id: topicFixtures.topic2Group1._id.toHexString(),
+          id: topicFixtures.topic2Group1.id,
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
           unread: true,
@@ -143,18 +139,18 @@ describe('main', () => {
     it('getTopicsOfCurrentGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const rootActions = new RootStore();
-      rootActions.currentlyViewedGroupId = groupFixtures.firstGroup._id.toHexString();
+      rootActions.currentlyViewedGroupId = groupFixtures.firstGroup.id;
       await rootActions.getTopicsOfCurrentGroup();
       expect(rootActions.topics).toEqual([
         {
-          id: topicFixtures.topic1Group1._id.toHexString(),
+          id: topicFixtures.topic1Group1.id,
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
           unread: true,
           pinned: false,
         },
         {
-          id: topicFixtures.topic2Group1._id.toHexString(),
+          id: topicFixtures.topic2Group1.id,
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
           unread: true,
@@ -165,7 +161,7 @@ describe('main', () => {
 
     describe('onTopicOpened', () => {
       it('no messages on storage', async () => {
-        const topicIdStr = topicFixtures.topic1Group1._id.toHexString();
+        const topicIdStr = topicFixtures.topic1Group1.id;
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         const rootActions = new RootStore();
@@ -177,21 +173,21 @@ describe('main', () => {
         });
         const expectedMessages = _.reverse([
           {
-            _id: messageFixtures.message1topic1._id.toHexString(),
+            _id: messageFixtures.message1topic1.id,
             createdAt: Date.parse('2018-10-01'),
             text: 'Topic 1 Group 1 Alice',
             user: {
-              _id: userFixtures.alice._id.toHexString(),
+              _id: userFixtures.alice.id,
               name: 'Alice',
               avatar: 'alice_url',
             },
           },
           {
-            _id: messageFixtures.message2topic1._id.toHexString(),
+            _id: messageFixtures.message2topic1.id,
             createdAt: Date.parse('2018-10-02'),
             text: 'Topic 1 Group 1 Robert',
             user: {
-              _id: userFixtures.robert._id.toHexString(),
+              _id: userFixtures.robert.id,
               name: 'Robert',
               avatar: 'robert_url',
             },
@@ -202,7 +198,7 @@ describe('main', () => {
       });
 
       it('3 extra messages to be fetched', async () => {
-        const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
+        const topicIdStr = topicFixtures.topic1Group2.id;
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(4, 24));
@@ -236,7 +232,7 @@ describe('main', () => {
       });
 
       it('hole between fetched and on storage', async () => {
-        const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
+        const topicIdStr = topicFixtures.topic1Group2.id;
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         storage.setItem(topicIdStr, localMessages50.slice(25, 44));
@@ -269,7 +265,7 @@ describe('main', () => {
     });
 
     it('onOlderMessagesRequested', async () => {
-      const topicIdStr = topicFixtures.topic1Group2._id.toHexString();
+      const topicIdStr = topicFixtures.topic1Group2.id;
       setCurrentUser(userFixtures.robert);
       const rootActions = new RootStore();
       rootActions.messages = localMessages50.slice(0, 5);
@@ -292,26 +288,26 @@ describe('main', () => {
     it('getMessagesOfCurrentTopic', async () => {
       setCurrentUser(userFixtures.robert);
       const rootActions = new RootStore();
-      rootActions.currentlyViewedTopicId = topicFixtures.topic1Group1._id.toHexString();
+      rootActions.currentlyViewedTopicId = topicFixtures.topic1Group1.id;
       const storage = createStorage();
       await rootActions.getMessagesOfCurrentTopic(storage);
       expect(rootActions.messages).toEqual(_.reverse([
         {
-          _id: messageFixtures.message1topic1._id.toHexString(),
+          _id: messageFixtures.message1topic1.id,
           createdAt: Date.parse('2018-10-01'),
           text: 'Topic 1 Group 1 Alice',
           user: {
-            _id: userFixtures.alice._id.toHexString(),
+            _id: userFixtures.alice.id,
             name: 'Alice',
             avatar: 'alice_url',
           },
         },
         {
-          _id: messageFixtures.message2topic1._id.toHexString(),
+          _id: messageFixtures.message2topic1.id,
           createdAt: Date.parse('2018-10-02'),
           text: 'Topic 1 Group 1 Robert',
           user: {
-            _id: userFixtures.robert._id.toHexString(),
+            _id: userFixtures.robert.id,
             name: 'Robert',
             avatar: 'robert_url',
           },
@@ -320,7 +316,7 @@ describe('main', () => {
     });
 
     it('getGroupInfo', async () => {
-      const groupId = groupFixtures.firstGroup._id.toHexString();
+      const groupId = groupFixtures.firstGroup.id;
       setCurrentUser(userFixtures.robert);
       const groupActions = new GroupStore();
       await groupActions.getGroupInfo(groupId);
@@ -362,7 +358,7 @@ describe('main', () => {
     describe('sendMessage', () => {
       const { alice } = userFixtures;
       const messageText = 'new message 1 from Alice';
-      const topicId = topicFixtures.topic1Group1._id.toHexString();
+      const topicId = topicFixtures.topic1Group1.id;
       let rootActions;
 
       beforeEach(async () => {
@@ -376,14 +372,14 @@ describe('main', () => {
         const call0args = pushService.pushMessage.mock.calls[0];
         expect(call0args).toHaveLength(2);
         const [, pushParams] = call0args;
-        expect(topicId).toBe(topicFixtures.topic1Group1._id.toHexString());
+        expect(topicId).toBe(topicFixtures.topic1Group1.id);
         const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).toEqual({
           payload: {
             message: messageText,
-            topicId: topicFixtures.topic1Group1._id.toHexString(),
-            groupId: groupFixtures.firstGroup._id.toHexString(),
-            messageId: createdMessage._id.toHexString(),
+            topicId: topicFixtures.topic1Group1.id,
+            groupId: groupFixtures.firstGroup.id,
+            messageId: createdMessage.id,
             authorName: alice.name,
             topicName: 'Topic 1 Group 1',
             type: messageTypes.NEW_MESSAGE,
@@ -395,7 +391,7 @@ describe('main', () => {
 
         const call1args = pushService.pushMessage.mock.calls[1];
         const [groupId] = call1args;
-        expect(groupId).toBe(groupFixtures.firstGroup._id.toHexString());
+        expect(groupId).toBe(groupFixtures.firstGroup.id);
 
         expect(rootActions.messages).toHaveLength(1);
       });
@@ -403,7 +399,7 @@ describe('main', () => {
       it('message was added to DB', async () => {
         const lastMessageOnStore = _.last(rootActions.messages);
         const messages = await server.getMessagesOfTopic({
-          topicId: topicFixtures.topic1Group1._id.toHexString(),
+          topicId: topicFixtures.topic1Group1.id,
           limit: 20,
           afterId: '507f1f77bcf86cd799439002',
         });
@@ -422,7 +418,7 @@ describe('main', () => {
 
       it('sendMessage, filtering by `startingId`', async () => {
         const messages = await server.getMessagesOfTopic({
-          topicId: topicFixtures.topic1Group1._id.toHexString(),
+          topicId: topicFixtures.topic1Group1.id,
           limit: 20,
         });
         expect(messages).toHaveLength(3);
@@ -436,7 +432,7 @@ describe('main', () => {
       });
 
       it('topic sort order', async () => {
-        const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id.toHexString(), 20, 'startingId1');
+        const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup.id, 20, 'startingId1');
         expect(_.map(topics, 'name')).toEqual(['Topic 1 Group 1', 'Topic 2 Group 1']);
       });
     });
@@ -450,19 +446,19 @@ describe('main', () => {
 
       beforeEach(async () => {
         const navigation = { goBack: jest.fn() };
-        const secondGroupId = groupFixtures.secondGroup._id.toHexString();
+        const secondGroupId = groupFixtures.secondGroup.id;
         await newTopicActions.createTopic(navigation, secondGroupId, topicName);
       });
 
       it('push', async () => {
         const [topic, pushParams] = pushService.pushMessage.mock.calls[0];
-        expect(topic).toBe(groupFixtures.secondGroup._id.toHexString());
+        expect(topic).toBe(groupFixtures.secondGroup.id);
         const newTopic = await Topic.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).toEqual({
           payload: {
             type: messageTypes.NEW_TOPIC,
-            topicId: newTopic._id.toHexString(),
-            groupId: groupFixtures.secondGroup._id.toHexString(),
+            topicId: newTopic.id,
+            groupId: groupFixtures.secondGroup.id,
             topicName,
           },
           body: topicName,
@@ -473,7 +469,7 @@ describe('main', () => {
 
       it('topic created on DB', async () => {
         setCurrentUser(userFixtures.robert);
-        const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup._id.toHexString(), 20, 'startingId1');
+        const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup.id, 20, 'startingId1');
         expect(topics).toHaveLength(3);
         // test order
         expect(_.map(topics, 'name')).toEqual([topicName, 'Topic 2 Group 2', 'Topic 1 Group 2']);
@@ -505,7 +501,7 @@ describe('main', () => {
       expect(unsubscribedGroup).toBe(groupId);
       expect(groups).toEqual([
         {
-          id: groupFixtures.secondGroup._id.toHexString(),
+          id: groupFixtures.secondGroup.id,
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
@@ -514,7 +510,7 @@ describe('main', () => {
       ]);
       expect(groupActions.ownGroups).toEqual([
         {
-          id: groupFixtures.secondGroup._id.toHexString(),
+          id: groupFixtures.secondGroup.id,
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
@@ -527,7 +523,7 @@ describe('main', () => {
       it('User already joined the group', async () => {
         expect.assertions(1);
         setCurrentUser(userFixtures.alice);
-        const groupId = groupFixtures.firstGroup._id.toHexString();
+        const groupId = groupFixtures.firstGroup.id;
         // let navigatePath;
         // const navigation = { navigate: (path) => navigatePath = path };
         const groupActions = new GroupStore();
@@ -540,7 +536,7 @@ describe('main', () => {
 
       it('joined group', async () => {
         setCurrentUser(userFixtures.alice);
-        const groupId = groupFixtures.secondGroup._id.toHexString();
+        const groupId = groupFixtures.secondGroup.id;
         await server.joinGroup(groupId);
         const groups = await server.getOwnGroups();
         expect(groups).toHaveLength(2);
@@ -565,13 +561,13 @@ describe('main', () => {
 
       // Create
       const firstCount = await TopicLatestRead.countDocuments();
-      const result1 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
+      const result1 = await server.setTopicLatestRead(topicFixtures.topic1Group1.id);
       expect(result1).toBe('OK');
       const secoundCount = await TopicLatestRead.countDocuments();
       expect(secoundCount - firstCount).toBe(1);
 
       // Update
-      const result2 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id.toHexString());
+      const result2 = await server.setTopicLatestRead(topicFixtures.topic1Group1.id);
       expect(result2).toBe('OK');
       const thirdCount = await TopicLatestRead.countDocuments();
       expect(thirdCount - secoundCount).toBe(0);
@@ -580,7 +576,7 @@ describe('main', () => {
     describe('setGroupPin', () => {
       it('pin', async () => {
         setCurrentUser(userFixtures.robert);
-        const groupId = groupFixtures.firstGroup._id.toHexString();
+        const groupId = groupFixtures.firstGroup.id;
         await server.setGroupPin({
           groupId,
           pinned: true,
@@ -594,7 +590,7 @@ describe('main', () => {
 
       it('unpin', async () => {
         setCurrentUser(userFixtures.robert);
-        const groupId = groupFixtures.secondGroup._id.toHexString();
+        const groupId = groupFixtures.secondGroup.id;
         await server.setGroupPin({
           groupId,
           pinned: false,
@@ -610,7 +606,7 @@ describe('main', () => {
     describe('setTopicPin', () => {
       it('pin', async () => {
         setCurrentUser(userFixtures.robert);
-        const topicId = topicFixtures.topic2Group2._id.toHexString();
+        const topicId = topicFixtures.topic2Group2.id;
         await server.setTopicPin({
           topicId,
           pinned: true,
@@ -624,7 +620,7 @@ describe('main', () => {
 
       it('unpin', async () => {
         setCurrentUser(userFixtures.robert);
-        const topicId = topicFixtures.topic1Group2._id.toHexString();
+        const topicId = topicFixtures.topic1Group2.id;
         await server.setTopicPin({
           topicId,
           pinned: false,
