@@ -3,7 +3,7 @@ import { groupIds } from './preIds';
 import { UserGroup } from '../../db/entity/UserGroup.entity';
 import { convertFixedDate } from './fixtureHelper';
 
-const groupLatestReads: Partial<UserGroup>[] = [
+const userGroups: Partial<UserGroup>[] = [
   {
     groupId: groupIds.firstGroup,
     userId: userFixtures.alice.id,
@@ -24,4 +24,4 @@ const groupLatestReads: Partial<UserGroup>[] = [
   },
 ];
 
-export default groupLatestReads;
+export default userGroups;

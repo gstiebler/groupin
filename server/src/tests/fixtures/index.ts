@@ -1,37 +1,30 @@
-/*
+import * as _ from 'lodash';
 import groupFixtures from './groupFixtures';
 import userFixtures from './userFixtures';
 import topicFixtures from './topicFixtures';
 import messageFixtures from './messageFixtures';
-import groupLatestReadFixtures from './groupLatestReadFixtures';
+import userGroupFixtures from './userGroup.fixtures';
+import pinnedTopicFixtures from './pinnedTopic.fixtures';
+import { ConnCtx } from '../../graphqlContext';
 
-import Group from '../../db/schema/Group';
-import User from '../../db/schema/User';
-import Topic from '../../db/schema/Topic';
-import Message from '../../db/schema/Message';
-import TopicLatestRead from '../../db/schema/TopicLatestRead';
-import GroupLatestRead from '../../db/schema/GroupLatestRead';
-
-async function initFixtures() {
+export async function initFixtures(db: ConnCtx) {
   await Promise.all([
-    Group.deleteMany({}),
-    User.deleteMany({}),
-    Topic.deleteMany({}),
-    Message.deleteMany({}),
-    TopicLatestRead.deleteMany({}),
-    GroupLatestRead.deleteMany({}),
+    db.pinnedTopicRepository.delete({}),
+    db.userGroupRepository.delete({}),
+    db.topicLatestReadRepository.delete({}),
+    db.topicRepository.delete({}),
+    db.groupRepository.delete({}),
+    db.messageRepository.delete({}),
+    db.userRepository.delete({}),
   ]);
 
   await Promise.all([
-    Group.insertMany(Object.values(groupFixtures)),
-    User.insertMany(Object.values(userFixtures)),
-    Topic.insertMany(Object.values(topicFixtures)),
-    Message.insertMany(Object.values(messageFixtures)),
-    GroupLatestRead.insertMany(groupLatestReadFixtures),
+    db.userRepository.insert(_.values(userFixtures)),
+    db.messageRepository.insert(_.values(messageFixtures)),
+    db.groupRepository.insert(_.values(groupFixtures)),
+    db.topicRepository.insert(_.values(topicFixtures)),
+    // db.topicLatestReadRepository.insert(_.values(topiLatestReadFixtures)),
+    db.userGroupRepository.insert(_.values(userGroupFixtures)),
+    db.pinnedTopicRepository.insert(_.values(pinnedTopicFixtures)),
   ]);
 }
-
-module.exports = {
-  initFixtures,
-};
-*/
