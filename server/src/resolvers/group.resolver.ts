@@ -1,10 +1,9 @@
 import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Arg, Ctx, Field, InputType, ObjectType, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { Like } from 'typeorm';
 import { Group } from '../db/entity/Group';
-import { UserGroup } from '../db/entity/UserGroup';
 import { Context } from '../graphqlContext';
 
 import { numMaxReturnedItems } from '../lib/constants';
@@ -52,7 +51,7 @@ class GroupInfo extends Group {
 export class GroupResolver {
 
   @Query(() => [OwnGroupsResult])
-  async ownGroups(args, @Ctx() { user, db }: Context): Promise<OwnGroupsResult[]> {
+  async ownGroups(args, @Ctx() { user }: Context): Promise<OwnGroupsResult[]> {
     if (!user) {
       throw new Error('Method only available with a user');
     }
@@ -82,7 +81,7 @@ export class GroupResolver {
       throw new Error('Method only available with a user');
     }
 
-    const group = await db.getRepository(Group).findOneOrFail(groupId)
+    const group = await db.groupRepository.findOneOrFail(groupId)
     const iBelong = !!_.find(await user.joinedGroups, (group_) => group_.id === groupId);
     return {
       ...group,
@@ -99,13 +98,13 @@ export class GroupResolver {
       throw new Error('Only logged in users can search for groups');
     }
     const trimmedSearchText = searchText.trim();
-    const byFriendlyId = await db.getRepository(Group).findOne({ friendlyId: trimmedSearchText });
+    const byFriendlyId = await db.groupRepository.findOne({ friendlyId: trimmedSearchText });
     if (byFriendlyId) {
       return [byFriendlyId];
     }
 
     const boundedLimit = Math.min(limit, numMaxReturnedItems);
-    const groups = await db.getRepository(Group)
+    const groups = await db.groupRepository
       .find({
         where: {
           name: Like(`%${trimmedSearchText}%`),
@@ -116,23 +115,23 @@ export class GroupResolver {
     return groups;
   }
 
-  @Query(() => String)
+  @Mutation(() => String)
   async createGroup(
     @Arg('groupName') groupName: string,
     @Arg('visibility') visibility: string,
     @Ctx() { user, db }: Context
-  ) {
+  ): Promise<string> {
     if (!user) {
       throw new Error('A user is required');
     }
-    const newGroup = await db.getRepository(Group).save({
+    const newGroup = await db.groupRepository.save({
       name: groupName,
       imgUrl: 'temp',
       visibility,
       createdById: user.id,
     });
 
-    await db.getRepository(UserGroup).update({
+    await db.userGroupRepository.update({
       userId: user.id,
       groupId: newGroup.id,
     }, {
@@ -143,19 +142,19 @@ export class GroupResolver {
     return 'OK';
   }
 
-  @Query(() => String)
+  @Mutation(() => String)
   async joinGroup(
     @Arg('groupId') groupId: string,
     @Ctx() { user, db }: Context
-  ) {
-    const previousGroupRelationship = await db.getRepository(UserGroup).findOne({
+  ): Promise<string> {
+    const previousGroupRelationship = await db.userGroupRepository.findOne({
       userId: user!.id,
       groupId,
     });
     if (previousGroupRelationship) {
       throw new Error('User already participate in the group');
     }
-    await db.getRepository(UserGroup).save({
+    await db.userGroupRepository.save({
       userId: user!.id,
       groupId,
       pinned: true,
@@ -164,12 +163,12 @@ export class GroupResolver {
     return 'OK';
   }
 
-  @Query(() => String)
+  @Mutation(() => String)
   async leaveGroup(
     @Arg('groupId') groupId: string,
     @Ctx() { user, db }: Context
-  ) {
-    await db.getRepository(UserGroup).delete({
+  ): Promise<string> {
+    await db.userGroupRepository.delete({
       userId: user!.id,
       groupId,
     });
@@ -179,12 +178,13 @@ export class GroupResolver {
     return 'OK';
   }
 
+  @Mutation(() => String)
   async setGroupPin(
     @Arg('groupId') groupId: string,
     @Arg('pinned') pinned: boolean,
     @Ctx() { user, db }: Context
-  ) {
-    await db.getRepository(UserGroup).update({
+  ): Promise<string> {
+    await db.userGroupRepository.update({
       userId: user!.id,
       groupId,
     }, {
@@ -197,6 +197,4 @@ export class GroupResolver {
     }
     return 'OK';
   }
-*/
-
 }

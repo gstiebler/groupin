@@ -13,13 +13,13 @@ export class PinnedTopic {
     user => user.pinnedTopics
   )
   user: Promise<User>;
+  userId: string;
 
   @ManyToOne(
     () => Topic,
     topic => topic.usersPinned
   )
   topic: Promise<Topic>;
-
   topicId: string;
 
   @Column(() => Boolean)

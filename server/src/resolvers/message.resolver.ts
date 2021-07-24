@@ -4,18 +4,15 @@ import { messageTypes } from '../lib/constants';
 
 import pushService from '../lib/pushService';
 import logger from '../config/winston';
-import { Topic } from '../db/entity/Topic';
 import { Context } from '../graphqlContext';
 import { Message } from '../db/entity/Message';
 import { Resolver } from 'type-graphql';
-import { UserGroup } from '../db/entity/UserGroup';
-import { Group } from '../db/entity/Group';
 
 @Resolver(() => Message)
 export class MessageResolver {
 
   async messagesOfTopic({ topicId, limit, afterId, beforeId }, { user, db }: Context) {
-    const topic = await db.getRepository(Topic).findOne(topicId);
+    const topic = await db.topicRepository.findOne(topicId);
     const groups = await user?.joinedGroups;
     if (!_.find(groups, { id: topic?.groupId })) {
       throw new Error('User does not participate in the group');
@@ -26,7 +23,7 @@ export class MessageResolver {
     if (beforeIdMessages && afterIdMessages) {
       throw new Error('Only one start of end filter is allowed');
     }
-    const messages = await db.getRepository(Message).find({
+    const messages = await db.messageRepository.find({
       where: {
         topicId
       },
@@ -43,27 +40,27 @@ export class MessageResolver {
   async sendMessage({ message, topicId }, { user, db }: Context) {
     // TODO: make calls to DB in parallel when possible
 
-    const topic = await db.getRepository(Topic).findOne(topicId);
+    const topic = await db.topicRepository.findOne(topicId);
     try {
-      await db.getRepository(UserGroup).findOneOrFail({ userId: user?.id, groupId: topic?.groupId });
+      await db.userGroupRepository.findOneOrFail({ userId: user?.id, groupId: topic?.groupId });
     } catch (err) {
       throw new Error('User does not participate in the group');
     }
 
-    const createdMessage = await db.getRepository(Message).save({
+    const createdMessage = await db.messageRepository.save({
       text: message,
       userId: user!.id,
       topicId: topic!.id,
     });
 
     // update topic updatedAt
-    await db.getRepository(Topic).save({
+    await db.topicRepository.save({
       id: topicId,
       updatedAt: Date.now(),
     });
 
     // update group updatedAt
-    await db.getRepository(Group).save({
+    await db.groupRepository.save({
       id: topic!.groupId,
       updatedAt: Date.now(),
     });

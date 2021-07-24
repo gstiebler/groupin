@@ -18,4 +18,4 @@ const typeOrmConfig: ConnectionOptions = {
   logging: ['error']
 };
 
-export const connectionPromise = createConnection(typeOrmConfig);
+export default () => createConnection(typeOrmConfig);
