@@ -6,12 +6,19 @@ import pushService from '../lib/pushService';
 import logger from '../config/winston';
 import { Context } from '../graphqlContext';
 import { Message } from '../db/entity/Message';
-import { Resolver } from 'type-graphql';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
 @Resolver(() => Message)
 export class MessageResolver {
-
-  async messagesOfTopic({ topicId, limit, afterId, beforeId }, { user, db }: Context) {
+  
+  @Query(() => [Message])
+  async messagesOfTopic(
+    @Arg('topicId') topicId: string,
+    @Arg('limit') limit: number,
+    @Arg('afterId') afterId: string,
+    @Arg('beforeId') beforeId: string,
+    @Ctx() { user, db }: Context
+  ): Promise<Message[]> {
     const topic = await db.topicRepository.findOne(topicId);
     const groups = await user?.joinedGroups;
     if (!_.find(groups, { id: topic?.groupId })) {
@@ -19,7 +26,7 @@ export class MessageResolver {
     }
     const beforeIdMessages = !_.isEmpty(beforeId);
     const afterIdMessages = !_.isEmpty(afterId);
-    // const newestMessages = !beforeIdMessages && !afterIdMessages;
+    const newestMessages = !beforeIdMessages && !afterIdMessages;
     if (beforeIdMessages && afterIdMessages) {
       throw new Error('Only one start of end filter is allowed');
     }
@@ -37,10 +44,15 @@ export class MessageResolver {
     return messages;
   }
 
-  async sendMessage({ message, topicId }, { user, db }: Context) {
+  @Mutation(() => String)
+  async sendMessage(
+    @Arg('message') message: string,
+    @Arg('topicId') topicId: string,
+    @Ctx() { user, db }: Context
+  ): Promise<string> {
     // TODO: make calls to DB in parallel when possible
 
-    const topic = await db.topicRepository.findOne(topicId);
+    const topic = await db.topicRepository.findOneOrFail(topicId);
     try {
       await db.userGroupRepository.findOneOrFail({ userId: user?.id, groupId: topic?.groupId });
     } catch (err) {
@@ -50,7 +62,7 @@ export class MessageResolver {
     const createdMessage = await db.messageRepository.save({
       text: message,
       userId: user!.id,
-      topicId: topic!.id,
+      topicId: topic.id,
     });
 
     // update topic updatedAt
@@ -61,11 +73,11 @@ export class MessageResolver {
 
     // update group updatedAt
     await db.groupRepository.save({
-      id: topic!.groupId,
+      id: topic.groupId,
       updatedAt: Date.now(),
     });
 
-    const groupId = topic!.groupId;
+    const groupId = topic.groupId;
 
     // send push notification
     const pushPayload = {
@@ -73,7 +85,7 @@ export class MessageResolver {
       authorName: user!.name,
       groupId,
       topicId,
-      topicName: topic!.name,
+      topicName: topic.name,
       messageId: createdMessage.id,
       type: messageTypes.NEW_MESSAGE,
     };
@@ -82,7 +94,7 @@ export class MessageResolver {
     logger.debug(`Usuário: ${user?.name}`);
     const pushParams = {
       payload: pushPayload,
-      title: topic!.name,
+      title: topic.name,
       body: message.slice(0, 30),
     };
     await Promise.all([
