@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as Bluebird from 'bluebird';
 
 import pushService from './pushService';

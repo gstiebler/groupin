@@ -1,10 +1,9 @@
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, Entity, ManyToOne, UpdateDateColumn } from "typeorm";
+import { PrimaryGeneratedColumn, CreateDateColumn, Entity, ManyToOne, UpdateDateColumn } from "typeorm";
 import { Topic } from "./Topic";
 import { User } from "./User";
 
 @Entity()
 export class PinnedTopic {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
