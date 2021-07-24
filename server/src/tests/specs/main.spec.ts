@@ -1,7 +1,5 @@
 import * as _ from 'lodash';
-
-import { setup, setCurrentUser } from '../setup';
-
+import { setup, setCurrentUser, connnectionContextPromise } from '../setup';
 import pushService from '../../lib/pushService';
 import userFixtures from '../fixtures/userFixtures';
 import groupFixtures from '../fixtures/groupFixtures';
@@ -14,6 +12,7 @@ import { Topic } from '../../db/entity/Topic.entity';
 import { Message } from '../../db/entity/Message.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { initFixtures } from '../fixtures/fixtureHelper';
+import { ConnCtx } from '../../db/ConnectionContext';
 
 
 function createMessages(numMessages: number, user: Partial<User>, topic: Partial<Topic>) {
@@ -42,17 +41,20 @@ function createStorage() {
 // TODO: test thrown exceptions
 
 describe('main', () => {
+  let db: ConnCtx;
+
   beforeAll(async () => {
     await setup();
+    db = await connnectionContextPromise;
   });
 
   describe('reading', () => {
-    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id);
+    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2);
     const localMessages50 = messages50.map((m) => ({ ...m, _id: m.id }));
 
     beforeAll(async () => {
-      await initFixtures();
-      await Message.insertMany(messages50);
+      await initFixtures(db);
+      await db.messageRepository.insert(messages50);
     });
 
     beforeEach(() => {

@@ -8,6 +8,7 @@ import { Context } from '../graphqlContext';
 import schema from './../buildSchema';
 import { ApolloServer } from 'apollo-server';
 import { VariableValues } from 'apollo-server-types';
+import graphqlConnect from '../mobile/lib/graphqlConnect';
 
 const currentUserHolder: { currentUser?: Partial<User> } = { currentUser: undefined };
 
@@ -51,3 +52,6 @@ export async function setup() {
   };
 }
 
+beforeAll(async () => {
+  await setup();
+});

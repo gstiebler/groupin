@@ -1,6 +1,6 @@
 import { GiMessage } from "./messages";
 
-import * as graphql from './graphqlConnect';
+import graphql from './graphqlConnect';
 
 export async function register(name: string) {
   const query = `

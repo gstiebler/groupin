@@ -3,32 +3,36 @@ import env from './graphqlEnv';
 
 const url = env.SERVER_URL;
 
-export function setToken(token: string) {
-  axios.defaults.headers.common.authorization = token;
-}
+export default {
+  setToken(token: string) {
+    axios.defaults.headers.common.authorization = token;
+  },
 
-export async function sendQuery(query: string, variables?: unknown) {
-  try {
-    const res = await axios.request({
-      url,
-      method: 'post',
-      data: { 
-        query, 
-        variables,
-      },
-    });
-    if (!res.data) {
-      throw new Error('No data returned from server');
+  async sendQuery(query: string, variables?: unknown) {
+    try {
+      const res = await axios.request({
+        url,
+        method: 'post',
+        data: { 
+          query, 
+          variables,
+        },
+      });
+      if (!res.data) {
+        throw new Error('No data returned from server');
+      }
+      if (res.data.errors) {
+        throw new Error(res.data.errors[0].message);
+      }
+      if (res.data.errorMessage) {
+        throw new Error(res.data.errorMessage);
+      }
+      return res.data.data;
+    } catch(err) {
+      console.error(err);
+      throw new Error(err);
     }
-    if (res.data.errors) {
-      throw new Error(res.data.errors[0].message);
-    }
-    if (res.data.errorMessage) {
-      throw new Error(res.data.errorMessage);
-    }
-    return res.data.data;
-  } catch(err) {
-    console.error(err);
-    throw new Error(err);
-  }
-}
+  },
+};
+
+
