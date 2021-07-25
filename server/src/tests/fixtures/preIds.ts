@@ -8,6 +8,11 @@ export const groupIds = {
   secondGroup: uuidv4(),
 };
 
+export const userIds = {
+  alice: uuidv4(),
+  robert: uuidv4(),
+};
+
 export const topicIds = {
   topic1Group2: uuidv4(),
   topic2Group2: uuidv4(),

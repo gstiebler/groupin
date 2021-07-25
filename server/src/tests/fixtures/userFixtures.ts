@@ -1,13 +1,13 @@
 import { User } from '../../db/entity/User.entity';
-import { v4 as uuidv4 } from 'uuid';
+import { userIds } from './preIds';
 
 const users: { [user: string]: Partial<User> } = {
   alice: {
-    id: uuidv4(),
+    id: userIds.alice,
     name: 'Alice',
   },
   robert: {
-    id: uuidv4(),
+    id: userIds.robert,
     name: 'Robert',
     imgUrl: 'robert_url',
   },

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import * as moment from 'moment';
+import { isBefore } from 'date-fns';
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Topic } from "../db/entity/Topic.entity";
 import pushService from '../lib/pushService';
@@ -8,7 +8,7 @@ import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
 import { In } from 'typeorm';
 
-const oldDate = moment('2015-01-01').toDate();
+const oldDate = new Date('2015-01-01');
 
 
 @Resolver(() => Topic)
@@ -46,7 +46,7 @@ export class TopicResolver {
       const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
       return {
         ...topic,
-        unread: moment(latestReadMoment).isBefore(topic.updatedAt),
+        unread: isBefore(latestReadMoment, topic.updatedAt),
         pinned: pinnedTopicsSet.has(topic.id),
       };
     });

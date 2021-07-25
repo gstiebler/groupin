@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
-import * as moment from 'moment';
+import { isBefore } from 'date-fns';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { Like } from 'typeorm';
 import { Group } from '../db/entity/Group.entity';
@@ -67,7 +67,7 @@ export class GroupResolver {
         ...userGroup,
         name: group.description,
         id: userGroup.id,
-        unread: moment(groupRelationship.latestRead).isBefore(userGroup.updatedAt),
+        unread: isBefore(groupRelationship.latestRead, userGroup.updatedAt),
         pinned: groupRelationship.pinned,
       };
     });

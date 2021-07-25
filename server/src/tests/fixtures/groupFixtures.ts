@@ -1,5 +1,4 @@
-import userFixtures from './userFixtures';
-import { groupIds } from './preIds';
+import { groupIds, userIds } from './preIds';
 import { Group } from '../../db/entity/Group.entity';
 import { convertFixedDate } from './fixtureHelper';
 
@@ -11,7 +10,7 @@ const groups: { [group: string]: Partial<Group> } = {
     description: 'Description of the first group',
     imgUrl: 'url1',
     visibility: 'PUBLIC',
-    createdById: userFixtures.alice.id,
+    createdById: userIds.alice,
     createdAt: convertFixedDate('2018-06-05'),
     updatedAt: convertFixedDate('2018-07-28'),
   },
@@ -21,7 +20,7 @@ const groups: { [group: string]: Partial<Group> } = {
     name: 'Second Group',
     imgUrl: 'url2',
     visibility: 'PUBLIC',
-    createdById: userFixtures.alice.id,
+    createdById: userIds.alice,
     createdAt: convertFixedDate('2018-06-06'),
     updatedAt: convertFixedDate('2018-06-05'),
   },
