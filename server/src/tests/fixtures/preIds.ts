@@ -14,6 +14,7 @@ export const userIds = {
 };
 
 export const topicIds = {
+  topic1Group1: uuidv4(),
   topic1Group2: uuidv4(),
   topic2Group2: uuidv4(),
   topic2Group1: uuidv4(),

@@ -4,6 +4,7 @@ import pushService from '../../lib/pushService';
 import userFixtures from '../fixtures/userFixtures';
 import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
+import { initFixtures } from '../fixtures/fixturesInit';
 /*
 import messageFixtures from '../fixtures/messageFixtures';
 import { groupIds } from '../fixtures/preIds';
@@ -13,7 +14,6 @@ import { User } from '../../db/entity/User.entity';
 import { Topic } from '../../db/entity/Topic.entity';
 import { Message } from '../../db/entity/Message.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { initFixtures } from '../fixtures/fixtureHelper';
 import { ConnCtx } from '../../db/ConnectionContext';
 import { addSeconds } from 'date-fns';
 import { GroupStore } from '../../mobile/stores/groupStore';
