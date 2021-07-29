@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .ts",
     "prepublish": "npm run compile",
     "test": "jest",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "build": "tsc && npm run copy",
     "build:schema": "ts-node ./src/buildSchema.ts",
     "watch": "tsc -w",

@@ -55,6 +55,11 @@ describe('main', () => {
     db = await connnectionContextPromise;
   });
 
+  it('hello', async () => {
+    const result = await server.getHello('foca');
+    expect(result).toEqual('OK');
+  })
+
   describe('reading', () => {
     const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2);
     // const localMessages50 = messages50.map((m) => ({ ...m, _id: m.id }));

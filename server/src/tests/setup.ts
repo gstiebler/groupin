@@ -31,9 +31,8 @@ export async function setup() {
 
   const server = new ApolloServer({
     schema,
-    context: async (): Promise<Context> => {
-      const user = await connectionContext.userRepository.findOne(currentUserHolder.currentUser?.id);
-      return { user, externalId: 'dk49sdfjhk', db: connectionContext };
+    context: (): Context => {
+      return { user: currentUserHolder.currentUser as User, externalId: 'dk49sdfjhk', db: connectionContext };
     },
   });
 
@@ -44,7 +43,7 @@ export async function setup() {
     });
     if (result.errors) {
       for (const error of result.errors) {
-        logger.error(JSON.stringify(error));
+        logger.error(error.message);
       }
       throw new Error(result.errors[0].message);
     }

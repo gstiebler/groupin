@@ -2,6 +2,16 @@ import { GiMessage } from "./messages";
 
 import graphql from './graphqlConnect';
 
+export async function getHello(pass: string): Promise<string> {
+  const query = `
+    query GetHello($helloInput: HelloInput!) {
+      getHello(helloInput: $helloInput)
+    }
+  `;
+  const res = await graphql.sendQuery(query, { helloInput: { pass } });
+  return res.getHello;
+}
+
 export async function register(name: string) {
   const query = `
     mutation Register($name: String!) {

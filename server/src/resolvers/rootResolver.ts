@@ -24,15 +24,15 @@ export class RootResolver {
 
   @Query(() => String)
   async getHello(
-    @Arg('todoInput') { pass }: HelloInput,
+    @Arg('helloInput') helloInput: HelloInput,
     @Ctx() ctx: Context
   ): Promise<String> {
-    console.log(ctx);
-    return pass === 'foca' ? 'OK' : 'ERROR';
+    console.log(ctx.externalId);
+    return helloInput.pass === 'foca' ? 'OK' : 'ERROR';
   }
 
   @Query(() => String)
-  async getUserId(args, @Ctx() { user }: Context) {
+  async getUserId(@Ctx() { user }: Context) {
     return user ? user.id : 'NO USER';
   }
 
