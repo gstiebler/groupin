@@ -51,7 +51,7 @@ class GroupInfo extends Group {
 export class GroupResolver {
 
   @Query(() => [OwnGroupsResult])
-  async ownGroups(args, @Ctx() { user }: Context): Promise<OwnGroupsResult[]> {
+  async ownGroups(@Ctx() { user }: Context): Promise<OwnGroupsResult[]> {
     if (!user) {
       throw new Error('Method only available with a user');
     }

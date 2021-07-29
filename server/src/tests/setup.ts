@@ -9,6 +9,7 @@ import schema from './../buildSchema';
 import graphqlConnect from '../mobile/lib/graphqlConnect';
 import { ApolloServer } from 'apollo-server';
 import { VariableValues } from 'apollo-server-types';
+import { GraphQLError } from 'graphql';
 
 const currentUserHolder: { currentUser?: Partial<User> } = { currentUser: undefined };
 
@@ -42,10 +43,11 @@ export async function setup() {
       variables,
     });
     if (result.errors) {
-      for (const error of result.errors) {
+      /*for (const error of result.errors) {
         logger.error(error.message);
-      }
-      throw new Error(result.errors[0].message);
+      }*/
+      const mainError = result.errors[0] as GraphQLError;
+      throw mainError.originalError;
     }
     return result.data;
   };
