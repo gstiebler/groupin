@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn, CreateDateColumn, Entity, ManyToOne, UpdateDateColumn } from "typeorm";
+import { PrimaryGeneratedColumn, CreateDateColumn, Entity, ManyToOne, UpdateDateColumn, Column } from "typeorm";
 import { Topic } from "./Topic.entity";
 import { User } from "./User.entity";
 
@@ -12,6 +12,7 @@ export class PinnedTopic {
     user => user.pinnedTopics
   )
   user: Promise<User>;
+  @Column({ nullable: false })
   userId: string;
 
   @ManyToOne(
@@ -19,6 +20,7 @@ export class PinnedTopic {
     topic => topic.usersPinned
   )
   topic: Promise<Topic>;
+  @Column({ nullable: false })
   topicId: string;
 
   @CreateDateColumn({ type: 'timestamp without time zone' })

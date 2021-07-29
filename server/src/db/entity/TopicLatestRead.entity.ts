@@ -13,6 +13,7 @@ export class TopicLatestRead {
     user => user.topicsLatestRead
   )
   user: Promise<User>;
+  @Column({ nullable: false })
   userId: string;
 
   @ManyToOne(
@@ -20,6 +21,7 @@ export class TopicLatestRead {
     topic => topic.usersLatestRead
   )
   topic: Promise<Topic>;
+  @Column({ nullable: false })
   topicId: string;
 
   @Column({ type: 'timestamp' })

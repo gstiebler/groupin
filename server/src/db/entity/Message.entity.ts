@@ -20,7 +20,7 @@ export class Message {
     user => user.messages
   )
   user: Promise<User>;
-
+  @Column({ nullable: false })
   userId: string;
 
   @ManyToOne(
@@ -28,7 +28,7 @@ export class Message {
     topic => topic.messages
   )
   topic: Promise<Topic>;
-
+  @Column({ nullable: false })
   topicId: string;
 
   @CreateDateColumn({ type: 'timestamp without time zone' })

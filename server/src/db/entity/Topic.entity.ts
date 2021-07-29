@@ -29,6 +29,7 @@ export class Topic {
   group: Promise<Group>;
 
   @Field()
+  @Column({ nullable: false })
   groupId: string;
 
   @OneToMany(
@@ -42,6 +43,7 @@ export class Topic {
     user => user.createdTopics
   )
   createdBy: Promise<User>;
+  @Column({ nullable: false })
   createdById: string;
 
   @OneToMany(

@@ -47,6 +47,7 @@ export class Group {
     user => user.joinedGroups
   )
   createdBy: Promise<User>;
+  @Column({ nullable: false })
   createdById: string;
 
   @OneToMany(

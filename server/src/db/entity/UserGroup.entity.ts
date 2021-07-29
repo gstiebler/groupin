@@ -13,6 +13,7 @@ export class UserGroup {
     user => user.joinedGroups
   )
   user: Promise<User>;
+  @Column({ nullable: false })
   userId: string;
 
   @ManyToOne(
@@ -20,6 +21,7 @@ export class UserGroup {
     group => group.users
   )
   group: Promise<Group>;
+  @Column({ nullable: false })
   groupId: string;
 
   @Column(() => Boolean)
