@@ -92,10 +92,10 @@ export async function setTopicLatestRead(topicId: string) {
   return res.setTopicLatestRead;
 }
 
-export async function getUserId() {
+export async function getUserId(): Promise<string> {
   const query = `
     query {
-      getUserId { id }
+      getUserId
     }
   `;
   const res = await graphql.sendQuery(query);

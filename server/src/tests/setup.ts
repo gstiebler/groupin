@@ -44,7 +44,7 @@ export async function setup() {
     });
     if (result.errors) {
       for (const error of result.errors) {
-        logger.error(error.locations);
+        logger.error(JSON.stringify(error));
       }
       throw new Error(result.errors[0].message);
     }

@@ -71,8 +71,8 @@ describe('main', () => {
 
     it('getUserId', async () => {
       setCurrentUser(userFixtures.robert);
-      const { id } = await server.getUserId();
-      expect(id).toEqual(userFixtures.robert.id);
+      const userId= await server.getUserId();
+      expect(userId).toEqual(userFixtures.robert.id);
     });
 
     it('getOwnGroups', async () => {

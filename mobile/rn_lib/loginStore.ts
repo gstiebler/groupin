@@ -64,7 +64,7 @@ export class LoginStore {
 
   async confirmationCodeReceived(fbUserToken: string) {
     updateFbUserToken(fbUserToken);
-    const { id: userId } = await server.getUserId();
+    const userId = await server.getUserId();
     if (userId === 'NO USER') {
       this.registerNewUser();
     } else {
