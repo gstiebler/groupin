@@ -65,7 +65,7 @@ export class GroupResolver {
       const group = await userGroup.group;
       return {
         ...userGroup,
-        name: group.description,
+        name: group.name,
         id: userGroup.id,
         unread: isBefore(groupRelationship.latestRead, userGroup.updatedAt),
         pinned: groupRelationship.pinned,
@@ -171,12 +171,14 @@ export class GroupResolver {
     @Arg('groupId') groupId: string,
     @Ctx() { user, db }: Context
   ): Promise<string> {
+    if (!user!.notificationToken) {
+      throw new Error('Notification token required');
+    }
     await db.userGroupRepository.delete({
       userId: user!.id,
       groupId,
     });
-
-    // unsubscribe user from the group on FCM
+    
     await unsubscribeFromGroup(db, user!, user!.notificationToken, groupId);
     return 'OK';
   }
@@ -187,6 +189,9 @@ export class GroupResolver {
     @Arg('pinned') pinned: boolean,
     @Ctx() { user, db }: Context
   ): Promise<string> {
+    if (!user!.notificationToken) {
+      throw new Error('Notification token required');
+    }
     await db.userGroupRepository.update({
       userId: user!.id,
       groupId,

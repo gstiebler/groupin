@@ -25,8 +25,8 @@ export class User {
   @Column()
   externalId: string;
 
-  @Column()
-  notificationToken: string;
+  @Column({ nullable: true })
+  notificationToken?: string;
 
   @Column({ nullable: true})
   imgUrl?: string;

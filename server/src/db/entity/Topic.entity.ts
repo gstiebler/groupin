@@ -23,8 +23,8 @@ export class Topic {
   imgUrl?: string;
 
   @ManyToOne(
-    () => Topic,
-    topic => topic.group
+    () => Group,
+    group => group.topics
   )
   group: Promise<Group>;
 

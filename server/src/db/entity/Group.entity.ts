@@ -35,8 +35,8 @@ export class Group {
   imgUrl?: string;
 
   @Column()
-  @Field({ nullable: true })
-  description: string;
+  @Field()
+  description?: string;
 
   @Column()
   @Field(() => Visibility)

@@ -18,6 +18,7 @@ const groups: { [group: string]: Partial<Group> } = {
     id: groupIds.secondGroup,
     friendlyId: 'TseHHEvGd',
     name: 'Second Group',
+    description: 'Description of the second group',
     imgUrl: 'url2',
     visibility: 'PUBLIC',
     createdById: userIds.alice,

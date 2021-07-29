@@ -134,6 +134,10 @@ export class TopicResolver {
     @Arg('pinned') pinned: boolean,
     @Ctx() { user, db }: Context
   ) {
+    if (!user!.notificationToken) {
+      throw new Error('Notification token required');
+    }
+
     if (pinned) {
       await db.pinnedTopicRepository.save({
         userId: user!.id,
