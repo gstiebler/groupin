@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
-import logger from '../config/winston';
+// import logger from '../config/winston';
 import { createConnectionContext } from '../db/ConnectionContext';
 import { User } from '../db/entity/User.entity';
 import { Context } from '../graphqlContext';

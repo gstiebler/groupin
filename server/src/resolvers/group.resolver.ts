@@ -1,8 +1,7 @@
-import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import { Like } from 'typeorm';
+import { In, Like } from 'typeorm';
 import { Group } from '../db/entity/Group.entity';
 import { Context } from '../graphqlContext';
 
@@ -51,24 +50,23 @@ class GroupInfo extends Group {
 export class GroupResolver {
 
   @Query(() => [OwnGroupsResult])
-  async ownGroups(@Ctx() { user }: Context): Promise<OwnGroupsResult[]> {
+  async ownGroups(@Ctx() { user, db }: Context): Promise<OwnGroupsResult[]> {
     if (!user) {
       throw new Error('Method only available with a user');
     }
 
-    const ownGroups = await user.joinedGroups;
+    const ownGroupsRelationship = await db.userGroupRepository.find({ userId: user.id });
+    const ownGroupsIds = ownGroupsRelationship.map(group => group.groupId)
+    const ownGroups = await db.groupRepository.find({ id: In(ownGroupsIds) });
+    const ownGroupsById = new Map(ownGroups.map(group => [group.id, group]));
 
-    const ownGroupsById = new Map(_.map(ownGroups, (group) => [group.id, group]));
-
-    return Bluebird.map(ownGroups, async (userGroup) => {
-      const groupRelationship = ownGroupsById.get(userGroup.id)!;
-      const group = await userGroup.group;
+    return _.map(ownGroupsRelationship, (userGroup) => {
+      const group = ownGroupsById.get(userGroup.groupId)!;
       return {
-        ...userGroup,
         name: group.name,
-        id: userGroup.id,
-        unread: isBefore(groupRelationship.latestRead, userGroup.updatedAt),
-        pinned: groupRelationship.pinned,
+        id: group.id,
+        unread: isBefore(userGroup.latestRead, userGroup.updatedAt),
+        pinned: userGroup.pinned,
       };
     });
   }

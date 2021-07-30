@@ -24,7 +24,7 @@ export class UserGroup {
   @Column({ nullable: false })
   groupId: string;
 
-  @Column(() => Boolean)
+  @Column()
   pinned: boolean;
 
   @Column({ type: 'timestamp' })
