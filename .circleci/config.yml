@@ -16,7 +16,6 @@ jobs:
           command: |
             cd server/src/mobile
             ./create_links.sh
-            yarn
 
       - run:
           name: Installing client packages
