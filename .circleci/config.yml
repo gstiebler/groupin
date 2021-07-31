@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Create mobile link
           command: |
-            cd mobile
+            cd server/src/mobile
             ./create_links.sh
             yarn
 
