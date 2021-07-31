@@ -1,0 +1,14 @@
+yarn run v1.21.1
+warning ../../package.json: No license field
+$ jest
+FAIL src/tests/specs/login.spec.ts
+  ● Test suite failed to run
+
+    Your test suite must contain at least one test.
+
+      at onResult (../../node_modules/@jest/core/build/TestScheduler.js:175:18)
+      at ../../node_modules/@jest/core/build/TestScheduler.js:304:17
+      at ../../node_modules/emittery/index.js:260:13
+          at Array.map (<anonymous>)
+      at Emittery.Typed.emit (../../node_modules/emittery/index.js:258:23)
+

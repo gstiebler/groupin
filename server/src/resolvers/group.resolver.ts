@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import { In, Like } from 'typeorm';
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { ILike, In } from 'typeorm';
 import { Group } from '../db/entity/Group.entity';
 import { Context } from '../graphqlContext';
 
@@ -101,7 +101,7 @@ export class GroupResolver {
     const groups = await db.groupRepository
       .find({
         where: {
-          name: Like(`%${trimmedSearchText}%`),
+          name: ILike(`%${trimmedSearchText}%`),
           visibility: 'PUBLIC'
         },
         take: boundedLimit,
