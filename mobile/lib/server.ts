@@ -154,13 +154,13 @@ export async function findGroups(params: { searchText: string, limit: number, sk
   return res.findGroups;
 }
 
-export async function getTopicsOfGroup(groupId: string, limit: number, startingId: string) {
+export async function getTopicsOfGroup(groupId: string, limit: number, skip: number) {
   const query = `
-    query TopicsOfGroup($groupId: String!, $limit: Float!, $startingId: String!) {
+    query TopicsOfGroup($groupId: String!, $limit: Float!, $skip: Float!) {
       topicsOfGroup (
         groupId: $groupId,
         limit: $limit,
-        startingId: $startingId
+        skip: $skip
       ) {
         id,
         name,
@@ -170,7 +170,7 @@ export async function getTopicsOfGroup(groupId: string, limit: number, startingI
       }
     }
   `;
-  const res = await graphql.sendQuery(query, { groupId, limit, startingId });
+  const res = await graphql.sendQuery(query, { groupId, limit, skip });
   return res.topicsOfGroup;
 }
 

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import { Topic } from "../db/entity/Topic.entity";
 import pushService from '../lib/pushService';
 import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
@@ -10,17 +10,25 @@ import { In } from 'typeorm';
 
 const oldDate = new Date('2015-01-01');
 
+@ObjectType()
+class TopicOfGroupResult extends Topic {
+  @Field()
+  unread: boolean;
+
+  @Field()
+  pinned: boolean;
+}
 
 @Resolver(() => Topic)
 export class TopicResolver {
 
-  @Query(() => [Topic])
+  @Query(() => [TopicOfGroupResult])
   async topicsOfGroup(
     @Arg('groupId') groupId: string,
     @Arg('limit') limit: number,
     @Arg('skip') skip: number,
     @Ctx() { user, db }: Context
-  ): Promise<Topic[]> {
+  ): Promise<TopicOfGroupResult[]> {
     await db.userGroupRepository.findOneOrFail({ userId: user!.id, groupId });
     // TODO: use an alternative to skip
     const topics = await db.topicRepository.find({

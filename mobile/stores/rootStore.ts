@@ -48,12 +48,12 @@ export class RootStore {
   }
   
   async getTopicsOfGroup(groupId: string): Promise<void> {
-    this.topics = await server.getTopicsOfGroup(groupId, NUM_ITEMS_PER_FETCH, '');
+    this.topics = await server.getTopicsOfGroup(groupId, NUM_ITEMS_PER_FETCH, 0);
   }
   
   async getTopicsOfCurrentGroup(): Promise<void> {
     if (!this.currentlyViewedGroupId) { return }
-    this.topics = await server.getTopicsOfGroup(this.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH, '');
+    this.topics = await server.getTopicsOfGroup(this.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH, 0);
   }
   
   async onOlderMessagesRequested(topicId: string): Promise<void> {
