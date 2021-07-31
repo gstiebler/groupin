@@ -135,14 +135,14 @@ export async function getOwnGroups(): Promise<Group[]> {
   return res.ownGroups;
 }
 
-export async function findGroups(params: { searchText: string, limit: number, startingId: string }) {
-  const { searchText, limit, startingId } = params;
+export async function findGroups(params: { searchText: string, limit: number, skip: number }) {
+  const { searchText, limit, skip } = params;
   const query = `
-    query FindGroups($searchText: String!, $limit: Float!, $startingId: String!) {
+    query FindGroups($searchText: String!, $limit: Float!, $skip: Float!) {
       findGroups(
         searchText: $searchText,
         limit: $limit,
-        startingId: $startingId
+        skip: $skip
       ) {
         id,
         name,
@@ -150,7 +150,7 @@ export async function findGroups(params: { searchText: string, limit: number, st
       }
     }
   `;
-  const res = await graphql.sendQuery(query, { searchText, limit, startingId });
+  const res = await graphql.sendQuery(query, { searchText, limit, skip });
   return res.findGroups;
 }
 

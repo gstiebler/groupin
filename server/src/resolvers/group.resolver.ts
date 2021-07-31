@@ -30,16 +30,6 @@ class OwnGroupsResult {
   imgUrl?: string;
 }
 
-@InputType()
-class FindGroupsInput {
-  @Field()
-  searchText: string;
-  
-
-  @Field()
-  limit: number;
-}
-
 @ObjectType()
 class GroupInfo extends Group {
   @Field()
@@ -62,7 +52,6 @@ export class GroupResolver {
 
     return _.map(ownGroupsRelationship, (userGroup) => {
       const group = ownGroupsById.get(userGroup.groupId)!;
-      console.log(userGroup.latestRead, group.updatedAt);
       return {
         name: group.name,
         id: group.id,
@@ -94,7 +83,9 @@ export class GroupResolver {
 
   @Query(() => [Group])
   async findGroups(
-    @Arg('findGroupsInput') { searchText, limit }: FindGroupsInput,
+    @Arg('searchText') searchText: string,
+    @Arg('limit') limit: number,
+    @Arg('skip') skip: number,
     @Ctx() { user, db }: Context
   ): Promise<Group[]> {
     if (!user) {
@@ -113,7 +104,8 @@ export class GroupResolver {
           name: Like(`%${trimmedSearchText}%`),
           visibility: 'PUBLIC'
         },
-        take: boundedLimit
+        take: boundedLimit,
+        skip
       });
     return groups;
   }

@@ -9,7 +9,7 @@ export class GroupSearchStore {
     const findGroups = () => server.findGroups({ 
       searchText, 
       limit: 20, 
-      startingId: '',
+      skip: 0,
     });
     this.groups = _.isEmpty(searchText) ? [] : await findGroups();
   }
