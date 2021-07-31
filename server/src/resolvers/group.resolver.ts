@@ -62,10 +62,12 @@ export class GroupResolver {
 
     return _.map(ownGroupsRelationship, (userGroup) => {
       const group = ownGroupsById.get(userGroup.groupId)!;
+      console.log(userGroup.latestRead, group.updatedAt);
       return {
         name: group.name,
         id: group.id,
-        unread: isBefore(userGroup.latestRead, userGroup.updatedAt),
+        imgUrl: group.imgUrl,
+        unread: isBefore(userGroup.latestRead, group.updatedAt),
         pinned: userGroup.pinned,
       };
     });
