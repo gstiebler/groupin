@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:14:17:3
+      - image: circleci/node:14:17:4
     environment:
       NODE_ENV: test
     steps:
@@ -10,6 +10,13 @@ jobs:
 
       - restore_cache:
           key: npm-dependencies
+
+      - run:
+          name: Create mobile link
+          command: |
+            cd mobile
+            ./create_links.sh
+            yarn
 
       - run:
           name: Installing client packages
