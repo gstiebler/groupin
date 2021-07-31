@@ -8,6 +8,8 @@ import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
 import { RootStore } from './rootStore';
 import { IStorage } from '../types/Storage.types';
 
+type SubscribeFunction = (formattedTopicId: string) => void;
+
 export class TopicStore {
   topicTitle: string;
   topicId: string;
@@ -24,7 +26,7 @@ export class TopicStore {
     topicId: string,
     topicName: string,
     storage: IStorage,
-    subscribeFn: (formattedTopicId: string) => void
+    subscribeFn: SubscribeFunction
   }) {
     const { topicId, topicName, storage, subscribeFn } = params;
     this.topicTitle = topicName;
@@ -60,7 +62,7 @@ export class TopicStore {
   
   async onTopicClosed(params: {
     topicId: string,
-    unsubscribeFn: (formattedTopicId: string) => void
+    unsubscribeFn: SubscribeFunction
   }) {
     const { topicId, unsubscribeFn } = params;
     this.rootActions.currentlyViewedTopicId = undefined;

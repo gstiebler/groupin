@@ -21,6 +21,7 @@
   ],
   "rules": {
     "@typescript-eslint/no-require-imports": 2,
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-unused-vars": 1
   }
 }
