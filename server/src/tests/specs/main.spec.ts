@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { setup, setCurrentUser, connnectionContextPromise } from '../setup';
+import { setCurrentUser, connnectionContextPromise } from '../setup';
 import pushService from '../../lib/pushService';
 import userFixtures from '../fixtures/userFixtures';
 import groupFixtures from '../fixtures/groupFixtures';
@@ -51,7 +51,6 @@ describe('main', () => {
   let db: ConnCtx;
 
   beforeAll(async () => {
-    await setup();
     db = await connnectionContextPromise;
   });
 

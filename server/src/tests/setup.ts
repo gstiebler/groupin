@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 export const connnectionContextPromise = createConnectionContext();
 
-export async function setup() {
+async function setup() {
   const connectionContext = await connnectionContextPromise;
 
   const server = new ApolloServer({
