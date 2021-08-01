@@ -53,3 +53,8 @@ export async function setup() {
 beforeAll(async () => {
   await setup();
 });
+
+afterAll(async () => {
+  const connectionContext = await connnectionContextPromise;
+  await connectionContext.connection.close();
+});
