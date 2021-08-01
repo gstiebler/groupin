@@ -48,6 +48,12 @@ jobs:
             cd server
             yarn run compile
             yarn run lint
+                        
+      - run:
+          name: Tests
+          command: |
+            cd server
+            yarn test
 
       - store_artifacts:
           path: server/log
