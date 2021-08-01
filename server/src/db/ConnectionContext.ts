@@ -37,5 +37,6 @@ export async function createConnectionContext() {
     return contextFromConnection(connection);
   } catch (error) {
     logger.error(`Error connecting to ${process.env.DB_HOST}: ${error}`);
+    throw new Error(error);
   }
 }
