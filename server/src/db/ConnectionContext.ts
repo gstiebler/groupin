@@ -35,7 +35,7 @@ export async function createConnectionContext() {
     const connection = await createConnection(mergedTypeormConfig);
     logger.info(`Connection completed to ${process.env.DB_HOST}`);
     return contextFromConnection(connection);
-  } catch {
-    logger.error(`Error connecting to ${process.env.DB_HOST}`);
+  } catch (error) {
+    logger.error(`Error connecting to ${process.env.DB_HOST}: ${error}`);
   }
 }
