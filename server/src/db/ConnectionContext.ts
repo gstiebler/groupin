@@ -7,6 +7,7 @@ import { TopicLatestRead } from './entity/TopicLatestRead.entity';
 import { PinnedTopic } from './entity/PinnedTopic.entity';
 import { User } from './entity/User.entity';
 import { Connection, ConnectionOptions, createConnection } from 'typeorm';
+import logger from '../config/winston';
 
 const contextFromConnection = (connection: Connection) => ({
   connection,
@@ -30,6 +31,11 @@ export async function createConnectionContext() {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
   };
-  const connection = await createConnection(mergedTypeormConfig);
-  return contextFromConnection(connection);
+  try {
+    const connection = await createConnection(mergedTypeormConfig);
+    logger.info(`Connection completed to ${process.env.DB_HOST}`);
+    return contextFromConnection(connection);
+  } catch {
+    logger.error(`Error connecting to ${process.env.DB_HOST}`);
+  }
 }
