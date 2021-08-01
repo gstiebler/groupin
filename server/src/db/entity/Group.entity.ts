@@ -62,11 +62,11 @@ export class Group {
   )
   users: Promise<UserGroup[]>;
 
-  @CreateDateColumn({ type: 'timestamp without time zone' })
+  @CreateDateColumn()
   @Field()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp without time zone' })
+  @UpdateDateColumn()
   @Field()
   updatedAt: Date;
 }

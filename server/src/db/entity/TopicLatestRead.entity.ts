@@ -24,6 +24,6 @@ export class TopicLatestRead {
   @Column({ nullable: false })
   topicId: string;
 
-  @Column({ type: 'timestamp' })
+  @Column()
   latestMoment: Date;
 }

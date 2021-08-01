@@ -27,12 +27,12 @@ export class UserGroup {
   @Column()
   pinned: boolean;
 
-  @Column({ type: 'timestamp' })
+  @Column()
   latestRead: Date;
 
-  @CreateDateColumn({ type: 'timestamp without time zone' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp without time zone' })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

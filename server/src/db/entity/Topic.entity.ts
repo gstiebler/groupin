@@ -58,9 +58,9 @@ export class Topic {
   )
   usersLatestRead: Promise<TopicLatestRead[]>;
 
-  @CreateDateColumn({ type: 'timestamp without time zone' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp without time zone' })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

@@ -31,6 +31,6 @@ export class Message {
   @Column({ nullable: false })
   topicId: string;
 
-  @CreateDateColumn({ type: 'timestamp without time zone' })
+  @CreateDateColumn()
   createdAt: Date;
 }

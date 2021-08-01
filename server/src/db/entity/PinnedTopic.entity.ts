@@ -23,9 +23,9 @@ export class PinnedTopic {
   @Column({ nullable: false })
   topicId: string;
 
-  @CreateDateColumn({ type: 'timestamp without time zone' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp without time zone' })
+  @UpdateDateColumn()
   updatedAt: Date;
 }
