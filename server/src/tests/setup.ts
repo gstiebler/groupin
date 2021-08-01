@@ -22,10 +22,7 @@ if (process.env.NODE_ENV !== 'test') {
       Current environment: ${process.env.NODE_ENV}`);
 }
 
-export const connnectionContextPromise = createConnectionContext({
-  host: 'localhost',
-  database: 'groupin_test',
-});
+export const connnectionContextPromise = createConnectionContext();
 
 export async function setup() {
   const connectionContext = await connnectionContextPromise;

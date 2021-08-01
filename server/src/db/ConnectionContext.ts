@@ -6,8 +6,7 @@ import { Message } from './entity/Message.entity';
 import { TopicLatestRead } from './entity/TopicLatestRead.entity';
 import { PinnedTopic } from './entity/PinnedTopic.entity';
 import { User } from './entity/User.entity';
-import { Connection, createConnection } from 'typeorm';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
 const contextFromConnection = (connection: Connection) => ({
   connection,
@@ -23,10 +22,13 @@ const contextFromConnection = (connection: Connection) => ({
 export type ConnCtx = ReturnType<typeof contextFromConnection>;
 
 // TODO: generic DB here
-export async function createConnectionContext(typeormConfig: Partial<PostgresConnectionOptions>) {
-  const mergedTypeormConfig: PostgresConnectionOptions = {
+export async function createConnectionContext() {
+  const mergedTypeormConfig: ConnectionOptions = {
     ...defaultTypeOrmConfig,
-    ...typeormConfig,
+    host: process.env.DB_HOST,
+    database: process.env.DATABASE,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
   };
   const connection = await createConnection(mergedTypeormConfig);
   return contextFromConnection(connection);

@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import * as admin from 'firebase-admin';
 import logger from './config/winston';
 import { ConnCtx, createConnectionContext } from './db/ConnectionContext';
@@ -9,10 +11,7 @@ export type Context = {
   db: ConnCtx;
 };
 
-const connectionContextPromise = createConnectionContext({
-  host: 'localhost',
-  database: 'groupin_dev',
-});
+const connectionContextPromise = createConnectionContext();
 
 export async function getContext(
   authFbToken: string
