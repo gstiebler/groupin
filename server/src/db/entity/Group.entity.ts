@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Field, ObjectType, registerEnumType } from "type-graphql";
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToOne, OneToMany } from "typeorm";
-import { Topic } from "./Topic.entity";
-import { User } from "./User.entity";
-import { UserGroup } from "./UserGroup.entity";
+import { Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToOne, OneToMany, ObjectIdColumn, ObjectID } from "typeorm";
 
 enum Visibility {
   SECRET = 'SECRET',
@@ -18,9 +15,9 @@ registerEnumType(Visibility, {
 @ObjectType()
 export class Group {
 
-  @PrimaryGeneratedColumn('uuid')
+  @ObjectIdColumn()
   @Field()
-  id: string;
+  id: ObjectID;
 
   @Column()
   @Field()
@@ -42,25 +39,8 @@ export class Group {
   @Field(() => Visibility)
   visibility: string;
 
-  @ManyToOne(
-    () => User,
-    user => user.joinedGroups
-  )
-  createdBy: Promise<User>;
   @Column({ nullable: false })
-  createdById: string;
-
-  @OneToMany(
-    () => Topic,
-    topic => topic.group
-  )
-  topics: Promise<Topic[]>;
-
-  @OneToMany(
-    () => UserGroup,
-    user => user.group
-  )
-  users: Promise<UserGroup[]>;
+  createdById: ObjectID;
 
   @CreateDateColumn()
   @Field()

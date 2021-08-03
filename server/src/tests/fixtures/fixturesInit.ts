@@ -6,21 +6,26 @@ import messageFixtures from './messageFixtures';
 import userGroupFixtures from './userGroup.fixtures';
 import pinnedTopicFixtures from './pinnedTopic.fixtures';
 import { ConnCtx } from '../../db/ConnectionContext';
+import logger from '../../config/winston';
 
 export async function initFixtures(db: ConnCtx) {
-  await db.pinnedTopicRepository.delete({});
-  await db.userGroupRepository.delete({});
-  await db.topicLatestReadRepository.delete({});
-  await db.messageRepository.delete({});
-  await db.topicRepository.delete({});
-  await db.groupRepository.delete({});
-  await db.userRepository.delete({});
+  try {
+    await db.pinnedTopicRepository.deleteMany({});
+    await db.userGroupRepository.deleteMany({});
+    await db.topicLatestReadRepository.deleteMany({});
+    await db.messageRepository.deleteMany({});
+    await db.topicRepository.deleteMany({});
+    await db.groupRepository.deleteMany({});
+    await db.userRepository.deleteMany({});
 
-  await db.userRepository.insert(_.values(userFixtures));
-  await db.groupRepository.insert(_.values(groupFixtures));
-  await db.topicRepository.insert(_.values(topicFixtures));
-  await db.messageRepository.insert(_.values(messageFixtures));
-  // await db.topicLatestReadRepository.insert(_.values(topiLatestReadFixtures));
-  await db.userGroupRepository.insert(_.values(userGroupFixtures));
-  await db.pinnedTopicRepository.insert(_.values(pinnedTopicFixtures));
+    await db.userRepository.insertMany(_.values(userFixtures));
+    await db.groupRepository.insertMany(_.values(groupFixtures));
+    await db.topicRepository.insertMany(_.values(topicFixtures));
+    await db.messageRepository.insertMany(_.values(messageFixtures));
+    // await db.topicLatestReadRepository.insert(_.values(topiLatestReadFixtures));
+    await db.userGroupRepository.insertMany(_.values(userGroupFixtures));
+    await db.pinnedTopicRepository.insertMany(_.values(pinnedTopicFixtures));
+  } catch (error) {
+    logger.error(`Error loading fixtures: ${error}`);
+  }
 }

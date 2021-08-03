@@ -3,12 +3,12 @@ import { userIds } from './preIds';
 
 const users: { [user: string]: Partial<User> } = {
   alice: {
-    id: userIds.alice,
+    id: userIds.alice.toHexString(),
     name: 'Alice',
     externalId: 'aliceExt',
   },
   robert: {
-    id: userIds.robert,
+    id: userIds.robert.toHexString(),
     name: 'Robert',
     imgUrl: 'robert_url',
     externalId: 'robertExt',

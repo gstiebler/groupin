@@ -1,28 +1,16 @@
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, Entity, ManyToOne, UpdateDateColumn } from "typeorm";
-import { Group } from "./Group.entity";
-import { User } from "./User.entity";
+import { Column, CreateDateColumn, Entity, UpdateDateColumn, ObjectIdColumn, ObjectID } from "typeorm";
 
 @Entity()
 export class UserGroup {
 
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @ObjectIdColumn()
+  id: ObjectID;
 
-  @ManyToOne(
-    () => User,
-    user => user.joinedGroups
-  )
-  user: Promise<User>;
   @Column({ nullable: false })
-  userId: string;
+  userId: ObjectID;
 
-  @ManyToOne(
-    () => Group,
-    group => group.users
-  )
-  group: Promise<Group>;
   @Column({ nullable: false })
-  groupId: string;
+  groupId: ObjectID;
 
   @Column()
   pinned: boolean;

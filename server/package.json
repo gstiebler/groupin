@@ -52,14 +52,12 @@
     "lodash": "^4.17.20",
     "md5": "^2.2.1",
     "mobx": "^6.0.4",
-    "mssql": "^7.2.0",
-    "pg": "^8.6.0",
+    "mongodb": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "shortid": "^2.2.15",
     "ts-jest": "^26.4.4",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.2.34",
-    "uuid": "^8.3.2",
     "winston": "^3.1.0"
   },
   "devDependencies": {

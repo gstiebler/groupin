@@ -1,28 +1,13 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from "typeorm";
-import { Topic } from "./Topic.entity";
-import { User } from "./User.entity";
+import { Column, Entity, ObjectID } from "typeorm";
 
 @Entity()
 export class TopicLatestRead {
 
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @ManyToOne(
-    () => User,
-    user => user.topicsLatestRead
-  )
-  user: Promise<User>;
   @Column({ nullable: false })
-  userId: string;
+  userId: ObjectID;
 
-  @ManyToOne(
-    () => Topic,
-    topic => topic.usersLatestRead
-  )
-  topic: Promise<Topic>;
   @Column({ nullable: false })
-  topicId: string;
+  topicId: ObjectID;
 
   @Column()
   latestMoment: Date;

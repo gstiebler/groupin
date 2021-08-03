@@ -1,35 +1,23 @@
 import { Field, ObjectType } from "type-graphql";
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, Entity, ManyToOne } from "typeorm";
-import { Topic } from "./Topic.entity";
-import { User } from "./User.entity";
+import { Column, CreateDateColumn, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 
 @Entity()
 @ObjectType()
 export class Message {
 
-  @PrimaryGeneratedColumn('uuid')
+  @ObjectIdColumn()
   @Field()
-  id: string;
+  id: ObjectID;
 
   @Column()
   @Field()
   text: string;
 
-  @ManyToOne(
-    () => User,
-    user => user.messages
-  )
-  user: Promise<User>;
   @Column({ nullable: false })
-  userId: string;
+  userId: ObjectID;
 
-  @ManyToOne(
-    () => Topic,
-    topic => topic.messages
-  )
-  topic: Promise<Topic>;
   @Column({ nullable: false })
-  topicId: string;
+  topicId: ObjectID;
 
   @CreateDateColumn()
   createdAt: Date;

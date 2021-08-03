@@ -11,13 +11,13 @@ import logger from '../config/winston';
 
 const contextFromConnection = (connection: Connection) => ({
   connection,
-  userRepository: connection.getRepository(User),
-  groupRepository: connection.getRepository(Group),
-  topicRepository: connection.getRepository(Topic),
-  messageRepository: connection.getRepository(Message),
-  userGroupRepository: connection.getRepository(UserGroup),
-  topicLatestReadRepository: connection.getRepository(TopicLatestRead),
-  pinnedTopicRepository: connection.getRepository(PinnedTopic),
+  userRepository: connection.getMongoRepository(User),
+  groupRepository: connection.getMongoRepository(Group),
+  topicRepository: connection.getMongoRepository(Topic),
+  messageRepository: connection.getMongoRepository(Message),
+  userGroupRepository: connection.getMongoRepository(UserGroup),
+  topicLatestReadRepository: connection.getMongoRepository(TopicLatestRead),
+  pinnedTopicRepository: connection.getMongoRepository(PinnedTopic),
 });
 
 export type ConnCtx = ReturnType<typeof contextFromConnection>;

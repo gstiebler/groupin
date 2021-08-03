@@ -75,7 +75,7 @@ describe('main', () => {
 
     it('getUserId', async () => {
       setCurrentUser(userFixtures.robert);
-      const userId= await server.getUserId();
+      const userId = await server.getUserId();
       expect(userId).toEqual(userFixtures.robert.id);
     });
 

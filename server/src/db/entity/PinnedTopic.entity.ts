@@ -1,27 +1,15 @@
-import { PrimaryGeneratedColumn, CreateDateColumn, Entity, ManyToOne, UpdateDateColumn, Column } from "typeorm";
-import { Topic } from "./Topic.entity";
-import { User } from "./User.entity";
+import { CreateDateColumn, Entity, UpdateDateColumn, Column, ObjectIdColumn, ObjectID } from "typeorm";
 
 @Entity()
 export class PinnedTopic {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @ObjectIdColumn()
+  id: ObjectID;
 
-  @ManyToOne(
-    () => User,
-    user => user.pinnedTopics
-  )
-  user: Promise<User>;
   @Column({ nullable: false })
-  userId: string;
+  userId: ObjectID;
 
-  @ManyToOne(
-    () => Topic,
-    topic => topic.usersPinned
-  )
-  topic: Promise<Topic>;
   @Column({ nullable: false })
-  topicId: string;
+  topicId: ObjectID;
 
   @CreateDateColumn()
   createdAt: Date;
