@@ -15,7 +15,6 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "copy": "cp .env .build",
     "link": "cd ./src/mobile/ && ./create_links.sh",
     "start:local": "node --inspect ./.build/localServer.js"
@@ -38,7 +37,6 @@
     "@types/express-serve-static-core": "^4.17.24",
     "@types/lodash": "^4.14.165",
     "@types/node": "^16.3.1",
-    "@types/uuid": "^8.3.1",
     "apollo-server": "2",
     "apollo-server-azure-functions": "^2.25.2",
     "apollo-server-core": "1.3.6",
@@ -53,11 +51,11 @@
     "md5": "^2.2.1",
     "mobx": "^6.0.4",
     "mongodb": "^4.0.1",
+    "mongoose": "^5.13.5",
     "reflect-metadata": "^0.1.13",
     "shortid": "^2.2.15",
     "ts-jest": "^26.4.4",
     "type-graphql": "^1.1.1",
-    "typeorm": "^0.2.34",
     "winston": "^3.1.0"
   },
   "devDependencies": {
