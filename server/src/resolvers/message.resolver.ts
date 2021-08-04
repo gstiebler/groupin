@@ -3,45 +3,72 @@ import { messageTypes } from '../lib/constants';
 import pushService from '../lib/pushService';
 import logger from '../config/winston';
 import { Context } from '../graphqlContext';
-import { Message } from '../db/entity/Message.entity';
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { LessThan, MoreThan } from 'typeorm';
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { UserGroup } from '../db/schema/UserGroup'; 
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
 
-@Resolver(() => Message)
+@ObjectType()
+class UserResult {
+  @Field()
+  id: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  avatar: string;
+}
+
+@ObjectType()
+class MessageResult {
+  @Field()
+  id: string;
+
+  @Field()
+  text: string;
+
+  @Field()
+  createdAt: Date;
+
+  @Field()
+  name: UserResult;
+}
+
+@Resolver(() => MessageResult)
 export class MessageResolver {
   
-  @Query(() => [Message])
+  @Query(() => [MessageResult])
   async messagesOfTopic(
     @Arg('topicId') topicId: string,
     @Arg('limit') limit: number,
-    @Arg('afterMoment') afterMoment: Date,
-    @Arg('beforeMoment') beforeMoment: Date,
+    @Arg('beforeId') beforeId: string,
+    @Arg('afterId') afterId: string,
     @Ctx() { user, db }: Context
-  ): Promise<Message[]> {
-    const topic = await db.topicRepository.findOne(topicId);
-    await db.userGroupRepository.findOneOrFail({
-      userId: user?.id,
-      group: topic?.group
-    });
-    const beforeMomentMessages = !_.isEmpty(afterMoment);
-    const afterMomentMessages = !_.isEmpty(beforeMoment);
-    const newestMessages = !beforeMomentMessages && !afterMomentMessages;
-    if (beforeMomentMessages && afterMomentMessages) {
+  ): Promise<MessageResult[]> {
+    const topic = await db.Topic.findById(topicId)
+      .orFail(() => Error('Topic expected'));
+
+    if (await db.UserGroup.findOne({ userId: user.id, topicId } as Partial<UserGroup>)) {
+      throw new Error('User does not participate in the group');
+    }
+    const beforeIdMessages = !_.isEmpty(beforeId);
+    const afterIdMessages = !_.isEmpty(afterId);
+    const newestMessages = !beforeIdMessages && !afterIdMessages;
+    if (beforeIdMessages && afterIdMessages) {
       throw new Error('Only one start of end filter is allowed');
     }
-    const idComparisonOperator = newestMessages ? {} :
-      beforeMomentMessages ? { createdAt: LessThan(beforeMoment) } : { createdAt: MoreThan(afterMoment) };
-    const messages = await db.messageRepository.find({
-      where: {
-        topicId,
-        ...idComparisonOperator,
-      },
-      order: {
-        createdAt: 'DESC'
-      },
-      take: limit,
-    });
-
+    // eslint-disable-next-line no-nested-ternary
+    const idMatch = newestMessages ? {}
+      : afterIdMessages ? { _id: { $gte: ObjectId(afterId) } }
+        : { _id: { $lt: ObjectId(beforeId) } };
+    const messages = await db.Message
+      .find({
+        topic: topic._id,
+        ...idMatch,
+      })
+      .sort({ _id: -1 }) // TODO: sort depending on before/after
+      .limit(limit);
     // TODO: join users
     return messages;
   }
@@ -54,32 +81,29 @@ export class MessageResolver {
   ): Promise<string> {
     // TODO: make calls to DB in parallel when possible
 
-    const topic = await db.topicRepository.findOneOrFail(topicId);
-    try {
-      await db.userGroupRepository.findOneOrFail({ userId: user?.id, groupId: topic?.groupId });
-    } catch (err) {
-      throw new Error('User does not participate in the group');
-    }
+    const topic = await db.Topic.findOne(topicId).orFail();
+    await db.UserGroup.findOne({ userId: user?.id, groupId: topic.groupId })
+      .orFail(() => Error('User does not participate in the group'));
 
-    const createdMessage = await db.messageRepository.save({
+    const createdMessage = await db.Message.create({
       text: message,
       userId: user!.id,
       topicId: topic.id,
     });
 
     // update topic updatedAt
-    await db.topicRepository.save({
-      id: topicId,
-      updatedAt: Date.now(),
-    });
+    await db.Topic.updateOne(
+      { id: topicId },
+      { updatedAt: new Date() },
+    );
 
     // update group updatedAt
-    await db.groupRepository.save({
-      id: topic.groupId,
-      updatedAt: Date.now(),
-    });
+    await db.Group.updateOne(
+      { id: topic.groupId },
+      { updatedAt: new Date() }
+    );
 
-    const groupId = topic.groupId;
+    const groupId = topic.groupId.toString();
 
     // send push notification
     const pushPayload = {
