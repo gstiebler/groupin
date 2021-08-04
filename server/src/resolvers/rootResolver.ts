@@ -18,7 +18,12 @@ class RegisterResult {
   id: string;
 }
 
-@Resolver(() => User)
+@ObjectType()
+class UserResult {
+
+}
+
+@Resolver(() => UserResult)
 export class RootResolver {
 
   @Query(() => String)
@@ -43,7 +48,7 @@ export class RootResolver {
     if (user) {
       throw new Error('User is already registered');
     }
-    const newUser = await db.userRepository.save({
+    const newUser = await db.User.create({
       name: name,
       externalId,
     });
@@ -63,7 +68,7 @@ export class RootResolver {
       throw new Error('A user is required to update FCM token');
     }
     user.notificationToken = notificationToken;
-    await db.userRepository.save(user);
+    await user.save();
     await subscribeToAll(db, user, notificationToken);
   }
 }

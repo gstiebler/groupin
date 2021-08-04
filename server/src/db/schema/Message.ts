@@ -11,9 +11,9 @@ interface IMessage {
   text: string;
   userId: Types.ObjectId;
   topicId: Types.ObjectId;
-  createdAt: Types.ObjectId;
+  createdAt: Date;
 }
-export interface Message extends IMessage, Document {}
+export interface Message extends IMessage, Document<Types.ObjectId> {}
 
 type MessageDef = {
   [key in keyof IMessage]: any;

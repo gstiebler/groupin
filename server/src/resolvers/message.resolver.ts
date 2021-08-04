@@ -6,6 +6,8 @@ import { Context } from '../graphqlContext';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { UserGroup } from '../db/schema/UserGroup'; 
 import { Types } from 'mongoose';
+import { User } from '../db/schema/User';
+import { Message } from '../db/schema/Message';
 const { ObjectId } = Types;
 
 @ObjectType()
@@ -16,8 +18,8 @@ class UserResult {
   @Field()
   name: string;
 
-  @Field()
-  avatar: string;
+  @Field({ nullable: true })
+  avatar?: string;
 }
 
 @ObjectType()
@@ -31,8 +33,8 @@ class MessageResult {
   @Field()
   createdAt: Date;
 
-  @Field()
-  name: UserResult;
+  @Field(() => UserResult)
+  user: UserResult;
 }
 
 @Resolver(() => MessageResult)
@@ -49,7 +51,7 @@ export class MessageResolver {
     const topic = await db.Topic.findById(topicId)
       .orFail(() => Error('Topic expected'));
 
-    if (await db.UserGroup.findOne({ userId: user.id, topicId } as Partial<UserGroup>)) {
+    if (await db.UserGroup.findOne({ userId: user?.id, topicId } as Partial<UserGroup>)) {
       throw new Error('User does not participate in the group');
     }
     const beforeIdMessages = !_.isEmpty(beforeId);
@@ -62,15 +64,26 @@ export class MessageResolver {
     const idMatch = newestMessages ? {}
       : afterIdMessages ? { _id: { $gte: ObjectId(afterId) } }
         : { _id: { $lt: ObjectId(beforeId) } };
-    const messages = await db.Message
+    const messages: Message[] = await db.Message
       .find({
         topic: topic._id,
         ...idMatch,
       })
       .sort({ _id: -1 }) // TODO: sort depending on before/after
       .limit(limit);
-    // TODO: join users
-    return messages;
+    const userIds = messages.map(message => message.userId);
+    const users: User[] = await db.User.find({ userId: { $in: userIds } });
+    const messageUser = users.map(user => ({
+      id: user._id!.toHexString(),
+      name: user.name,
+      avatar: user.imgUrl,
+    }));
+    const userById = _.keyBy(messageUser, user => user.id);
+    return messages.map(message => ({
+      ...message,
+      id: message._id!.toHexString(),
+      user: userById[message.userId.toHexString()],
+    }));
   }
 
   @Mutation(() => String)
@@ -81,7 +94,7 @@ export class MessageResolver {
   ): Promise<string> {
     // TODO: make calls to DB in parallel when possible
 
-    const topic = await db.Topic.findOne(topicId).orFail();
+    const topic = await db.Topic.findById(topicId).orFail();
     await db.UserGroup.findOne({ userId: user?.id, groupId: topic.groupId })
       .orFail(() => Error('User does not participate in the group'));
 
@@ -103,7 +116,7 @@ export class MessageResolver {
       { updatedAt: new Date() }
     );
 
-    const groupId = topic.groupId.toString();
+    const groupId = topic.groupId.toHexString();
 
     // send push notification
     const pushPayload = {

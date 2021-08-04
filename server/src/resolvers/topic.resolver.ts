@@ -5,6 +5,7 @@ import pushService from '../lib/pushService';
 import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
+import { TopicLatestRead } from '../db/schema/TopicLatestRead';
 
 const oldDate = new Date('2015-01-01');
 
@@ -44,7 +45,7 @@ export class TopicResolver {
       order: { updatedAt: 'DESC' }
     });
     const topicIds = _.map(topics, topic => topic.id);
-    const latestTopicRead = await db.TopicLatestRead.findOne({
+    const latestTopicRead: TopicLatestRead[] = await db.TopicLatestRead.find({
       topicId: { $in: topicIds },
       userId: user!.id,
     }).orFail();
@@ -54,7 +55,7 @@ export class TopicResolver {
     });
     const pinnedTopicsIds = pinnedTopics.map(pinnedTopic => pinnedTopic.topicId);
     const pinnedTopicsSet = new Set(pinnedTopicsIds);
-    const latestReadByTopicId = _.keyBy(latestTopicRead, l => l.topicId.toString());
+    const latestReadByTopicId = _.keyBy(latestTopicRead, l => l.topicId.toHexString());
     return topics.map((topic) => {
       const latestReadObj = latestReadByTopicId[topic.id];
       const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
@@ -121,7 +122,7 @@ export class TopicResolver {
       latestMoment: new Date(),
     });
 
-    const topic = await db.Topic.findOne(topicId).orFail();
+    const topic = await db.Topic.findById(topicId).orFail();
     const userGroup = await db.UserGroup.findOne({
       userId: user!.id,
       groupId: topic.groupId,

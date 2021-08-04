@@ -2,6 +2,7 @@ import {
   Document,
   model,
   Schema,
+  Types,
 } from 'mongoose';
 
 export interface IUser {
@@ -12,7 +13,7 @@ export interface IUser {
   createdAt: number;
   updatedAt: number;
 }
-export interface User extends IUser, Document { }
+export interface User extends IUser, Document<Types.ObjectId> { }
 
 type UserSchemaDef = {
   [key in keyof IUser]: any;

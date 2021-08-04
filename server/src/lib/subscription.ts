@@ -19,7 +19,7 @@ export function unsubscribeFromTopic(notificationToken: string, topicId: string)
 }
 
 export async function subscribeToTopic(db: ConnCtx, user: User, notificationToken: string, topicId: string) {
-  const topic = await db.Topic.findOne(topicId).orFail();
+  const topic = await db.Topic.findById(topicId).orFail();
   const userGroup = await db.UserGroup.findOne({
     groupId: topic.groupId,
     userId: user.id
@@ -31,13 +31,13 @@ export async function subscribeToTopic(db: ConnCtx, user: User, notificationToke
 }
 
 export async function subscribeToGroup(db: ConnCtx, user: User, notificationToken: string, groupId: string) {
-  const pinnedTopics = await userPinnedTopics(db, user._id, groupId);
+  const pinnedTopics = await userPinnedTopics(db, user._id!.toHexString(), groupId);
   await Bluebird.map(pinnedTopics, (topic) => pushService.unsubscribe(notificationToken, topic.id));
   await pushService.subscribe(notificationToken, groupId);
 }
 
 export async function unsubscribeFromGroup(db: ConnCtx, user: User, notificationToken: string, groupId: string) {
-  const pinnedTopics = await userPinnedTopics(db, user._id, groupId);
+  const pinnedTopics = await userPinnedTopics(db, user._id!.toHexString(), groupId);
   await Bluebird.map(pinnedTopics, (topic) => pushService.subscribe(notificationToken, topic.id));
   await pushService.unsubscribe(notificationToken, groupId);
 }
@@ -49,6 +49,6 @@ export async function subscribeToAll(db: ConnCtx, user: User, notificationToken:
     pinned: true,
   });
   const pinnedTopics = await db.PinnedTopic.find({ userId: user.id });
-  await Bluebird.map(pinnedGroups, (group) => subscribeToGroup(db, user, notificationToken, group.groupId.toString()));
-  await Bluebird.map(pinnedTopics, (pinnedTopic) => subscribeToTopic(db, user, notificationToken, pinnedTopic.topicId.toString()));
+  await Bluebird.map(pinnedGroups, (group) => subscribeToGroup(db, user, notificationToken, group.groupId.toHexString()));
+  await Bluebird.map(pinnedTopics, (pinnedTopic) => subscribeToTopic(db, user, notificationToken, pinnedTopic.topicId.toHexString()));
 }

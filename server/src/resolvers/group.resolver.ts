@@ -105,7 +105,7 @@ export class GroupResolver {
     return {
       ...group,
       id: group._id,
-      createdBy: group.createdBy.toString(),
+      createdBy: group.createdBy.toHexString(),
       iBelong,
     };
   }
@@ -126,7 +126,7 @@ export class GroupResolver {
       return [{
         ...byFriendlyId,
         id: byFriendlyId._id,
-        createdBy: byFriendlyId.createdBy.toString(),
+        createdBy: byFriendlyId.createdBy.toHexString(),
       }];
     }
 
@@ -138,7 +138,7 @@ export class GroupResolver {
     return groups.map((group) => ({
       ...group,
       id: group._id,
-      createdBy: group.createdBy.toString(),
+      createdBy: group.createdBy.toHexString(),
     }));
   }
 
