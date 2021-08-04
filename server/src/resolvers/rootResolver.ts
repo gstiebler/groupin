@@ -37,7 +37,7 @@ export class RootResolver {
 
   @Query(() => String)
   async getUserId(@Ctx() { user }: Context) {
-    return user ? user.id : 'NO USER';
+    return user ? user._id!.toHexString() : 'NO USER';
   }
 
   @Mutation(() => RegisterResult)

@@ -22,7 +22,7 @@ import { Message } from '../../db/schema/Message';
 const { ObjectId } = Types;
 
 
-function createMessages(numMessages: number, user: Partial<User>, topicId: Types.ObjectId) {
+function createMessages(numMessages: number, user: Partial<User>, topicId: string) {
   const messages: Partial<Message>[] = [];
   const baseMoment = new Date();
   for (let i = 0; i < numMessages; i++) {
@@ -30,7 +30,7 @@ function createMessages(numMessages: number, user: Partial<User>, topicId: Types
       _id: new ObjectId(),
       text: `Message ${i}`,
       userId: user._id,
-      topicId,
+      topicId: new ObjectId(topicId),
       createdAt: addSeconds(baseMoment, 3)
     });
   }
@@ -60,7 +60,7 @@ describe('main', () => {
   })
 
   describe('reading', () => {
-    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id!);
+    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2.id);
     // const localMessages50 = messages50.map((m) => ({ ...m, _id: m.id }));
 
     beforeAll(async () => {
@@ -76,7 +76,7 @@ describe('main', () => {
     it('getUserId', async () => {
       setCurrentUser(userFixtures.robert);
       const userId = await server.getUserId();
-      expect(userId).toEqual(userFixtures.robert.id);
+      expect(userId).toEqual(userFixtures.robert._id?.toHexString());
     });
 
     it('getOwnGroups', async () => {
