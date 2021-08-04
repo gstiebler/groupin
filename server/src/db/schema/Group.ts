@@ -2,21 +2,20 @@ import {
   Document,
   model,
   Schema,
-  Types,
 } from 'mongoose';
-import shortid from 'shortid';
+import * as shortid from 'shortid';
 
 const { ObjectId } = Schema.Types;
 
 export interface IGroup {
-  friendlyId?: string;
+  friendlyId: string;
   name: string;
-  imgUrl: string;
+  imgUrl?: string;
   description?: string;
   visibility: 'SECRET' | 'PUBLIC',
-  createdBy: Types.ObjectId;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdBy: typeof ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 export interface Group extends IGroup, Document { }
 
@@ -25,7 +24,7 @@ type GroupSchemaDef = {
 };
 
 const schemaDef: GroupSchemaDef = {
-  friendlyId: { type: String, default: shortid.generate },
+  friendlyId: { type: String, default: shortid.generate, required: true },
   name: { type: String, required: true },
   imgUrl: { type: String },
   description: { type: String },

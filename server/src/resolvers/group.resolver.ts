@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import { ILike, In } from 'typeorm';
-import { Group } from '../db/entity/Group.entity';
 import { Context } from '../graphqlContext';
 
 import { numMaxReturnedItems } from '../lib/constants';
@@ -31,12 +29,37 @@ class OwnGroupsResult {
 }
 
 @ObjectType()
-class GroupInfo extends Group {
+class GroupResult {
+  @Field()
+  id: string;
+
+  @Field()
+  friendlyId: string;
+
+  @Field()
+  name: string;
+
+  @Field({ nullable: true })
+  imgUrl?: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field()
+  visibility: string;
+
+  @Field()
+  createdBy: string;
+}
+
+
+@ObjectType()
+class GroupInfo extends GroupResult {
   @Field()
   iBelong: boolean;
 }
 
-@Resolver(() => Group)
+@Resolver(() => GroupInfo)
 export class GroupResolver {
 
   @Query(() => [OwnGroupsResult])
@@ -45,9 +68,9 @@ export class GroupResolver {
       throw new Error('Method only available with a user');
     }
 
-    const ownGroupsRelationship = await db.userGroupRepository.find({ userId: user.id });
+    const ownGroupsRelationship = await db.UserGroup.find({ userId: user.id });
     const ownGroupsIds = ownGroupsRelationship.map(group => group.groupId)
-    const ownGroups = await db.groupRepository.find({ id: In(ownGroupsIds) });
+    const ownGroups = await db.Group.find({ id: { $in: ownGroupsIds } });
     const ownGroupsById = new Map(ownGroups.map(group => [group.id, group]));
 
     return _.map(ownGroupsRelationship, (userGroup) => {
@@ -65,49 +88,58 @@ export class GroupResolver {
   @Query(() => GroupInfo)
   async getGroupInfo(
     @Arg('groupId') groupId: string,
-    @Ctx() { user, db }: Context): Promise<GroupInfo> {
+    @Ctx() { user, db }: Context
+  ): Promise<GroupInfo> {
     if (!user) {
       throw new Error('Method only available with a user');
     }
 
-    const group = await db.groupRepository.findOneOrFail(groupId)
-    const iBelong = !!await db.userGroupRepository.findOne({
-      userId: user?.id,
+    const group = await db.Group.findById(groupId);
+    if (!group) {
+      throw new Error(`Group ${groupId} not found`);
+    }
+    const iBelong = !!await db.UserGroup.findOne({
+      userId: user.id,
       groupId
     });
     return {
       ...group,
+      id: group._id,
+      createdBy: group.createdBy.toString(),
       iBelong,
     };
   }
 
-  @Query(() => [Group])
+  @Query(() => [GroupResult])
   async findGroups(
     @Arg('searchText') searchText: string,
     @Arg('limit') limit: number,
     @Arg('skip') skip: number,
     @Ctx() { user, db }: Context
-  ): Promise<Group[]> {
+  ): Promise<GroupResult[]> {
     if (!user) {
       throw new Error('Only logged in users can search for groups');
     }
     const trimmedSearchText = searchText.trim();
-    const byFriendlyId = await db.groupRepository.findOne({ friendlyId: trimmedSearchText });
+    const byFriendlyId = await db.Group.findOne({ friendlyId: trimmedSearchText });
     if (byFriendlyId) {
-      return [byFriendlyId];
+      return [{
+        ...byFriendlyId,
+        id: byFriendlyId._id,
+        createdBy: byFriendlyId.createdBy.toString(),
+      }];
     }
 
     const boundedLimit = Math.min(limit, numMaxReturnedItems);
-    const groups = await db.groupRepository
-      .find({
-        where: {
-          name: ILike(`%${trimmedSearchText}%`),
-          visibility: 'PUBLIC'
-        },
-        take: boundedLimit,
-        skip
-      });
-    return groups;
+    const groups = await db.Group
+      .find({ name: { $regex: trimmedSearchText, $options: 'i' }, visibility: 'PUBLIC' })
+      .sort({ name: 1, createdAt: 1 })
+      .limit(boundedLimit);
+    return groups.map((group) => ({
+      ...group,
+      id: group._id,
+      createdBy: group.createdBy.toString(),
+    }));
   }
 
   @Mutation(() => String)
@@ -119,19 +151,20 @@ export class GroupResolver {
     if (!user) {
       throw new Error('A user is required');
     }
-    const newGroup = await db.groupRepository.save({
+
+    const newGroup = await db.Group.create({
       name: groupName,
       imgUrl: 'temp',
       visibility,
-      createdById: user.id,
+      createdBy: user._id,
     });
 
-    await db.userGroupRepository.update({
+    await db.UserGroup.updateOne({
       userId: user.id,
       groupId: newGroup.id,
     }, {
       pinned: true,
-      latestRead: Date.now(),
+      latestRead: new Date(),
     });
 
     return 'OK';
@@ -142,14 +175,14 @@ export class GroupResolver {
     @Arg('groupId') groupId: string,
     @Ctx() { user, db }: Context
   ): Promise<string> {
-    const previousGroupRelationship = await db.userGroupRepository.findOne({
+    const previousGroupRelationship = await db.UserGroup.findOne({
       userId: user!.id,
       groupId,
     });
     if (previousGroupRelationship) {
       throw new Error('User already participate in the group');
     }
-    await db.userGroupRepository.save({
+    await db.UserGroup.create({
       userId: user!.id,
       groupId,
       pinned: true,
@@ -166,7 +199,7 @@ export class GroupResolver {
     if (!user!.notificationToken) {
       throw new Error('Notification token required');
     }
-    await db.userGroupRepository.delete({
+    await db.UserGroup.deleteOne({
       userId: user!.id,
       groupId,
     });
@@ -184,7 +217,7 @@ export class GroupResolver {
     if (!user!.notificationToken) {
       throw new Error('Notification token required');
     }
-    await db.userGroupRepository.update({
+    await db.UserGroup.updateOne({
       userId: user!.id,
       groupId,
     }, {
