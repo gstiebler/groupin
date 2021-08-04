@@ -106,7 +106,7 @@ export class GroupResolver {
     });
     return {
       ...group,
-      id: group.id as string,
+      id: group._id!.toHexString(),
       createdBy: group.createdBy.toHexString(),
       iBelong,
     };

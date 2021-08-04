@@ -85,14 +85,14 @@ describe('main', () => {
       await groupStore.fetchOwnGroups();
       expect(groupStore.ownGroups).toEqual([
         {
-          id: groupFixtures.firstGroup.id,
+          id: groupFixtures.firstGroup._id?.toHexString(),
           name: 'First Group',
           imgUrl: 'url1',
           unread: false,
           pinned: false,
         },
         {
-          id: groupFixtures.secondGroup.id,
+          id: groupFixtures.secondGroup._id?.toHexString(),
           name: 'Second Group',
           imgUrl: 'url2',
           unread: true,
