@@ -26,7 +26,6 @@ export type ConnCtx = ReturnType<typeof contextFromConnection>;
 export async function createConnectionContext() {
   try {
     const connection = await createMongooseConnection(process.env.MONGODB_URL ?? '');
-    logger.info(`Connection completed to ${process.env.DB_HOST}`);
     return contextFromConnection(connection!);
   } catch (error) {
     logger.error(`Error connecting to ${process.env.DB_HOST}: ${error}`);

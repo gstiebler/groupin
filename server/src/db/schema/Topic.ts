@@ -15,7 +15,7 @@ export interface ITopic {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface Topic extends ITopic, Document { }
+export interface Topic extends ITopic, Document<Types.ObjectId> { }
 
 type TopicSchemaDef = {
   [key in keyof ITopic]: any;

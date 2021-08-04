@@ -9,6 +9,7 @@ import {
   subscribeToGroup,
   unsubscribeFromGroup,
 } from '../lib/subscription';
+import { Group } from '../db/schema/Group';
 
 @ObjectType()
 class OwnGroupsResult {
@@ -104,7 +105,7 @@ export class GroupResolver {
     });
     return {
       ...group,
-      id: group._id,
+      id: group.id as string,
       createdBy: group.createdBy.toHexString(),
       iBelong,
     };
@@ -121,11 +122,11 @@ export class GroupResolver {
       throw new Error('Only logged in users can search for groups');
     }
     const trimmedSearchText = searchText.trim();
-    const byFriendlyId = await db.Group.findOne({ friendlyId: trimmedSearchText });
+    const byFriendlyId: Group | null = await db.Group.findOne({ friendlyId: trimmedSearchText });
     if (byFriendlyId) {
       return [{
         ...byFriendlyId,
-        id: byFriendlyId._id,
+        id: byFriendlyId.id,
         createdBy: byFriendlyId.createdBy.toHexString(),
       }];
     }

@@ -74,14 +74,14 @@ export class MessageResolver {
     const userIds = messages.map(message => message.userId);
     const users: User[] = await db.User.find({ userId: { $in: userIds } });
     const messageUser = users.map(user => ({
-      id: user._id!.toHexString(),
+      id: user.id as string,
       name: user.name,
       avatar: user.imgUrl,
     }));
     const userById = _.keyBy(messageUser, user => user.id);
     return messages.map(message => ({
       ...message,
-      id: message._id!.toHexString(),
+      id: message.id as string,
       user: userById[message.userId.toHexString()],
     }));
   }

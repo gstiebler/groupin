@@ -1,6 +1,7 @@
 import { subscribeToAll } from '../lib/subscription';
 import { Query, Resolver, Mutation, Arg, Field, InputType, ObjectType, Ctx } from 'type-graphql'
 import { Context } from '../graphqlContext';
+import logger from '../config/winston';
 
 @InputType()
 class HelloInput {
@@ -30,7 +31,7 @@ export class RootResolver {
     @Arg('helloInput') helloInput: HelloInput,
     @Ctx() ctx: Context
   ): Promise<String> {
-    console.log(ctx.externalId);
+    logger.debug(ctx.externalId);
     return helloInput.pass === 'foca' ? 'OK' : 'ERROR';
   }
 

@@ -16,14 +16,13 @@ import { GroupStore } from '../../mobile/stores/groupStore';
 import { GroupSearchStore } from '../../mobile/stores/groupSearchStore';
 import { RootStore } from '../../mobile/stores/rootStore';
 import * as server from '../../mobile/lib/server';
-import { Types } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import { User } from '../../db/schema/User';
 import { Message } from '../../db/schema/Message';
-import { Topic } from '../../db/schema/Topic';
 const { ObjectId } = Types;
 
 
-function createMessages(numMessages: number, user: Partial<User>, topic: Partial<Topic>) {
+function createMessages(numMessages: number, user: Partial<User>, topicId: Types.ObjectId) {
   const messages: Partial<Message>[] = [];
   const baseMoment = new Date();
   for (let i = 0; i < numMessages; i++) {
@@ -31,7 +30,7 @@ function createMessages(numMessages: number, user: Partial<User>, topic: Partial
       _id: new ObjectId(),
       text: `Message ${i}`,
       userId: user._id,
-      topicId: topic._id,
+      topicId,
       createdAt: addSeconds(baseMoment, 3)
     });
   }
@@ -61,7 +60,7 @@ describe('main', () => {
   })
 
   describe('reading', () => {
-    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2);
+    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id!);
     // const localMessages50 = messages50.map((m) => ({ ...m, _id: m.id }));
 
     beforeAll(async () => {

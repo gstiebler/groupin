@@ -18,7 +18,7 @@ export interface IGroup {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface Group extends IGroup, Document { }
+export interface Group extends IGroup, Document<Types.ObjectId> { }
 
 type GroupSchemaDef = {
   [key in keyof IGroup]: any;

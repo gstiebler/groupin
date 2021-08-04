@@ -31,13 +31,13 @@ export async function subscribeToTopic(db: ConnCtx, user: User, notificationToke
 }
 
 export async function subscribeToGroup(db: ConnCtx, user: User, notificationToken: string, groupId: string) {
-  const pinnedTopics = await userPinnedTopics(db, user._id!.toHexString(), groupId);
+  const pinnedTopics = await userPinnedTopics(db, user.id, groupId);
   await Bluebird.map(pinnedTopics, (topic) => pushService.unsubscribe(notificationToken, topic.id));
   await pushService.subscribe(notificationToken, groupId);
 }
 
 export async function unsubscribeFromGroup(db: ConnCtx, user: User, notificationToken: string, groupId: string) {
-  const pinnedTopics = await userPinnedTopics(db, user._id!.toHexString(), groupId);
+  const pinnedTopics = await userPinnedTopics(db, user.id, groupId);
   await Bluebird.map(pinnedTopics, (topic) => pushService.subscribe(notificationToken, topic.id));
   await pushService.unsubscribe(notificationToken, groupId);
 }
