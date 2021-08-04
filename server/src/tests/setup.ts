@@ -1,6 +1,8 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
+import 'reflect-metadata';
+
 // import logger from '../config/winston';
 import { createConnectionContext } from '../db/ConnectionContext';
 import { Context } from '../graphqlContext';
