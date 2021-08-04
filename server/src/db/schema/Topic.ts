@@ -2,17 +2,18 @@ import {
   Document,
   model,
   Schema,
+  Types,
 } from 'mongoose';
 
 const { ObjectId } = Schema.Types;
 
 export interface ITopic {
-  name: string,
-  imgUrl: string,
-  createdBy: typeof ObjectId,
-  groupId: typeof ObjectId,
-  createdAt: Date,
-  updatedAt: Date,
+  name: string;
+  imgUrl: string;
+  createdBy: Types.ObjectId;
+  groupId: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 export interface Topic extends ITopic, Document { }
 

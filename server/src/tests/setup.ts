@@ -9,11 +9,11 @@ import graphqlConnect from '../mobile/lib/graphqlConnect';
 import { ApolloServer } from 'apollo-server';
 import { VariableValues } from 'apollo-server-types';
 import { GraphQLError } from 'graphql';
-import { IUser } from '../db/schema/User';
+import { User } from '../db/schema/User';
 
-const currentUserHolder: { currentUser?: Partial<IUser> } = { currentUser: undefined };
+const currentUserHolder: { currentUser: Partial<User> | null } = { currentUser: null };
 
-export function setCurrentUser(user: Partial<IUser>) {
+export function setCurrentUser(user: Partial<User>) {
   currentUserHolder.currentUser = user;
 }
 
@@ -30,7 +30,7 @@ async function setup() {
   const server = new ApolloServer({
     schema,
     context: (): Context => {
-      return { user: currentUserHolder.currentUser as IUser, externalId: 'dk49sdfjhk', db: connectionContext };
+      return { user: currentUserHolder.currentUser as User, externalId: 'dk49sdfjhk', db: connectionContext };
     },
   });
 

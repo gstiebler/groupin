@@ -9,7 +9,7 @@ const { ObjectId } = Schema.Types;
 export interface TopicLatestRead {
   userId: Types.ObjectId;
   topicId: Types.ObjectId;
-  latestMoment: number;
+  latestMoment: Date;
 }
 
 type TopicLatestReadDef = {

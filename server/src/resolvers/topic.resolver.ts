@@ -1,17 +1,23 @@
 import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
-import { Topic } from "../db/entity/Topic.entity";
 import pushService from '../lib/pushService';
 import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
-import { In } from 'typeorm';
 
 const oldDate = new Date('2015-01-01');
 
+
+
 @ObjectType()
-class TopicOfGroupResult extends Topic {
+class TopicResult {
+
+}
+
+
+@ObjectType()
+class TopicOfGroupResult extends TopicResult {
   @Field()
   unread: boolean;
 
@@ -19,7 +25,7 @@ class TopicOfGroupResult extends Topic {
   pinned: boolean;
 }
 
-@Resolver(() => Topic)
+@Resolver(() => TopicResult)
 export class TopicResolver {
 
   @Query(() => [TopicOfGroupResult])
@@ -29,26 +35,26 @@ export class TopicResolver {
     @Arg('skip') skip: number,
     @Ctx() { user, db }: Context
   ): Promise<TopicOfGroupResult[]> {
-    await db.userGroupRepository.findOneOrFail({ userId: user!.id, groupId });
+    await db.UserGroup.findOne({ userId: user!.id, groupId }).orFail();
     // TODO: use an alternative to skip
-    const topics = await db.topicRepository.find({
+    const topics = await db.Topic.find({
       where: { groupId },
       take: limit,
       skip,
       order: { updatedAt: 'DESC' }
     });
     const topicIds = _.map(topics, topic => topic.id);
-    const latestTopicRead = await db.topicLatestReadRepository.find({
-      topicId: In(topicIds),
+    const latestTopicRead = await db.TopicLatestRead.findOne({
+      topicId: { $in: topicIds },
       userId: user!.id,
-    });
-    const pinnedTopics = await db.pinnedTopicRepository.find({
+    }).orFail();
+    const pinnedTopics = await db.PinnedTopic.find({
       userId: user!.id,
-      topicId: In(topicIds),
+      topicId: { $in: topicIds },
     });
     const pinnedTopicsIds = pinnedTopics.map(pinnedTopic => pinnedTopic.topicId);
     const pinnedTopicsSet = new Set(pinnedTopicsIds);
-    const latestReadByTopicId = _.keyBy(latestTopicRead, l => l.topicId);
+    const latestReadByTopicId = _.keyBy(latestTopicRead, l => l.topicId.toString());
     return topics.map((topic) => {
       const latestReadObj = latestReadByTopicId[topic.id];
       const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
@@ -66,27 +72,25 @@ export class TopicResolver {
     @Arg('topicName') topicName: string,
     @Ctx() { user, db }: Context
   ): Promise<string> {
-    await db.userGroupRepository.findOneOrFail({ userId: user!.id, groupId });
+    await db.UserGroup.findOne({ userId: user!.id, groupId }).orFail();
 
-    const createdTopic = await db.topicRepository.save({
+    const createdTopic = await db.Topic.create({
       name: topicName,
       groupId,
       createdById: user!.id,
       imgUrl: 'TODO url',
     });
 
-    await db.groupRepository.update(
-      { 
-        id: groupId
-      }, {
-        updatedAt: Date.now(),
-      },
-    );
+    await db.Group.updateOne({ 
+      id: groupId
+    }, {
+      updatedAt: new Date(),
+    },);
 
-    await db.topicLatestReadRepository.save({
+    await db.TopicLatestRead.create({
       topicId: createdTopic.id,
       userId: user!.id,
-      latestMoment: Date.now(),
+      latestMoment: new Date(),
     });
 
     const pushPayload = {
@@ -110,26 +114,23 @@ export class TopicResolver {
     @Arg('topicId') topicId: string,
     @Ctx() { user, db }: Context
   ): Promise<string> {
-    const topicLatestRead = await db.topicLatestReadRepository.findOne({
+    await db.TopicLatestRead.updateOne({
       userId: user!.id,
       topicId,
-    });
-    await db.topicLatestReadRepository.save({
-      id: topicLatestRead?.id,
-      userId: user!.id,
-      topicId,
-      latestMoment: Date.now(),
+    }, {
+      latestMoment: new Date(),
     });
 
-    const topic = await db.topicRepository.findOneOrFail(topicId);
-    const userGroup = await db.userGroupRepository.findOne({
+    const topic = await db.Topic.findOne(topicId).orFail();
+    const userGroup = await db.UserGroup.findOne({
       userId: user!.id,
-      group: topic.group,
-    });
-    await db.userGroupRepository.save({
-      id: userGroup?.id,
+      groupId: topic.groupId,
+    }).orFail();
+    await db.UserGroup.updateOne({
+      id: userGroup._id,
       userId: user!.id,
-      group: topic.group,
+    }, {
+      groupId: topic.groupId,
       latestMoment: Date.now(),
     });
 
@@ -147,13 +148,13 @@ export class TopicResolver {
     }
 
     if (pinned) {
-      await db.pinnedTopicRepository.save({
+      await db.PinnedTopic.create({
         userId: user!.id,
         topicId,
       });
       await subscribeToTopic(db, user!, user!.notificationToken, topicId);
     } else {
-      await db.pinnedTopicRepository.delete({
+      await db.PinnedTopic.deleteOne({
         userId: user!.id,
         topicId,
       });

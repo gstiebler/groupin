@@ -2,6 +2,7 @@ import {
   Document,
   model,
   Schema,
+  Types,
 } from 'mongoose';
 import * as shortid from 'shortid';
 
@@ -13,7 +14,7 @@ export interface IGroup {
   imgUrl?: string;
   description?: string;
   visibility: 'SECRET' | 'PUBLIC',
-  createdBy: typeof ObjectId;
+  createdBy: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,13 +1,14 @@
 import {
   model,
   Schema,
+  Types,
 } from 'mongoose';
 
 const { ObjectId } = Schema.Types;
 
 export interface PinnedTopic {
-  userId: typeof ObjectId;
-  topicId: typeof ObjectId;
+  userId: Types.ObjectId;
+  topicId: Types.ObjectId;
   createdAt: number;
   updatedAt: number;
 }
