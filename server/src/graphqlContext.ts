@@ -3,10 +3,10 @@ dotenv.config();
 import * as admin from 'firebase-admin';
 import logger from './config/winston';
 import { ConnCtx, createConnectionContext } from './db/ConnectionContext';
-import { User } from './db/entity/User.entity';
+import { User } from './db/schema/User';
 
 export type Context = {
-  user?: User;
+  user: User | null;
   externalId?: string;
   db: ConnCtx;
 };
@@ -17,7 +17,7 @@ export async function getContext(
   authFbToken: string
 ): Promise<Context> {
   const connection = await connectionContextPromise;
-  let user: User | undefined = undefined;
+  let user: User | null = null;
   let firebaseId: string | null = null;
   // ***
   if (authFbToken) {
@@ -25,8 +25,8 @@ export async function getContext(
     // authFbToken comes from the client app
     const decodedToken = await admin.auth().verifyIdToken(authFbToken);
     firebaseId = decodedToken.uid;
-    user = await connection.userRepository.findOne({ externalId: firebaseId });
+    user = await connection.User.findOne({ externalId: firebaseId });
     return { user, externalId: firebaseId, db: connection };
   }
-  return { user: undefined, externalId: undefined, db: connection };
+  return { user: null, externalId: undefined, db: connection };
 }
