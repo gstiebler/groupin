@@ -1,6 +1,6 @@
 import { groupIds, userIds } from './preIds';
-import { UserGroup } from '../../db/entity/UserGroup.entity';
 import { convertFixedDate } from './fixtureHelper';
+import { UserGroup } from '../../db/schema/UserGroup';
 
 const userGroups: Partial<UserGroup>[] = [
   {

@@ -10,16 +10,17 @@ import messageFixtures from '../fixtures/messageFixtures';
 import { groupIds } from '../fixtures/preIds';
 import { messageTypes } from '../../lib/constants';
 */
-import { User } from '../../db/entity/User.entity';
-import { Topic } from '../../db/entity/Topic.entity';
-import { Message } from '../../db/entity/Message.entity';
-import { v4 as uuidv4 } from 'uuid';
 import { ConnCtx } from '../../db/ConnectionContext';
 import { addSeconds } from 'date-fns';
 import { GroupStore } from '../../mobile/stores/groupStore';
 import { GroupSearchStore } from '../../mobile/stores/groupSearchStore';
 import { RootStore } from '../../mobile/stores/rootStore';
 import * as server from '../../mobile/lib/server';
+import { Types } from 'mongoose';
+import { User } from '../../db/schema/User';
+import { Message } from '../../db/schema/Message';
+import { Topic } from '../../db/schema/Topic';
+const { ObjectId } = Types;
 
 
 function createMessages(numMessages: number, user: Partial<User>, topic: Partial<Topic>) {
@@ -27,10 +28,10 @@ function createMessages(numMessages: number, user: Partial<User>, topic: Partial
   const baseMoment = new Date();
   for (let i = 0; i < numMessages; i++) {
     messages.push({
-      id: uuidv4(),
+      _id: new ObjectId(),
       text: `Message ${i}`,
-      userId: user.id!,
-      topicId: topic.id!,
+      userId: user._id,
+      topicId: topic._id,
       createdAt: addSeconds(baseMoment, 3)
     });
   }
@@ -65,7 +66,7 @@ describe('main', () => {
 
     beforeAll(async () => {
       await initFixtures(db);
-      await db.messageRepository.insert(messages50);
+      await db.Message.insertMany(messages50);
     });
 
     beforeEach(() => {
@@ -131,7 +132,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupStore = new GroupStore();
       const rootStore = new RootStore(createStorage(), groupStore);
-      await rootStore.getTopicsOfGroup(groupFixtures.firstGroup.id!);
+      await rootStore.getTopicsOfGroup(groupFixtures.firstGroup.id?.toHexString() ?? '');
       expect(rootStore.topics).toEqual([
         {
           id: topicFixtures.topic1Group1.id,
@@ -154,7 +155,7 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupStore = new GroupStore();
       const rootStore = new RootStore(createStorage(), groupStore);
-      rootStore.currentlyViewedGroupId = groupFixtures.firstGroup.id;
+      rootStore.currentlyViewedGroupId = groupFixtures.firstGroup.id?.toHexString();
       await rootStore.getTopicsOfCurrentGroup();
       expect(rootStore.topics).toEqual([
         {

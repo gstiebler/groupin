@@ -1,40 +1,33 @@
-import { defaultTypeOrmConfig } from './TypeormConnectionParams';
-import { Topic } from './entity/Topic.entity';
-import { UserGroup } from './entity/UserGroup.entity';
-import { Group } from './entity/Group.entity';
-import { Message } from './entity/Message.entity';
-import { TopicLatestRead } from './entity/TopicLatestRead.entity';
-import { PinnedTopic } from './entity/PinnedTopic.entity';
-import { User } from './entity/User.entity';
-import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 import logger from '../config/winston';
+import { createMongooseConnection } from './mongooseConnection';
+import * as mongoose from 'mongoose';
+import GroupModel from './schema/Group';
+import MessageModel from './schema/Message';
+import UserModel from './schema/User';
+import PinnedTopicModel from './schema/PinnedTopic';
+import TopicModel from './schema/Topic';
+import TopicLatestReadModel from './schema/TopicLatestRead';
+import UserGroupModel from './schema/UserGroup';
 
-const contextFromConnection = (connection: Connection) => ({
+const contextFromConnection = (connection: typeof mongoose) => ({
   connection,
-  userRepository: connection.getMongoRepository(User),
-  groupRepository: connection.getMongoRepository(Group),
-  topicRepository: connection.getMongoRepository(Topic),
-  messageRepository: connection.getMongoRepository(Message),
-  userGroupRepository: connection.getMongoRepository(UserGroup),
-  topicLatestReadRepository: connection.getMongoRepository(TopicLatestRead),
-  pinnedTopicRepository: connection.getMongoRepository(PinnedTopic),
+  User: UserModel,
+  Group: GroupModel,
+  Message: MessageModel,
+  PinnedTopic: PinnedTopicModel,
+  Topic: TopicModel,
+  TopicLatestRead: TopicLatestReadModel,
+  UserGroup: UserGroupModel,
 });
 
 export type ConnCtx = ReturnType<typeof contextFromConnection>;
 
 // TODO: generic DB here
 export async function createConnectionContext() {
-  const mergedTypeormConfig: ConnectionOptions = {
-    ...defaultTypeOrmConfig,
-    host: process.env.DB_HOST,
-    database: process.env.DATABASE,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-  };
   try {
-    const connection = await createConnection(mergedTypeormConfig);
+    const connection = await createMongooseConnection(process.env.MONGODB_URL ?? '');
     logger.info(`Connection completed to ${process.env.DB_HOST}`);
-    return contextFromConnection(connection);
+    return contextFromConnection(connection!);
   } catch (error) {
     logger.error(`Error connecting to ${process.env.DB_HOST}: ${error}`);
     throw new Error(error);

@@ -6,7 +6,7 @@ import {
 
 const { ObjectId } = Schema.Types;
 
-export interface IPinnedTopic {
+export interface PinnedTopic {
   userId: Types.ObjectId;
   topicId: Types.ObjectId;
   createdAt: number;
@@ -14,7 +14,7 @@ export interface IPinnedTopic {
 }
 
 type PinnedTopicDef = {
-  [key in keyof IPinnedTopic]: any;
+  [key in keyof PinnedTopic]: any;
 };
 
 const schemaDef: PinnedTopicDef = {
@@ -23,8 +23,8 @@ const schemaDef: PinnedTopicDef = {
   createdAt: { type: Date, default: Date.now, required: true },
   updatedAt: { type: Date, default: Date.now, required: true },
 };
-const pinnedTopicSchema = new Schema<IPinnedTopic>(schemaDef);
+const pinnedTopicSchema = new Schema<PinnedTopic>(schemaDef);
 
-const PinnedTopic = model('PinnedTopic', pinnedTopicSchema);
+const PinnedTopicModel = model<PinnedTopic>('PinnedTopic', pinnedTopicSchema);
 
-export default PinnedTopic;
+export default PinnedTopicModel;

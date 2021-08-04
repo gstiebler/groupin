@@ -1,4 +1,5 @@
 import {
+  Document,
   model,
   Schema,
   Types,
@@ -11,9 +12,10 @@ export interface ITopic {
   imgUrl: string,
   createdBy: Types.ObjectId,
   groupId: Types.ObjectId,
-  createdAt: number,
-  updatedAt: number,
+  createdAt: Date,
+  updatedAt: Date,
 }
+export interface Topic extends ITopic, Document { }
 
 type TopicSchemaDef = {
   [key in keyof ITopic]: any;
@@ -29,6 +31,6 @@ const schemaDef: TopicSchemaDef = {
 };
 const topicSchema = new Schema<ITopic>(schemaDef);
 
-const Topic = model<ITopic>('Topic', topicSchema);
+const TopicModel = model<ITopic>('Topic', topicSchema);
 
-export default Topic;
+export default TopicModel;

@@ -1,4 +1,5 @@
 import {
+  Document,
   model,
   Schema,
 } from 'mongoose';
@@ -11,6 +12,7 @@ export interface IUser {
   createdAt: number;
   updatedAt: number;
 }
+export interface User extends IUser, Document { }
 
 type UserSchemaDef = {
   [key in keyof IUser]: any;
@@ -26,6 +28,6 @@ const schemaDef: UserSchemaDef = {
 };
 const userSchema = new Schema<IUser>(schemaDef);
 
-const User = model<IUser>('User', userSchema);
+const UserModel = model<IUser>('User', userSchema);
 
-export default User;
+export default UserModel;

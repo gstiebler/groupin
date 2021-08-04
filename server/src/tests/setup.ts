@@ -3,17 +3,17 @@ dotenv.config({ path: '.env.test' });
 
 // import logger from '../config/winston';
 import { createConnectionContext } from '../db/ConnectionContext';
-import { User } from '../db/entity/User.entity';
 import { Context } from '../graphqlContext';
 import schema from './../buildSchema';
 import graphqlConnect from '../mobile/lib/graphqlConnect';
 import { ApolloServer } from 'apollo-server';
 import { VariableValues } from 'apollo-server-types';
 import { GraphQLError } from 'graphql';
+import { IUser } from '../db/schema/User';
 
-const currentUserHolder: { currentUser?: Partial<User> } = { currentUser: undefined };
+const currentUserHolder: { currentUser?: Partial<IUser> } = { currentUser: undefined };
 
-export function setCurrentUser(user: Partial<User>) {
+export function setCurrentUser(user: Partial<IUser>) {
   currentUserHolder.currentUser = user;
 }
 
@@ -30,7 +30,7 @@ async function setup() {
   const server = new ApolloServer({
     schema,
     context: (): Context => {
-      return { user: currentUserHolder.currentUser as User, externalId: 'dk49sdfjhk', db: connectionContext };
+      return { user: currentUserHolder.currentUser as IUser, externalId: 'dk49sdfjhk', db: connectionContext };
     },
   });
 
@@ -40,9 +40,6 @@ async function setup() {
       variables,
     });
     if (result.errors) {
-      /*for (const error of result.errors) {
-        logger.error(error.message);
-      }*/
       const mainError = result.errors[0] as GraphQLError;
       throw mainError.originalError;
     }
@@ -56,5 +53,5 @@ beforeAll(async () => {
 
 afterAll(async () => {
   const connectionContext = await connnectionContextPromise;
-  await connectionContext.connection.close();
+  await connectionContext.connection.disconnect();
 });

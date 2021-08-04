@@ -1,4 +1,5 @@
 import {
+  Document,
   model,
   Schema,
   Types,
@@ -6,12 +7,13 @@ import {
 
 const { ObjectId } = Schema.Types;
 
-export interface IMessage {
+interface IMessage {
   text: string;
   userId: Types.ObjectId;
   topicId: Types.ObjectId;
   createdAt: Types.ObjectId;
 }
+export interface Message extends IMessage, Document {}
 
 type MessageDef = {
   [key in keyof IMessage]: any;
@@ -25,6 +27,6 @@ const schemaDef: MessageDef = {
 }
 const messageSchema = new Schema<IMessage>(schemaDef);
 
-const Message = model('Message', messageSchema);
+const MessageModel = model<IMessage>('Message', messageSchema);
 
-export default Message;
+export default MessageModel;

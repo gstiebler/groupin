@@ -6,14 +6,14 @@ import {
 
 const { ObjectId } = Schema.Types;
 
-export interface ITopicLatestRead {
+export interface TopicLatestRead {
   userId: Types.ObjectId;
   topicId: Types.ObjectId;
   latestMoment: number;
 }
 
 type TopicLatestReadDef = {
-  [key in keyof ITopicLatestRead]: any;
+  [key in keyof TopicLatestRead]: any;
 };
 
 const schemaDef: TopicLatestReadDef = {
@@ -23,6 +23,6 @@ const schemaDef: TopicLatestReadDef = {
 };
 const topicLatestReadSchema = new Schema<TopicLatestReadDef>(schemaDef);
 
-const TopicLatestRead = model('TopicLatestRead', topicLatestReadSchema);
+const TopicLatestReadModel = model<TopicLatestRead>('TopicLatestRead', topicLatestReadSchema);
 
-export default TopicLatestRead;
+export default TopicLatestReadModel;

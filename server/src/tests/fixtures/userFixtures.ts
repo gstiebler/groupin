@@ -1,14 +1,14 @@
-import { User } from '../../db/entity/User.entity';
+import { User } from '../../db/schema/User';
 import { userIds } from './preIds';
 
 const users: { [user: string]: Partial<User> } = {
   alice: {
-    id: userIds.alice.toHexString(),
+    _id: userIds.alice,
     name: 'Alice',
     externalId: 'aliceExt',
   },
   robert: {
-    id: userIds.robert.toHexString(),
+    _id: userIds.robert,
     name: 'Robert',
     imgUrl: 'robert_url',
     externalId: 'robertExt',
