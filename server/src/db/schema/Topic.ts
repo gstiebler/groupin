@@ -1,5 +1,4 @@
 import {
-  Document,
   model,
   Schema,
   Types,
@@ -7,16 +6,7 @@ import {
 
 const { ObjectId } = Types;
 
-const topicSchema = new Schema({
-  name: { type: String, required: true },
-  imgUrl: { type: String },
-  createdBy: { type: ObjectId, ref: 'User', required: true },
-  groupId: { type: ObjectId, ref: 'Group', required: true, index: true },
-  createdAt: { type: Date, default: Date.now, required: true },
-  updatedAt: { type: Date, default: Date.now, required: true },
-});
-
-export interface ITopic extends Document {
+export interface ITopic {
   name: string,
   imgUrl: string,
   createdBy: Types.ObjectId,
@@ -24,6 +14,20 @@ export interface ITopic extends Document {
   createdAt: number,
   updatedAt: number,
 }
+
+type TopicSchemaDef = {
+  [key in keyof ITopic]: any;
+};
+
+const schemaDef: TopicSchemaDef = {
+  name: { type: String, required: true },
+  imgUrl: { type: String },
+  createdBy: { type: ObjectId, ref: 'User', required: true },
+  groupId: { type: ObjectId, ref: 'Group', required: true, index: true },
+  createdAt: { type: Date, default: Date.now, required: true },
+  updatedAt: { type: Date, default: Date.now, required: true },
+};
+const topicSchema = new Schema<ITopic>(schemaDef);
 
 const Topic = model<ITopic>('Topic', topicSchema);
 

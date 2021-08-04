@@ -1,10 +1,9 @@
 import {
-  Document,
   model,
   Schema,
 } from 'mongoose';
 
-export interface IUser extends Document {
+export interface IUser {
   externalId: string;
   name: string;
   notificationToken?: string;
@@ -17,7 +16,7 @@ type UserSchemaDef = {
   [key in keyof IUser]: any;
 };
 
-const schemaDef: Partial<UserSchemaDef> = {
+const schemaDef: UserSchemaDef = {
   externalId: { type: String, required: true },
   name: { type: String, required: true },
   notificationToken: { type: String },
@@ -25,8 +24,7 @@ const schemaDef: Partial<UserSchemaDef> = {
   createdAt: { type: Date, default: Date.now, required: true },
   updatedAt: { type: Date, default: Date.now, required: true },
 };
-
-const userSchema = new Schema(schemaDef);
+const userSchema = new Schema<IUser>(schemaDef);
 
 const User = model<IUser>('User', userSchema);
 

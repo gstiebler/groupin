@@ -1,5 +1,4 @@
 import {
-  Document,
   model,
   Schema,
   Types,
@@ -8,20 +7,7 @@ import shortid from 'shortid';
 
 const { ObjectId } = Schema.Types;
 
-const groupSchema = new Schema({
-  friendlyId: { type: String, default: shortid.generate },
-  name: { type: String, required: true },
-  imgUrl: { type: String },
-  description: { type: String },
-  visibility: { type: String, enum: ['SECRET', 'PUBLIC'] },
-  createdBy: { type: ObjectId, ref: 'User', required: true },
-  createdAt: { type: Date, default: Date.now, required: true },
-  updatedAt: { type: Date, default: Date.now, required: true },
-});
-
-groupSchema.index({ name: 1, createdAt: 1 });
-
-export interface IGroup extends Document {
+export interface IGroup {
   friendlyId?: string;
   name: string;
   imgUrl: string;
@@ -31,6 +17,25 @@ export interface IGroup extends Document {
   createdAt?: number;
   updatedAt?: number;
 }
+
+type GroupSchemaDef = {
+  [key in keyof IGroup]: any;
+};
+
+const schemaDef: GroupSchemaDef = {
+  friendlyId: { type: String, default: shortid.generate },
+  name: { type: String, required: true },
+  imgUrl: { type: String },
+  description: { type: String },
+  visibility: { type: String, enum: ['SECRET', 'PUBLIC'] },
+  createdBy: { type: ObjectId, ref: 'User', required: true },
+  createdAt: { type: Date, default: Date.now, required: true },
+  updatedAt: { type: Date, default: Date.now, required: true },
+};
+
+const groupSchema = new Schema<IGroup>(schemaDef);
+
+groupSchema.index({ name: 1, createdAt: 1 });
 
 const Group = model<IGroup>('Group', groupSchema);
 

@@ -1,5 +1,4 @@
 import {
-  Document,
   model,
   Schema,
   Types,
@@ -7,17 +6,22 @@ import {
 
 const { ObjectId } = Schema.Types;
 
-const topicLatestReadSchema = new Schema({
-  userId: { type: ObjectId, ref: 'User', required: true },
-  topicId: { type: ObjectId, ref: 'Topic', required: true },
-  latestMoment: { type: Date, default: Date.now, required: true },
-});
-
-export interface ITopicLatestRead extends Document {
+export interface ITopicLatestRead {
   userId: Types.ObjectId;
   topicId: Types.ObjectId;
   latestMoment: number;
 }
+
+type TopicLatestReadDef = {
+  [key in keyof ITopicLatestRead]: any;
+};
+
+const schemaDef: TopicLatestReadDef = {
+  userId: { type: ObjectId, ref: 'User', required: true },
+  topicId: { type: ObjectId, ref: 'Topic', required: true },
+  latestMoment: { type: Date, default: Date.now, required: true },
+};
+const topicLatestReadSchema = new Schema<TopicLatestReadDef>(schemaDef);
 
 const TopicLatestRead = model('TopicLatestRead', topicLatestReadSchema);
 
