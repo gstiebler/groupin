@@ -10,6 +10,7 @@ import {
   unsubscribeFromGroup,
 } from '../lib/subscription';
 import { Group } from '../db/schema/Group';
+import logger from '../config/winston';
 
 @ObjectType()
 class OwnGroupsResult {
@@ -69,16 +70,16 @@ export class GroupResolver {
       throw new Error('Method only available with a user');
     }
 
-    const ownGroupsRelationship = await db.UserGroup.find({ userId: user.id });
+    const ownGroupsRelationship = await db.UserGroup.find({ userId: user._id });
     const ownGroupsIds = ownGroupsRelationship.map(group => group.groupId)
-    const ownGroups = await db.Group.find({ id: { $in: ownGroupsIds } });
-    const ownGroupsById = new Map(ownGroups.map(group => [group.id, group]));
+    const ownGroups: Group[] = await db.Group.find({ _id: { $in: ownGroupsIds } });
+    const ownGroupsById = new Map(ownGroups.map(group => [group._id!.toHexString(), group]));
 
     return _.map(ownGroupsRelationship, (userGroup) => {
-      const group = ownGroupsById.get(userGroup.groupId)!;
+      const group = ownGroupsById.get(userGroup.groupId.toHexString())!;
       return {
         name: group.name,
-        id: group.id,
+        id: group._id!.toHexString(),
         imgUrl: group.imgUrl,
         unread: isBefore(userGroup.latestRead, group.updatedAt),
         pinned: userGroup.pinned,
