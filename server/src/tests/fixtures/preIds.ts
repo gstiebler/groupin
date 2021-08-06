@@ -5,8 +5,8 @@ import { Types } from 'mongoose';
 const { ObjectId } = Types;
 
 export const groupIds = {
-  firstGroup: new ObjectId(),
-  secondGroup: new ObjectId(),
+  firstGroup: new ObjectId("610c8cd99317a37387a2eb0f"),
+  secondGroup: new ObjectId("610c8cd99317a37387a2eb10"),
 };
 
 export const userIds = {

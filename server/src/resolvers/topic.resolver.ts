@@ -43,12 +43,12 @@ export class TopicResolver {
   ): Promise<TopicOfGroupResult[]> {
     await db.UserGroup.findOne({ userId: user!._id!.toHexString(), groupId }).orFail();
     // TODO: use an alternative to skip
-    const topics = await db.Topic.find({
-      where: { groupId: new Types.ObjectId(groupId) },
-      take: limit,
-      skip,
-      order: { updatedAt: 'DESC' }
-    }).lean();
+    const topics = await db.Topic
+      .find({ groupId: new Types.ObjectId(groupId) })
+      .limit(limit)
+      .skip(skip)
+      .sort({ updatedAt: -1 })
+      .lean();
     const topicIds = _.map(topics, topic => topic._id);
     const latestTopicRead = await db.TopicLatestRead.find({
       topicId: { $in: topicIds },
