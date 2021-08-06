@@ -67,8 +67,7 @@ export class RootResolver {
     if (!user) {
       throw new Error('A user is required to update FCM token');
     }
-    user.notificationToken = notificationToken;
-    await user.save();
+    await db.User.updateOne({ _id: user._id }, { notificationToken });
     await subscribeToAll(db, user, notificationToken);
   }
 }

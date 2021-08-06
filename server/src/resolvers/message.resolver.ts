@@ -74,14 +74,14 @@ export class MessageResolver {
     const userIds = messages.map(message => message.userId);
     const users: User[] = await db.User.find({ userId: { $in: userIds } });
     const messageUser = users.map(user => ({
-      id: user.id as string,
+      id: user._id.toHexString(),
       name: user.name,
       avatar: user.imgUrl,
     }));
     const userById = _.keyBy(messageUser, user => user.id);
     return messages.map(message => ({
       ...message,
-      id: message.id as string,
+      id: message._id.toHexString() as string,
       user: userById[message.userId.toHexString()],
     }));
   }
@@ -94,14 +94,14 @@ export class MessageResolver {
   ): Promise<string> {
     // TODO: make calls to DB in parallel when possible
 
-    const topic = await db.Topic.findById(topicId).orFail();
-    await db.UserGroup.findOne({ userId: user?.id, groupId: topic.groupId })
+    const topic = await db.Topic.findById(topicId).orFail().lean();
+    await db.UserGroup.findOne({ userId: user?._id.toHexString(), groupId: topic.groupId })
       .orFail(() => Error('User does not participate in the group'));
 
     const createdMessage = await db.Message.create({
       text: message,
-      userId: user!.id,
-      topicId: topic.id,
+      userId: user!._id,
+      topicId: topic._id,
     });
 
     // update topic updatedAt
