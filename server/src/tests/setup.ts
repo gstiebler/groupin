@@ -12,6 +12,7 @@ import { ApolloServer } from 'apollo-server';
 import { VariableValues } from 'apollo-server-types';
 import { GraphQLError } from 'graphql';
 import { User } from '../db/schema/User';
+import logger from '../config/winston';
 
 const currentUserHolder: { currentUser: Partial<User> | null } = { currentUser: null };
 

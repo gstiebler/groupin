@@ -70,9 +70,9 @@ export class GroupResolver {
       throw new Error('Method only available with a user');
     }
 
-    const ownGroupsRelationship = await db.UserGroup.find({ userId: user._id });
+    const ownGroupsRelationship = await db.UserGroup.find({ userId: user._id }).lean();
     const ownGroupsIds = ownGroupsRelationship.map(group => group.groupId)
-    const ownGroups: Group[] = await db.Group.find({ _id: { $in: ownGroupsIds } });
+    const ownGroups: Group[] = await db.Group.find({ _id: { $in: ownGroupsIds } }).lean();
     const ownGroupsById = new Map(ownGroups.map(group => [group._id!.toHexString(), group]));
 
     return _.map(ownGroupsRelationship, (userGroup) => {
@@ -96,14 +96,14 @@ export class GroupResolver {
       throw new Error('Method only available with a user');
     }
 
-    const group = await db.Group.findById(groupId);
+    const group = await db.Group.findById(groupId).lean();
     if (!group) {
       throw new Error(`Group ${groupId} not found`);
     }
     const iBelong = !!await db.UserGroup.findOne({
-      userId: user.id,
+      userId: user._id!.toHexString(),
       groupId
-    });
+    }).lean();
     return {
       ...group,
       id: group._id!.toHexString(),
@@ -123,11 +123,11 @@ export class GroupResolver {
       throw new Error('Only logged in users can search for groups');
     }
     const trimmedSearchText = searchText.trim();
-    const byFriendlyId: Group | null = await db.Group.findOne({ friendlyId: trimmedSearchText });
+    const byFriendlyId: Group | null = await db.Group.findOne({ friendlyId: trimmedSearchText }).lean();
     if (byFriendlyId) {
       return [{
         ...byFriendlyId,
-        id: byFriendlyId.id,
+        id: byFriendlyId._id!.toHexString(),
         createdBy: byFriendlyId.createdBy.toHexString(),
       }];
     }
@@ -136,10 +136,11 @@ export class GroupResolver {
     const groups = await db.Group
       .find({ name: { $regex: trimmedSearchText, $options: 'i' }, visibility: 'PUBLIC' })
       .sort({ name: 1, createdAt: 1 })
-      .limit(boundedLimit);
+      .limit(boundedLimit)
+      .lean();
     return groups.map((group) => ({
       ...group,
-      id: group._id,
+      id: group._id!.toHexString(),
       createdBy: group.createdBy.toHexString(),
     }));
   }
@@ -162,8 +163,8 @@ export class GroupResolver {
     });
 
     await db.UserGroup.updateOne({
-      userId: user.id,
-      groupId: newGroup.id,
+      userId: user._id!.toHexString(),
+      groupId: newGroup._id!.toHexString(),
     }, {
       pinned: true,
       latestRead: new Date(),
@@ -178,14 +179,14 @@ export class GroupResolver {
     @Ctx() { user, db }: Context
   ): Promise<string> {
     const previousGroupRelationship = await db.UserGroup.findOne({
-      userId: user!.id,
+      userId: user!._id!.toHexString(),
       groupId,
     });
     if (previousGroupRelationship) {
       throw new Error('User already participate in the group');
     }
     await db.UserGroup.create({
-      userId: user!.id,
+      userId: user!._id!.toHexString(),
       groupId,
       pinned: true,
       latestRead: Date.now(),
@@ -202,7 +203,7 @@ export class GroupResolver {
       throw new Error('Notification token required');
     }
     await db.UserGroup.deleteOne({
-      userId: user!.id,
+      userId: user!._id!.toHexString(),
       groupId,
     });
     
@@ -220,7 +221,7 @@ export class GroupResolver {
       throw new Error('Notification token required');
     }
     await db.UserGroup.updateOne({
-      userId: user!.id,
+      userId: user!._id!.toHexString(),
       groupId,
     }, {
       pinned,

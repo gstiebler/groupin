@@ -1,5 +1,4 @@
 import {
-  Document,
   model,
   Schema,
   Types,
@@ -13,7 +12,9 @@ export interface IUser {
   createdAt: number;
   updatedAt: number;
 }
-export interface User extends IUser, Document<Types.ObjectId> { }
+export interface User extends IUser {
+  _id: Types.ObjectId;
+}
 
 type UserSchemaDef = {
   [key in keyof IUser]: any;
@@ -29,6 +30,6 @@ const schemaDef: UserSchemaDef = {
 };
 const userSchema = new Schema<IUser>(schemaDef);
 
-const UserModel = model<IUser>('User', userSchema);
+const UserModel = model<User>('User', userSchema);
 
 export default UserModel;

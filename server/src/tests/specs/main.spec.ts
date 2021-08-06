@@ -60,7 +60,7 @@ describe('main', () => {
   })
 
   describe('reading', () => {
-    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2.id);
+    const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id!.toHexString());
     // const localMessages50 = messages50.map((m) => ({ ...m, _id: m.id }));
 
     beforeAll(async () => {
@@ -107,7 +107,7 @@ describe('main', () => {
       await groupsSearchActions.findGroups('second');
       expect(groupsSearchActions.groups).toEqual([
         {
-          id: groupFixtures.secondGroup.id,
+          id: groupFixtures.secondGroup._id?.toHexString(),
           name: 'Second Group',
           imgUrl: 'url2',
         },
@@ -120,7 +120,7 @@ describe('main', () => {
       await groupsSearchActions.findGroups('  S9hvTvIBWM ');
       expect(groupsSearchActions.groups).toEqual([
         {
-          id: groupFixtures.firstGroup.id,
+          id: groupFixtures.firstGroup._id?.toHexString(),
           name: 'First Group',
           imgUrl: 'url1',
         },
@@ -131,17 +131,17 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupStore = new GroupStore();
       const rootStore = new RootStore(createStorage(), groupStore);
-      await rootStore.getTopicsOfGroup(groupFixtures.firstGroup.id?.toHexString() ?? '');
+      await rootStore.getTopicsOfGroup(groupFixtures.firstGroup._id!.toHexString());
       expect(rootStore.topics).toEqual([
         {
-          id: topicFixtures.topic1Group1.id,
+          id: topicFixtures.topic1Group1._id!.toHexString(),
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
           unread: true,
           pinned: false,
         },
         {
-          id: topicFixtures.topic2Group1.id,
+          id: topicFixtures.topic2Group1._id!.toHexString(),
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
           unread: true,
@@ -154,18 +154,18 @@ describe('main', () => {
       setCurrentUser(userFixtures.robert);
       const groupStore = new GroupStore();
       const rootStore = new RootStore(createStorage(), groupStore);
-      rootStore.currentlyViewedGroupId = groupFixtures.firstGroup.id?.toHexString();
+      rootStore.currentlyViewedGroupId = groupFixtures.firstGroup._id!.toHexString();
       await rootStore.getTopicsOfCurrentGroup();
       expect(rootStore.topics).toEqual([
         {
-          id: topicFixtures.topic1Group1.id,
+          id: topicFixtures.topic1Group1._id!.toHexString(),
           name: 'Topic 1 Group 1',
           imgUrl: 't1g1_url',
           unread: true,
           pinned: false,
         },
         {
-          id: topicFixtures.topic2Group1.id,
+          id: topicFixtures.topic2Group1._id!.toHexString(),
           name: 'Topic 2 Group 1',
           imgUrl: 't2g1_url',
           unread: true,

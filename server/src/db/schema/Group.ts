@@ -1,5 +1,4 @@
 import {
-  Document,
   model,
   Schema,
   Types,
@@ -18,7 +17,9 @@ export interface IGroup {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface Group extends IGroup, Document<Types.ObjectId> { }
+export interface Group extends IGroup {
+  _id: Types.ObjectId;
+}
 
 type GroupSchemaDef = {
   [key in keyof IGroup]: any;
@@ -39,6 +40,6 @@ const groupSchema = new Schema<IGroup>(schemaDef);
 
 groupSchema.index({ name: 1, createdAt: 1 });
 
-const GroupModel = model<IGroup>('Group', groupSchema);
+const GroupModel = model<Group>('Group', groupSchema);
 
 export default GroupModel;

@@ -6,16 +6,21 @@ import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
 import { TopicLatestRead } from '../db/schema/TopicLatestRead';
+import { Types } from 'mongoose';
 
 const oldDate = new Date('2015-01-01');
 
-
-
 @ObjectType()
 class TopicResult {
+  @Field()
+  id: string;
 
+  @Field()
+  name: string;
+
+  @Field()
+  imgUrl?: string;
 }
-
 
 @ObjectType()
 class TopicOfGroupResult extends TopicResult {
@@ -36,33 +41,34 @@ export class TopicResolver {
     @Arg('skip') skip: number,
     @Ctx() { user, db }: Context
   ): Promise<TopicOfGroupResult[]> {
-    await db.UserGroup.findOne({ userId: user!.id, groupId }).orFail();
+    await db.UserGroup.findOne({ userId: user!._id!.toHexString(), groupId }).orFail();
     // TODO: use an alternative to skip
     const topics = await db.Topic.find({
-      where: { groupId },
+      where: { groupId: new Types.ObjectId(groupId) },
       take: limit,
       skip,
       order: { updatedAt: 'DESC' }
-    });
-    const topicIds = _.map(topics, topic => topic.id);
-    const latestTopicRead: TopicLatestRead[] = await db.TopicLatestRead.find({
+    }).lean();
+    const topicIds = _.map(topics, topic => topic._id);
+    const latestTopicRead = await db.TopicLatestRead.find({
       topicId: { $in: topicIds },
-      userId: user!.id,
-    }).orFail();
+      userId: user!._id,
+    }).lean();
     const pinnedTopics = await db.PinnedTopic.find({
-      userId: user!.id,
+      userId: user!._id,
       topicId: { $in: topicIds },
     });
-    const pinnedTopicsIds = pinnedTopics.map(pinnedTopic => pinnedTopic.topicId);
+    const pinnedTopicsIds = pinnedTopics.map(pinnedTopic => pinnedTopic.topicId.toHexString());
     const pinnedTopicsSet = new Set(pinnedTopicsIds);
     const latestReadByTopicId = _.keyBy(latestTopicRead, l => l.topicId.toHexString());
     return topics.map((topic) => {
-      const latestReadObj = latestReadByTopicId[topic.id];
+      const latestReadObj = latestReadByTopicId[topic._id!.toHexString()];
       const latestReadMoment = latestReadObj ? latestReadObj.latestMoment : oldDate;
       return {
         ...topic,
+        id: topic._id?.toHexString(),
         unread: isBefore(latestReadMoment, topic.updatedAt),
-        pinned: pinnedTopicsSet.has(topic.id),
+        pinned: pinnedTopicsSet.has(topic._id!.toHexString()),
       };
     });
   }
@@ -73,12 +79,12 @@ export class TopicResolver {
     @Arg('topicName') topicName: string,
     @Ctx() { user, db }: Context
   ): Promise<string> {
-    await db.UserGroup.findOne({ userId: user!.id, groupId }).orFail();
+    await db.UserGroup.findOne({ userId: user!._id!.toHexString(), groupId }).orFail().lean();
 
     const createdTopic = await db.Topic.create({
       name: topicName,
       groupId,
-      createdById: user!.id,
+      createdById: user!._id!.toHexString(),
       imgUrl: 'TODO url',
     });
 
@@ -89,8 +95,8 @@ export class TopicResolver {
     },);
 
     await db.TopicLatestRead.create({
-      topicId: createdTopic.id,
-      userId: user!.id,
+      topicId: createdTopic._id!.toHexString(),
+      userId: user!._id!.toHexString(),
       latestMoment: new Date(),
     });
 
@@ -98,7 +104,7 @@ export class TopicResolver {
       type: messageTypes.NEW_TOPIC,
       groupId,
       topicName,
-      topicId: createdTopic.id,
+      topicId: createdTopic._id!.toHexString(),
     };
     const pushParams = {
       payload: pushPayload,
@@ -116,7 +122,7 @@ export class TopicResolver {
     @Ctx() { user, db }: Context
   ): Promise<string> {
     await db.TopicLatestRead.updateOne({
-      userId: user!.id,
+      userId: user!._id.toHexString(),
       topicId,
     }, {
       latestMoment: new Date(),
@@ -124,12 +130,12 @@ export class TopicResolver {
 
     const topic = await db.Topic.findById(topicId).orFail();
     const userGroup = await db.UserGroup.findOne({
-      userId: user!.id,
+      userId: user!._id!.toHexString(),
       groupId: topic.groupId,
     }).orFail();
     await db.UserGroup.updateOne({
       id: userGroup._id,
-      userId: user!.id,
+      userId: user!._id!.toHexString(),
     }, {
       groupId: topic.groupId,
       latestMoment: Date.now(),
@@ -150,13 +156,13 @@ export class TopicResolver {
 
     if (pinned) {
       await db.PinnedTopic.create({
-        userId: user!.id,
+        userId: user!._id!.toHexString(),
         topicId,
       });
       await subscribeToTopic(db, user!, user!.notificationToken, topicId);
     } else {
       await db.PinnedTopic.deleteOne({
-        userId: user!.id,
+        userId: user!._id!.toHexString(),
         topicId,
       });
       await unsubscribeFromTopic(user!.notificationToken, topicId);

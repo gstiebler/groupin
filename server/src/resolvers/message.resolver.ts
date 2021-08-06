@@ -51,7 +51,7 @@ export class MessageResolver {
     const topic = await db.Topic.findById(topicId)
       .orFail(() => Error('Topic expected'));
 
-    if (await db.UserGroup.findOne({ userId: user?.id, topicId } as Partial<UserGroup>)) {
+    if (await db.UserGroup.findOne({ userId: user?._id, topicId })) {
       throw new Error('User does not participate in the group');
     }
     const beforeIdMessages = !_.isEmpty(beforeId);

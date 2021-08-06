@@ -1,8 +1,8 @@
 import { groupIds, userIds } from './preIds';
 import { convertFixedDate } from './fixtureHelper';
-import { UserGroup } from '../../db/schema/UserGroup';
+import { IUserGroup } from '../../db/schema/UserGroup';
 
-const userGroups: Partial<UserGroup>[] = [
+const userGroups: Partial<IUserGroup>[] = [
   {
     groupId: groupIds.firstGroup,
     userId: userIds.alice,

@@ -6,7 +6,7 @@ import {
 
 const { ObjectId } = Schema.Types;
 
-export interface UserGroup {
+export interface IUserGroup {
   userId: Types.ObjectId;
   groupId: Types.ObjectId;
   pinned: boolean;
@@ -14,9 +14,12 @@ export interface UserGroup {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface UserGroup extends IUserGroup {
+  _id: Types.ObjectId;
+}
 
 type UserGroupSchemaDef = {
-  [key in keyof UserGroup]: any;
+  [key in keyof IUserGroup]: any;
 };
 
 const schemaDef: UserGroupSchemaDef = {
@@ -27,7 +30,7 @@ const schemaDef: UserGroupSchemaDef = {
   createdAt: { type: Date, default: Date.now, required: true },
   updatedAt: { type: Date, default: Date.now, required: true },
 };
-const userGroupSchema = new Schema<UserGroup>(schemaDef);
+const userGroupSchema = new Schema<IUserGroup>(schemaDef);
 
 const UserGroupModel = model<UserGroup>('UserGroup', userGroupSchema);
 
