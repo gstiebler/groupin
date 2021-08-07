@@ -7,7 +7,7 @@ import { User } from '../db/schema/User';
 import { Types } from 'mongoose';
 
 async function userPinnedTopics(db: ConnCtx, userId: Types.ObjectId, groupId: string) {
-  const pinnedTopics = await db.PinnedTopic.find({ userId });
+  const pinnedTopics = await db.PinnedTopic.find({ userId }).lean();
   const topics = await db.Topic.find({
     id: { $in: pinnedTopics },
     groupId,

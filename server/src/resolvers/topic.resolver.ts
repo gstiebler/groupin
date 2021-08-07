@@ -56,7 +56,7 @@ export class TopicResolver {
     const pinnedTopics = await db.PinnedTopic.find({
       userId: user!._id,
       topicId: { $in: topicIds },
-    });
+    }).lean();
     const pinnedTopicsIds = pinnedTopics.map(pinnedTopic => pinnedTopic.topicId.toHexString());
     const pinnedTopicsSet = new Set(pinnedTopicsIds);
     const latestReadByTopicId = _.keyBy(latestTopicRead, l => l.topicId.toHexString());
