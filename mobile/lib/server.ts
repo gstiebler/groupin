@@ -189,7 +189,7 @@ export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: 
         beforeId: $beforeId,
         afterId: $afterId
       ) {
-        id,
+        _id,
         text,
         createdAt,
         user {

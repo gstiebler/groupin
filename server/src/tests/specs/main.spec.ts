@@ -20,17 +20,19 @@ import { ObjectId, Types } from 'mongoose';
 import { User } from '../../db/schema/User';
 import { Message } from '../../db/schema/Message';
 import { MessageResult } from '../../resolvers/message.resolver';
+import { GiMessage } from '../../mobile/lib/messages';
+import { IStorage } from '../../mobile/types/Storage.types';
 const { ObjectId } = Types;
 
 
 function createMessages(numMessages: number, user: Partial<User>, topicId: string) {
-  const messages: Partial<Message>[] = [];
+  const messages: Message[] = [];
   const baseMoment = new Date();
   for (let i = 0; i < numMessages; i++) {
     messages.push({
       _id: new ObjectId(),
       text: `Message ${i}`,
-      userId: user._id,
+      userId: user._id!,
       topicId: new ObjectId(topicId),
       createdAt: addSeconds(baseMoment, 3)
     });
@@ -38,11 +40,11 @@ function createMessages(numMessages: number, user: Partial<User>, topicId: strin
   return _.reverse(messages);
 }
 
-function createStorage() {
+function createStorage(): IStorage {
+  const messagesByTopic = new Map<string, GiMessage[]>();
   return {
-    messagesByTopic: new Map([]),
-    getItem(topicId: string) { return this.messagesByTopic.get(topicId); },
-    setItem(topicId: string, messages: Message[]) { this.messagesByTopic.set(topicId, messages); },
+    async getMessages(topicId: string) { return messagesByTopic.get(topicId) ?? []; },
+    async setMessages(topicId: string, messages: GiMessage[]) { messagesByTopic.set(topicId, messages); },
   };
 }
 
@@ -62,7 +64,10 @@ describe('main', () => {
 
   describe('reading', () => {
     const messages50 = createMessages(50, userFixtures.robert, topicFixtures.topic1Group2._id!.toHexString());
-    // const localMessages50 = messages50.map((m) => ({ ...m, _id: m.id }));
+    const localMessages50: Partial<GiMessage>[] = messages50.map(message => ({
+      _id: message._id.toHexString(),
+      text: message.text,
+    }));
 
     beforeAll(async () => {
       await initFixtures(db);
@@ -190,7 +195,7 @@ describe('main', () => {
         });
         const expectedMessages: MessageResult[] = [
           {
-            id: messageFixtures.message1topic1._id!.toHexString(),
+            _id: messageFixtures.message1topic1._id!.toHexString(),
             createdAt: Date.parse('2018-10-01'),
             text: 'Topic 1 Group 1 Alice',
             user: {
@@ -200,7 +205,7 @@ describe('main', () => {
             },
           },
           {
-            id: messageFixtures.message2topic1._id!.toHexString(),
+            _id: messageFixtures.message2topic1._id!.toHexString(),
             createdAt: Date.parse('2018-10-02'),
             text: 'Topic 1 Group 1 Robert',
             user: {
@@ -212,15 +217,14 @@ describe('main', () => {
         ]
         const expectedMessagesReversed = _.reverse(expectedMessages);
         expect(rootStore.messages).toEqual(expectedMessagesReversed);
-        expect(storage.getItem(topicIdStr)).toEqual(expectedMessagesReversed);
+        expect(await storage.getMessages(topicIdStr)).toEqual(expectedMessagesReversed);
       });
-    });
-/*
+
       it('3 extra messages to be fetched', async () => {
-        const topicIdStr = topicFixtures.topic1Group2.id!;
+        const topicIdStr = topicFixtures.topic1Group2._id!.toHexString();
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
-        storage.setItem(topicIdStr, localMessages50.slice(4, 24));
+        await storage.setMessages(topicIdStr, localMessages50.slice(4, 24) as GiMessage[]);
         const groupStore = new GroupStore();
         const rootStore = new RootStore(storage, groupStore);
         await rootStore.topicStore.onTopicOpened({
@@ -241,7 +245,7 @@ describe('main', () => {
         expect(storeMessageTexts[23]).toEqual('Message 49');
 
         // storage messages
-        const storageMessageTexts = _.reverse(_.map(storage.getItem(topicIdStr), 'text'));
+        const storageMessageTexts = _.reverse(_.map(await storage.getMessages(topicIdStr), 'text'));
         expect(storageMessageTexts).toHaveLength(20);
         expect(storageMessageTexts[0]).toEqual('Message 30');
         expect(storageMessageTexts[15]).toEqual('Message 45');
@@ -251,6 +255,8 @@ describe('main', () => {
         expect(storageMessageTexts[19]).toEqual('Message 49');
       });
 
+    });
+/*
       it('hole between fetched and on storage', async () => {
         const topicIdStr = topicFixtures.topic1Group2.id;
         setCurrentUser(userFixtures.robert);

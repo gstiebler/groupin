@@ -38,7 +38,7 @@ async function setup() {
   });
 
   graphqlConnect.sendQuery = async (query: string, variables?: VariableValues) => {
-    logger.debug(query, variables);
+    // logger.debug(query, variables);
     const result = await server.executeOperation({
       query,
       variables,

@@ -31,11 +31,11 @@ export class TopicStore {
     const { topicId, topicName, storage, subscribeFn } = params;
     this.topicTitle = topicName;
     this.topicId = topicId;
-    // is `currentlyViewedTopicId` redundant with `topicId`?
+    // TODO: is `currentlyViewedTopicId` redundant with `topicId`?
     this.rootActions.currentlyViewedTopicId = topicId;
     this.rootActions.hasOlderMessages = true;
   
-    const currentMessages = (await storage.getItem(topicId)) as GiMessage[];
+    const currentMessages = await storage.getMessages(topicId);
     this.rootActions.messages = currentMessages;
     const messagesEmpty = _.isEmpty(currentMessages);
     let messages;
@@ -55,7 +55,7 @@ export class TopicStore {
         messages = mergeMessages(currentMessages, removeFirst(messages));
       }
     }
-    await storage.setItem(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
+    await storage.setMessages(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
     this.rootActions.messages = messages;
     subscribeFn(formatDataTopicId(topicId));
   }

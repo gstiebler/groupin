@@ -24,7 +24,7 @@ class UserResult {
 @ObjectType()
 export class MessageResult {
   @Field()
-  id: string;
+  _id: string;
 
   @Field()
   text: string;
@@ -82,7 +82,7 @@ export class MessageResolver {
     return messages.map(message => ({
       ...message,
       createdAt: message.createdAt.getTime(),
-      id: message._id.toHexString() as string,
+      _id: message._id.toHexString(),
       user: userById[message.userId.toHexString()],
     }));
   }

@@ -1,4 +1,6 @@
+import { GiMessage } from "../lib/messages";
+
 export interface IStorage {
-  getItem: (key: string) => Promise<unknown>;
-  setItem: (key: string, value: unknown) => void;
+  setMessages: (topicId: string, messages: GiMessage[]) => Promise<void>;
+  getMessages: (topicId: string) => Promise<GiMessage[]>;
 }
