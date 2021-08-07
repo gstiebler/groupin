@@ -286,13 +286,12 @@ describe('main', () => {
         expect(storageMessageTexts[19]).toEqual('Message 49');
       });
     });
-/*
 
     it('onOlderMessagesRequested', async () => {
-      const topicIdStr = topicFixtures.topic1Group2.id;
+      const topicIdStr = topicFixtures.topic1Group2._id!.toHexString();
       setCurrentUser(userFixtures.robert);
-      const rootActions = new RootStore();
-      rootActions.messages = localMessages50.slice(0, 5);
+      const rootActions = new RootStore(createStorage(), new GroupStore());
+      rootActions.messages = localMessages50.slice(0, 5) as GiMessage[];
       await rootActions.onOlderMessagesRequested(topicIdStr);
 
       // store messages
@@ -308,6 +307,7 @@ describe('main', () => {
       expect(storeMessageTexts[23]).toEqual('Message 48');
       expect(storeMessageTexts[24]).toEqual('Message 49');
     });
+/*
 
     it('getMessagesOfCurrentTopic', async () => {
       setCurrentUser(userFixtures.robert);

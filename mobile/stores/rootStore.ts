@@ -1,5 +1,5 @@
 import * as server from '../lib/server';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { mergeMessages, getFirst, GiMessage } from '../lib/messages';
 
 import { NUM_ITEMS_PER_FETCH } from '../constants/domainConstants';
@@ -79,7 +79,7 @@ export class RootStore {
       limit: NUM_ITEMS_PER_FETCH,
     });
     // TODO: test line below
-    await this.storage.setItem(topicId, this.messages);
+    await this.storage.setMessages(topicId, this.messages);
   }
   
   async updateNotificationToken(notificationToken: string) {
