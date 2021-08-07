@@ -5,7 +5,7 @@ export async function createMongooseConnection(mongoURL: string): Promise<typeof
   mongoose.set('useCreateIndex', true);
   mongoose.set('useFindAndModify', false);
   mongoose.set('bufferCommands', false);
-  mongoose.set('debug', true);
+  mongoose.set('debug', !!process.env.DEBUG_MONGOOSE);
 
   await mongoose.disconnect();
 

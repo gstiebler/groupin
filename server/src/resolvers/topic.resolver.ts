@@ -47,7 +47,7 @@ export class TopicResolver {
       .find({ groupId: new Types.ObjectId(groupId) })
       .limit(limit)
       .skip(skip)
-      .sort({ updatedAt: -1 })
+      .sort({ groupId: 1, updatedAt: -1 })
       .lean();
     const topicIds = _.map(topics, topic => topic._id);
     const latestTopicRead = await db.TopicLatestRead.find({

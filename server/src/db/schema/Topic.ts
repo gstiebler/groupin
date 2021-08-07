@@ -31,6 +31,7 @@ const schemaDef: TopicSchemaDef = {
   updatedAt: { type: Date, default: Date.now, required: true },
 };
 const topicSchema = new Schema<ITopic>(schemaDef);
+topicSchema.index({ groupId: 1, updatedAt: -1 });
 
 const TopicModel = model<Topic>('Topic', topicSchema);
 
