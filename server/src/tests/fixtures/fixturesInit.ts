@@ -10,21 +10,25 @@ import logger from '../../config/winston';
 
 export async function initFixtures(db: ConnCtx) {
   try {
-    await db.PinnedTopic.deleteMany({});
-    await db.UserGroup.deleteMany({});
-    await db.TopicLatestRead.deleteMany({});
-    await db.Message.deleteMany({});
-    await db.Topic.deleteMany({});
-    await db.Group.deleteMany({});
-    await db.User.deleteMany({});
+    await Promise.all([
+      db.PinnedTopic.deleteMany({}),
+      db.UserGroup.deleteMany({}),
+      db.TopicLatestRead.deleteMany({}),
+      db.Message.deleteMany({}),
+      db.Topic.deleteMany({}),
+      db.Group.deleteMany({}),
+      db.User.deleteMany({}),
+    ]);
 
-    await db.User.insertMany(_.values(userFixtures));
-    await db.Group.insertMany(_.values(groupFixtures));
-    await db.Topic.insertMany(_.values(topicFixtures));
-    await db.Message.insertMany(_.values(messageFixtures));
-    // await db.topicLatestRead.insert(_.values(topiLatestReadFixtures));
-    await db.UserGroup.insertMany(_.values(userGroupFixtures));
-    await db.PinnedTopic.insertMany(_.values(pinnedTopicFixtures));
+    await Promise.all([
+      db.User.insertMany(_.values(userFixtures)),
+      db.Group.insertMany(_.values(groupFixtures)),
+      db.Topic.insertMany(_.values(topicFixtures)),
+      db.Message.insertMany(_.values(messageFixtures)),
+      // await db.topicLatestRead.insert(_.values(topiLatestReadFixtures)),
+      db.UserGroup.insertMany(_.values(userGroupFixtures)),
+      db.PinnedTopic.insertMany(_.values(pinnedTopicFixtures)),
+    ]);
   } catch (error) {
     logger.error(`Error loading fixtures: ${error}`);
   }
