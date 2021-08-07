@@ -6,10 +6,7 @@ import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import { initFixtures } from '../fixtures/fixturesInit';
 import messageFixtures from '../fixtures/messageFixtures';
-/*
-import { groupIds } from '../fixtures/preIds';
 import { messageTypes } from '../../lib/constants';
-*/
 import { ConnCtx } from '../../db/ConnectionContext';
 import { addSeconds } from 'date-fns';
 import { GroupStore } from '../../mobile/stores/groupStore';
@@ -376,32 +373,31 @@ describe('main', () => {
       expect(userByUid!.name).toBe('Guilherme');
       expect(userByUid!.externalId).toBe(uid);
     });
-/*
     describe('sendMessage', () => {
       const { alice } = userFixtures;
       const messageText = 'new message 1 from Alice';
-      const topicId = topicFixtures.topic1Group1.id;
-      let rootActions;
+      const topicId = topicFixtures.topic1Group1._id?.toHexString();
+      let rootStore;
 
       beforeEach(async () => {
         setCurrentUser(alice);
-        rootActions = new RootStore();
-        rootActions.topicStore.topicId = topicId;
-        await rootActions.sendMessages([{ text: messageText }]);
+        rootStore = new RootStore(createStorage(), new GroupStore());
+        rootStore.topicStore.topicId = topicId;
+        await rootStore.sendMessages([{ text: messageText }]);
       });
 
       it('push', async () => {
-        const call0args = pushService.pushMessage.mock.calls[0];
+        const call0args = (pushService.pushMessage as any).mock.calls[0];
         expect(call0args).toHaveLength(2);
         const [, pushParams] = call0args;
-        expect(topicId).toBe(topicFixtures.topic1Group1.id);
-        const createdMessage = await Message.findOne({}, {}, { sort: { _id: -1 } });
+        expect(topicId).toBe(topicFixtures.topic1Group1._id!.toHexString());
+        const createdMessage = await db.Message.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).toEqual({
           payload: {
             message: messageText,
-            topicId: topicFixtures.topic1Group1.id,
-            groupId: groupFixtures.firstGroup.id,
-            messageId: createdMessage.id,
+            topicId: topicFixtures.topic1Group1._id!.toHexString(),
+            groupId: groupFixtures.firstGroup._id!.toHexString(),
+            messageId: createdMessage!._id!.toHexString(),
             authorName: alice.name,
             topicName: 'Topic 1 Group 1',
             type: messageTypes.NEW_MESSAGE,
@@ -411,12 +407,18 @@ describe('main', () => {
           sendNotification: true,
         });
 
-        const call1args = pushService.pushMessage.mock.calls[1];
+        const call1args = (pushService.pushMessage as any).mock.calls[1];
         const [groupId] = call1args;
-        expect(groupId).toBe(groupFixtures.firstGroup.id);
+        expect(groupId).toBe(groupFixtures.firstGroup._id!.toHexString());
 
-        expect(rootActions.messages).toHaveLength(1);
+        expect(rootStore.messages).toHaveLength(1);
       });
+
+
+
+
+    });
+/*
 
       it('message was added to DB', async () => {
         const lastMessageOnStore = _.last(rootActions.messages);
