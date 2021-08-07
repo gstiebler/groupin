@@ -16,7 +16,7 @@ import logger from '../config/winston';
 
 const currentUserHolder: { currentUser: Partial<User> | null } = { currentUser: null };
 
-export function setCurrentUser(user: Partial<User>) {
+export function setCurrentUser(user: Partial<User> | null) {
   currentUserHolder.currentUser = user;
 }
 

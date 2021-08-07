@@ -12,10 +12,11 @@ export async function getHello(pass: string): Promise<string> {
   return res.getHello;
 }
 
-export async function register(name: string) {
+export async function register(name: string): Promise<{ id: string, errorMessage: string }> {
   const query = `
     mutation Register($name: String!) {
       register(name: $name) {
+        id
         errorMessage
       }
     }

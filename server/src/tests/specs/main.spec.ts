@@ -357,7 +357,6 @@ describe('main', () => {
         iBelong: true,
       });
     });
-/*
   });
 
   describe('writting', () => {
@@ -365,21 +364,19 @@ describe('main', () => {
       pushService.pushMessage = jest.fn();
       pushService.subscribe = jest.fn();
       pushService.unsubscribe = jest.fn();
-      await initFixtures();
+      await initFixtures(db);
     });
 
     it('register', async () => {
+      setCurrentUser(null);
       const uid = 'dk49sdfjhk';
-      await server.register({
-        name: 'Guilherme',
-      });
+      const result = await server.register('Guilherme');
 
-      const userByUid = await User.findOne({ uid });
-      expect(userByUid.phoneNumber).toBe('(21)999995555');
-      expect(userByUid.name).toBe('Guilherme');
-      expect(userByUid.uid).toBe(uid);
+      const userByUid = await db.User.findById(result.id).lean();
+      expect(userByUid!.name).toBe('Guilherme');
+      expect(userByUid!.externalId).toBe(uid);
     });
-
+/*
     describe('sendMessage', () => {
       const { alice } = userFixtures;
       const messageText = 'new message 1 from Alice';
