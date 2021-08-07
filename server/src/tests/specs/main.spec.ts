@@ -254,15 +254,12 @@ describe('main', () => {
         expect(storageMessageTexts[18]).toEqual('Message 48');
         expect(storageMessageTexts[19]).toEqual('Message 49');
       });
-
-    });
-/*
       it('hole between fetched and on storage', async () => {
-        const topicIdStr = topicFixtures.topic1Group2.id;
+        const topicIdStr = topicFixtures.topic1Group2._id!.toHexString();
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
-        storage.setItem(topicIdStr, localMessages50.slice(25, 44));
-        const rootActions = new RootStore();
+        await storage.setMessages(topicIdStr, localMessages50.slice(25, 44) as GiMessage[]);
+        const rootActions = new RootStore(storage, new GroupStore());
         await rootActions.topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
@@ -279,7 +276,7 @@ describe('main', () => {
         expect(storeMessageTexts[19]).toEqual('Message 49');
 
         // storage messages
-        const storageMessageTexts = _.reverse(_.map(storage.getItem(topicIdStr), 'text'));
+        const storageMessageTexts = _.reverse(_.map(await storage.getMessages(topicIdStr), 'text'));
         expect(storageMessageTexts).toHaveLength(20);
         expect(storageMessageTexts[0]).toEqual('Message 30');
         expect(storageMessageTexts[15]).toEqual('Message 45');
@@ -289,6 +286,7 @@ describe('main', () => {
         expect(storageMessageTexts[19]).toEqual('Message 49');
       });
     });
+/*
 
     it('onOlderMessagesRequested', async () => {
       const topicIdStr = topicFixtures.topic1Group2.id;
