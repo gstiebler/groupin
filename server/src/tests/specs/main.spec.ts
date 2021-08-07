@@ -376,14 +376,14 @@ describe('main', () => {
     describe('sendMessage', () => {
       const { alice } = userFixtures;
       const messageText = 'new message 1 from Alice';
-      const topicId = topicFixtures.topic1Group1._id?.toHexString();
-      let rootStore;
+      const topicId = topicFixtures.topic1Group1._id!.toHexString();
+      let rootStore: RootStore;
 
       beforeEach(async () => {
         setCurrentUser(alice);
         rootStore = new RootStore(createStorage(), new GroupStore());
         rootStore.topicStore.topicId = topicId;
-        await rootStore.sendMessages([{ text: messageText }]);
+        await rootStore.sendMessages([{ text: messageText } as GiMessage]);
       });
 
       it('push', async () => {
@@ -414,31 +414,28 @@ describe('main', () => {
         expect(rootStore.messages).toHaveLength(1);
       });
 
-
-
-
-    });
-/*
-
       it('message was added to DB', async () => {
-        const lastMessageOnStore = _.last(rootActions.messages);
         const messages = await server.getMessagesOfTopic({
-          topicId: topicFixtures.topic1Group1.id,
+          topicId: topicFixtures.topic1Group1._id!.toHexString(),
           limit: 20,
           afterId: '507f1f77bcf86cd799439002',
         });
         expect(messages).toEqual(expect.arrayContaining([
           expect.objectContaining({
-            _id: lastMessageOnStore._id,
             text: messageText,
             user: expect.objectContaining({
-              _id: '507f1f77bcf86cd799430001',
-              avatar: 'alice_url',
-              name: 'Alice',
+              avatar: userFixtures.alice.imgUrl,
+              name: userFixtures.alice.name,
             }),
           }),
         ]));
       });
+
+
+
+
+    });
+/*
 
       it('sendMessage, filtering by `startingId`', async () => {
         const messages = await server.getMessagesOfTopic({
