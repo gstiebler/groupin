@@ -52,6 +52,9 @@ class GroupResult {
 
   @Field()
   createdBy: string;
+
+  @Field()
+  createdAt: number;
 }
 
 
@@ -108,6 +111,7 @@ export class GroupResolver {
       ...group,
       id: group._id!.toHexString(),
       createdBy: group.createdBy.toHexString(),
+      createdAt: group.createdAt.getTime(),
       iBelong,
     };
   }
@@ -129,6 +133,7 @@ export class GroupResolver {
         ...byFriendlyId,
         id: byFriendlyId._id!.toHexString(),
         createdBy: byFriendlyId.createdBy.toHexString(),
+        createdAt: byFriendlyId.createdAt.getTime(),
       }];
     }
 
@@ -142,6 +147,7 @@ export class GroupResolver {
       ...group,
       id: group._id!.toHexString(),
       createdBy: group.createdBy.toHexString(),
+      createdAt: group.createdAt.getTime(),
     }));
   }
 

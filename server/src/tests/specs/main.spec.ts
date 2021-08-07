@@ -22,6 +22,7 @@ import { Message } from '../../db/schema/Message';
 import { MessageResult } from '../../resolvers/message.resolver';
 import { GiMessage } from '../../mobile/lib/messages';
 import { IStorage } from '../../mobile/types/Storage.types';
+import { groupIds, userIds } from '../fixtures/preIds';
 const { ObjectId } = Types;
 
 
@@ -199,7 +200,7 @@ describe('main', () => {
             createdAt: Date.parse('2018-10-01'),
             text: 'Topic 1 Group 1 Alice',
             user: {
-              id: userFixtures.alice._id!.toHexString(),
+              _id: userFixtures.alice._id!.toHexString(),
               name: 'Alice',
               avatar: 'alice_url',
             },
@@ -209,7 +210,7 @@ describe('main', () => {
             createdAt: Date.parse('2018-10-02'),
             text: 'Topic 1 Group 1 Robert',
             user: {
-              id: userFixtures.robert._id!.toHexString(),
+              _id: userFixtures.robert._id!.toHexString(),
               name: 'Robert',
               avatar: 'robert_url',
             },
@@ -290,12 +291,12 @@ describe('main', () => {
     it('onOlderMessagesRequested', async () => {
       const topicIdStr = topicFixtures.topic1Group2._id!.toHexString();
       setCurrentUser(userFixtures.robert);
-      const rootActions = new RootStore(createStorage(), new GroupStore());
-      rootActions.messages = localMessages50.slice(0, 5) as GiMessage[];
-      await rootActions.onOlderMessagesRequested(topicIdStr);
+      const rootStore = new RootStore(createStorage(), new GroupStore());
+      rootStore.messages = localMessages50.slice(0, 5) as GiMessage[];
+      await rootStore.onOlderMessagesRequested(topicIdStr);
 
       // store messages
-      const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
+      const storeMessageTexts = _.reverse(_.map(rootStore.messages, 'text'));
       expect(storeMessageTexts).toHaveLength(25);
       expect(storeMessageTexts[0]).toEqual('Message 25');
       expect(storeMessageTexts[1]).toEqual('Message 26');
@@ -307,31 +308,30 @@ describe('main', () => {
       expect(storeMessageTexts[23]).toEqual('Message 48');
       expect(storeMessageTexts[24]).toEqual('Message 49');
     });
-/*
 
     it('getMessagesOfCurrentTopic', async () => {
       setCurrentUser(userFixtures.robert);
-      const rootActions = new RootStore();
-      rootActions.currentlyViewedTopicId = topicFixtures.topic1Group1.id;
       const storage = createStorage();
-      await rootActions.getMessagesOfCurrentTopic(storage);
-      expect(rootActions.messages).toEqual(_.reverse([
+      const rootStore = new RootStore(storage, new GroupStore());
+      rootStore.currentlyViewedTopicId = topicFixtures.topic1Group1._id!.toHexString();
+      await rootStore.getMessagesOfCurrentTopic();
+      expect(rootStore.messages).toEqual(_.reverse([
         {
-          _id: messageFixtures.message1topic1.id,
+          _id: messageFixtures.message1topic1._id!.toHexString(),
           createdAt: Date.parse('2018-10-01'),
           text: 'Topic 1 Group 1 Alice',
           user: {
-            _id: userFixtures.alice.id,
+            _id: userFixtures.alice._id!.toHexString(),
             name: 'Alice',
             avatar: 'alice_url',
           },
         },
         {
-          _id: messageFixtures.message2topic1.id,
+          _id: messageFixtures.message2topic1._id!.toHexString(),
           createdAt: Date.parse('2018-10-02'),
           text: 'Topic 1 Group 1 Robert',
           user: {
-            _id: userFixtures.robert.id,
+            _id: userFixtures.robert._id!.toHexString(),
             name: 'Robert',
             avatar: 'robert_url',
           },
@@ -340,23 +340,24 @@ describe('main', () => {
     });
 
     it('getGroupInfo', async () => {
-      const groupId = groupFixtures.firstGroup.id;
+      const groupId = groupFixtures.firstGroup._id!.toHexString();
       setCurrentUser(userFixtures.robert);
       const groupActions = new GroupStore();
       await groupActions.getGroupInfo(groupId);
       expect(groupActions.currentGroupInfo).toEqual({
-        _id: '5c1c1e99e362b2ce8042faaa',
+        id: groupIds.firstGroup.toHexString(),
         name: 'First Group',
         imgUrl: 'url1',
         description: 'Description of the first group',
         visibility: 'PUBLIC',
         visibilityLabel: 'Público',
         friendlyId: 'S9hvTvIBWM',
-        createdBy: '507f1f77bcf86cd799430001',
-        createdAt: 1528156800000,
+        createdBy: userIds.alice.toHexString(),
+        createdAt: groupFixtures.firstGroup.createdAt!.getTime(),
         iBelong: true,
       });
     });
+/*
   });
 
   describe('writting', () => {

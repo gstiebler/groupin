@@ -193,7 +193,7 @@ export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: 
         text,
         createdAt,
         user {
-          id,
+          _id,
           name,
           avatar
         }
@@ -229,7 +229,7 @@ export type GroupInfo = {
 }
 export async function getGroupInfo(groupId: string): Promise<GroupInfo> {
   const query = `
-    query GetGroupInfo($groupId: String) {
+    query GetGroupInfo($groupId: String!) {
       getGroupInfo (
         groupId: $groupId
       ) {

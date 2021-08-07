@@ -12,7 +12,7 @@ const { ObjectId } = Types;
 @ObjectType()
 class UserResult {
   @Field()
-  id: string;
+  _id: string;
 
   @Field()
   name: string;
@@ -74,11 +74,11 @@ export class MessageResolver {
     const userIds = messages.map(message => message.userId);
     const users: User[] = await db.User.find({ _id: { $in: userIds } }).lean();
     const messageUser = users.map(user => ({
-      id: user._id.toHexString(),
+      _id: user._id!.toHexString(),
       name: user.name,
       avatar: user.imgUrl,
     }));
-    const userById = _.keyBy(messageUser, user => user.id);
+    const userById = _.keyBy(messageUser, user => user._id);
     return messages.map(message => ({
       ...message,
       createdAt: message.createdAt.getTime(),
