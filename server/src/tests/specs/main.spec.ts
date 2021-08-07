@@ -5,8 +5,8 @@ import userFixtures from '../fixtures/userFixtures';
 import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import { initFixtures } from '../fixtures/fixturesInit';
-/*
 import messageFixtures from '../fixtures/messageFixtures';
+/*
 import { groupIds } from '../fixtures/preIds';
 import { messageTypes } from '../../lib/constants';
 */
@@ -19,6 +19,7 @@ import * as server from '../../mobile/lib/server';
 import { ObjectId, Types } from 'mongoose';
 import { User } from '../../db/schema/User';
 import { Message } from '../../db/schema/Message';
+import { MessageResult } from '../../resolvers/message.resolver';
 const { ObjectId } = Types;
 
 
@@ -173,10 +174,10 @@ describe('main', () => {
         },
       ]);
     });
-/*
+
     describe('onTopicOpened', () => {
       it('no messages on storage', async () => {
-        const topicIdStr = topicFixtures.topic1Group1.id!;
+        const topicIdStr = topicFixtures.topic1Group1._id?.toHexString()!;
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         const groupStore = new GroupStore();
@@ -187,32 +188,34 @@ describe('main', () => {
           storage,
           subscribeFn: jest.fn(),
         });
-        const expectedMessages = _.reverse([
+        const expectedMessages: MessageResult[] = [
           {
-            _id: messageFixtures.message1topic1.id,
+            id: messageFixtures.message1topic1._id!.toHexString(),
             createdAt: Date.parse('2018-10-01'),
             text: 'Topic 1 Group 1 Alice',
             user: {
-              _id: userFixtures.alice.id,
+              id: userFixtures.alice._id!.toHexString(),
               name: 'Alice',
               avatar: 'alice_url',
             },
           },
           {
-            _id: messageFixtures.message2topic1.id,
+            id: messageFixtures.message2topic1._id!.toHexString(),
             createdAt: Date.parse('2018-10-02'),
             text: 'Topic 1 Group 1 Robert',
             user: {
-              _id: userFixtures.robert.id,
+              id: userFixtures.robert._id!.toHexString(),
               name: 'Robert',
               avatar: 'robert_url',
             },
           },
-        ]);
-        expect(rootStore.messages).toEqual(expectedMessages);
-        expect(storage.getItem(topicIdStr)).toEqual(expectedMessages);
+        ]
+        const expectedMessagesReversed = _.reverse(expectedMessages);
+        expect(rootStore.messages).toEqual(expectedMessagesReversed);
+        expect(storage.getItem(topicIdStr)).toEqual(expectedMessagesReversed);
       });
-
+    });
+/*
       it('3 extra messages to be fetched', async () => {
         const topicIdStr = topicFixtures.topic1Group2.id!;
         setCurrentUser(userFixtures.robert);

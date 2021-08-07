@@ -5,6 +5,7 @@ const users: { [user: string]: Partial<User> } = {
   alice: {
     _id: userIds.alice,
     name: 'Alice',
+    imgUrl: 'alice_url',
     externalId: 'aliceExt',
   },
   robert: {

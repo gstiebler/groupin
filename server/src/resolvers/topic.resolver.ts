@@ -5,7 +5,6 @@ import pushService from '../lib/pushService';
 import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
-import { TopicLatestRead } from '../db/schema/TopicLatestRead';
 import { Types } from 'mongoose';
 
 const oldDate = new Date('2015-01-01');

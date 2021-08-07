@@ -1,5 +1,5 @@
 import * as server from '../lib/server';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { mergeMessages, getFirst, getLast, removeFirst, getNNew, GiMessage } from '../lib/messages';
 
 const formatDataTopicId = (topicId: string) => `data.${topicId}`;

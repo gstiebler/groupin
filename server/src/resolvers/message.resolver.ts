@@ -4,7 +4,6 @@ import pushService from '../lib/pushService';
 import logger from '../config/winston';
 import { Context } from '../graphqlContext';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import { UserGroup } from '../db/schema/UserGroup'; 
 import { Types } from 'mongoose';
 import { User } from '../db/schema/User';
 import { Message } from '../db/schema/Message';
@@ -23,7 +22,7 @@ class UserResult {
 }
 
 @ObjectType()
-class MessageResult {
+export class MessageResult {
   @Field()
   id: string;
 
@@ -31,7 +30,7 @@ class MessageResult {
   text: string;
 
   @Field()
-  createdAt: Date;
+  createdAt: number;
 
   @Field(() => UserResult)
   user: UserResult;
@@ -44,8 +43,8 @@ export class MessageResolver {
   async messagesOfTopic(
     @Arg('topicId') topicId: string,
     @Arg('limit') limit: number,
-    @Arg('beforeId') beforeId: string,
-    @Arg('afterId') afterId: string,
+    @Arg('beforeId', { nullable: true }) beforeId: string,
+    @Arg('afterId', { nullable: true }) afterId: string,
     @Ctx() { user, db }: Context
   ): Promise<MessageResult[]> {
     const topic = await db.Topic.findById(topicId)
@@ -66,13 +65,14 @@ export class MessageResolver {
         : { _id: { $lt: ObjectId(beforeId) } };
     const messages: Message[] = await db.Message
       .find({
-        topic: topic._id,
+        topicId: topic._id,
         ...idMatch,
       })
       .sort({ _id: -1 }) // TODO: sort depending on before/after
-      .limit(limit);
+      .limit(limit)
+      .lean();
     const userIds = messages.map(message => message.userId);
-    const users: User[] = await db.User.find({ userId: { $in: userIds } });
+    const users: User[] = await db.User.find({ _id: { $in: userIds } }).lean();
     const messageUser = users.map(user => ({
       id: user._id.toHexString(),
       name: user.name,
@@ -81,6 +81,7 @@ export class MessageResolver {
     const userById = _.keyBy(messageUser, user => user.id);
     return messages.map(message => ({
       ...message,
+      createdAt: message.createdAt.getTime(),
       id: message._id.toHexString() as string,
       user: userById[message.userId.toHexString()],
     }));
