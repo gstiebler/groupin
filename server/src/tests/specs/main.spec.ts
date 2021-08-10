@@ -9,7 +9,7 @@ import messageFixtures from '../fixtures/messageFixtures';
 import { messageTypes } from '../../lib/constants';
 import { ConnCtx } from '../../db/ConnectionContext';
 import { addSeconds } from 'date-fns';
-import { GroupStore } from '../../mobile/stores/groupStore';
+import { FeGroupInfo, GroupStore } from '../../mobile/stores/groupStore';
 import { GroupSearchStore } from '../../mobile/stores/groupSearchStore';
 import { RootStore } from '../../mobile/stores/rootStore';
 import * as server from '../../mobile/lib/server';
@@ -536,20 +536,17 @@ describe('main', () => {
       ]);
     });
 
-/*
-
-
-
     describe('joinGroup', () => {
       it('User already joined the group', async () => {
         expect.assertions(1);
         setCurrentUser(userFixtures.alice);
-        const groupId = groupFixtures.firstGroup.id;
-        // let navigatePath;
-        // const navigation = { navigate: (path) => navigatePath = path };
-        const groupActions = new GroupStore();
+        const groupId = groupFixtures.firstGroup._id!.toHexString();
+        const groupStore = new GroupStore();
+        groupStore.currentGroupInfo = {
+          id: groupId,
+        } as FeGroupInfo;
         try {
-          await groupActions.joinGroup(groupId, jest.fn());
+          await groupStore.joinGroup();
         } catch (error) {
           expect(error.message).toEqual('User already participate in the group');
         }
@@ -557,13 +554,17 @@ describe('main', () => {
 
       it('joined group', async () => {
         setCurrentUser(userFixtures.alice);
-        const groupId = groupFixtures.secondGroup.id;
+        const groupId = groupFixtures.secondGroup._id!.toHexString();
         await server.joinGroup(groupId);
         const groups = await server.getOwnGroups();
         expect(groups).toHaveLength(2);
         expect(groups[1].name).toBe('Second Group');
       });
     });
+
+
+/*
+
 
     it('updateFcmToken', async () => {
       setCurrentUser(userFixtures.robert);
