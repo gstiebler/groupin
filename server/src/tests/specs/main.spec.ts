@@ -20,6 +20,7 @@ import { GiMessage } from '../../mobile/lib/messages';
 import { IStorage } from '../../mobile/types/Storage.types';
 import { groupIds, topicIds, userIds } from '../fixtures/preIds';
 import { Types } from 'mongoose';
+import { TopicStore } from '../../mobile/stores/topicStore';
 const { ObjectId } = Types;
 
 
@@ -452,8 +453,6 @@ describe('main', () => {
       });
     });
 
-/*
-
     describe('createTopic', () => {
       const topicName = 'new topic foca';
 
@@ -462,20 +461,22 @@ describe('main', () => {
       });
 
       beforeEach(async () => {
-        const navigation = { goBack: jest.fn() };
-        const secondGroupId = groupFixtures.secondGroup.id;
-        await newTopicActions.createTopic(navigation, secondGroupId, topicName);
+        setCurrentUser(userFixtures.robert);
+        const secondGroupId = groupFixtures.secondGroup._id!.toHexString();
+        const rootStore = new RootStore(createStorage(), new GroupStore());
+        const topicStore = new TopicStore(rootStore);
+        await topicStore.createTopic({ groupId: secondGroupId, name: topicName });
       });
 
       it('push', async () => {
-        const [topic, pushParams] = pushService.pushMessage.mock.calls[0];
-        expect(topic).toBe(groupFixtures.secondGroup.id);
-        const newTopic = await Topic.findOne({}, {}, { sort: { _id: -1 } });
+        const [topic, pushParams] = (pushService.pushMessage as any).mock.calls[0];
+        expect(topic).toBe(groupFixtures.secondGroup._id!.toHexString());
+        const newTopic = await db.Topic.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).toEqual({
           payload: {
             type: messageTypes.NEW_TOPIC,
-            topicId: newTopic.id,
-            groupId: groupFixtures.secondGroup.id,
+            topicId: newTopic!._id!.toHexString(),
+            groupId: groupFixtures.secondGroup._id!.toHexString(),
             topicName,
           },
           body: topicName,
@@ -483,6 +484,14 @@ describe('main', () => {
           sendNotification: true,
         });
       });
+
+
+
+
+
+    });
+
+/*
 
       it('topic created on DB', async () => {
         setCurrentUser(userFixtures.robert);

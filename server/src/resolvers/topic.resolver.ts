@@ -83,7 +83,7 @@ export class TopicResolver {
     const createdTopic = await db.Topic.create({
       name: topicName,
       groupId,
-      createdById: user!._id!.toHexString(),
+      createdBy: user!._id!.toHexString(),
       imgUrl: 'TODO url',
     });
 

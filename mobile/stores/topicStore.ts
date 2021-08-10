@@ -15,9 +15,9 @@ export class TopicStore {
   topicId: string;
 
   constructor(
-    private rootActions: RootStore
+    private rootStore: RootStore
   ) {
-    this.rootActions = rootActions;
+    this.rootStore = rootStore;
     this.topicTitle = '';
     this.topicId = '';
   }
@@ -32,11 +32,11 @@ export class TopicStore {
     this.topicTitle = topicName;
     this.topicId = topicId;
     // TODO: is `currentlyViewedTopicId` redundant with `topicId`?
-    this.rootActions.currentlyViewedTopicId = topicId;
-    this.rootActions.hasOlderMessages = true;
+    this.rootStore.currentlyViewedTopicId = topicId;
+    this.rootStore.hasOlderMessages = true;
   
     const currentMessages = await storage.getMessages(topicId);
-    this.rootActions.messages = currentMessages;
+    this.rootStore.messages = currentMessages;
     const messagesEmpty = _.isEmpty(currentMessages);
     let messages;
     if (messagesEmpty) {
@@ -56,7 +56,7 @@ export class TopicStore {
       }
     }
     await storage.setMessages(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
-    this.rootActions.messages = messages;
+    this.rootStore.messages = messages;
     subscribeFn(formatDataTopicId(topicId));
   }
   
@@ -65,10 +65,10 @@ export class TopicStore {
     unsubscribeFn: SubscribeFunction
   }) {
     const { topicId, unsubscribeFn } = params;
-    this.rootActions.currentlyViewedTopicId = undefined;
-    this.rootActions.messages = [];
+    this.rootStore.currentlyViewedTopicId = undefined;
+    this.rootStore.messages = [];
     server.setTopicLatestRead(topicId);
-    const currentTopic = _.find(this.rootActions.topics, { id: topicId });
+    const currentTopic = _.find(this.rootStore.topics, { id: topicId });
     // TODO: move this logic to the server?
     if (!currentTopic?.pinned) {
       unsubscribeFn(formatDataTopicId(topicId));
