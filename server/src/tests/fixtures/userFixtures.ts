@@ -7,12 +7,14 @@ const users: { [user: string]: Partial<User> } = {
     name: 'Alice',
     imgUrl: 'alice_url',
     externalId: 'aliceExt',
+    notificationToken: 'notificationTokenAlice',
   },
   robert: {
     _id: userIds.robert,
     name: 'Robert',
     imgUrl: 'robert_url',
     externalId: 'robertExt',
+    notificationToken: 'notificationTokenRobert',
   },
 };
 

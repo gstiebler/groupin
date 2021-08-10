@@ -507,29 +507,27 @@ describe('main', () => {
       expect(groups[0].name).toBe('new group 1');
     });
 
-/*
-
-
     it('leaveGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const groupId = groupIds.firstGroup.toHexString();
-      const groupActions = new GroupStore();
-      await groupActions.leaveGroup(groupId, jest.fn());
+      const groupStore = new GroupStore();
+      await groupStore.leaveGroup(groupId);
       const groups = await server.getOwnGroups();
-      const [, unsubscribedGroup] = pushService.unsubscribe.mock.calls[0];
+      const [unsubscribedUserToken, unsubscribedGroup] = (pushService.unsubscribe as any).mock.calls[0];
+      expect(unsubscribedUserToken).toBe(userFixtures.robert.notificationToken);
       expect(unsubscribedGroup).toBe(groupId);
       expect(groups).toEqual([
         {
-          id: groupFixtures.secondGroup.id,
+          id: groupFixtures.secondGroup._id!.toHexString(),
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
           pinned: true,
         },
       ]);
-      expect(groupActions.ownGroups).toEqual([
+      expect(groupStore.ownGroups).toEqual([
         {
-          id: groupFixtures.secondGroup.id,
+          id: groupFixtures.secondGroup._id!.toHexString(),
           imgUrl: 'url2',
           name: 'Second Group',
           unread: true,
@@ -537,6 +535,10 @@ describe('main', () => {
         },
       ]);
     });
+
+/*
+
+
 
     describe('joinGroup', () => {
       it('User already joined the group', async () => {
