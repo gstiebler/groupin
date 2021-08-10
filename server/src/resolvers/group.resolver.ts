@@ -169,10 +169,9 @@ export class GroupResolver {
       createdBy: user._id,
     });
 
-    await db.UserGroup.updateOne({
+    await db.UserGroup.create({
       userId: user._id!.toHexString(),
       groupId: newGroup._id!.toHexString(),
-    }, {
       pinned: true,
       latestRead: new Date(),
     });

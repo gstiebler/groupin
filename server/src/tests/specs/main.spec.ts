@@ -498,8 +498,6 @@ describe('main', () => {
       });
     });
 
-/*
-
     it('createGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const result = await server.createGroup({ groupName: 'new group 1', visibility: 'SECRET' });
@@ -508,6 +506,9 @@ describe('main', () => {
       expect(groups).toHaveLength(3);
       expect(groups[0].name).toBe('new group 1');
     });
+
+/*
+
 
     it('leaveGroup', async () => {
       setCurrentUser(userFixtures.robert);
