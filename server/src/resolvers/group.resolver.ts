@@ -75,17 +75,18 @@ export class GroupResolver {
 
     const ownGroupsRelationship = await db.UserGroup.find({ userId: user._id }).lean();
     const ownGroupsIds = ownGroupsRelationship.map(group => group.groupId)
-    const ownGroups: Group[] = await db.Group.find({ _id: { $in: ownGroupsIds } }).lean();
-    const ownGroupsById = new Map(ownGroups.map(group => [group._id!.toHexString(), group]));
+    const ownGroups: Group[] = await db.Group.find({ _id: { $in: ownGroupsIds } })
+      .sort({ updatedAt: -1 })
+      .lean();
+    const ownGroupsRelationshipById = new Map(ownGroupsRelationship.map(groupRelationship => [groupRelationship.groupId.toHexString(), groupRelationship]));
 
-    return _.map(ownGroupsRelationship, (userGroup) => {
-      const group = ownGroupsById.get(userGroup.groupId.toHexString())!;
+    return ownGroups.map((group) => {
+      const groupRelationship = ownGroupsRelationshipById.get(group._id.toHexString());
       return {
-        name: group.name,
-        id: group._id!.toHexString(),
-        imgUrl: group.imgUrl,
-        unread: isBefore(userGroup.latestRead, group.updatedAt),
-        pinned: userGroup.pinned,
+        ...group,
+        id: group._id.toHexString(),
+        unread: isBefore(groupRelationship!.latestRead, group.updatedAt),
+        pinned: groupRelationship!.pinned,
       };
     });
   }

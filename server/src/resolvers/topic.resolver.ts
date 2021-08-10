@@ -88,7 +88,7 @@ export class TopicResolver {
     });
 
     await db.Group.updateOne({ 
-      id: groupId
+      _id: groupId
     }, {
       updatedAt: new Date(),
     },);

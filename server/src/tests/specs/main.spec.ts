@@ -485,28 +485,20 @@ describe('main', () => {
         });
       });
 
-
-
-
-
-    });
-
-/*
-
       it('topic created on DB', async () => {
-        setCurrentUser(userFixtures.robert);
-        const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup.id, 20, 'startingId1');
+        const topics = await server.getTopicsOfGroup(groupFixtures.secondGroup._id!.toHexString(), 20);
         expect(topics).toHaveLength(3);
         // test order
         expect(_.map(topics, 'name')).toEqual([topicName, 'Topic 2 Group 2', 'Topic 1 Group 2']);
       });
 
       it('group sort order', async () => {
-        setCurrentUser(userFixtures.robert);
         const groups = await server.getOwnGroups();
         expect(_.map(groups, 'name')).toEqual(['Second Group', 'First Group']);
       });
     });
+
+/*
 
     it('createGroup', async () => {
       setCurrentUser(userFixtures.robert);
