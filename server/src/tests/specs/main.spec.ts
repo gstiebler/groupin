@@ -13,13 +13,13 @@ import { GroupStore } from '../../mobile/stores/groupStore';
 import { GroupSearchStore } from '../../mobile/stores/groupSearchStore';
 import { RootStore } from '../../mobile/stores/rootStore';
 import * as server from '../../mobile/lib/server';
-import { ObjectId, Types } from 'mongoose';
 import { User } from '../../db/schema/User';
 import { Message } from '../../db/schema/Message';
 import { MessageResult } from '../../resolvers/message.resolver';
 import { GiMessage } from '../../mobile/lib/messages';
 import { IStorage } from '../../mobile/types/Storage.types';
-import { groupIds, userIds } from '../fixtures/preIds';
+import { groupIds, topicIds, userIds } from '../fixtures/preIds';
+import { Types } from 'mongoose';
 const { ObjectId } = Types;
 
 
@@ -431,15 +431,9 @@ describe('main', () => {
         ]));
       });
 
-
-
-
-    });
-/*
-
       it('sendMessage, filtering by `startingId`', async () => {
         const messages = await server.getMessagesOfTopic({
-          topicId: topicFixtures.topic1Group1.id,
+          topicId: topicFixtures.topic1Group1._id!.toHexString(),
           limit: 20,
         });
         expect(messages).toHaveLength(3);
@@ -453,10 +447,12 @@ describe('main', () => {
       });
 
       it('topic sort order', async () => {
-        const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup.id, 20, 'startingId1');
-        expect(_.map(topics, 'name')).toEqual(['Topic 1 Group 1', 'Topic 2 Group 1']);
+        const topics = await server.getTopicsOfGroup(groupFixtures.firstGroup._id!.toHexString(), 20, topicIds.topic2Group1.toHexString());
+        expect(_.map(topics, 'name')).toEqual(['Topic 1 Group 1']);
       });
     });
+
+/*
 
     describe('createTopic', () => {
       const topicName = 'new topic foca';

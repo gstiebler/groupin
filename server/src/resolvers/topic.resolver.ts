@@ -6,6 +6,7 @@ import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
 import { Types } from 'mongoose';
+const { ObjectId } = Types;
 
 const oldDate = new Date('2015-01-01');
 
@@ -37,15 +38,14 @@ export class TopicResolver {
   async topicsOfGroup(
     @Arg('groupId') groupId: string,
     @Arg('limit') limit: number,
-    @Arg('skip') skip: number,
+    @Arg('startingId', { nullable: true }) startingId: string,
     @Ctx() { user, db }: Context
   ): Promise<TopicOfGroupResult[]> {
     await db.UserGroup.findOne({ userId: user!._id!.toHexString(), groupId }).orFail();
-    // TODO: use an alternative to skip
+    const idCondition = _.isEmpty(startingId) ? {} : { _id: { $lt: new ObjectId(startingId) } };
     const topics = await db.Topic
-      .find({ groupId: new Types.ObjectId(groupId) })
+      .find({ groupId: new ObjectId(groupId), ...idCondition })
       .limit(limit)
-      .skip(skip)
       .sort({ groupId: 1, updatedAt: -1 })
       .lean();
     const topicIds = _.map(topics, topic => topic._id);
