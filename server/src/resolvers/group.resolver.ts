@@ -76,7 +76,7 @@ export class GroupResolver {
     const ownGroupsRelationship = await db.UserGroup.find({ userId: user._id }).lean();
     const ownGroupsIds = ownGroupsRelationship.map(group => group.groupId)
     const ownGroups: Group[] = await db.Group.find({ _id: { $in: ownGroupsIds } })
-      .sort({ updatedAt: -1 })
+      .sort({ _id: 1, updatedAt: -1 })
       .lean();
     const ownGroupsRelationshipById = new Map(ownGroupsRelationship.map(groupRelationship => [groupRelationship.groupId.toHexString(), groupRelationship]));
 
