@@ -253,7 +253,7 @@ export async function getGroupInfo(groupId: string): Promise<GroupInfo> {
 export async function setGroupPin(params: { groupId: string, pinned: boolean }) {
   const { groupId, pinned } = params;
   const query = `
-    mutation SetGroupPin($groupId: String, $pinned: Boolean) {
+    mutation SetGroupPin($groupId: String!, $pinned: Boolean!) {
       setGroupPin (
         groupId: $groupId,
         pinned: $pinned

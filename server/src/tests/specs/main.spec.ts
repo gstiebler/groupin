@@ -598,40 +598,39 @@ describe('main', () => {
       expect(thirdCount - secoundCount).toBe(0);
     });
 
-
-/*
-
-
-
     describe('setGroupPin', () => {
       it('pin', async () => {
         setCurrentUser(userFixtures.robert);
-        const groupId = groupFixtures.firstGroup.id;
+        const groupId = groupFixtures.firstGroup._id!.toHexString();
         await server.setGroupPin({
           groupId,
           pinned: true,
         });
 
-        const user = await User.findById(userFixtures.robert._id);
-        expect(user.groups[0].pinned).toBe(true);
-        const [, groupIdP] = pushService.subscribe.mock.calls[0];
+        const userGroup = await db.UserGroup.findOne({ userId: userFixtures.robert._id, groupId: groupFixtures.firstGroup._id });
+        expect(userGroup!.pinned).toBe(true);
+        const [, groupIdP] = (pushService.subscribe as any).mock.calls[0];
         expect(groupIdP).toBe(groupId);
       });
 
       it('unpin', async () => {
         setCurrentUser(userFixtures.robert);
-        const groupId = groupFixtures.secondGroup.id;
+        const groupId = groupFixtures.secondGroup._id!.toHexString();
         await server.setGroupPin({
           groupId,
           pinned: false,
         });
-
-        const user = await User.findById(userFixtures.robert._id);
-        expect(user.groups[1].pinned).toBe(false);
-        const [, groupIdP] = pushService.unsubscribe.mock.calls[0];
+        const userGroup = await db.UserGroup.findOne({ userId: userFixtures.robert._id, groupId: groupFixtures.secondGroup._id });
+        expect(userGroup!.pinned).toBe(false);
+        const [, groupIdP] = (pushService.unsubscribe as any).mock.calls[0];
         expect(groupIdP).toBe(groupId);
       });
     });
+
+
+
+/*
+
 
     describe('setTopicPin', () => {
       it('pin', async () => {
