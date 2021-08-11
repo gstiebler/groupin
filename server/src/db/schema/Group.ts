@@ -39,7 +39,7 @@ const schemaDef: GroupSchemaDef = {
 const groupSchema = new Schema<IGroup>(schemaDef);
 
 groupSchema.index({ name: 1, createdAt: 1 });
-groupSchema.index({ _id: 1, updatedAt: -1 });
+groupSchema.index({ updatedAt: -1 });
 
 const GroupModel = model<Group>('Group', groupSchema);
 

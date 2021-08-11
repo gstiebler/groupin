@@ -81,13 +81,13 @@ export class TopicResolver {
 
     const createdTopic = await db.Topic.create({
       name: topicName,
-      groupId,
+      groupId: new ObjectId(groupId),
       createdBy: user!._id!.toHexString(),
       imgUrl: 'TODO url',
     });
 
     await db.Group.updateOne({ 
-      _id: groupId
+      _id: new ObjectId(groupId)
     }, {
       updatedAt: new Date(),
     },);
