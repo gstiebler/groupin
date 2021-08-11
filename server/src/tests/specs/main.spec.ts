@@ -21,6 +21,7 @@ import { IStorage } from '../../mobile/types/Storage.types';
 import { groupIds, topicIds, userIds } from '../fixtures/preIds';
 import { Types } from 'mongoose';
 import { TopicStore } from '../../mobile/stores/topicStore';
+import userGroups from '../fixtures/userGroup.fixtures';
 const { ObjectId } = Types;
 
 
@@ -470,7 +471,7 @@ describe('main', () => {
 
       it('push', async () => {
         const [topic, pushParams] = (pushService.pushMessage as any).mock.calls[0];
-        expect(topic).toBe(groupFixtures.secondGroup._id!.toHexString());
+        expect(topic).toBe('notificationTokenRobert');
         const newTopic = await db.Topic.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).toEqual({
           payload: {
@@ -562,21 +563,22 @@ describe('main', () => {
       });
     });
 
+    it('updateNotificationToken', async () => {
+      setCurrentUser(userFixtures.robert);
+      const notificationToken = 'robertFcmToken345873';
+      await server.updateNotificationToken(notificationToken);
+      const robert = await db.User.findById(userFixtures.robert._id);
+      expect(robert!.notificationToken).toBe(notificationToken);
+
+      const [subscribedNotificationToken, firstSubscribedGroupId] = (pushService.subscribe as any).mock.calls[0];
+      expect(subscribedNotificationToken).toBe(notificationToken);
+      expect(firstSubscribedGroupId).toBe(userGroups[2].groupId!.toHexString());
+    });
+
 
 /*
 
 
-    it('updateFcmToken', async () => {
-      setCurrentUser(userFixtures.robert);
-      const fcmToken = 'robertFcmToken345873';
-      await server.updateFcmToken(fcmToken);
-      const robert = await User.findById(userFixtures.robert._id);
-      expect(robert.fcmToken).toBe(fcmToken);
-
-      const [subscribedFcmToken, firstSubscribedGroupId] = pushService.subscribe.mock.calls[0];
-      expect(subscribedFcmToken).toBe(fcmToken);
-      expect(firstSubscribedGroupId).toBe(userFixtures.robert.groups[1].id.toHexString());
-    });
 
     it('setTopicLatestRead', async () => {
       setCurrentUser(userFixtures.robert);

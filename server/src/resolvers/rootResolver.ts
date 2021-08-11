@@ -65,9 +65,10 @@ export class RootResolver {
     @Ctx() { user, db }: Context
   ) {
     if (!user) {
-      throw new Error('A user is required to update FCM token');
+      throw new Error('A user is required to update the notification token');
     }
     await db.User.updateOne({ _id: user._id }, { notificationToken });
     await subscribeToAll(db, user, notificationToken);
+    return 'OK';
   }
 }

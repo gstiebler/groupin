@@ -205,16 +205,16 @@ export async function getMessagesOfTopic({ topicId, limit, beforeId, afterId }: 
   return res.messagesOfTopic;
 }
 
-export async function updateFcmToken(fcmToken: string) {
+export async function updateNotificationToken(notificationToken: string) {
   const query = `
-    mutation UpdateFcmToken($fcmToken: String) {
-      updateFcmToken (
-        fcmToken: $fcmToken
+    mutation UpdateNotificationToken($notificationToken: String!) {
+      updateNotificationToken (
+        notificationToken: $notificationToken
       )
     }
   `;
-  const res = await graphql.sendQuery(query, { fcmToken });
-  return res.updateFcmToken;
+  const res = await graphql.sendQuery(query, { notificationToken });
+  return res.updateNotificationToken;
 }
 
 export type GroupInfo = {

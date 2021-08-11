@@ -1,8 +1,7 @@
 import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
-import pushService from '../lib/pushService';
-import { subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
+import { pushNewTopic, subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
 import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
 import { Types } from 'mongoose';
@@ -93,25 +92,7 @@ export class TopicResolver {
       updatedAt: new Date(),
     },);
 
-    await db.TopicLatestRead.create({
-      topicId: createdTopic._id!.toHexString(),
-      userId: user!._id!.toHexString(),
-      latestMoment: new Date(),
-    });
-
-    const pushPayload = {
-      type: messageTypes.NEW_TOPIC,
-      groupId,
-      topicName,
-      topicId: createdTopic._id!.toHexString(),
-    };
-    const pushParams = {
-      payload: pushPayload,
-      title: 'Novo tópico',
-      body: topicName.slice(0, 50),
-      sendNotification: true,
-    };
-    await pushService.pushMessage(groupId, pushParams);
+    await pushNewTopic(db, groupId, createdTopic._id!.toHexString(), createdTopic.name);
     return 'OK';
   }
 

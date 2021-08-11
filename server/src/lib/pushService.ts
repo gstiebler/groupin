@@ -4,6 +4,13 @@ import logger from '../config/winston';
 
 // console.log(firebaseConfig);
 
+export type NotificationParams = {
+  payload: unknown,
+  title: string,
+  body: unknown,
+  sendNotification: boolean;
+}
+
 const pushService = {
 
   init() {
@@ -22,15 +29,16 @@ const pushService = {
     // this.messaging = admin.messaging();
   },
 
-  async pushMessage(fcmTopic: string, { payload, title, body, sendNotification }) {
+  async pushMessage(notificationTopic: string, notificationParams: NotificationParams) {
+    const { payload, title, body, sendNotification } = notificationParams;
     const message = {
       data: payload,
       // token: registrationToken, Only used when sending to an specific device
-      topic: fcmTopic,
+      topic: notificationTopic,
       notification: sendNotification ? { title, body } : undefined
     };
     try {
-      logger.debug(`Sending push message to topic "${fcmTopic}", ${JSON.stringify(message)}`);
+      logger.debug(`Sending push message to topic "${notificationTopic}", ${JSON.stringify(message)}`);
       const response = await this.messaging.send(message);
       // Response is a message ID string.
       logger.info('Successfully sent message:', response);
@@ -39,29 +47,25 @@ const pushService = {
     }
   },
 
-  async subscribe(fcmToken: string, fcmTopic: string) {
-    const response = await this.messaging.subscribeToTopic([fcmToken], fcmTopic);
-    // See the MessagingTopicManagementResponse reference documentation
-    // for the contents of response.
-    logger.debug(`Successfully subscribed to topic: ${fcmTopic}, ${response}`);
+  async subscribe(notificationToken: string, notificationTopic: string) {
+    logger.debug(`Successfully subscribed to topic: ${notificationTopic}`);
   },
 
-  async unsubscribe(fcmToken: string, fcmTopic: string) {
-    const response = await this.messaging.unsubscribeFromTopic([fcmToken], fcmTopic);
-    logger.debug('Successfully unsubscribed from topic:', response);
+  async unsubscribe(notificationToken: string, notificationTopic: string) {
+    logger.debug('Successfully unsubscribed from topic:');
   },
 
   /**
    * Subscribe or unsubscribe depending on `subscribed` parameter
-   * @param {*} fcmToken
-   * @param {*} fcmTopic
+   * @param {*} notificationToken
+   * @param {*} notificationTopic
    * @param {*} subscribed
    */
-  async setSubscription(fcmToken: string, fcmTopic: string, subscribed: boolean) {
+  async setSubscription(notificationToken: string, notificationTopic: string, subscribed: boolean) {
     if (subscribed) {
-      this.subscribe(fcmToken, fcmTopic);
+      this.subscribe(notificationToken, notificationTopic);
     } else {
-      this.unsubscribe(fcmToken, fcmTopic);
+      this.unsubscribe(notificationToken, notificationTopic);
     }
   },
 

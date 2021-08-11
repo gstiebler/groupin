@@ -84,7 +84,7 @@ export class RootStore {
   
   async updateNotificationToken(notificationToken: string) {
     this.notificationToken = notificationToken;
-    await server.updateFcmToken(notificationToken);
+    await server.updateNotificationToken(notificationToken);
   }
 
   async setTopicPin(params: { topicId: string, pinned: boolean }) {

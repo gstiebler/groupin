@@ -1,12 +1,12 @@
 import * as _ from 'lodash';
 import { messageTypes } from '../lib/constants';
-import pushService from '../lib/pushService';
 import logger from '../config/winston';
 import { Context } from '../graphqlContext';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { Types } from 'mongoose';
 import { User } from '../db/schema/User';
 import { Message } from '../db/schema/Message';
+import { pushNewMessage } from '../lib/subscription';
 const { ObjectId } = Types;
 
 @ObjectType()
@@ -119,29 +119,14 @@ export class MessageResolver {
 
     const groupId = topic.groupId.toHexString();
 
-    // send push notification
-    const pushPayload = {
+    await pushNewMessage({
       message,
-      authorName: user!.name,
+      messageId: createdMessage.id,
       groupId,
       topicId,
       topicName: topic.name,
-      messageId: createdMessage.id,
-      type: messageTypes.NEW_MESSAGE,
-    };
-
-    logger.debug(`Mensagem: ${message}`);
-    logger.debug(`Usuário: ${user?.name}`);
-    const pushParams = {
-      payload: pushPayload,
-      title: topic.name,
-      body: message.slice(0, 30),
-    };
-    await Promise.all([
-      pushService.pushMessage(topicId, { ...pushParams, sendNotification: true }),
-      pushService.pushMessage(groupId, { ...pushParams, sendNotification: true }),
-      pushService.pushMessage(`data.${topicId}`, { ...pushParams, sendNotification: false }),
-    ]);
+      authorName: user!.name,
+    });
 
     return createdMessage.id;
   }
