@@ -8,7 +8,7 @@ import { initFixtures } from '../fixtures/fixturesInit';
 import messageFixtures from '../fixtures/messageFixtures';
 import { messageTypes } from '../../lib/constants';
 import { ConnCtx } from '../../db/ConnectionContext';
-import { addSeconds } from 'date-fns';
+import { addSeconds, differenceInMinutes } from 'date-fns';
 import { FeGroupInfo, GroupStore } from '../../mobile/stores/groupStore';
 import { GroupSearchStore } from '../../mobile/stores/groupSearchStore';
 import { RootStore } from '../../mobile/stores/rootStore';
@@ -575,27 +575,33 @@ describe('main', () => {
       expect(firstSubscribedGroupId).toBe(userGroups[2].groupId!.toHexString());
     });
 
-
-/*
-
-
-
     it('setTopicLatestRead', async () => {
       setCurrentUser(userFixtures.robert);
 
       // Create
-      const firstCount = await TopicLatestRead.countDocuments();
-      const result1 = await server.setTopicLatestRead(topicFixtures.topic1Group1.id);
+      const firstCount = await db.TopicLatestRead.countDocuments();
+      const result1 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id!.toHexString());
       expect(result1).toBe('OK');
-      const secoundCount = await TopicLatestRead.countDocuments();
+      const secoundCount = await db.TopicLatestRead.countDocuments();
       expect(secoundCount - firstCount).toBe(1);
 
+      const updatedUserGroup = await db.UserGroup.findOne({
+        userId: userFixtures.robert._id,
+        groupId: groupFixtures.firstGroup._id,
+      });
+      expect(differenceInMinutes(new Date(), updatedUserGroup!.latestRead)).toBeLessThan(5);
+
       // Update
-      const result2 = await server.setTopicLatestRead(topicFixtures.topic1Group1.id);
+      const result2 = await server.setTopicLatestRead(topicFixtures.topic1Group1._id!.toHexString());
       expect(result2).toBe('OK');
-      const thirdCount = await TopicLatestRead.countDocuments();
+      const thirdCount = await db.TopicLatestRead.countDocuments();
       expect(thirdCount - secoundCount).toBe(0);
     });
+
+
+/*
+
+
 
     describe('setGroupPin', () => {
       it('pin', async () => {

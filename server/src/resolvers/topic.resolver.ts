@@ -109,16 +109,19 @@ export class TopicResolver {
     });
 
     const topic = await db.Topic.findById(topicId).orFail();
-    const userGroup = await db.UserGroup.findOne({
+
+    await db.TopicLatestRead.updateOne({
       userId: user!._id!.toHexString(),
-      groupId: topic.groupId,
-    }).orFail();
-    await db.UserGroup.updateOne({
-      id: userGroup._id,
-      userId: user!._id!.toHexString(),
+      topicId: new ObjectId(topicId),
     }, {
+      latestMoment: new Date(),
+    }, { upsert: true });
+
+    await db.UserGroup.updateOne({
+      userId: user!._id,
       groupId: topic.groupId,
-      latestMoment: Date.now(),
+    }, {
+      latestRead: new Date(),
     });
 
     return 'OK';
