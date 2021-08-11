@@ -627,40 +627,33 @@ describe('main', () => {
       });
     });
 
-
-
-/*
-
-
     describe('setTopicPin', () => {
       it('pin', async () => {
         setCurrentUser(userFixtures.robert);
-        const topicId = topicFixtures.topic2Group2.id;
+        const topicId = topicFixtures.topic2Group2._id!.toHexString();
         await server.setTopicPin({
           topicId,
           pinned: true,
         });
 
-        const user = await User.findById(userFixtures.robert._id);
-        expect(user.pinnedTopics[2].toHexString()).toBe(topicId);
-        const [, topicIdP] = pushService.subscribe.mock.calls[0];
+        await db.PinnedTopic.findOne({ userId: userFixtures.robert._id, topicId: topicFixtures.topic2Group2._id }).orFail();
+        const [, topicIdP] = (pushService.subscribe as any).mock.calls[0];
         expect(topicIdP).toBe(topicId);
       });
 
       it('unpin', async () => {
         setCurrentUser(userFixtures.robert);
-        const topicId = topicFixtures.topic1Group2.id;
+        const topicId = topicFixtures.topic1Group2._id!.toHexString();
         await server.setTopicPin({
           topicId,
           pinned: false,
         });
 
-        const user = await User.findById(userFixtures.robert._id);
-        expect(user.pinnedTopics).toHaveLength(1);
-        const [, topicIdP] = pushService.unsubscribe.mock.calls[0];
+        const pinnedTopic = await db.PinnedTopic.findOne({ userId: userFixtures.robert._id, topicId: topicFixtures.topic2Group2._id });
+        expect(pinnedTopic).toBeNull();
+        const [, topicIdP] = (pushService.unsubscribe as any).mock.calls[0];
         expect(topicIdP).toBe(topicId);
       });
     });
-  */
   });
 });

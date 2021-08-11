@@ -267,7 +267,7 @@ export async function setGroupPin(params: { groupId: string, pinned: boolean }) 
 export async function setTopicPin(params: { topicId: string, pinned: boolean }) {
   const { topicId, pinned } = params;
   const query = `
-    mutation SetTopicPin($topicId: String, $pinned: Boolean) {
+    mutation SetTopicPin($topicId: String!, $pinned: Boolean!) {
       setTopicPin (
         topicId: $topicId,
         pinned: $pinned
