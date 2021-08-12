@@ -1,17 +1,18 @@
+import { init as firebaseInit } from './config/firebaseConfig';
 import { notifications } from './rn_lib/notifications';
 import { loginStore } from './rn_lib/storesFactory';
 import { Navigation } from './rn_lib/Navigator.types';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import { firebaseConfig } from './config/firebaseConfig';
+import * as server from './lib/server';
 
 export default async function init(navigation: Navigation) {
   try {
-    firebase.initializeApp(firebaseConfig);
+    firebaseInit();
+    console.log('Firebase initialized');
   } catch (err) {
     console.error(`Error initializing Firebase Auth: ${err}`);
   }
 
-  await notifications.init(navigation);
-  await loginStore.init(navigation);
+  const notificationToken = await notifications.init(navigation);
+  await loginStore.init(navigation, notificationToken);
+  server.getHello('foca').then(() => console.log('Server Hello ok'));
 }

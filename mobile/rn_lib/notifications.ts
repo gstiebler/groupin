@@ -7,7 +7,7 @@ import * as messageReceiver from '../lib/messageReceiver';
 import { Platform } from 'react-native';
 
 async function registerForPushNotificationsAsync() {
-  let token = '';
+  let notificationToken = '';
   let status = 'no_device';
   if (Constants.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -16,8 +16,8 @@ async function registerForPushNotificationsAsync() {
       const { status: newStatus } = await Notifications.requestPermissionsAsync();
       status = newStatus;
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    return { token, status };
+    notificationToken = (await Notifications.getExpoPushTokenAsync()).data;
+    return { token: notificationToken, status };
   } else {
     alert('Must use physical device for Push Notifications');
   }
@@ -31,7 +31,7 @@ async function registerForPushNotificationsAsync() {
     });
   }
 
-  return { token, status };
+  return { token: notificationToken, status };
 }
 
 type Subscription = ReturnType<typeof Notifications.addNotificationReceivedListener>;
@@ -40,9 +40,8 @@ export class GiNotifications {
   notificationListener: Subscription;
   responseListener: Subscription;
   navigation: Navigation;
-  notificationToken: string;
 
-  public async init(navigation: Navigation) {
+  public async init(navigation: Navigation): Promise<string> {
     this.navigation = navigation;
 
     const { token: notificationToken, status } = await registerForPushNotificationsAsync();
@@ -51,7 +50,6 @@ export class GiNotifications {
       console.error('User has not authorized messaging');
       return;
     }
-    this.notificationToken = notificationToken;
 
     if (status === 'granted') {
       console.log('Notification has permission');
@@ -59,6 +57,7 @@ export class GiNotifications {
     } else {
       console.error('User has not authorized messaging');
     }
+    return notificationToken;
   }
 
   async startMessageListener() {

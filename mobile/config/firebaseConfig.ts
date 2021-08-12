@@ -1,4 +1,7 @@
-export const firebaseConfig = {
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
+const firebaseConfig = {
   apiKey: "AIzaSyAqeNtjeYXf8sXmACmJ9l_Y6ZUSzVqN9do",
   authDomain: "groupin-stiebler.firebaseapp.com",
   databaseURL: "https://groupin-stiebler.firebaseio.com",
@@ -8,3 +11,7 @@ export const firebaseConfig = {
   appId: "1:995117614801:web:6eeebeaa0f0f198101a7f0",
   measurementId: "G-HXPTVLXFED"
 };
+
+export function init() {
+  firebase.initializeApp(firebaseConfig);
+}

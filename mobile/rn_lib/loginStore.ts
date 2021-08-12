@@ -2,7 +2,6 @@ import * as server from '../lib/server';
 import graphqlConnect from '../lib/graphqlConnect';
 import { Navigation } from './Navigator.types';
 import { RootStore } from '../stores/rootStore';
-import { notifications } from './notifications';
 import { AlertStatic } from 'react-native';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -14,6 +13,7 @@ export class LoginStore {
   message?: { text: string, color: string };
   verificationId: string;
   firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
+  notificationToken: string;
 
   constructor(
     private rootStore: RootStore,
@@ -22,8 +22,9 @@ export class LoginStore {
 
   setMessage(message: { text: string, color: string }) { this.message = message }
 
-  async init(navigation: Navigation) {
+  async init(navigation: Navigation, notificationToken: string) {
     this.navigation = navigation;
+    this.notificationToken = notificationToken;
     const noConfigMessage = {
       text: 'To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.',
       color: 'green'
@@ -96,10 +97,10 @@ export class LoginStore {
 
   async loginRegisteredUser(userId: string) {
     this.rootStore.setUserId(userId);
-    if (!notifications.notificationToken) {
+    if (!this.notificationToken) {
       throw new Error('Notification token is not yet available');
     }
-    await this.rootStore.updateNotificationToken(notifications.notificationToken);
+    await this.updateNotificationToken(this.notificationToken);
     this.navigation.navigate('TabNavigator');
   }
 
@@ -135,5 +136,12 @@ export class LoginStore {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async updateNotificationToken(notificationToken: string) {
+    if (!this.rootStore.userId) {
+      throw new Error('There is no user yet');
+    }
+    await server.updateNotificationToken(notificationToken);
   }
 }
