@@ -40,8 +40,9 @@ export class GiNotifications {
   notificationListener: Subscription;
   responseListener: Subscription;
   navigation: Navigation;
+  notificationToken: string;
 
-  public async init(navigation: Navigation, updateNotificationToken: (notificationToken: string) => void) {
+  public async init(navigation: Navigation) {
     this.navigation = navigation;
 
     const { token: notificationToken, status } = await registerForPushNotificationsAsync();
@@ -50,7 +51,7 @@ export class GiNotifications {
       console.error('User has not authorized messaging');
       return;
     }
-    updateNotificationToken(notificationToken);
+    this.notificationToken = notificationToken;
 
     if (status === 'granted') {
       console.log('Notification has permission');

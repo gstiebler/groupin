@@ -1,6 +1,5 @@
-// import _ from 'lodash';
 import { notifications } from './rn_lib/notifications';
-import { loginStore, rootStore } from './rn_lib/storesFactory';
+import { loginStore } from './rn_lib/storesFactory';
 import { Navigation } from './rn_lib/Navigator.types';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -13,6 +12,6 @@ export default async function init(navigation: Navigation) {
     console.error(`Error initializing Firebase Auth: ${err}`);
   }
 
-  await notifications.init(navigation, (notificationToken) => rootStore.updateNotificationToken(notificationToken));
+  await notifications.init(navigation);
   await loginStore.init(navigation);
 }

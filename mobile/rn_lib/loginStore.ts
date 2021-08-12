@@ -2,6 +2,7 @@ import * as server from '../lib/server';
 import graphqlConnect from '../lib/graphqlConnect';
 import { Navigation } from './Navigator.types';
 import { RootStore } from '../stores/rootStore';
+import { notifications } from './notifications';
 import { AlertStatic } from 'react-native';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -74,6 +75,7 @@ export class LoginStore {
 
   loginRegisteredUser(userId: string) {
     this.rootStore.setUserId(userId);
+    this.rootStore.updateNotificationToken(notifications.notificationToken);
     this.navigation.navigate('TabNavigator');
   }
 
