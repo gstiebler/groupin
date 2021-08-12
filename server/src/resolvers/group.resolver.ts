@@ -105,7 +105,7 @@ export class GroupResolver {
       throw new Error(`Group ${groupId} not found`);
     }
     const iBelong = !!await db.UserGroup.findOne({
-      userId: user._id!.toHexString(),
+      userId: user._id,
       groupId
     }).lean();
     return {
