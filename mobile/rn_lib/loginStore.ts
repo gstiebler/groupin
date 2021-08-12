@@ -29,6 +29,27 @@ export class LoginStore {
       color: 'green'
     };
     this.message = !this.firebaseConfig ? noConfigMessage : undefined;
+
+    const firebaseUser = firebase.auth().currentUser;
+    // check if user is already logged in
+    if (firebaseUser) {
+      const fbUserToken = await firebaseUser.getIdToken(true);
+      updateFbUserToken(fbUserToken);
+      const userId = await server.getUserId();
+      if (!userId) {
+        throw new Error('Error getting user ID');
+      }
+      await this.loginRegisteredUser(userId);
+    }
+
+    firebase.auth().onAuthStateChanged(async (fbUser) => {
+      if (fbUser) {
+        const fbUserToken = await fbUser.getIdToken(true);
+        updateFbUserToken(fbUserToken);
+      } else {
+        console.log('no user yet');
+      }
+    });
   }
 
   async onSendVerificationCode(phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) {
@@ -73,9 +94,12 @@ export class LoginStore {
     }
   }
 
-  loginRegisteredUser(userId: string) {
+  async loginRegisteredUser(userId: string) {
     this.rootStore.setUserId(userId);
-    this.rootStore.updateNotificationToken(notifications.notificationToken);
+    if (!notifications.notificationToken) {
+      throw new Error('Notification token is not yet available');
+    }
+    await this.rootStore.updateNotificationToken(notifications.notificationToken);
     this.navigation.navigate('TabNavigator');
   }
 
