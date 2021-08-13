@@ -4,7 +4,6 @@ import { Navigation } from './Navigator.types';
 import { RootStore } from '../stores/rootStore';
 import { AlertStatic } from 'react-native';
 import firebase from 'firebase/app';
-import 'firebase/auth';
 
 const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
@@ -12,7 +11,8 @@ export class LoginStore {
   navigation: Navigation;
   message?: { text: string, color: string };
   verificationId: string;
-  firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
+  firebaseConfig: unknown;
+  firebaseApp: firebase.app.App;
   notificationToken: string;
 
   constructor(
@@ -22,16 +22,18 @@ export class LoginStore {
 
   setMessage(message: { text: string, color: string }) { this.message = message }
 
-  async init(navigation: Navigation, notificationToken: string) {
+  async init(navigation: Navigation, firebaseApp: firebase.app.App, notificationToken: string) {
     this.navigation = navigation;
+    this.firebaseApp = firebaseApp;
     this.notificationToken = notificationToken;
     const noConfigMessage = {
       text: 'To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.',
       color: 'green'
     };
+    this.firebaseConfig = firebaseApp.options;
     this.message = !this.firebaseConfig ? noConfigMessage : undefined;
 
-    const firebaseUser = firebase.auth().currentUser;
+    const firebaseUser = firebaseApp.auth().currentUser;
     // check if user is already logged in
     if (firebaseUser) {
       const fbUserToken = await firebaseUser.getIdToken(true);
@@ -56,10 +58,14 @@ export class LoginStore {
   async onSendVerificationCode(phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) {
     try {
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
+      console.log('onSendVerificationCode', {
+        phoneNumber,
+        applicationVerifier});
       this.verificationId = await phoneProvider.verifyPhoneNumber(
         phoneNumber,
         applicationVerifier
       );
+      console.log('verification code sent');
       this.message = { text: 'Verification code has been sent to your phone.', color: 'green' };
     } catch (err) {
       this.message = { text: `Error: ${err.message}`, color: 'red' };

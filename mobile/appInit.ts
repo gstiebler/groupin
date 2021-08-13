@@ -5,14 +5,10 @@ import { Navigation } from './rn_lib/Navigator.types';
 import * as server from './lib/server';
 
 export default async function init(navigation: Navigation) {
-  try {
-    firebaseInit();
-    console.log('Firebase initialized');
-  } catch (err) {
-    console.error(`Error initializing Firebase Auth: ${err}`);
-  }
+  const firebaseApp = firebaseInit();
+  console.log('Firebase initialized');
 
   const notificationToken = await notifications.init(navigation);
-  await loginStore.init(navigation, notificationToken);
+  await loginStore.init(navigation, firebaseApp, notificationToken);
   server.getHello('foca').then(() => console.log('Server Hello ok'));
 }

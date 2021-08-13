@@ -12,6 +12,6 @@ const firebaseConfig = {
   measurementId: "G-HXPTVLXFED"
 };
 
-export function init() {
-  firebase.initializeApp(firebaseConfig);
+export function init(): firebase.app.App {
+  return firebase.initializeApp(firebaseConfig);
 }

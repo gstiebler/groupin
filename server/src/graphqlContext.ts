@@ -21,7 +21,7 @@ export async function getContext(
   let firebaseId: string | null = null;
   // ***
   if (authFbToken) {
-    logger.debug(authFbToken);
+    logger.debug(`authFbToken: ${authFbToken}`);
     // authFbToken comes from the client app
     const decodedToken = await admin.auth().verifyIdToken(authFbToken);
     firebaseId = decodedToken.uid;
