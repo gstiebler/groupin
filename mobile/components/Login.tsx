@@ -15,18 +15,11 @@ export type LoginProps = {
   firebaseConfig: unknown;
   verificationId: string;
   message?: { text: string, color: string };
-  setMessage: (message: { text: string, color: string }) => void;
+  setMessageAction: (message: { text: string, color: string }) => void;
   onSendVerificationCode: (phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) => void;
   onConfirmVerificationCode: (verificationCode: string) => void;
 };
-const LoginComponent: React.FC<LoginProps> = ({
-  firebaseConfig,
-  verificationId,
-  message,
-  setMessage,
-  onSendVerificationCode,
-  onConfirmVerificationCode,
-}) => {
+const LoginComponent: React.FC<{ loginStore: LoginProps }> = ({ loginStore }) => {
   const recaptchaVerifier = React.useRef(null);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -37,7 +30,7 @@ const LoginComponent: React.FC<LoginProps> = ({
     <View style={{ padding: 20, marginTop: 50 }}>
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
-        firebaseConfig={firebaseConfig}
+        firebaseConfig={loginStore.firebaseConfig}
         attemptInvisibleVerification={attemptInvisibleVerification}
       />
       <Text style={{ marginTop: 20 }}>Enter phone number</Text>
@@ -52,36 +45,35 @@ const LoginComponent: React.FC<LoginProps> = ({
       />
       <Button
         title="Send Verification Code"
-        disabled={!phoneNumber}
-        onPress={() => onSendVerificationCode(phoneNumber, recaptchaVerifier.current)}
+        onPress={() => loginStore.onSendVerificationCode(phoneNumber, recaptchaVerifier.current)}
       />
       <Text style={{ marginTop: 20 }}>Enter Verification code</Text>
       <TextInput
         style={{ marginVertical: 10, fontSize: 17 }}
-        editable={!!verificationId}
+        editable={!!loginStore.verificationId}
         placeholder="123456"
         onChangeText={setVerificationCode}
       />
       <Button
         title="Confirm Verification Code"
-        disabled={!verificationId}
-        onPress={() => onConfirmVerificationCode(verificationCode)}
+        disabled={!loginStore.verificationId}
+        onPress={() => loginStore.onConfirmVerificationCode(verificationCode)}
       />
-      {message ? (
+      {loginStore.message ? (
         <TouchableOpacity
           style={[
             StyleSheet.absoluteFill,
             { backgroundColor: 'gray', justifyContent: 'center' },
           ]}
-          onPress={() => setMessage(undefined)}>
+          onPress={() => loginStore.setMessageAction(undefined)}>
           <Text
             style={{
-              color: message.color || 'blue',
+              color: loginStore.message.color || 'blue',
               fontSize: 17,
               textAlign: 'center',
               margin: 20,
             }}>
-            {message.text}
+            {loginStore.message.text}
           </Text>
         </TouchableOpacity>
       ) : (

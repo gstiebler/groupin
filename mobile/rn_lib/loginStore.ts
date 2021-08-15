@@ -20,7 +20,8 @@ export class LoginStore {
     private Alert: AlertStatic,
   ) { }
 
-  setMessage(message: { text: string, color: string }) { this.message = message }
+  setVerificationIdAction = (verificationId: string) => { this.verificationId = verificationId; }
+  setMessageAction = (message: { text: string, color: string }) => { this.message = message }
 
   async init(navigation: Navigation, firebaseApp: firebase.app.App, notificationToken: string) {
     this.navigation = navigation;
@@ -58,17 +59,15 @@ export class LoginStore {
   async onSendVerificationCode(phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) {
     try {
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
-      console.log('onSendVerificationCode', {
-        phoneNumber,
-        applicationVerifier});
-      this.verificationId = await phoneProvider.verifyPhoneNumber(
+      const verificationId = await phoneProvider.verifyPhoneNumber(
         phoneNumber,
         applicationVerifier
       );
-      console.log('verification code sent');
-      this.message = { text: 'Verification code has been sent to your phone.', color: 'green' };
+      console.log(`Verification id: ${verificationId}`);
+      this.setVerificationIdAction(verificationId);
+      this.setMessageAction({ text: 'Verification code has been sent to your phone.', color: 'green' });
     } catch (err) {
-      this.message = { text: `Error: ${err.message}`, color: 'red' };
+      this.setMessageAction({ text: `Error: ${err.message}`, color: 'red' });
     }
   }
 
@@ -84,10 +83,10 @@ export class LoginStore {
         throw new Error('Firebase user not found');
       }
       const fbUserToken = await firebaseUser.getIdToken(true);
-      this.message = { text: 'Phone authentication successful 👍', color: 'green' };
+      this.setMessageAction({ text: 'Phone authentication successful 👍', color: 'green' });
       await this.confirmationCodeReceived(fbUserToken);
     } catch(err) {
-      this.message = { text: `Error: ${err.message}`, color: 'red' };
+      this.setMessageAction({ text: `Error: ${err.message}`, color: 'red' });
     }
   }
 
