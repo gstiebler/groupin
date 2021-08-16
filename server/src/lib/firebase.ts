@@ -2,8 +2,8 @@ import * as admin from 'firebase-admin';
 import { ServiceAccount } from 'firebase-admin';
 
 const serviceAccount: ServiceAccount = {
-  projectId: "groupin-4700b",
-  clientEmail: "firebase-adminsdk-3ut5h@groupin-4700b.iam.gserviceaccount.com",
+  projectId: "groupin-stiebler",
+  clientEmail: "firebase-adminsdk-6ex1x@groupin-stiebler.iam.gserviceaccount.com",
   privateKey: process.env.FIREBASE_PRIVATE_KEY,
 };
 const config = {
