@@ -9,8 +9,8 @@ const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUse
 
 export class LoginStore {
   navigation: Navigation;
-  message?: { text: string, color: string };
-  verificationId: string;
+  message?: { text: string, color: string } = undefined;
+  verificationId: string = undefined;
   firebaseConfig: unknown;
   firebaseApp: firebase.app.App;
   notificationToken: string;
