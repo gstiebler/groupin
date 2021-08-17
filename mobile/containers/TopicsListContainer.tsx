@@ -2,12 +2,14 @@ import { RouteProp } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
 import TopicsListComponent from '../components/TopicsList';
-import { rootStore } from '../rn_lib/storesFactory';
+import { rootStore as rootStoreInstance } from '../rn_lib/storesFactory';
+import { RootStore } from '../stores/rootStore';
+import { observer } from 'mobx-react-lite';
 
 export type TopicsListScreenRouteProp = RouteProp<RootStackParamList, 'TopicsList'>;
 
-type ContainerProp = { navigation: Navigation, route: TopicsListScreenRouteProp };
-const TopicsListContainer: React.FC<ContainerProp> = ({ navigation, route }) => {
+type ContainerProp = { navigation: Navigation, route: TopicsListScreenRouteProp, rootStore: RootStore };
+const TopicsListContainerObserver: React.FC<ContainerProp> = observer(({ navigation, route, rootStore }) => {
   const willFocus = () => rootStore.setCurrentlyViewedGroup(route.params.groupId);
   const willLeave = () => rootStore.leaveGroup();
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
@@ -18,5 +20,8 @@ const TopicsListContainer: React.FC<ContainerProp> = ({ navigation, route }) => 
     selectTopic: (topicId, topicName) => navigation.push('Chat', { topicId, topicName }),
     onPinClicked: (topic) => rootStore.setTopicPin({ topicId: topic.id, pinned: !topic.pinned }),
   });
-}
+});
+const TopicsListContainer: React.FC<{ navigation: Navigation, route: TopicsListScreenRouteProp }> = ({ navigation, route }) => (
+  <TopicsListContainerObserver navigation={navigation} route={route} rootStore={rootStoreInstance}/>
+);
 export default TopicsListContainer;
