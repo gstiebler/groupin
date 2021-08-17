@@ -4,6 +4,7 @@ import { Navigation } from './Navigator.types';
 import { RootStore } from '../stores/rootStore';
 import { AlertStatic } from 'react-native';
 import firebase from 'firebase/app';
+import { localStorage } from './localStorage';
 
 const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
@@ -34,11 +35,10 @@ export class LoginStore {
     this.firebaseConfig = firebaseApp.options;
     this.message = !this.firebaseConfig ? noConfigMessage : undefined;
 
-    const firebaseUser = firebaseApp.auth().currentUser;
+    const externalUserToken = await localStorage.getExternalUserToken();
     // check if user is already logged in
-    if (firebaseUser) {
-      const fbUserToken = await firebaseUser.getIdToken(true);
-      updateFbUserToken(fbUserToken);
+    if (externalUserToken) {
+      updateFbUserToken(externalUserToken);
       const userId = await server.getUserId();
       if (!userId) {
         throw new Error('Error getting user ID');
