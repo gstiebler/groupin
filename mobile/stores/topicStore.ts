@@ -11,15 +11,16 @@ import { IStorage } from '../types/Storage.types';
 type SubscribeFunction = (formattedTopicId: string) => void;
 
 export class TopicStore {
-  topicTitle: string;
-  topicId: string;
+  topicTitle = '';
+  topicId = '';
+
+  setTopicTitleAction = (topicTitle: string) => { this.topicTitle = topicTitle; };
+  setTopicIdAction = (topicId: string) => { this.topicId = topicId; };
 
   constructor(
     private rootStore: RootStore
   ) {
     this.rootStore = rootStore;
-    this.topicTitle = '';
-    this.topicId = '';
   }
 
   async onTopicOpened(params: {
@@ -29,8 +30,8 @@ export class TopicStore {
     subscribeFn: SubscribeFunction
   }) {
     const { topicId, topicName, storage, subscribeFn } = params;
-    this.topicTitle = topicName;
-    this.topicId = topicId;
+    this.setTopicTitleAction(topicName);
+    this.setTopicIdAction(topicId);
     // TODO: is `currentlyViewedTopicId` redundant with `topicId`?
     this.rootStore.currentlyViewedTopicId = topicId;
     this.rootStore.hasOlderMessages = true;

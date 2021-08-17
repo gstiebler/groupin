@@ -8,7 +8,7 @@ export type GroupInfoScreenRouteProp = RouteProp<RootStackParamList, 'GroupInfo'
 type ContainerProp = { navigation: Navigation, route: GroupInfoScreenRouteProp };
 const GroupInfoContainer: React.FC<ContainerProp> = ({ navigation, route }: ContainerProp) => {
   const willFocus = () => groupStore.getGroupInfo(route.params.groupId);
-  const willLeave = () => groupStore.setCurrentGroupInfo(undefined);
+  const willLeave = () => groupStore.setCurrentGroupInfoAction(undefined);
 
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
   useEffect(() => navigation.addListener('blur', () => willLeave()), [navigation]);

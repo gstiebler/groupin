@@ -23,6 +23,11 @@ export class RootStore {
   currentlyViewedTopicId?: string;
   hasOlderMessages = false;
 
+  setMessagesAction = (messages: GiMessage[]) => { this.messages = messages; };
+  setTopicsAction = (topics: Topic[]) => { this.topics = topics; };
+  setUserIdAction = (userId: string) => { this.userId = userId; };
+  setHasOlderMessagesAction = (hasOlderMessages: boolean) => { this.hasOlderMessages = hasOlderMessages; };
+
   constructor(
     private storage: IStorage,
     public groupStore: GroupStore

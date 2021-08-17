@@ -8,7 +8,10 @@ export interface FeGroupInfo extends server.GroupInfo {
 
 export class GroupStore {
   ownGroups: server.Group[] = [];
-  currentGroupInfo?: FeGroupInfo;
+  currentGroupInfo?: FeGroupInfo = undefined;
+
+  setOwnGroupsAction = (ownGroups: server.Group[]) => { this.ownGroups = ownGroups; };
+  setCurrentGroupInfoAction = (currentGroupInfo?: FeGroupInfo) => { this.currentGroupInfo = currentGroupInfo; };
 
   async getGroupInfo(groupId: string)  {
     const groupInfo = await server.getGroupInfo(groupId);
@@ -16,10 +19,10 @@ export class GroupStore {
     if (!groupVisibilityLocal) {
       throw new Error('Should have group visibility here');
     }
-    this.currentGroupInfo = {
+    this.setCurrentGroupInfoAction({
       ...groupInfo,
       visibilityLabel: groupVisibilityLocal.label,
-    };
+    });
   }
   
   async leaveGroup(groupId: string) {
@@ -41,11 +44,7 @@ export class GroupStore {
   }
   
   async fetchOwnGroups() {
-    this.ownGroups = await server.getOwnGroups();
-  }
-
-  setCurrentGroupInfo(currentGroupInfo?: FeGroupInfo) {
-    this.currentGroupInfo = currentGroupInfo;
+    this.setOwnGroupsAction(await server.getOwnGroups());
   }
 
 }

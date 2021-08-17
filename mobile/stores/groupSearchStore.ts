@@ -3,19 +3,21 @@ import * as _ from 'lodash';
 import { Group } from '../lib/server';
 
 export class GroupSearchStore {
-  public groups: Group[];
+  groups: Group[] = [];
 
-  public async findGroups(searchText: string) {
+  setGroupsAction = (groups: Group[]) => { this.groups = groups; };
+
+  async findGroups(searchText: string) {
     const findGroups = () => server.findGroups({ 
       searchText, 
       limit: 20, 
       skip: 0,
     });
-    this.groups = _.isEmpty(searchText) ? [] : await findGroups();
+    this.setGroupsAction(_.isEmpty(searchText) ? [] : await findGroups());
   }
 
-  public reset() {
-    this.groups = [];
+  reset() {
+    this.setGroupsAction([]);
   }
 
 }
