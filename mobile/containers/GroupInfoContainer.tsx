@@ -2,11 +2,12 @@ import { RouteProp } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import GroupInfoComponent from '../components/GroupInfo';
 import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
-import { groupStore } from '../rn_lib/storesFactory';
+import { groupStore as groupStoreInstance } from '../rn_lib/storesFactory';
+import { GroupStore } from '../stores/groupStore';
 
 export type GroupInfoScreenRouteProp = RouteProp<RootStackParamList, 'GroupInfo'>;
-type ContainerProp = { navigation: Navigation, route: GroupInfoScreenRouteProp };
-const GroupInfoContainer: React.FC<ContainerProp> = ({ navigation, route }: ContainerProp) => {
+type ContainerProp = { navigation: Navigation, route: GroupInfoScreenRouteProp, groupStore: GroupStore };
+const GroupInfoContainerObserver: React.FC<ContainerProp> = ({ navigation, route, groupStore }: ContainerProp) => {
   const willFocus = () => groupStore.getGroupInfo(route.params.groupId);
   const willLeave = () => groupStore.setCurrentGroupInfoAction(undefined);
 
@@ -27,5 +28,7 @@ const GroupInfoContainer: React.FC<ContainerProp> = ({ navigation, route }: Cont
       navigation.navigate('GroupList');
     },
   });
-};
+};const GroupInfoContainer: React.FC<{ navigation: Navigation, route: GroupInfoScreenRouteProp }> = ({ navigation, route }) => (
+  <GroupInfoContainerObserver navigation={navigation} route={route} groupStore={groupStoreInstance} />
+);
 export default GroupInfoContainer;
