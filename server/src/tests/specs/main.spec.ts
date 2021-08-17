@@ -45,6 +45,8 @@ function createStorage(): IStorage {
   return {
     async getMessages(topicId: string) { return messagesByTopic.get(topicId) ?? []; },
     async setMessages(topicId: string, messages: GiMessage[]) { messagesByTopic.set(topicId, messages); },
+    async setExternalUserToken(externalUserToken: string) {},
+    async getExternalUserToken() { return ''; },
   };
 }
 
