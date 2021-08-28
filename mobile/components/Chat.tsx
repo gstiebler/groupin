@@ -1,3 +1,4 @@
+import React from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { Container } from 'native-base';
 import { GiMessage } from '../lib/messages';
