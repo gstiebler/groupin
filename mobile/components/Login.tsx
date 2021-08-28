@@ -15,6 +15,7 @@ export type LoginProps = {
   firebaseConfig: unknown;
   verificationId: string;
   message?: { text: string, color: string };
+  isLoading: boolean;
   setMessageAction: (message: { text: string, color: string }) => void;
   onSendVerificationCode: (phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) => void;
   onConfirmVerificationCode: (verificationCode: string) => void;
@@ -45,6 +46,7 @@ const LoginComponent: React.FC<{ loginStore: LoginProps }> = ({ loginStore }) =>
       />
       <Button
         title="Send Verification Code"
+        disabled={loginStore.isLoading}
         onPress={() => loginStore.onSendVerificationCode(phoneNumber, recaptchaVerifier.current)}
       />
       <Text style={{ marginTop: 20 }}>Enter Verification code</Text>
@@ -56,7 +58,7 @@ const LoginComponent: React.FC<{ loginStore: LoginProps }> = ({ loginStore }) =>
       />
       <Button
         title="Confirm Verification Code"
-        disabled={!loginStore.verificationId}
+        disabled={!loginStore.verificationId || loginStore.isLoading}
         onPress={() => loginStore.onConfirmVerificationCode(verificationCode)}
       />
       {loginStore.message ? (

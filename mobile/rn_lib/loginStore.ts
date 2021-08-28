@@ -15,6 +15,7 @@ export class LoginStore {
   firebaseConfig: unknown;
   firebaseApp: firebase.app.App;
   notificationToken: string;
+  isLoading = false;
 
   constructor(
     private rootStore: RootStore,
@@ -23,6 +24,7 @@ export class LoginStore {
 
   setVerificationIdAction = (verificationId: string) => { this.verificationId = verificationId; }
   setMessageAction = (message: { text: string, color: string }) => { this.message = message }
+  setIsLoading = (isLoading: boolean) => { this.isLoading = isLoading; }
 
   async init(navigation: Navigation, firebaseApp: firebase.app.App, notificationToken: string) {
     this.navigation = navigation;
@@ -35,17 +37,21 @@ export class LoginStore {
     this.firebaseConfig = firebaseApp.options;
     this.message = !this.firebaseConfig ? noConfigMessage : undefined;
 
+    this.setIsLoading(true);
     const externalUserToken = await localStorage.getExternalUserToken();
     // check if user is already logged in
     if (externalUserToken) {
       updateFbUserToken(externalUserToken);
       const userId = await server.getUserId();
+
       if (!userId) {
+        this.setIsLoading(false);
         throw new Error('Error getting user ID');
       }
       await this.loginRegisteredUser(userId);
     }
 
+    this.setIsLoading(false);
     firebase.auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
         const fbUserToken = await fbUser.getIdToken(true);
@@ -57,6 +63,7 @@ export class LoginStore {
   }
 
   async onSendVerificationCode(phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) {
+    this.setIsLoading(true);
     try {
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
       const verificationId = await phoneProvider.verifyPhoneNumber(
@@ -69,9 +76,11 @@ export class LoginStore {
     } catch (err) {
       this.setMessageAction({ text: `Error: ${err.message}`, color: 'red' });
     }
+    this.setIsLoading(false);
   }
 
   async onConfirmVerificationCode(verificationCode: string) {
+    this.setIsLoading(true);
     try {
       const credential = firebase.auth.PhoneAuthProvider.credential(
         this.verificationId,
@@ -80,6 +89,7 @@ export class LoginStore {
       const userCredential = await firebase.auth().signInWithCredential(credential);
       const firebaseUser = userCredential.user;
       if (!firebaseUser) {
+        this.setIsLoading(false);
         throw new Error('Firebase user not found');
       }
       const fbUserToken = await firebaseUser.getIdToken(true);
@@ -88,6 +98,7 @@ export class LoginStore {
     } catch(err) {
       this.setMessageAction({ text: `Error: ${err.message}`, color: 'red' });
     }
+    this.setIsLoading(false);
   }
 
   async confirmationCodeReceived(fbUserToken: string) {
@@ -114,6 +125,7 @@ export class LoginStore {
   }
 
   async register(name: string) {
+    this.setIsLoading(true);
     try {
       const { errorMessage, id: userId } = await server.register(name);
       if (errorMessage) {
@@ -132,6 +144,7 @@ export class LoginStore {
     } catch (error) {
       console.error(error);
     }
+    this.setIsLoading(false);
   }
 
   async logout() {
