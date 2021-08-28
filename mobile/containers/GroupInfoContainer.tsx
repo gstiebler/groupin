@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
-import GroupInfoComponent from '../components/GroupInfo';
+import GroupInfoComponent, { GroupInfoProps } from '../components/GroupInfo';
 import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
 import { groupStore as groupStoreInstance } from '../rn_lib/storesFactory';
 import { GroupStore } from '../stores/groupStore';
@@ -15,7 +15,7 @@ const GroupInfoContainerObserver: React.FC<ContainerProp> = observer(({ navigati
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
   useEffect(() => navigation.addListener('blur', () => willLeave()), [navigation]);
 
-  return GroupInfoComponent({
+  const props: GroupInfoProps = {
     groupInfo: groupStore.currentGroupInfo,
     onJoinGroup: async () => {
       await groupStore.joinGroup(),
@@ -28,7 +28,8 @@ const GroupInfoContainerObserver: React.FC<ContainerProp> = observer(({ navigati
       await groupStore.leaveGroup(groupStore.currentGroupInfo?.id ?? '');
       navigation.navigate('GroupList');
     },
-  });
+  };
+  return <GroupInfoComponent {...props} />;
 });
 const GroupInfoContainer: React.FC<{ navigation: Navigation, route: GroupInfoScreenRouteProp }> = ({ navigation, route }) => (
   <GroupInfoContainerObserver navigation={navigation} route={route} groupStore={groupStoreInstance} />

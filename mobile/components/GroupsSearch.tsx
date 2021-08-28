@@ -10,7 +10,7 @@ import {
 import { Group } from '../lib/server';
 import { TextInput } from 'react-native';
 
-interface GroupSearchProps {
+export interface GroupSearchProps {
   groups: Group[];
   changeSearchText: (searchText: string) => void;
   onGroupSelected: (groupId: string) => void;

@@ -10,6 +10,6 @@ const SplashScreenContainer: React.FC<{ navigation: Navigation }> = ({ navigatio
   };
   useEffect(() => navigation.addListener('focus', willFocus), [navigation]);
 
-  return SplashScreenComponent();
+  return <SplashScreenComponent />;
 }
 export default SplashScreenContainer;

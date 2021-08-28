@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface NewGroupProps {
+export interface NewGroupProps {
   onCreate: (params: { name: string, visibility: string }) => void;
 }
 
