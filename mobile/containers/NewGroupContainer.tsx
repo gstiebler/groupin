@@ -1,3 +1,4 @@
+import React from 'react';
 import NewGroupComponent, { NewGroupProps } from '../components/NewGroup';
 import { createGroup } from '../actions/newGroupActions';
 import { Navigation } from '../rn_lib/Navigator.types';

@@ -1,6 +1,6 @@
+import React, { useEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
 import GroupInfoComponent, { GroupInfoProps } from '../components/GroupInfo';
 import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
 import { groupStore as groupStoreInstance } from '../rn_lib/storesFactory';

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import GroupsSearchComponent, { GroupSearchProps } from '../components/GroupsSearch';
 import { Navigation } from '../rn_lib/Navigator.types';
 import { groupSearchStore as groupSearchStoreInstance } from '../rn_lib/storesFactory';

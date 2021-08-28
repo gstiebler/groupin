@@ -1,3 +1,4 @@
+import React from 'react';
 import SettingsComponent, { SettingsProps } from '../components/Settings';
 import { loginStore } from '../rn_lib/storesFactory';
 

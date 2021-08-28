@@ -1,3 +1,4 @@
+import React from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
 import NewTopicComponent, { NewTopicProps } from '../components/NewTopic';
