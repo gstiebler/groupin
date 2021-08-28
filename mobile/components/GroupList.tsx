@@ -1,3 +1,4 @@
+import React from 'react';
 import { TouchableHighlight, View, StyleSheet, ListRenderItemInfo } from 'react-native';
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
