@@ -4,6 +4,7 @@ import { Navigation } from './Navigator.types';
 
 import * as messageReceiver from '../lib/messageReceiver';
 import { Platform } from 'react-native';
+import { groupStore, topicStore } from './storesFactory';
 
 async function registerForPushNotificationsAsync() {
   let notificationToken = '';
@@ -62,13 +63,17 @@ export class GiNotifications {
   async startMessageListener() {
     this.notificationListener = Notifications.addNotificationReceivedListener(notification => {
       console.log(notification);
-      messageReceiver.messageReceived();
+      messageReceiver.messageReceived(groupStore, topicStore);
     });
 
     this.responseListener = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
       console.log('onNotificationOpenedApp');
-      messageReceiver.onNotificationOpened(response.notification.request.content.data as messageReceiver.GiNotification);
+      messageReceiver.onNotificationOpened(
+        response.notification.request.content.data as messageReceiver.GiNotification,
+        groupStore,
+        topicStore
+      );
       const notificationOpen = response.notification.request.content.data as messageReceiver.GiNotification;
       const { topicId, topicName } = notificationOpen.notification.data;
       this.navigation.navigate('Chat', { topicId, topicName });

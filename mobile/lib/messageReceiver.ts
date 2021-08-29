@@ -1,5 +1,5 @@
-import { groupStore, topicStore } from '../rn_lib/storesFactory';
-import { RootStore } from '../stores/rootStore';
+import { GroupStore } from "../stores/groupStore";
+import { TopicStore } from "../stores/topicStore";
 
 export type GiNotification = {
   notification: {
@@ -11,7 +11,7 @@ export type GiNotification = {
   }
 }
 
-export async function messageReceived() {
+export async function messageReceived(groupStore: GroupStore, topicStore: TopicStore) {
   await Promise.all([
     groupStore.getTopicsOfCurrentGroup(),
     topicStore.getMessagesOfCurrentTopic(),
@@ -21,29 +21,32 @@ export async function messageReceived() {
 async function onNewNotification(params: {
   groupId: string;
   topicId: string;
-  topicName: string;
+  groupStore: GroupStore;
+  topicStore: TopicStore;
 }) {
-  const { groupId, topicId } = params;
+  const { groupId, topicId, groupStore, topicStore } = params;
   groupStore.setCurrentlyViewedGroup(groupId);
   topicStore.setCurrentViewedTopicId(topicId);
   
-  await messageReceived();
+  await messageReceived(groupStore, topicStore);
 }
 
-export async function onNotificationOpened(notificationOpen: GiNotification) {
+export async function onNotificationOpened(notificationOpen: GiNotification, groupStore: GroupStore, topicStore: TopicStore) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
     groupId, 
     topicId,
-    topicName,
+    groupStore,
+    topicStore,
   });
 }
 
-export async function onInitialNotification(notificationOpen: GiNotification) {
+export async function onInitialNotification(notificationOpen: GiNotification, groupStore: GroupStore, topicStore: TopicStore) {
   const { groupId, topicId, topicName } = notificationOpen.notification.data;
   onNewNotification({
     groupId, 
     topicId,
-    topicName,
+    groupStore,
+    topicStore,
   });
 }
