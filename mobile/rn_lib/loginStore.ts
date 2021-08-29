@@ -120,7 +120,11 @@ export class LoginStore {
       throw new Error('Notification token is not yet available');
     }
     await this.rootStore.updateNotificationToken(this.notificationToken);
-    this.navigation.navigate('TabNavigator');
+  }
+
+  async isUserLoggedIn() {
+    const userToken = await localStorage.getExternalUserToken();
+    return !!(this.rootStore.userId && userToken);
   }
 
   registerNewUser(externalUserToken: string) {
