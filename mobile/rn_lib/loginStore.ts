@@ -118,7 +118,7 @@ export class LoginStore {
     if (!this.notificationToken) {
       throw new Error('Notification token is not yet available');
     }
-    await this.updateNotificationToken(this.notificationToken);
+    await this.rootStore.updateNotificationToken(this.notificationToken);
     this.navigation.navigate('TabNavigator');
   }
 
@@ -157,12 +157,5 @@ export class LoginStore {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  async updateNotificationToken(notificationToken: string) {
-    if (!this.rootStore.userId) {
-      throw new Error('There is no user yet');
-    }
-    await server.updateNotificationToken(notificationToken);
   }
 }
