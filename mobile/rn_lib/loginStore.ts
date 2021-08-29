@@ -39,6 +39,7 @@ export class LoginStore {
 
     this.setIsLoading(true);
     const externalUserToken = await localStorage.getExternalUserToken();
+    console.log(`Stored external user token: "${externalUserToken}"`);
     // check if user is already logged in
     if (externalUserToken) {
       updateFbUserToken(externalUserToken);
@@ -48,7 +49,7 @@ export class LoginStore {
         this.setIsLoading(false);
         throw new Error('Error getting user ID');
       }
-      await this.loginRegisteredUser(userId);
+      await this.loginRegisteredUser(userId, externalUserToken);
     }
 
     this.setIsLoading(false);
@@ -105,14 +106,15 @@ export class LoginStore {
     updateFbUserToken(fbUserToken);
     const userId = await server.getUserId();
     if (userId === 'NO USER') {
-      this.registerNewUser();
+      this.registerNewUser(fbUserToken);
     } else {
-      this.loginRegisteredUser(userId);
+      this.loginRegisteredUser(userId, fbUserToken);
     }
   }
 
-  async loginRegisteredUser(userId: string) {
+  async loginRegisteredUser(userId: string, fbUserToken: string) {
     this.rootStore.setUserId(userId);
+    await localStorage.setExternalUserToken(fbUserToken);
     if (!this.notificationToken) {
       throw new Error('Notification token is not yet available');
     }
@@ -120,11 +122,11 @@ export class LoginStore {
     this.navigation.navigate('TabNavigator');
   }
 
-  registerNewUser() {
-    this.navigation.navigate('Register');
+  registerNewUser(externalUserToken: string) {
+    this.navigation.navigate('Register', { externalUserToken });
   }
 
-  async register(name: string) {
+  async register(name: string, externalUserToken: string) {
     this.setIsLoading(true);
     try {
       const { errorMessage, id: userId } = await server.register(name);
@@ -140,7 +142,7 @@ export class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
-      this.loginRegisteredUser(userId);
+      this.loginRegisteredUser(userId, externalUserToken);
     } catch (error) {
       console.error(error);
     }
@@ -150,6 +152,7 @@ export class LoginStore {
   async logout() {
     try {
       this.rootStore.setUserId('');
+      await localStorage.setExternalUserToken(null);
       this.navigation.navigate('Login');
     } catch (error) {
       console.error(error);

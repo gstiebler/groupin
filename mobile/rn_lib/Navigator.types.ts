@@ -10,7 +10,7 @@ export type RootStackParamList = {
   NewGroup: undefined;
   GroupInfo: { groupId: string }  ;
   Login: undefined;
-  Register: undefined;
+  Register: { externalUserToken: string };
   TabNavigator: undefined;
 };
 
