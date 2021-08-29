@@ -33,11 +33,11 @@ export class TopicStore {
     this.setTopicTitleAction(topicName);
     this.setTopicIdAction(topicId);
     // TODO: is `currentlyViewedTopicId` redundant with `topicId`?
-    this.rootStore.currentlyViewedTopicId = topicId;
-    this.rootStore.hasOlderMessages = true;
+    this.rootStore.setCurrentViewedTopicId(topicId);
+    this.rootStore.setHasOlderMessagesAction(true);
   
     const currentMessages = await storage.getMessages(topicId);
-    this.rootStore.messages = currentMessages;
+    this.rootStore.setMessagesAction(currentMessages);
     const messagesEmpty = _.isEmpty(currentMessages);
     let messages;
     if (messagesEmpty) {
@@ -57,7 +57,7 @@ export class TopicStore {
       }
     }
     await storage.setMessages(topicId, getNNew(messages, NUM_ITEMS_PER_FETCH));
-    this.rootStore.messages = messages;
+    this.rootStore.setMessagesAction(messages);
     subscribeFn(formatDataTopicId(topicId));
   }
   
@@ -66,8 +66,8 @@ export class TopicStore {
     unsubscribeFn: SubscribeFunction
   }) {
     const { topicId, unsubscribeFn } = params;
-    this.rootStore.currentlyViewedTopicId = undefined;
-    this.rootStore.messages = [];
+    this.rootStore.setCurrentViewedTopicId(undefined);
+    this.rootStore.setMessagesAction([]);
     server.setTopicLatestRead(topicId);
     const currentTopic = _.find(this.rootStore.topics, { id: topicId });
     // TODO: move this logic to the server?

@@ -19,26 +19,24 @@ export class RootStore {
   messages: GiMessage[] = [];
   topics: Topic[] = []; // TODO: change name to `topicsOfGroup`
   userId = '';
-  currentlyViewedGroupId?: string;
-  currentlyViewedTopicId?: string;
+  currentlyViewedGroupId = '';
+  currentlyViewedTopicId = '';
   hasOlderMessages = false;
 
   setMessagesAction = (messages: GiMessage[]) => { this.messages = messages; };
   setTopicsAction = (topics: Topic[]) => { this.topics = topics; };
   setUserIdAction = (userId: string) => { this.userId = userId; };
   setHasOlderMessagesAction = (hasOlderMessages: boolean) => { this.hasOlderMessages = hasOlderMessages; };
+  setCurrentViewedTopicId = (topicId: string) => { this.currentlyViewedGroupId = topicId; }
+  setCurrentViewedGroupId = (topicId: string) => { this.currentlyViewedTopicId = topicId; }
 
   constructor(
     private storage: IStorage,
     public groupStore: GroupStore
   ) {}
 
-  setUserId(userId: string): void {
-    this.userId = userId;
-  }
-
   addNewMessages(newMessages: GiMessage[]): void {
-    this.messages = mergeMessages(this.messages, newMessages);
+    this.setMessagesAction(mergeMessages(this.messages, newMessages));
   }
 
   async sendMessages(messages: GiMessage[]): Promise<void> {
@@ -52,12 +50,12 @@ export class RootStore {
   }
   
   async getTopicsOfGroup(groupId: string): Promise<void> {
-    this.topics = await server.getTopicsOfGroup(groupId, NUM_ITEMS_PER_FETCH);
+    this.setTopicsAction(await server.getTopicsOfGroup(groupId, NUM_ITEMS_PER_FETCH));
   }
   
   async getTopicsOfCurrentGroup(): Promise<void> {
     if (!this.currentlyViewedGroupId) { return }
-    this.topics = await server.getTopicsOfGroup(this.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH);
+    this.setTopicsAction(await server.getTopicsOfGroup(this.currentlyViewedGroupId, NUM_ITEMS_PER_FETCH));
   }
   
   async onOlderMessagesRequested(topicId: string): Promise<void> {
@@ -69,20 +67,20 @@ export class RootStore {
       beforeId: firstMessage?._id,
     });
   
-    this.messages = mergeMessages(olderMessages, this.messages);
+    this.setMessagesAction(mergeMessages(olderMessages, this.messages));
     if (olderMessages.length < NUM_ITEMS_PER_FETCH) {
-      this.hasOlderMessages = false;
+      this.setHasOlderMessagesAction(false);
     }
   }
   
   async getMessagesOfCurrentTopic(): Promise<void> {
     if (!this.currentlyViewedTopicId) { return }
     const topicId = this.currentlyViewedTopicId;
-    this.messages = await server.getMessagesOfTopic({
+    const messages = await server.getMessagesOfTopic({
       topicId, 
       limit: NUM_ITEMS_PER_FETCH,
     });
-    // TODO: test line below
+    this.setMessagesAction(messages);
     await this.storage.setMessages(topicId, this.messages);
   }
 
@@ -94,16 +92,12 @@ export class RootStore {
   }
 
   async setCurrentlyViewedGroup(groupId: string) {
-    this.currentlyViewedGroupId = groupId;
+    this.setCurrentViewedGroupId(groupId);
     await this.getTopicsOfGroup(groupId);
   }
-  
-  setCurrentViewedTopicId(topicId: string) {
-    this.currentlyViewedTopicId = topicId;
-  }
 
-  async leaveGroup() {
-    this.currentlyViewedGroupId = undefined;
+  leaveGroup() {
+    this.setCurrentViewedTopicId(undefined);
     this.topics = [];
   }
 }
