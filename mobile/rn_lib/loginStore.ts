@@ -38,6 +38,7 @@ export class LoginStore {
     this.message = !this.firebaseConfig ? noConfigMessage : undefined;
 
     this.setIsLoading(true);
+    await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     const externalUserToken = await localStorage.getExternalUserToken();
     console.log(`Stored external user token: "${externalUserToken}"`);
     // check if user is already logged in
