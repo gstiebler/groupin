@@ -3,7 +3,7 @@ import { TouchableHighlight, View, StyleSheet, ListRenderItemInfo } from 'react-
 import { Container, Button, Text, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
-import { Topic } from '../stores/rootStore';
+import { Topic } from '../stores/groupStore';
 
 export type TopicsListProps = {
   topics: Topic[];

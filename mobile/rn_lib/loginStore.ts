@@ -113,7 +113,7 @@ export class LoginStore {
   }
 
   async loginRegisteredUser(userId: string, fbUserToken: string) {
-    this.rootStore.setUserId(userId);
+    this.rootStore.setUserIdAction(userId);
     await localStorage.setExternalUserToken(fbUserToken);
     if (!this.notificationToken) {
       throw new Error('Notification token is not yet available');
@@ -151,7 +151,7 @@ export class LoginStore {
 
   async logout() {
     try {
-      this.rootStore.setUserId('');
+      this.rootStore.setUserIdAction('');
       await localStorage.setExternalUserToken(null);
       this.navigation.navigate('Login');
     } catch (error) {

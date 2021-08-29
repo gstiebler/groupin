@@ -1,7 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Navigation } from './Navigator.types';
-import { rootStore } from './storesFactory';
 
 import * as messageReceiver from '../lib/messageReceiver';
 import { Platform } from 'react-native';
@@ -63,13 +62,13 @@ export class GiNotifications {
   async startMessageListener() {
     this.notificationListener = Notifications.addNotificationReceivedListener(notification => {
       console.log(notification);
-      messageReceiver.messageReceived(rootStore);
+      messageReceiver.messageReceived();
     });
 
     this.responseListener = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
       console.log('onNotificationOpenedApp');
-      messageReceiver.onNotificationOpened(response.notification.request.content.data as messageReceiver.GiNotification, rootStore);
+      messageReceiver.onNotificationOpened(response.notification.request.content.data as messageReceiver.GiNotification);
       const notificationOpen = response.notification.request.content.data as messageReceiver.GiNotification;
       const { topicId, topicName } = notificationOpen.notification.data;
       this.navigation.navigate('Chat', { topicId, topicName });

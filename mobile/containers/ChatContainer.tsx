@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react';
 import { localStorage as storage } from '../rn_lib/localStorage';
-import { rootStore as rootStoreInstance } from '../rn_lib/storesFactory';
+import { rootStore as rootStoreInstance, topicStore as topicStoreInstance } from '../rn_lib/storesFactory';
 import ChatComponent, { ChatProps } from '../components/Chat';
 import { Navigation, RootStackParamList } from '../rn_lib/Navigator.types';
 import { RouteProp } from '@react-navigation/native';
 import { notifications } from '../rn_lib/notifications';
 import { observer } from 'mobx-react-lite';
 import { RootStore } from '../stores/rootStore';
+import { TopicStore } from '../stores/topicStore';
 
 export type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
-type ContainerProp = { navigation: Navigation, route: ChatScreenRouteProp, rootStore: RootStore };
-const ChatContainerObserver: React.FC<ContainerProp> = observer(({ navigation, route, rootStore }) => {
+type ContainerProp = { navigation: Navigation, route: ChatScreenRouteProp, rootStore: RootStore, topicStore: TopicStore };
+const ChatContainerObserver: React.FC<ContainerProp> = observer(({ navigation, route, rootStore, topicStore }) => {
   const willFocus = () => {
-    rootStore.topicStore.onTopicOpened({ 
+    topicStore.onTopicOpened({ 
       topicId: route.params.topicId, 
       topicName: route.params.topicName, 
       storage,
@@ -21,7 +22,7 @@ const ChatContainerObserver: React.FC<ContainerProp> = observer(({ navigation, r
   };
       
   const willLeave = () => {
-    rootStore.topicStore.onTopicClosed({
+    topicStore.onTopicClosed({
       topicId: route.params.topicId,
       unsubscribeFn: (formattedTopicId) => { notifications.unsubscribeFromTopic(formattedTopicId); },
     });
@@ -30,16 +31,16 @@ const ChatContainerObserver: React.FC<ContainerProp> = observer(({ navigation, r
   useEffect(() => navigation.addListener('blur', () => willLeave()), [navigation]);
   
   const props: ChatProps = {
-    title: rootStore.topicStore.topicTitle,
-    messages: rootStore.messages,
+    title: topicStore.topicTitle,
+    messages: topicStore.messages,
     userId: rootStore.userId, 
-    hasOlderMessages: rootStore.hasOlderMessages,
-    onSend: messages => rootStore.sendMessages(messages),
-    onLoadEarlier: () => rootStore.onOlderMessagesRequested(route.params.topicId),
+    hasOlderMessages: topicStore.hasOlderMessages,
+    onSend: messages => topicStore.sendMessages(messages),
+    onLoadEarlier: () => topicStore.onOlderMessagesRequested(route.params.topicId),
   }
   return <ChatComponent {...props} />;
 }); 
 const ChatContainer: React.FC<{ navigation: Navigation, route: ChatScreenRouteProp }> = ({ navigation, route }) => (
-  <ChatContainerObserver navigation={navigation} route={route} rootStore={rootStoreInstance} />
+  <ChatContainerObserver navigation={navigation} route={route} rootStore={rootStoreInstance} topicStore={topicStoreInstance} />
 );
 export default ChatContainer;
