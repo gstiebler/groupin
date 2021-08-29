@@ -13,13 +13,13 @@ type SubscribeFunction = (formattedTopicId: string) => void;
 export class TopicStore {
   topicTitle = '';
   topicId = '';
-  currentlyViewedTopicId = '';
+  currentlyViewedTopicId? = '';
   messages: GiMessage[] = [];
   hasOlderMessages = false;
 
   setTopicTitleAction = (topicTitle: string) => { this.topicTitle = topicTitle; };
   setTopicIdAction = (topicId: string) => { this.topicId = topicId; };
-  setCurrentViewedTopicId = (topicId: string) => { this.currentlyViewedTopicId = topicId; }
+  setCurrentViewedTopicId = (topicId?: string) => { this.currentlyViewedTopicId = topicId; }
   setMessagesAction = (messages: GiMessage[]) => { this.messages = messages; };
   setHasOlderMessagesAction = (hasOlderMessages: boolean) => { this.hasOlderMessages = hasOlderMessages; };
 

@@ -16,12 +16,12 @@ export type Topic = {
 export class GroupStore {
   ownGroups: server.Group[] = [];
   currentGroupInfo?: FeGroupInfo = undefined;
-  currentlyViewedGroupId = '';
+  currentlyViewedGroupId? = '';
   topics: Topic[] = []; // TODO: change name to `topicsOfGroup`
 
   setOwnGroupsAction = (ownGroups: server.Group[]) => { this.ownGroups = ownGroups; };
   setCurrentGroupInfoAction = (currentGroupInfo?: FeGroupInfo) => { this.currentGroupInfo = currentGroupInfo; };
-  setCurrentViewedGroupId = (topicId: string) => { this.currentlyViewedGroupId = topicId; }
+  setCurrentViewedGroupId = (topicId?: string) => { this.currentlyViewedGroupId = topicId; }
   setTopicsAction = (topics: Topic[]) => { this.topics = topics; };
 
   async getGroupInfo(groupId: string)  {
@@ -44,6 +44,7 @@ export class GroupStore {
 
   async leaveGroup(groupId: string) {
     await server.leaveGroup(groupId);
+    await this.fetchOwnGroups();
   }
   
   async joinGroup()  {

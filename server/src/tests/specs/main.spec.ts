@@ -11,7 +11,6 @@ import { ConnCtx } from '../../db/ConnectionContext';
 import { addSeconds, differenceInMinutes } from 'date-fns';
 import { FeGroupInfo, GroupStore } from '../../mobile/stores/groupStore';
 import { GroupSearchStore } from '../../mobile/stores/groupSearchStore';
-import { RootStore } from '../../mobile/stores/rootStore';
 import * as server from '../../mobile/lib/server';
 import { User } from '../../db/schema/User';
 import { Message } from '../../db/schema/Message';
@@ -138,9 +137,8 @@ describe('main', () => {
     it('getTopicsOfGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const groupStore = new GroupStore();
-      const rootStore = new RootStore(createStorage(), groupStore);
-      await rootStore.getTopicsOfGroup(groupFixtures.firstGroup._id!.toHexString());
-      expect(rootStore.topics).toEqual([
+      await groupStore.getTopicsOfGroup(groupFixtures.firstGroup._id!.toHexString());
+      expect(groupStore.topics).toEqual([
         {
           id: topicFixtures.topic1Group1._id!.toHexString(),
           name: 'Topic 1 Group 1',
@@ -161,10 +159,9 @@ describe('main', () => {
     it('getTopicsOfCurrentGroup', async () => {
       setCurrentUser(userFixtures.robert);
       const groupStore = new GroupStore();
-      const rootStore = new RootStore(createStorage(), groupStore);
-      rootStore.currentlyViewedGroupId = groupFixtures.firstGroup._id!.toHexString();
-      await rootStore.getTopicsOfCurrentGroup();
-      expect(rootStore.topics).toEqual([
+      groupStore.currentlyViewedGroupId = groupFixtures.firstGroup._id!.toHexString();
+      await groupStore.getTopicsOfCurrentGroup();
+      expect(groupStore.topics).toEqual([
         {
           id: topicFixtures.topic1Group1._id!.toHexString(),
           name: 'Topic 1 Group 1',
@@ -188,8 +185,8 @@ describe('main', () => {
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         const groupStore = new GroupStore();
-        const rootStore = new RootStore(storage, groupStore);
-        await rootStore.topicStore.onTopicOpened({
+        const topicStore = new TopicStore(groupStore, storage);
+        await topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
           storage,
@@ -218,7 +215,7 @@ describe('main', () => {
           },
         ]
         const expectedMessagesReversed = _.reverse(expectedMessages);
-        expect(rootStore.messages).toEqual(expectedMessagesReversed);
+        expect(topicStore.messages).toEqual(expectedMessagesReversed);
         expect(await storage.getMessages(topicIdStr)).toEqual(expectedMessagesReversed);
       });
 
@@ -228,8 +225,8 @@ describe('main', () => {
         const storage = createStorage();
         await storage.setMessages(topicIdStr, localMessages50.slice(4, 24) as GiMessage[]);
         const groupStore = new GroupStore();
-        const rootStore = new RootStore(storage, groupStore);
-        await rootStore.topicStore.onTopicOpened({
+        const topicStore = new TopicStore(groupStore, storage,);
+        await topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
           storage,
@@ -237,7 +234,7 @@ describe('main', () => {
         });
 
         // store messages
-        const storeMessageTexts = _.reverse(_.map(rootStore.messages, 'text'));
+        const storeMessageTexts = _.reverse(_.map(topicStore.messages, 'text'));
         expect(storeMessageTexts).toHaveLength(24);
         expect(storeMessageTexts[0]).toEqual('Message 26');
         expect(storeMessageTexts[19]).toEqual('Message 45');
@@ -261,8 +258,8 @@ describe('main', () => {
         setCurrentUser(userFixtures.robert);
         const storage = createStorage();
         await storage.setMessages(topicIdStr, localMessages50.slice(25, 44) as GiMessage[]);
-        const rootActions = new RootStore(storage, new GroupStore());
-        await rootActions.topicStore.onTopicOpened({
+        const topicStore = new TopicStore(new GroupStore(), storage);
+        await topicStore.onTopicOpened({
           topicId: topicIdStr,
           topicName: 'name',
           storage,
@@ -270,7 +267,7 @@ describe('main', () => {
         });
 
         // store messages
-        const storeMessageTexts = _.reverse(_.map(rootActions.messages, 'text'));
+        const storeMessageTexts = _.reverse(_.map(topicStore.messages, 'text'));
         expect(storeMessageTexts).toHaveLength(20);
         expect(storeMessageTexts[0]).toEqual('Message 30');
         expect(storeMessageTexts[1]).toEqual('Message 31');
@@ -292,12 +289,12 @@ describe('main', () => {
     it('onOlderMessagesRequested', async () => {
       const topicIdStr = topicFixtures.topic1Group2._id!.toHexString();
       setCurrentUser(userFixtures.robert);
-      const rootStore = new RootStore(createStorage(), new GroupStore());
-      rootStore.messages = localMessages50.slice(0, 5) as GiMessage[];
-      await rootStore.onOlderMessagesRequested(topicIdStr);
+      const topicStore = new TopicStore(new GroupStore(), createStorage());
+      topicStore.messages = localMessages50.slice(0, 5) as GiMessage[];
+      await topicStore.onOlderMessagesRequested(topicIdStr);
 
       // store messages
-      const storeMessageTexts = _.reverse(_.map(rootStore.messages, 'text'));
+      const storeMessageTexts = _.reverse(_.map(topicStore.messages, 'text'));
       expect(storeMessageTexts).toHaveLength(25);
       expect(storeMessageTexts[0]).toEqual('Message 25');
       expect(storeMessageTexts[1]).toEqual('Message 26');
@@ -312,11 +309,10 @@ describe('main', () => {
 
     it('getMessagesOfCurrentTopic', async () => {
       setCurrentUser(userFixtures.robert);
-      const storage = createStorage();
-      const rootStore = new RootStore(storage, new GroupStore());
-      rootStore.currentlyViewedTopicId = topicFixtures.topic1Group1._id!.toHexString();
-      await rootStore.getMessagesOfCurrentTopic();
-      expect(rootStore.messages).toEqual(_.reverse([
+      const topicStore = new TopicStore(new GroupStore(), createStorage());
+      topicStore.currentlyViewedTopicId = topicFixtures.topic1Group1._id!.toHexString();
+      await topicStore.getMessagesOfCurrentTopic();
+      expect(topicStore.messages).toEqual(_.reverse([
         {
           _id: messageFixtures.message1topic1._id!.toHexString(),
           createdAt: Date.parse('2018-10-01'),
@@ -381,13 +377,13 @@ describe('main', () => {
       const { alice } = userFixtures;
       const messageText = 'new message 1 from Alice';
       const topicId = topicFixtures.topic1Group1._id!.toHexString();
-      let rootStore: RootStore;
+      let topicStore: TopicStore;
 
       beforeEach(async () => {
         setCurrentUser(alice);
-        rootStore = new RootStore(createStorage(), new GroupStore());
-        rootStore.topicStore.topicId = topicId;
-        await rootStore.sendMessages([{ text: messageText } as GiMessage]);
+        topicStore = new TopicStore(new GroupStore(), createStorage());
+        topicStore.topicId = topicId;
+        await topicStore.sendMessages([{ text: messageText } as GiMessage]);
       });
 
       it('push', async () => {
@@ -415,7 +411,7 @@ describe('main', () => {
         const [groupId] = call1args;
         expect(groupId).toBe(groupFixtures.firstGroup._id!.toHexString());
 
-        expect(rootStore.messages).toHaveLength(1);
+        expect(topicStore.messages).toHaveLength(1);
       });
 
       it('message was added to DB', async () => {
@@ -466,8 +462,7 @@ describe('main', () => {
       beforeEach(async () => {
         setCurrentUser(userFixtures.robert);
         const secondGroupId = groupFixtures.secondGroup._id!.toHexString();
-        const rootStore = new RootStore(createStorage(), new GroupStore());
-        const topicStore = new TopicStore(rootStore);
+        const topicStore = new TopicStore(new GroupStore(), createStorage());
         await topicStore.createTopic({ groupId: secondGroupId, name: topicName });
       });
 
