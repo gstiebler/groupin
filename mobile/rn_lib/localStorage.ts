@@ -3,7 +3,7 @@ import { GiMessage } from '../lib/messages';
 import { IStorage } from '../types/Storage.types';
 
 export class LocalStorage implements IStorage {
-  externalUserTokenKey = 'externalUserTokenKey';
+  authTokenKey = 'authTokenKey';
 
   async getMessages(topicId: string): Promise<GiMessage[]> {
     const res = await AsyncStorage.getItem(topicId);
@@ -14,12 +14,12 @@ export class LocalStorage implements IStorage {
     await AsyncStorage.setItem(topicId, JSON.stringify(value));
   }
 
-  async getExternalUserToken(): Promise<string> {
-    return await AsyncStorage.getItem(this.externalUserTokenKey);
+  async getAuthToken(): Promise<string> {
+    return await AsyncStorage.getItem(this.authTokenKey);
   }
 
-  async setExternalUserToken(externalUserToken: string) {
-    await AsyncStorage.setItem(this.externalUserTokenKey, externalUserToken);
+  async setAuthToken(authToken: string) {
+    await AsyncStorage.setItem(this.authTokenKey, authToken);
   }
 }
 

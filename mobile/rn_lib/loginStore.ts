@@ -6,7 +6,7 @@ import { AlertStatic } from 'react-native';
 import firebase from 'firebase/app';
 import { localStorage } from './localStorage';
 
-const updateFbUserToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
+const updateAuthToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
 export class LoginStore {
   navigation: Navigation;
@@ -38,26 +38,25 @@ export class LoginStore {
     this.message = !this.firebaseConfig ? noConfigMessage : undefined;
 
     this.setIsLoading(true);
-    await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    const externalUserToken = await localStorage.getExternalUserToken();
-    console.log(`Stored external user token: "${externalUserToken}"`);
+    const authToken = await localStorage.getAuthToken();
+    console.log(`Stored external user token: "${authToken}"`);
     // check if user is already logged in
-    if (externalUserToken) {
-      updateFbUserToken(externalUserToken);
+    if (authToken) {
+      updateAuthToken(authToken);
       const userId = await server.getUserId();
 
       if (!userId) {
         this.setIsLoading(false);
         throw new Error('Error getting user ID');
       }
-      await this.loginRegisteredUser(userId, externalUserToken);
+      await this.loginRegisteredUser(userId, authToken);
     }
 
     this.setIsLoading(false);
     firebase.auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
         const fbUserToken = await fbUser.getIdToken(true);
-        updateFbUserToken(fbUserToken);
+        updateAuthToken(fbUserToken);
       } else {
         console.log('no user yet');
       }
@@ -104,7 +103,7 @@ export class LoginStore {
   }
 
   async confirmationCodeReceived(fbUserToken: string) {
-    updateFbUserToken(fbUserToken);
+    updateAuthToken(fbUserToken);
     const userId = await server.getUserId();
     if (userId === 'NO USER') {
       this.registerNewUser(fbUserToken);
@@ -115,7 +114,7 @@ export class LoginStore {
 
   async loginRegisteredUser(userId: string, fbUserToken: string) {
     this.rootStore.setUserIdAction(userId);
-    await localStorage.setExternalUserToken(fbUserToken);
+    await localStorage.setAuthToken(fbUserToken);
     if (!this.notificationToken) {
       throw new Error('Notification token is not yet available');
     }
@@ -123,7 +122,7 @@ export class LoginStore {
   }
 
   async isUserLoggedIn() {
-    const userToken = await localStorage.getExternalUserToken();
+    const userToken = await localStorage.getAuthToken();
     return !!(this.rootStore.userId && userToken);
   }
 
@@ -157,7 +156,7 @@ export class LoginStore {
   async logout() {
     try {
       this.rootStore.setUserIdAction('');
-      await localStorage.setExternalUserToken(null);
+      await localStorage.setAuthToken(null);
       this.navigation.navigate('Login');
     } catch (error) {
       console.error(error);
