@@ -53,14 +53,6 @@ export class LoginStore {
     }
 
     this.setIsLoading(false);
-    firebase.auth().onAuthStateChanged(async (fbUser) => {
-      if (fbUser) {
-        const fbUserToken = await fbUser.getIdToken(true);
-        updateAuthToken(fbUserToken);
-      } else {
-        console.log('no user yet');
-      }
-    });
   }
 
   async onSendVerificationCode(phoneNumber: string, applicationVerifier: firebase.auth.ApplicationVerifier) {

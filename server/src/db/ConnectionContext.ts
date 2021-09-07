@@ -8,6 +8,7 @@ import PinnedTopicModel from './schema/PinnedTopic';
 import TopicModel from './schema/Topic';
 import TopicLatestReadModel from './schema/TopicLatestRead';
 import UserGroupModel from './schema/UserGroup';
+import { envConfig } from '../config/envConfig';
 
 const contextFromConnection = (connection: typeof mongoose) => ({
   connection,
@@ -25,10 +26,10 @@ export type ConnCtx = ReturnType<typeof contextFromConnection>;
 // TODO: generic DB here
 export async function createConnectionContext() {
   try {
-    const connection = await createMongooseConnection(process.env.MONGODB_URL ?? '');
+    const connection = await createMongooseConnection(envConfig.MONGODB_URL ?? '');
     return contextFromConnection(connection!);
   } catch (error) {
-    logger.error(`Error connecting to ${process.env.DB_HOST}: ${error}`);
+    logger.error(`Error connecting to ${envConfig.MONGODB_URL}: ${error}`);
     throw new Error(error);
   }
 }

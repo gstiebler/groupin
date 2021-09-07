@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import './lib/firebase';
 import * as admin from 'firebase-admin';
 import logger from './config/winston';

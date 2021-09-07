@@ -1,6 +1,4 @@
 import 'reflect-metadata';
-import * as dotenv from 'dotenv';
-dotenv.config();
 import pushService from './lib/pushService';
 import { ApolloServer } from 'apollo-server-azure-functions';
 import { getContext } from './graphqlContext';

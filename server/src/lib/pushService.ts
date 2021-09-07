@@ -17,11 +17,11 @@ const pushService = {
     /*
     const serviceAccount = {
       ...firebaseConfig,
-      private_key: JSON.parse(`"${process.env.FIREBASE_PRIVATE_KEY}"`),
+      private_key: JSON.parse(`"${envConfig.FIREBASE_PRIVATE_KEY}"`),
     };
     const config = {
       credential: admin.credential.cert(serviceAccount),
-      databaseURL: process.env.FIREBASE_DATABASE_URL,
+      databaseURL: envConfig.FIREBASE_DATABASE_URL,
     };
     admin.initializeApp(config);
     */
