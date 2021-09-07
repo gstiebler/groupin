@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import { pushNewTopic, subscribeToTopic, unsubscribeFromTopic } from '../lib/subscription';
-import { messageTypes } from '../lib/constants';
 import { Context } from '../graphqlContext';
 import { Types } from 'mongoose';
 const { ObjectId } = Types;
@@ -38,9 +37,9 @@ export class TopicResolver {
     @Arg('groupId') groupId: string,
     @Arg('limit') limit: number,
     @Arg('startingId', { nullable: true }) startingId: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<TopicOfGroupResult[]> {
-    await db.UserGroup.findOne({ userId: user!._id!.toHexString(), groupId }).orFail();
+    await db.UserGroup.findOne({ userId: new ObjectId(userId), groupId }).orFail();
     const idCondition = _.isEmpty(startingId) ? {} : { _id: { $lt: new ObjectId(startingId) } };
     const topics = await db.Topic
       .find({ groupId: new ObjectId(groupId), ...idCondition })
@@ -50,10 +49,10 @@ export class TopicResolver {
     const topicIds = _.map(topics, topic => topic._id);
     const latestTopicRead = await db.TopicLatestRead.find({
       topicId: { $in: topicIds },
-      userId: user!._id,
+      userId: new ObjectId(userId),
     }).lean();
     const pinnedTopics = await db.PinnedTopic.find({
-      userId: user!._id,
+      userId: new ObjectId(userId),
       topicId: { $in: topicIds },
     }).lean();
     const pinnedTopicsIds = pinnedTopics.map(pinnedTopic => pinnedTopic.topicId.toHexString());
@@ -75,14 +74,14 @@ export class TopicResolver {
   async createTopic(
     @Arg('groupId') groupId: string,
     @Arg('topicName') topicName: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<string> {
-    await db.UserGroup.findOne({ userId: user!._id!.toHexString(), groupId }).orFail().lean();
+    await db.UserGroup.findOne({ userId: new ObjectId(userId), groupId }).orFail().lean();
 
     const createdTopic = await db.Topic.create({
       name: topicName,
       groupId: new ObjectId(groupId),
-      createdBy: user!._id!.toHexString(),
+      createdBy: new ObjectId(userId),
       imgUrl: 'TODO url',
     });
 
@@ -99,10 +98,10 @@ export class TopicResolver {
   @Mutation(() => String)
   async setTopicLatestRead(
     @Arg('topicId') topicId: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<string> {
     await db.TopicLatestRead.updateOne({
-      userId: user!._id.toHexString(),
+      userId: new ObjectId(userId),
       topicId,
     }, {
       latestMoment: new Date(),
@@ -111,14 +110,14 @@ export class TopicResolver {
     const topic = await db.Topic.findById(topicId).orFail();
 
     await db.TopicLatestRead.updateOne({
-      userId: user!._id!.toHexString(),
+      userId: new ObjectId(userId),
       topicId: new ObjectId(topicId),
     }, {
       latestMoment: new Date(),
     }, { upsert: true });
 
     await db.UserGroup.updateOne({
-      userId: user!._id,
+      userId: new ObjectId(userId),
       groupId: topic.groupId,
     }, {
       latestRead: new Date(),
@@ -131,21 +130,22 @@ export class TopicResolver {
   async setTopicPin(
     @Arg('topicId') topicId: string,
     @Arg('pinned') pinned: boolean,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ) {
-    if (!user!.notificationToken) {
+    const user = await db.User.findById(userId).lean();
+    if (!user?.notificationToken) {
       throw new Error('Notification token required');
     }
 
     if (pinned) {
       await db.PinnedTopic.create({
-        userId: user!._id!.toHexString(),
+        userId: new ObjectId(userId),
         topicId,
       });
-      await subscribeToTopic(db, user!, user!.notificationToken, topicId);
+      await subscribeToTopic(db, userId!, user!.notificationToken, topicId);
     } else {
       await db.PinnedTopic.deleteOne({
-        userId: user!._id!.toHexString(),
+        userId: new ObjectId(userId),
         topicId,
       });
       await unsubscribeFromTopic(user!.notificationToken, topicId);

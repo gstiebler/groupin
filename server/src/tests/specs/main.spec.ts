@@ -80,9 +80,10 @@ describe('main', () => {
       pushService.unsubscribe = jest.fn();
     });
 
-    it('getUserId', async () => {
+    it('getAuthToken', async () => {
       setCurrentUser(userFixtures.robert);
-      const userId = await server.getUserId();
+      const authToken = await server.getAuthToken();
+      const { userId, externalId } = jwt.decode(authToken);
       expect(userId).toEqual(userFixtures.robert._id?.toHexString());
     });
 

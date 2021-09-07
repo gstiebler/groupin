@@ -103,16 +103,6 @@ export async function setTopicLatestRead(topicId: string) {
   return res.setTopicLatestRead;
 }
 
-export async function getUserId(): Promise<string> {
-  const query = `
-    query {
-      getUserId
-    }
-  `;
-  const res = await graphql.sendQuery(query);
-  return res.getUserId;
-}
-
 export type Group = {
   id: string;
   name: string;

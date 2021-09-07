@@ -1,7 +1,9 @@
-import { subscribeToAll } from '../lib/subscription';
+import * as firebaseAdmin from 'firebase-admin';
 import { Query, Resolver, Mutation, Arg, Field, InputType, ObjectType, Ctx } from 'type-graphql'
+import { subscribeToAll } from '../lib/subscription';
 import { Context } from '../graphqlContext';
 import logger from '../config/winston';
+import { encodeAuthToken } from '../lib/auth';
 
 @InputType()
 class HelloInput {
@@ -15,7 +17,7 @@ class RegisterResult {
   errorMessage: string;
   
   @Field()
-  id: string;
+  authToken: string;
 }
 
 @ObjectType()
@@ -36,16 +38,26 @@ export class RootResolver {
   }
 
   @Query(() => String)
-  async getUserId(@Ctx() { user }: Context) {
-    return user ? user._id!.toHexString() : 'NO USER';
+  async getAuthToken(
+    @Arg('firebaseAuthToken') firebaseAuthToken: string,
+    @Ctx() { db }: Context
+  ): Promise<string> {
+    const decodedFirebaseToken = await firebaseAdmin.auth().verifyIdToken(firebaseAuthToken);
+    const firebaseId = decodedFirebaseToken.sub;
+    const user = await db.User.findOne({ externalId: firebaseId });
+    const authToken = encodeAuthToken({
+      userId: user?._id,
+      externalId: firebaseId,
+    });
+    return authToken;
   }
 
   @Mutation(() => RegisterResult)
   async register(
     @Arg('name') name: string,
-    @Ctx() { user, externalId, db }: Context
-  ) {
-    if (user) {
+    @Ctx() { userId, externalId, db }: Context
+  ): Promise<RegisterResult> {
+    if (userId) {
       throw new Error('User is already registered');
     }
     const newUser = await db.User.create({
@@ -53,22 +65,26 @@ export class RootResolver {
       externalId,
     });
 
+    const authToken = encodeAuthToken({
+      userId: newUser._id,
+      externalId: externalId!,
+    });
     return {
       errorMessage: '',
-      id: newUser.id,
+      authToken,
     };
   }
 
   @Mutation(() => String)
   async updateNotificationToken(
     @Arg('notificationToken') notificationToken: string,
-    @Ctx() { user, db }: Context
-  ) {
-    if (!user) {
+    @Ctx() { userId, db }: Context
+  ): Promise<string> {
+    if (!userId) {
       throw new Error('A user is required to update the notification token');
     }
-    await db.User.updateOne({ _id: user._id }, { notificationToken });
-    await subscribeToAll(db, user, notificationToken);
+    await db.User.updateOne({ _id: userId }, { notificationToken });
+    await subscribeToAll(db, userId, notificationToken);
     return 'OK';
   }
 }

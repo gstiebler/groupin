@@ -2,6 +2,8 @@ import * as _ from 'lodash';
 import { isBefore } from 'date-fns';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { Context } from '../graphqlContext';
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
 
 import { numMaxReturnedItems } from '../lib/constants';
 
@@ -10,7 +12,6 @@ import {
   unsubscribeFromGroup,
 } from '../lib/subscription';
 import { Group } from '../db/schema/Group';
-import logger from '../config/winston';
 
 @ObjectType()
 class OwnGroupsResult {
@@ -68,12 +69,12 @@ class GroupInfo extends GroupResult {
 export class GroupResolver {
 
   @Query(() => [OwnGroupsResult])
-  async ownGroups(@Ctx() { user, db }: Context): Promise<OwnGroupsResult[]> {
-    if (!user) {
+  async ownGroups(@Ctx() { userId, db }: Context): Promise<OwnGroupsResult[]> {
+    if (!userId) {
       throw new Error('Method only available with a user');
     }
 
-    const ownGroupsRelationship = await db.UserGroup.find({ userId: user._id }).lean();
+    const ownGroupsRelationship = await db.UserGroup.find({ userId: new ObjectId(userId) }).lean();
     const ownGroupsIds = ownGroupsRelationship.map(group => group.groupId)
     const ownGroups: Group[] = await db.Group.find({ _id: { $in: ownGroupsIds } })
       .sort({ updatedAt: -1 })
@@ -94,9 +95,9 @@ export class GroupResolver {
   @Query(() => GroupInfo)
   async getGroupInfo(
     @Arg('groupId') groupId: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<GroupInfo> {
-    if (!user) {
+    if (!userId) {
       throw new Error('Method only available with a user');
     }
 
@@ -105,7 +106,7 @@ export class GroupResolver {
       throw new Error(`Group ${groupId} not found`);
     }
     const iBelong = !!await db.UserGroup.findOne({
-      userId: user._id,
+      userId: new ObjectId(userId),
       groupId
     }).lean();
     return {
@@ -122,9 +123,9 @@ export class GroupResolver {
     @Arg('searchText') searchText: string,
     @Arg('limit') limit: number,
     @Arg('skip') skip: number,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<GroupResult[]> {
-    if (!user) {
+    if (!userId) {
       throw new Error('Only logged in users can search for groups');
     }
     const trimmedSearchText = searchText.trim();
@@ -156,9 +157,9 @@ export class GroupResolver {
   async createGroup(
     @Arg('groupName') groupName: string,
     @Arg('visibility') visibility: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<string> {
-    if (!user) {
+    if (!userId) {
       throw new Error('A user is required');
     }
 
@@ -166,11 +167,11 @@ export class GroupResolver {
       name: groupName,
       imgUrl: 'temp',
       visibility,
-      createdBy: user._id,
+      createdBy: new ObjectId(userId),
     });
 
     await db.UserGroup.create({
-      userId: user._id!.toHexString(),
+      userId: new ObjectId(userId),
       groupId: newGroup._id!.toHexString(),
       pinned: true,
       latestRead: new Date(),
@@ -182,17 +183,17 @@ export class GroupResolver {
   @Mutation(() => String)
   async joinGroup(
     @Arg('groupId') groupId: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<string> {
     const previousGroupRelationship = await db.UserGroup.findOne({
-      userId: user!._id!.toHexString(),
+      userId: new ObjectId(userId),
       groupId,
     });
     if (previousGroupRelationship) {
       throw new Error('User already participate in the group');
     }
     await db.UserGroup.create({
-      userId: user!._id!.toHexString(),
+      userId: new ObjectId(userId),
       groupId,
       pinned: true,
       latestRead: Date.now(),
@@ -203,17 +204,18 @@ export class GroupResolver {
   @Mutation(() => String)
   async leaveGroup(
     @Arg('groupId') groupId: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<string> {
-    if (!user!.notificationToken) {
+    const user = await db.User.findById(userId).lean();
+    if (!user?.notificationToken) {
       throw new Error('Notification token required');
     }
     await db.UserGroup.deleteOne({
-      userId: user!._id!.toHexString(),
+      userId: new ObjectId(userId),
       groupId,
     });
     
-    await unsubscribeFromGroup(db, user!, user!.notificationToken, groupId);
+    await unsubscribeFromGroup(db, userId!, user.notificationToken, groupId);
     return 'OK';
   }
 
@@ -221,21 +223,22 @@ export class GroupResolver {
   async setGroupPin(
     @Arg('groupId') groupId: string,
     @Arg('pinned') pinned: boolean,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<string> {
-    if (!user!.notificationToken) {
+    const user = await db.User.findById(userId).lean();
+    if (!user?.notificationToken) {
       throw new Error('Notification token required');
     }
     await db.UserGroup.updateOne({
-      userId: user!._id!.toHexString(),
+      userId: new ObjectId(userId),
       groupId,
     }, {
       pinned,
     });
     if (pinned) {
-      await subscribeToGroup(db, user!, user!.notificationToken, groupId);
+      await subscribeToGroup(db, userId!, user.notificationToken, groupId);
     } else {
-      await unsubscribeFromGroup(db, user!, user!.notificationToken, groupId);
+      await unsubscribeFromGroup(db, userId!, user.notificationToken, groupId);
     }
     return 'OK';
   }

@@ -30,7 +30,7 @@ async function setup() {
   const server = new ApolloServer({
     schema,
     context: (): Context => {
-      return { user: currentUserHolder.currentUser as User, externalId: 'dk49sdfjhk', db: connectionContext };
+      return { userId: currentUserHolder.currentUser?._id?.toHexString(), externalId: 'dk49sdfjhk', db: connectionContext };
     },
   });
 

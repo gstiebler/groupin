@@ -1,6 +1,4 @@
 import * as _ from 'lodash';
-import { messageTypes } from '../lib/constants';
-import logger from '../config/winston';
 import { Context } from '../graphqlContext';
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { Types } from 'mongoose';
@@ -45,12 +43,12 @@ export class MessageResolver {
     @Arg('limit') limit: number,
     @Arg('beforeId', { nullable: true }) beforeId: string,
     @Arg('afterId', { nullable: true }) afterId: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<MessageResult[]> {
     const topic = await db.Topic.findById(topicId)
       .orFail(() => Error('Topic expected'));
 
-    if (await db.UserGroup.findOne({ userId: user?._id, topicId })) {
+    if (await db.UserGroup.findOne({ userId: new ObjectId(userId), topicId })) {
       throw new Error('User does not participate in the group');
     }
     const beforeIdMessages = !_.isEmpty(beforeId);
@@ -91,17 +89,17 @@ export class MessageResolver {
   async sendMessage(
     @Arg('message') message: string,
     @Arg('topicId') topicId: string,
-    @Ctx() { user, db }: Context
+    @Ctx() { userId, db }: Context
   ): Promise<string> {
     // TODO: make calls to DB in parallel when possible
 
     const topic = await db.Topic.findById(topicId).orFail().lean();
-    await db.UserGroup.findOne({ userId: user?._id.toHexString(), groupId: topic.groupId })
+    await db.UserGroup.findOne({ userId: new ObjectId(userId), groupId: topic.groupId })
       .orFail(() => Error('User does not participate in the group'));
 
     const createdMessage = await db.Message.create({
       text: message,
-      userId: user!._id,
+      userId: new ObjectId(userId),
       topicId: topic._id,
     });
 
@@ -119,6 +117,7 @@ export class MessageResolver {
 
     const groupId = topic.groupId.toHexString();
 
+    const user = await db.User.findById(userId).lean();
     await pushNewMessage({
       message,
       messageId: createdMessage.id,

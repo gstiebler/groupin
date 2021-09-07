@@ -1,31 +1,26 @@
 import './lib/firebase';
-import * as admin from 'firebase-admin';
 import logger from './config/winston';
 import { ConnCtx, createConnectionContext } from './db/ConnectionContext';
-import { User } from './db/schema/User';
+import { decodeAuthToken } from './lib/auth';
 
 export type Context = {
-  user: User | null;
+  userId?: string;
   externalId?: string;
   db: ConnCtx;
 };
 
 const connectionContextPromise = createConnectionContext();
 
-export async function getContext(
-  authFbToken: string
-): Promise<Context> {
+export async function getContext(authToken: string): Promise<Context> {
   const connection = await connectionContextPromise;
-  let user: User | null = null;
-  let firebaseId: string | null = null;
-  // ***
-  if (authFbToken) {
-    logger.debug(`authFbToken: ${authFbToken}`);
-    // authFbToken comes from the client app
-    const decodedToken = await admin.auth().verifyIdToken(authFbToken);
-    firebaseId = decodedToken.uid;
-    user = await connection.User.findOne({ externalId: firebaseId });
-    return { user, externalId: firebaseId, db: connection };
+  if (authToken) {
+    logger.debug(`authToken: ${authToken}`);
+    const decodedToken = decodeAuthToken(authToken);
+    return {
+      userId: decodedToken.userId,
+      externalId: decodedToken.externalId,
+      db: connection
+    };
   }
-  return { user: null, externalId: undefined, db: connection };
+  return { db: connection };
 }
