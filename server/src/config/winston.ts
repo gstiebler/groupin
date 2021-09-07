@@ -1,5 +1,5 @@
 import * as winston from 'winston';
-import envConfig from './envConfig';
+import { envConfig } from './envConfig';
 
 const logger = winston.createLogger({
   level: envConfig.WINSTON_FILE_LEVEL,
