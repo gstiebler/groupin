@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt_decode from "jwt-decode";
 
 type JwtDecodedToken = {
   userId?: string;
@@ -6,6 +6,6 @@ type JwtDecodedToken = {
 };
 
 export function decodeAuthToken(authToken: string) {
-  const decodedObj = jwt.decode(authToken);
+  const decodedObj = jwt_decode(authToken);
   return decodedObj as JwtDecodedToken;
 }
