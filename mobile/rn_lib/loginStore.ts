@@ -74,6 +74,7 @@ export class LoginStore {
         this.verificationId,
         verificationCode
       );
+      console.log(`verificationCode: ${verificationCode}`);
       const userCredential = await firebase.auth().signInWithCredential(credential);
       const firebaseUser = userCredential.user;
       if (!firebaseUser) {
@@ -81,6 +82,7 @@ export class LoginStore {
         throw new Error('Firebase user not found');
       }
       const fbUserToken = await firebaseUser.getIdToken(true);
+      console.log(`fb user token: ${fbUserToken}`);
       this.setMessageAction({ text: 'Phone authentication successful 👍', color: 'green' });
       await this.confirmationCodeReceived(fbUserToken);
     } catch(err) {
@@ -91,8 +93,8 @@ export class LoginStore {
 
   async confirmationCodeReceived(fbUserToken: string) {
     const authToken = await server.getAuthToken(fbUserToken);
-    updateAuthToken(authToken);
     const { userId } = decodeAuthToken(authToken);
+    console.log(`confirmationCodeReceived:userId: ${userId}`);
     if (!userId) {
       this.registerNewUser(fbUserToken);
     } else {
@@ -101,6 +103,7 @@ export class LoginStore {
   }
 
   async loginRegisteredUser(authToken: string) {
+    updateAuthToken(authToken);
     const { userId } = decodeAuthToken(authToken);
     if (!userId) {
       throw new Error('Error getting user ID');
@@ -147,6 +150,7 @@ export class LoginStore {
 
   async logout() {
     try {
+      updateAuthToken(null);
       this.rootStore.setUserIdAction('');
       await localStorage.setAuthToken(null);
       this.navigation.navigate('Login');
