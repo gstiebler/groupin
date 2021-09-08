@@ -5,6 +5,7 @@ import { RootStore } from '../stores/rootStore';
 import { AlertStatic } from 'react-native';
 import firebase from 'firebase/app';
 import { localStorage } from './localStorage';
+import { decodeAuthToken } from '../lib/auth';
 
 const updateAuthToken = (fbUserToken: string) => graphqlConnect.setToken(fbUserToken);
 
@@ -43,7 +44,7 @@ export class LoginStore {
     // check if user is already logged in
     if (authToken) {
       updateAuthToken(authToken);
-      const userId = await server.getUserId();
+      const { userId } = decodeAuthToken(authToken);
 
       if (!userId) {
         this.setIsLoading(false);
@@ -95,18 +96,19 @@ export class LoginStore {
   }
 
   async confirmationCodeReceived(fbUserToken: string) {
-    updateAuthToken(fbUserToken);
-    const userId = await server.getUserId();
-    if (userId === 'NO USER') {
+    const authToken = await server.getAuthToken(fbUserToken);
+    updateAuthToken(authToken);
+    const { userId } = decodeAuthToken(authToken);
+    if (!userId) {
       this.registerNewUser(fbUserToken);
     } else {
       this.loginRegisteredUser(userId, fbUserToken);
     }
   }
 
-  async loginRegisteredUser(userId: string, fbUserToken: string) {
+  async loginRegisteredUser(userId: string, authToken: string) {
     this.rootStore.setUserIdAction(userId);
-    await localStorage.setAuthToken(fbUserToken);
+    await localStorage.setAuthToken(authToken);
     if (!this.notificationToken) {
       throw new Error('Notification token is not yet available');
     }
@@ -125,7 +127,7 @@ export class LoginStore {
   async register(name: string, externalUserToken: string) {
     this.setIsLoading(true);
     try {
-      const { errorMessage, id: userId } = await server.register(name);
+      const { errorMessage, authToken } = await server.register(name);
       if (errorMessage) {
         this.Alert.alert(
           'Erro',
@@ -138,6 +140,7 @@ export class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
+      const { userId } = decodeAuthToken(authToken);
       this.loginRegisteredUser(userId, externalUserToken);
     } catch (error) {
       console.error(error);
