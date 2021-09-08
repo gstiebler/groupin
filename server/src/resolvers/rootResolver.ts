@@ -1,9 +1,8 @@
-import * as firebaseAdmin from 'firebase-admin';
 import { Query, Resolver, Mutation, Arg, Field, InputType, ObjectType, Ctx } from 'type-graphql'
 import { subscribeToAll } from '../lib/subscription';
 import { Context } from '../graphqlContext';
 import logger from '../config/winston';
-import { encodeAuthToken } from '../lib/auth';
+import { encodeAuthToken, getFirebaseUserId } from '../lib/auth';
 
 @InputType()
 class HelloInput {
@@ -37,13 +36,13 @@ export class RootResolver {
     return helloInput.pass === 'foca' ? 'OK' : 'ERROR';
   }
 
+  // TODO: test
   @Query(() => String)
   async getAuthToken(
     @Arg('firebaseAuthToken') firebaseAuthToken: string,
     @Ctx() { db }: Context
   ): Promise<string> {
-    const decodedFirebaseToken = await firebaseAdmin.auth().verifyIdToken(firebaseAuthToken);
-    const firebaseId = decodedFirebaseToken.sub;
+    const firebaseId = await getFirebaseUserId(firebaseAuthToken);
     const user = await db.User.findOne({ externalId: firebaseId });
     const authToken = encodeAuthToken({
       userId: user?._id,
@@ -52,22 +51,27 @@ export class RootResolver {
     return authToken;
   }
 
+  // TODO: test
   @Mutation(() => RegisterResult)
   async register(
     @Arg('name') name: string,
-    @Ctx() { userId, externalId, db }: Context
+    @Arg('firebaseAuthToken') firebaseAuthToken: string,
+    @Ctx() { db }: Context
   ): Promise<RegisterResult> {
-    if (userId) {
+    const firebaseId = await getFirebaseUserId(firebaseAuthToken);
+
+    const user = await db.User.findOne({ externalId: firebaseId, }).lean();
+    if (user) {
       throw new Error('User is already registered');
     }
     const newUser = await db.User.create({
       name: name,
-      externalId,
+      externalId: firebaseId,
     });
 
     const authToken = encodeAuthToken({
       userId: newUser._id,
-      externalId: externalId!,
+      externalId: firebaseId,
     });
     return {
       errorMessage: '',

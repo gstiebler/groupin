@@ -12,16 +12,16 @@ export async function getHello(pass: string): Promise<string> {
   return res.getHello;
 }
 
-export async function register(name: string): Promise<{ authToken: string, errorMessage: string }> {
+export async function register(firebaseAuthToken: string, name: string): Promise<{ authToken: string, errorMessage: string }> {
   const query = `
-    mutation Register($name: String!) {
-      register(name: $name) {
+    mutation Register($firebaseAuthToken: String!, $name: String!) {
+      register(firebaseAuthToken: $firebaseAuthToken, name: $name) {
         authToken
         errorMessage
       }
     }
   `;
-  const res = await graphql.sendQuery(query, { name });
+  const res = await graphql.sendQuery(query, { firebaseAuthToken, name });
   return res.register;
 }
 

@@ -44,13 +44,7 @@ export class LoginStore {
     // check if user is already logged in
     if (authToken) {
       updateAuthToken(authToken);
-      const { userId } = decodeAuthToken(authToken);
-
-      if (!userId) {
-        this.setIsLoading(false);
-        throw new Error('Error getting user ID');
-      }
-      await this.loginRegisteredUser(userId, authToken);
+      await this.loginRegisteredUser(authToken);
     }
 
     this.setIsLoading(false);
@@ -102,11 +96,15 @@ export class LoginStore {
     if (!userId) {
       this.registerNewUser(fbUserToken);
     } else {
-      this.loginRegisteredUser(userId, authToken);
+      this.loginRegisteredUser(authToken);
     }
   }
 
-  async loginRegisteredUser(userId: string, authToken: string) {
+  async loginRegisteredUser(authToken: string) {
+    const { userId } = decodeAuthToken(authToken);
+    if (!userId) {
+      throw new Error('Error getting user ID');
+    }
     this.rootStore.setUserIdAction(userId);
     await localStorage.setAuthToken(authToken);
     if (!this.notificationToken) {
@@ -127,7 +125,7 @@ export class LoginStore {
   async register(name: string, externalUserToken: string) {
     this.setIsLoading(true);
     try {
-      const { errorMessage, authToken } = await server.register(name);
+      const { errorMessage, authToken } = await server.register(externalUserToken, name);
       if (errorMessage) {
         this.Alert.alert(
           'Erro',
@@ -140,8 +138,7 @@ export class LoginStore {
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
-      const { userId } = decodeAuthToken(authToken);
-      this.loginRegisteredUser(userId, externalUserToken);
+      this.loginRegisteredUser(authToken);
     } catch (error) {
       console.error(error);
     }
