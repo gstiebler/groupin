@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import 'reflect-metadata';
 import { GraphQLServer } from 'graphql-yoga'
 import { getContext } from './graphqlContext';

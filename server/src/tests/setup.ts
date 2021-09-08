@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+console.log(process.cwd());
+dotenv.config({ path: process.cwd() + '/.env.test' });
+
 import 'reflect-metadata';
 
 // import logger from '../config/winston';

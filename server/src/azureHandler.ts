@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import 'reflect-metadata';
 import pushService from './lib/pushService';
 import { ApolloServer } from 'apollo-server-azure-functions';

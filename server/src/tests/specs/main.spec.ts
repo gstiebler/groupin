@@ -20,7 +20,6 @@ import { IStorage } from '../../mobile/types/Storage.types';
 import { groupIds, topicIds, userIds } from '../fixtures/preIds';
 import { Types } from 'mongoose';
 import { TopicStore } from '../../mobile/stores/topicStore';
-import { getDecodedAuthToken } from '../../mobile/lib/auth';
 import userGroups from '../fixtures/userGroup.fixtures';
 import { decodeAuthToken } from '../../lib/auth';
 const { ObjectId } = Types;
