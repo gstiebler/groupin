@@ -20,7 +20,9 @@ import { IStorage } from '../../mobile/types/Storage.types';
 import { groupIds, topicIds, userIds } from '../fixtures/preIds';
 import { Types } from 'mongoose';
 import { TopicStore } from '../../mobile/stores/topicStore';
+import { getDecodedAuthToken } from '../../mobile/lib/auth';
 import userGroups from '../fixtures/userGroup.fixtures';
+import { decodeAuthToken } from '../../lib/auth';
 const { ObjectId } = Types;
 
 
@@ -78,13 +80,6 @@ describe('main', () => {
     beforeEach(() => {
       pushService.subscribe = jest.fn();
       pushService.unsubscribe = jest.fn();
-    });
-
-    it('getAuthToken', async () => {
-      setCurrentUser(userFixtures.robert);
-      const authToken = await server.getAuthToken();
-      const { userId, externalId } = jwt.decode(authToken);
-      expect(userId).toEqual(userFixtures.robert._id?.toHexString());
     });
 
     it('getOwnGroups', async () => {
@@ -368,9 +363,10 @@ describe('main', () => {
     it('register', async () => {
       setCurrentUser(null);
       const uid = 'dk49sdfjhk';
-      const result = await server.register('Guilherme');
+      const { authToken } = await server.register('Guilherme');
 
-      const userByUid = await db.User.findById(result.id).lean();
+      const decoded = decodeAuthToken(authToken);
+      const userByUid = await db.User.findById(decoded.userId).lean();
       expect(userByUid!.name).toBe('Guilherme');
       expect(userByUid!.externalId).toBe(uid);
     });
@@ -655,3 +651,4 @@ describe('main', () => {
     });
   });
 });
+

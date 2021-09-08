@@ -12,11 +12,11 @@ export async function getHello(pass: string): Promise<string> {
   return res.getHello;
 }
 
-export async function register(name: string): Promise<{ id: string, errorMessage: string }> {
+export async function register(name: string): Promise<{ authToken: string, errorMessage: string }> {
   const query = `
     mutation Register($name: String!) {
       register(name: $name) {
-        id
+        authToken
         errorMessage
       }
     }
@@ -101,6 +101,18 @@ export async function setTopicLatestRead(topicId: string) {
   `;
   const res = await graphql.sendQuery(query, { topicId });
   return res.setTopicLatestRead;
+}
+
+export async function getAuthToken(firebaseAuthToken: string) {
+  const query = `
+    query GetAuthToken($firebaseAuthToken: String!) {
+      getAuthToken(
+        firebaseAuthToken: $firebaseAuthToken
+      )
+    }
+  `;
+  const res = await graphql.sendQuery(query, { firebaseAuthToken });
+  return res.getAuthToken;
 }
 
 export type Group = {
