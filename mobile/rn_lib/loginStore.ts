@@ -102,7 +102,7 @@ export class LoginStore {
     if (!userId) {
       this.registerNewUser(fbUserToken);
     } else {
-      this.loginRegisteredUser(userId, fbUserToken);
+      this.loginRegisteredUser(userId, authToken);
     }
   }
 
