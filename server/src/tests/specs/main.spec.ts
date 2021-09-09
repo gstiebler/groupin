@@ -21,7 +21,6 @@ import { groupIds, topicIds, userIds } from '../fixtures/preIds';
 import { Types } from 'mongoose';
 import { TopicStore } from '../../mobile/stores/topicStore';
 import userGroups from '../fixtures/userGroup.fixtures';
-import { decodeAuthToken } from '../../lib/auth';
 const { ObjectId } = Types;
 
 
@@ -405,12 +404,6 @@ describe('main', () => {
           title: 'Topic 1 Group 1',
           sendNotification: true,
         });
-
-        const call1args = (pushService.pushMessage as any).mock.calls[1];
-        const [groupId] = call1args;
-        expect(groupId).toBe(groupFixtures.firstGroup._id!.toHexString());
-
-        expect(topicStore.messages).toHaveLength(1);
       });
 
       it('message was added to DB', async () => {
@@ -467,10 +460,11 @@ describe('main', () => {
 
       it('push', async () => {
         const [topic, pushParams] = (pushService.pushMessage as any).mock.calls[0];
-        expect(topic).toBe('notificationTokenRobert');
+        expect(topic).toStrictEqual(['notificationTokenRobert']);
         const newTopic = await db.Topic.findOne({}, {}, { sort: { _id: -1 } });
         expect(pushParams).toEqual({
           payload: {
+            authorName: 'Robert',
             type: messageTypes.NEW_TOPIC,
             topicId: newTopic!._id!.toHexString(),
             groupId: groupFixtures.secondGroup._id!.toHexString(),
