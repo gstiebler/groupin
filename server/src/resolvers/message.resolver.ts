@@ -118,7 +118,7 @@ export class MessageResolver {
     const groupId = topic.groupId.toHexString();
 
     const user = await db.User.findById(userId).lean();
-    await pushNewMessage({
+    await pushNewMessage(db, {
       message,
       messageId: createdMessage.id,
       groupId,

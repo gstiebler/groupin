@@ -2,12 +2,12 @@ import logger from '../config/winston';
 import { sendPushNotifications } from './expoPush';
 
 export type PushPayload = {
-  message: string;
+  message?: string;
   authorName: string;
   groupId: string;
   topicId: string;
-  topicName: string;
-  messageId: string;
+  topicName?: string;
+  messageId?: string;
   type: string;
 }
 

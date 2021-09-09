@@ -5,6 +5,7 @@ import logger from '../config/winston';
 import { ConnCtx } from '../db/ConnectionContext';
 import { messageTypes } from './constants';
 import { Types } from 'mongoose';
+import { Db } from 'mongodb';
 const { ObjectId } = Types;
 
 async function userPinnedTopics(db: ConnCtx, userId: string, groupId: string) {
@@ -53,23 +54,28 @@ export async function subscribeToAll(db: ConnCtx, userId: string, notificationTo
 }
 
 // TODO: automated test
-export async function pushNewTopic(db: ConnCtx, groupId: string, topicId: string, topicName: string) {
+type PushNewTopicParams = {
+  groupId: string;
+  topicId: string;
+  topicName: string;
+  authorName: string;
+};
+export async function pushNewTopic(db: ConnCtx, topicParams: PushNewTopicParams) {
   const pushPayload = {
+    ...topicParams,
     type: messageTypes.NEW_TOPIC,
-    groupId,
-    topicName,
-    topicId,
   };
   const notificationParams: NotificationParams = {
     payload: pushPayload,
     title: 'Novo tópico',
-    body: topicName.slice(0, 50),
+    body: topicParams.topicName.slice(0, 50),
     sendNotification: true,
   };
-  const subscribedUsers = await db.UserGroup.find({ groupId, pinned: true }).lean();
+  const subscribedUsers = await db.UserGroup.find({ groupId: topicParams.groupId, pinned: true }).lean();
   const userIds = subscribedUsers.map(subs => subs.userId);
-  const users = db.User.find({ _id: { $in: userIds } }).lean();
-  await Bluebird.map(users, user => pushService.pushMessage(user.notificationToken!, notificationParams));
+  const users = await db.User.find({ _id: { $in: userIds } }).lean();
+  const notificationTokens = users.map(user => user.notificationToken!);
+  pushService.pushMessage(notificationTokens, notificationParams);
 }
 
 // TODO: automated test
@@ -81,7 +87,7 @@ type PushMessageParams = {
   topicName: string;
   authorName: string;
 };
-export async function pushNewMessage(params: PushMessageParams) {
+export async function pushNewMessage(db: ConnCtx, params: PushMessageParams) {
   const { message, messageId, groupId, topicId, topicName, authorName } = params;
   // send push notification
   const pushPayload = {
@@ -102,10 +108,13 @@ export async function pushNewMessage(params: PushMessageParams) {
     body: message.slice(0, 30),
     sendNotification: true,
   };
-  await Promise.all([
-    pushService.pushMessage(topicId, { ...notificationParams, sendNotification: true }),
-    pushService.pushMessage(groupId, { ...notificationParams, sendNotification: true }),
-    pushService.pushMessage(`data.${topicId}`, { ...notificationParams, sendNotification: false }),
-  ]);
 
+  const usersFollowingTopic = (await db.PinnedTopic.find({ topicId: new ObjectId(topicId) }).lean())
+    .map(pinnedTopic => pinnedTopic.userId);
+  const usersFollowingGroup = (await db.UserGroup.find({ groupId: new ObjectId(groupId), pinned: true }).lean())
+    .map(userGroup => userGroup.userId);
+  const userIds = [...usersFollowingTopic, ...usersFollowingGroup];
+  const users = await db.User.find({ _id: { $in: userIds } });
+  const notificationTokens = users.map(user => user.notificationToken!);
+  await pushService.pushMessage(notificationTokens, { ...notificationParams, sendNotification: true });
 }

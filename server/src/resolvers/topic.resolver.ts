@@ -90,8 +90,14 @@ export class TopicResolver {
     }, {
       updatedAt: new Date(),
     },);
+    const user = await db.User.findById(userId);
 
-    await pushNewTopic(db, groupId, createdTopic._id!.toHexString(), createdTopic.name);
+    await pushNewTopic(db, {
+      groupId,
+      topicId: createdTopic._id!.toHexString(),
+      topicName: createdTopic.name,
+      authorName: user!.name,
+    });
     return 'OK';
   }
 
