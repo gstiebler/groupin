@@ -1,47 +1,41 @@
 import logger from '../config/winston';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-// const firebaseConfig = require('../firebase_android_config.json');
+import { sendPushNotifications } from './expoPush';
 
-// console.log(firebaseConfig);
+export type PushPayload = {
+  message: string;
+  authorName: string;
+  groupId: string;
+  topicId: string;
+  topicName: string;
+  messageId: string;
+  type: string;
+}
 
 export type NotificationParams = {
-  payload: unknown,
+  payload: PushPayload,
   title: string,
-  body: unknown,
+  body: string,
   sendNotification: boolean;
 }
 
 const pushService = {
 
   init() {
-    /*
-    const serviceAccount = {
-      ...firebaseConfig,
-      private_key: JSON.parse(`"${envConfig.FIREBASE_PRIVATE_KEY}"`),
-    };
-    const config = {
-      credential: admin.credential.cert(serviceAccount),
-      databaseURL: envConfig.FIREBASE_DATABASE_URL,
-    };
-    admin.initializeApp(config);
-    */
 
-    // this.messaging = admin.messaging();
   },
 
-  async pushMessage(notificationTopic: string, notificationParams: NotificationParams) {
+  async pushMessage(expoPushTokens: string[], notificationParams: NotificationParams) {
     const { payload, title, body, sendNotification } = notificationParams;
-    const message = {
-      data: payload,
-      // token: registrationToken, Only used when sending to an specific device
-      topic: notificationTopic,
-      notification: sendNotification ? { title, body } : undefined
-    };
     try {
-      logger.debug(`Sending push message to topic "${notificationTopic}", ${JSON.stringify(message)}`);
-      const response = await this.messaging.send(message);
+      const message = {
+        title,
+        body,
+        data: payload,
+      };
+      logger.debug(`Sending push message ${JSON.stringify(message)}`);
+      const receipts = await sendPushNotifications(message, expoPushTokens);
       // Response is a message ID string.
-      logger.info('Successfully sent message:', response);
+      logger.info('Successfully sent message:', receipts);
     } catch (error) {
       logger.info('Error sending message:', error);
     }
