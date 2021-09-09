@@ -6,7 +6,6 @@ import groupFixtures from '../fixtures/groupFixtures';
 import topicFixtures from '../fixtures/topicFixtures';
 import { initFixtures } from '../fixtures/fixturesInit';
 import messageFixtures from '../fixtures/messageFixtures';
-import { messageTypes } from '../../lib/constants';
 import { ConnCtx } from '../../db/ConnectionContext';
 import { addSeconds, differenceInMinutes } from 'date-fns';
 import { FeGroupInfo, GroupStore } from '../../mobile/stores/groupStore';
@@ -398,7 +397,7 @@ describe('main', () => {
             messageId: createdMessage!._id!.toHexString(),
             authorName: alice.name,
             topicName: 'Topic 1 Group 1',
-            type: messageTypes.NEW_MESSAGE,
+            type: 'NEW_MESSAGE',
           },
           body: messageText,
           title: 'Topic 1 Group 1',
@@ -465,7 +464,7 @@ describe('main', () => {
         expect(pushParams).toEqual({
           payload: {
             authorName: 'Robert',
-            type: messageTypes.NEW_TOPIC,
+            type: 'NEW_TOPIC',
             topicId: newTopic!._id!.toHexString(),
             groupId: groupFixtures.secondGroup._id!.toHexString(),
             topicName,

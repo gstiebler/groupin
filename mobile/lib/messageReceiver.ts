@@ -1,15 +1,6 @@
 import { GroupStore } from "../stores/groupStore";
 import { TopicStore } from "../stores/topicStore";
-
-export type GiNotification = {
-  notification: {
-    data: {
-      groupId: string;
-      topicId: string;
-      topicName: string
-    }
-  }
-}
+import { NotificationProcessingParams } from "./notificationTypes";
 
 export async function messageReceived(groupStore: GroupStore, topicStore: TopicStore) {
   await Promise.all([
@@ -18,35 +9,28 @@ export async function messageReceived(groupStore: GroupStore, topicStore: TopicS
   ]);
 }
 
-async function onNewNotification(params: {
-  groupId: string;
-  topicId: string;
-  groupStore: GroupStore;
-  topicStore: TopicStore;
-}) {
-  const { groupId, topicId, groupStore, topicStore } = params;
+async function onNewNotification(notificationParams: NotificationProcessingParams) {
+  const { groupStore, topicStore, navigation } = notificationParams;
+  const { groupId, topicId, topicName, type } = notificationParams.giNotification.notification.data;
   groupStore.setCurrentlyViewedGroup(groupId);
   topicStore.setCurrentViewedTopicId(topicId);
   
   await messageReceived(groupStore, topicStore);
+
+  if (type === 'NEW_MESSAGE') {
+    // TODO: focus on the received message
+    navigation.navigate('Chat', { topicId, topicName });
+  } else if (type === 'NEW_TOPIC') {
+    navigation.navigate('Chat', { topicId, topicName });
+  } else {
+    throw new Error(`Invalid message type: ${type}`);
+  }
 }
 
-export async function onNotificationOpened(notificationOpen: GiNotification, groupStore: GroupStore, topicStore: TopicStore) {
-  const { groupId, topicId, topicName } = notificationOpen.notification.data;
-  onNewNotification({
-    groupId, 
-    topicId,
-    groupStore,
-    topicStore,
-  });
+export async function onNotificationOpened(notificationParams: NotificationProcessingParams) {
+  onNewNotification(notificationParams);
 }
 
-export async function onInitialNotification(notificationOpen: GiNotification, groupStore: GroupStore, topicStore: TopicStore) {
-  const { groupId, topicId, topicName } = notificationOpen.notification.data;
-  onNewNotification({
-    groupId, 
-    topicId,
-    groupStore,
-    topicStore,
-  });
+export async function onInitialNotification(notificationParams: NotificationProcessingParams) {
+  onNewNotification(notificationParams);
 }

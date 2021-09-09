@@ -1,6 +1,8 @@
 import logger from '../config/winston';
 import { sendPushNotifications } from './expoPush';
+import { MessageType } from './types';
 
+// TODO: share with mobile
 export type PushPayload = {
   message?: string;
   authorName: string;
@@ -8,7 +10,7 @@ export type PushPayload = {
   topicId: string;
   topicName?: string;
   messageId?: string;
-  type: string;
+  type: MessageType;
 }
 
 export type NotificationParams = {

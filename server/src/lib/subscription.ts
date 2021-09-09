@@ -1,11 +1,9 @@
 import * as Bluebird from 'bluebird';
 
-import pushService, { NotificationParams } from './pushService';
+import pushService, { NotificationParams, PushPayload } from './pushService';
 import logger from '../config/winston';
 import { ConnCtx } from '../db/ConnectionContext';
-import { messageTypes } from './constants';
 import { Types } from 'mongoose';
-import { Db } from 'mongodb';
 const { ObjectId } = Types;
 
 async function userPinnedTopics(db: ConnCtx, userId: string, groupId: string) {
@@ -61,9 +59,9 @@ type PushNewTopicParams = {
   authorName: string;
 };
 export async function pushNewTopic(db: ConnCtx, topicParams: PushNewTopicParams) {
-  const pushPayload = {
+  const pushPayload: PushPayload = {
     ...topicParams,
-    type: messageTypes.NEW_TOPIC,
+    type: 'NEW_TOPIC',
   };
   const notificationParams: NotificationParams = {
     payload: pushPayload,
@@ -90,14 +88,14 @@ type PushMessageParams = {
 export async function pushNewMessage(db: ConnCtx, authorNotificationToken: string, params: PushMessageParams) {
   const { message, messageId, groupId, topicId, topicName, authorName } = params;
   // send push notification
-  const pushPayload = {
+  const pushPayload: PushPayload = {
     message,
     authorName,
     groupId,
     topicId,
     topicName,
     messageId,
-    type: messageTypes.NEW_MESSAGE,
+    type: 'NEW_MESSAGE',
   };
 
   logger.debug(`Mensagem: ${message}`);
