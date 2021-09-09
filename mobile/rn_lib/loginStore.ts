@@ -43,8 +43,13 @@ export class LoginStore {
     console.log(`Stored external user token: "${authToken}"`);
     // check if user is already logged in
     if (authToken) {
-      updateAuthToken(authToken);
-      await this.loginRegisteredUser(authToken);
+      const { userId, externalId } = decodeAuthToken(authToken);
+      if (userId) {
+        updateAuthToken(authToken);
+        await this.loginRegisteredUser(authToken);
+      } else {
+        this.registerNewUser(externalId);
+      }
     }
 
     this.setIsLoading(false);
