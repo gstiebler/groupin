@@ -32,7 +32,7 @@ const pushService = {
         body,
         data: payload,
       };
-      logger.debug(`Sending push message ${JSON.stringify(message)}`);
+      logger.debug(`Sending push message ${JSON.stringify(message)} to tokens ${JSON.stringify(expoPushTokens)}`);
       const receipts = await sendPushNotifications(message, expoPushTokens);
       // Response is a message ID string.
       logger.info('Successfully sent message:', receipts);

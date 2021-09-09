@@ -1,13 +1,21 @@
 import * as _ from 'lodash';
-import { Expo, ExpoPushErrorReceipt, ExpoPushMessage, ExpoPushReceipt, ExpoPushReceiptId, ExpoPushSuccessReceipt, ExpoPushSuccessTicket, ExpoPushTicket } from 'expo-server-sdk';
+import {
+  Expo,
+  ExpoPushErrorReceipt,
+  ExpoPushMessage,
+  ExpoPushReceipt,
+  ExpoPushSuccessReceipt,
+  ExpoPushSuccessTicket,
+  ExpoPushTicket
+} from 'expo-server-sdk';
 import logger from '../config/winston';
 
 const expo = new Expo();
 
 export type ExpoGiPushMessage = ExpoPushMessage;
 export async function sendPushNotifications(message: Partial<ExpoPushMessage>, somePushTokens: string[]): Promise<ExpoPushReceipt[]> {
-  if (somePushTokens.every(pushToken => Expo.isExpoPushToken(pushToken))) {
-    throw new Error('There are invalid tokens');
+  if (somePushTokens.some(pushToken => !Expo.isExpoPushToken(pushToken))) {
+    throw new Error(`There are invalid tokens: ${JSON.stringify(somePushTokens)}`);
   }
   const messages: ExpoPushMessage[] = somePushTokens.map(pushToken => ({
     ...message,
@@ -28,7 +36,7 @@ export async function sendPushNotifications(message: Partial<ExpoPushMessage>, s
   for (const chunk of chunks) {
     try {
       const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-      logger.debug(ticketChunk);
+      logger.debug(JSON.stringify(ticketChunk));
       tickets.push(...ticketChunk);
       // NOTE: If a ticket contains an error code in ticket.details.error, you
       // must handle it appropriately. The error codes are listed in the Expo
@@ -65,7 +73,7 @@ export async function sendPushNotifications(message: Partial<ExpoPushMessage>, s
   for (const chunk of receiptIdChunks) {
     try {
       const receipts = await expo.getPushNotificationReceiptsAsync(chunk);
-      logger.debug(receipts);
+      logger.debug(JSON.stringify(receipts));
 
       // The receipts specify whether Apple or Google successfully received the
       // notification and information about an error, if one occurred.
