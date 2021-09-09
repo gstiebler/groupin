@@ -2,10 +2,10 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Navigation } from './Navigator.types';
 
-import * as messageReceiver from '../lib/messageReceiver';
+import * as messageReceiver from './messageReceiver';
 import { Platform } from 'react-native';
 import { groupStore, topicStore } from './storesFactory';
-import { GiNotification } from '../lib/notificationTypes';
+import { GiNotification } from './notificationTypes';
 
 async function registerForPushNotificationsAsync() {
   let notificationToken = '';
