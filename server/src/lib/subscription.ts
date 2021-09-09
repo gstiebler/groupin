@@ -87,7 +87,7 @@ type PushMessageParams = {
   topicName: string;
   authorName: string;
 };
-export async function pushNewMessage(db: ConnCtx, params: PushMessageParams) {
+export async function pushNewMessage(db: ConnCtx, authorNotificationToken: string, params: PushMessageParams) {
   const { message, messageId, groupId, topicId, topicName, authorName } = params;
   // send push notification
   const pushPayload = {
@@ -115,6 +115,7 @@ export async function pushNewMessage(db: ConnCtx, params: PushMessageParams) {
     .map(userGroup => userGroup.userId);
   const userIds = [...usersFollowingTopic, ...usersFollowingGroup];
   const users = await db.User.find({ _id: { $in: userIds } });
-  const notificationTokens = users.map(user => user.notificationToken!);
+  const notificationTokens = users.map(user => user.notificationToken!)
+    .filter(token => token !== authorNotificationToken);
   await pushService.pushMessage(notificationTokens, { ...notificationParams, sendNotification: true });
 }
