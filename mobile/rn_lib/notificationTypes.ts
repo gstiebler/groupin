@@ -4,7 +4,7 @@ import { TopicStore } from "../stores/topicStore";
 
 type MessageType = 'NEW_MESSAGE' | 'NEW_TOPIC';
 
-type NotificationData = {
+export type NotificationData = {
   message?: string;
   authorName: string;
   groupId: string;
@@ -14,14 +14,8 @@ type NotificationData = {
   type: MessageType;
 }
 
-export type GiNotification = {
-  notification: {
-    data: NotificationData;
-  }
-}
-
 export type NotificationProcessingParams = {
-  giNotification: GiNotification;
+  notificationData: NotificationData;
   groupStore: GroupStore;
   topicStore: TopicStore;
   navigation: Navigation;

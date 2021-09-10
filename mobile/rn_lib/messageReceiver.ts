@@ -11,7 +11,7 @@ export async function messageReceived(groupStore: GroupStore, topicStore: TopicS
 
 async function onNewNotification(notificationParams: NotificationProcessingParams) {
   const { groupStore, topicStore, navigation } = notificationParams;
-  const { groupId, topicId, topicName, type } = notificationParams.giNotification.notification.data;
+  const { groupId, topicId, topicName, type } = notificationParams.notificationData;
   groupStore.setCurrentlyViewedGroup(groupId);
   topicStore.setCurrentViewedTopicId(topicId);
   
