@@ -26,8 +26,9 @@ jobs:
     needs: startup
     steps:
     - name: Create mobile link
-      working-directory: ${{ github.workspace }}
       run: |
+        pwd
+        ls
         cd server/src/mobile
         ./create_links.sh
 
