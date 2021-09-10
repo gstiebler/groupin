@@ -4,6 +4,7 @@ import pushService, { NotificationParams, PushPayload } from './pushService';
 import logger from '../config/winston';
 import { ConnCtx } from '../db/ConnectionContext';
 import { Types } from 'mongoose';
+import User from '../db/schema/User';
 const { ObjectId } = Types;
 
 async function userPinnedTopics(db: ConnCtx, userId: string, groupId: string) {
@@ -85,6 +86,17 @@ type PushMessageParams = {
   topicName: string;
   authorName: string;
 };
+
+export async function getUserToNotify(db: ConnCtx, groupId: string, topicId: string) {
+  const usersFollowingTopic = (await db.PinnedTopic.find({ topicId: new ObjectId(topicId) }).lean())
+    .map(pinnedTopic => pinnedTopic.userId);
+  const usersFollowingGroup = (await db.UserGroup.find({ groupId: new ObjectId(groupId), pinned: true }).lean())
+    .map(userGroup => userGroup.userId);
+  const userIds = [...usersFollowingTopic, ...usersFollowingGroup];
+  const users = await db.User.find({ _id: { $in: userIds } });
+  return users;
+}
+
 export async function pushNewMessage(db: ConnCtx, authorNotificationToken: string, params: PushMessageParams) {
   const { message, messageId, groupId, topicId, topicName, authorName } = params;
   // send push notification
@@ -107,12 +119,7 @@ export async function pushNewMessage(db: ConnCtx, authorNotificationToken: strin
     sendNotification: true,
   };
 
-  const usersFollowingTopic = (await db.PinnedTopic.find({ topicId: new ObjectId(topicId) }).lean())
-    .map(pinnedTopic => pinnedTopic.userId);
-  const usersFollowingGroup = (await db.UserGroup.find({ groupId: new ObjectId(groupId), pinned: true }).lean())
-    .map(userGroup => userGroup.userId);
-  const userIds = [...usersFollowingTopic, ...usersFollowingGroup];
-  const users = await db.User.find({ _id: { $in: userIds } });
+  const users = await getUserToNotify(db, groupId, topicId);
   const notificationTokens = users.map(user => user.notificationToken!)
     .filter(token => token !== authorNotificationToken);
   await pushService.pushMessage(notificationTokens, { ...notificationParams, sendNotification: true });
