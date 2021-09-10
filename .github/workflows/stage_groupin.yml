@@ -24,6 +24,7 @@ jobs:
   build_server:
     runs-on: ubuntu-latest
     needs: startup
+    working-directory: ${{ github.workspace }}
     steps:
     - name: Create mobile link
       run: |
