@@ -20,13 +20,38 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '14.x'
+    
+    - name: Create mobile link
+      run: |
+        cd server/src/mobile
+        ./create_links.sh
 
-    - name: npm install, build, and test
+    - name: Installing client packages
+      run: |
+        cd mobile
+        yarn
+
+    - name: Installing server packages
       run: |
         cd server
         yarn
-        npm run build --if-present
-        npm run test --if-present
+
+    - name: ESLint Mobile
+      run: |
+        cd mobile
+        yarn run compile
+        yarn run lint
+
+    - name: ESLint Server
+      run: |
+        cd server
+        yarn run compile
+        yarn run lint
+
+    - name: Tests
+      run: |
+        cd server
+        yarn test
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
