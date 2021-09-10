@@ -12,6 +12,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      WINSTON_FILE_LEVEL: error
+      WINSTON_CONSOLE_LEVEL: debug
+      JWT_SECRET: anything123
+      MONGODB_URL: mongodb://groupin:KiMH3IZPSKOLd7F8RJg50tHxy4yVLcways9JOwX47qvnhJT4FOVjUFIKydt08UwPoLMjNvuSDRGT6of8EFcaPw==@groupin.mongo.cosmos.azure.com:10255/groupin_test?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@groupin@
 
     steps:
     - uses: actions/checkout@v2
