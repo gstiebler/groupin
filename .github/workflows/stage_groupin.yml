@@ -59,11 +59,16 @@ jobs:
         cd server
         yarn test
 
+    - uses: papeloto/action-zip@v1
+      with:
+        files: server
+        dest: server.zip
+
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
         name: node-app
-        path: ./server
+        path: server.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -85,4 +90,4 @@ jobs:
         app-name: 'groupin'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_6d4339fc6c6944459b37776adf2cc343 }}
-        package: .
+        package: server.zip
