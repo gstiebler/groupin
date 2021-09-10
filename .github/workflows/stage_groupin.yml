@@ -28,9 +28,6 @@ jobs:
     - name: Create mobile link
       run: |
         pwd
-        ls
-        cd server/src/mobile
-        ./create_links.sh
 
     - name: Installing server packages
       run: |
