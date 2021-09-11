@@ -59,7 +59,8 @@ jobs:
         cd server
         yarn test
 
-    - uses: papeloto/action-zip@v1
+    - name: compress to Zip file
+      uses: papeloto/action-zip@v1
       with:
         files: server
         dest: server.zip
