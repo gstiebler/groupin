@@ -2,12 +2,21 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import 'reflect-metadata';
-import { GraphQLServer } from 'graphql-yoga'
+import pushService from './lib/pushService';
+import { ApolloServer } from 'apollo-server';
 import { getContext } from './graphqlContext';
 import schema from './buildSchema';
+import logger from './config/winston';
 
-const server = new GraphQLServer({
+pushService.init();
+
+const server = new ApolloServer({
   schema,
-  context: (params) => getContext(params.request.headers.authorization ?? ''), 
-})
-server.start(() => console.log('Server is running on localhost:4000'))
+  context: ({ req }) => {
+    return getContext(req.headers.authorization ?? '');
+  }
+});
+
+server.listen().then(({ url }) => {
+  logger.info(`🚀 Server ready at ${url}`);
+});

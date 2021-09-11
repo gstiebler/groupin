@@ -14,9 +14,9 @@
     "build:schema": "ts-node ./src/buildSchema.ts",
     "watch": "tsc -w",
     "prestart": "npm run build",
-    "start": "func start",
     "copy": "cp .env .build",
     "link": "cd ./src/mobile/ && ./create_links.sh",
+    "start": "node ./.build/localServer.js",
     "start:local": "node --inspect ./.build/localServer.js"
   },
   "nyc": {
@@ -40,8 +40,7 @@
     "@types/mongodb": "^4.0.7",
     "@types/node": "^16.3.1",
     "@types/shortid": "^0.0.29",
-    "apollo-server": "2",
-    "apollo-server-azure-functions": "^2.25.2",
+    "apollo-server": "^3.3.0",
     "apollo-server-core": "1.3.6",
     "axios": "^0.19.2",
     "bluebird": "^3.7.1",
