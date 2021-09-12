@@ -7,6 +7,7 @@ import { ApolloServer } from 'apollo-server';
 import { getContext } from './graphqlContext';
 import schema from './buildSchema';
 import logger from './config/winston';
+import { envConfig } from './config/envConfig';
 
 pushService.init();
 
@@ -17,6 +18,6 @@ const server = new ApolloServer({
   }
 });
 
-server.listen().then(({ url }) => {
+server.listen({ port: envConfig.PORT }).then(({ url }) => {
   logger.info(`🚀 Server ready at ${url}`);
 });
