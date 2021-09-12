@@ -48,10 +48,10 @@ jobs:
         yarn run compile
         yarn run lint
 
-    - name: ESLint Server
+    - name: ESLint and build Server
       run: |
         cd server
-        yarn run compile
+        yarn run build
         yarn run lint
 
     - name: Tests
