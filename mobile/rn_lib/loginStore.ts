@@ -119,6 +119,7 @@ export class LoginStore {
       throw new Error('Notification token is not yet available');
     }
     await this.rootStore.updateNotificationToken(this.notificationToken);
+    this.navigation.navigate('GroupList');
   }
 
   async isUserLoggedIn() {
