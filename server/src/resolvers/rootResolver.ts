@@ -32,7 +32,7 @@ export class RootResolver {
     @Arg('helloInput') helloInput: HelloInput,
     @Ctx() ctx: Context
   ): Promise<String> {
-    logger.debug(ctx.externalId);
+    logger.debug(`External id: ${ctx.externalId}`);
     return helloInput.pass === 'foca' ? 'OK' : 'ERROR';
   }
 
