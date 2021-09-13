@@ -20,6 +20,7 @@ export default {
           variables,
         },
       });
+      console.log(JSON.stringify(res));
       if (!res.data) {
         throw new Error('No data returned from server');
       }
@@ -32,6 +33,7 @@ export default {
       return res.data.data;
     } catch (err) {
       console.error(err);
+      console.error(err.response?.data?.errors);
       throw new Error(err);
     }
   },
