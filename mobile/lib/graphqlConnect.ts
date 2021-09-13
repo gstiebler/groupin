@@ -20,7 +20,6 @@ export default {
           variables,
         },
       });
-      console.log(JSON.stringify(res));
       if (!res.data) {
         throw new Error('No data returned from server');
       }
