@@ -1,6 +1,7 @@
 import React from 'react';
-import { TouchableHighlight, View, StyleSheet, ListRenderItemInfo } from 'react-native';
-import { Container, Button, Text, Icon } from 'native-base';
+import { StyleSheet, ListRenderItemInfo, Pressable } from 'react-native';
+import { Container, Button, Text, Box } from 'native-base';
+import { Ionicons } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
 import { Group } from '../lib/server';
@@ -21,45 +22,45 @@ const GroupListComponent: React.FC<GroupListProps> = ({
   const renderGroup = ({ item: group }: ListRenderItemInfo<Group>) => {
     const fontWeight = group.unread ? 'bold' : 'normal';
     return (
-      <TouchableHighlight
+      <Pressable
         onPress={() => selectGroup(group.id, group.name) }
         style={styles.rowFront}
-        underlayColor={'#AAA'}
       >
-        <View style={styles.frontView}>   
-          { group.pinned ? <Icon name="md-arrow-up" /> : <View style={{ paddingLeft: 10 }}/> }
+        <Box style={styles.frontView}>   
+          {group.pinned ? <Ionicons name="md-arrow-up" /> : <Box style={{ paddingLeft: 10 }}/> }
           <Text 
             style={{ fontWeight }}
             onPress={() => selectGroup(group.id, group.name) }
           >{ group.name } </Text>
-        </View>
-      </TouchableHighlight>
+        </Box>
+      </Pressable>
     );
   };
 
   const renderHiddenItem = ({ item: group }: ListRenderItemInfo<Group>) => {
     const pinIconName = group.pinned ? 'md-arrow-down' : 'md-arrow-up';
     return (
-      <View style={styles.rowBack}>
+      <Box style={styles.rowBack}>
         <Button 
           style={styles.backLeftBtn}
           onPress={() => onLeaveGroup(group.id)}>
-          <Icon name="trash" />
+          <Ionicons name="trash" />
         </Button>
         <Button 
           style={styles.backRightBtn}
           onPress={() => onPinClicked(group) }>
-          <Icon name={pinIconName} />
+          <Ionicons name={pinIconName} />
         </Button>
-      </View>
+      </Box>
     );
   };
 
   const getEmpty = () => <Text style={{ padding: 10 }}>Nenhum grupo ainda</Text>
 
   return _.isEmpty(ownGroups) ? getEmpty() : (
-    <Container>
+    <Container w="100%">
       <SwipeListView<Group>
+        style={{ width: '100%' }}
         data={ownGroups}
         leftOpenValue={50}
         rightOpenValue={-50} 
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   rowFront: {
+    width: '100%',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
