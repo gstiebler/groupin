@@ -15,7 +15,7 @@ import GroupsSearch from '../containers/GroupsSearchContainer';
 import GroupInfo from '../containers/GroupInfoContainer';
 import Settings from '../containers/SettingsContainer';
 import * as React from 'react';
-import { Button, Icon, Text } from 'native-base';
+import { Button, Text } from 'native-base';
 import { RootStackParamList } from '../rn_lib/Navigator.types';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -31,13 +31,13 @@ const appStackNavigator = () => (
         headerTitle: 'Meus grupos',
         headerBackTitle: null,
         headerLeft: () => (
-          <Button onPress={() => navigation.push('GroupsSearch')}>
+          <Button variant="ghost" onPress={() => navigation.push('GroupsSearch')}>
             <Text>Buscar</Text>
           </Button>
         ),
         headerRight: () => (
-          <Button>
-            <Icon name='add' onPress={() => {
+          <Button variant="ghost">
+            <Ionicons name='add' size={25} onPress={() => {
               navigation.push('NewGroup')
             }}/>
           </Button>
@@ -66,7 +66,7 @@ const appStackNavigator = () => (
         headerBackTitle: null,
         headerRight: () => (
           <Button>
-            <Icon name='add' onPress={() => navigation.push('NewTopic', { groupId: route.params.groupId })}/>
+            <Ionicons name='add' size={25} onPress={() => navigation.push('NewTopic', { groupId: route.params.groupId })}/>
           </Button>
         ),
       })}
