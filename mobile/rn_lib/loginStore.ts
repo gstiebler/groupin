@@ -41,15 +41,21 @@ export class LoginStore {
     this.setIsLoading(true);
     const authToken = await localStorage.getAuthToken();
     console.log(`Stored external user token: "${authToken}"`);
-    // check if user is already logged in
-    if (authToken) {
+    if (this.isUserLoggedIn()) {
       const { userId, externalId } = decodeAuthToken(authToken);
       if (userId) {
-        updateAuthToken(authToken);
-        await this.loginRegisteredUser(authToken);
+        try {
+          const newAuthToken = await server.getAuthToken(externalId);
+          updateAuthToken(newAuthToken);
+          await this.loginRegisteredUser(newAuthToken);
+        } catch (error) {
+          navigation.navigate('Login');
+        }
       } else {
         this.registerNewUser(externalId);
       }
+    } else {
+      navigation.navigate('Login');
     }
 
     this.setIsLoading(false);
@@ -119,12 +125,16 @@ export class LoginStore {
       throw new Error('Notification token is not yet available');
     }
     await this.rootStore.updateNotificationToken(this.notificationToken);
-    this.navigation.navigate('GroupList');
+    this.navigation.navigate('TabNavigator');
   }
 
   async isUserLoggedIn() {
-    const userToken = await localStorage.getAuthToken();
-    return !!(this.rootStore.userId && userToken);
+    const authToken = await localStorage.getAuthToken();
+    if (!authToken) {
+      return false;
+    }
+    const { userId } = decodeAuthToken(authToken);
+    return !!userId;
   }
 
   registerNewUser(externalUserToken: string) {

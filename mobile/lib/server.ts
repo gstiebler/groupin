@@ -103,7 +103,7 @@ export async function setTopicLatestRead(topicId: string) {
   return res.setTopicLatestRead;
 }
 
-export async function getAuthToken(firebaseAuthToken: string) {
+export async function getAuthToken(firebaseAuthToken: string): Promise<string> {
   const query = `
     query GetAuthToken($firebaseAuthToken: String!) {
       getAuthToken(
