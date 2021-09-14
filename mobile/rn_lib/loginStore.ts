@@ -45,9 +45,9 @@ export class LoginStore {
       const { userId, externalId } = decodeAuthToken(authToken);
       if (userId) {
         try {
-          const newAuthToken = await server.getAuthToken(externalId);
-          updateAuthToken(newAuthToken);
-          await this.loginRegisteredUser(newAuthToken);
+          updateAuthToken(authToken);
+          await server.getOwnGroups(); // TODO: change to a quicker call
+          await this.loginRegisteredUser(authToken);
         } catch (error) {
           navigation.navigate('Login');
         }
