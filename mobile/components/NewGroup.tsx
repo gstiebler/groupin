@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { Input, Button, Text, VStack, Radio } from 'native-base';
 import { groupVisibility } from '../constants/domainConstants';
 
@@ -13,7 +14,7 @@ const NewGroupComponent: React.FC<NewGroupProps> = ({ onCreate }) => {
   const visibilities = groupVisibility.map(v => <Radio value={v.value} key={v.value}>{ v.label }</Radio>);
 
   return (
-    <VStack space={4} alignItems="center">
+    <VStack style={styles.stack} space={4}>
       <Input
         placeholder="Nome do novo grupo"
         value={name}
@@ -33,5 +34,10 @@ const NewGroupComponent: React.FC<NewGroupProps> = ({ onCreate }) => {
     </VStack>
   );
 }
+const styles = StyleSheet.create({
+  stack: {
+    margin: 20,
+  },
+});
 
 export default NewGroupComponent;

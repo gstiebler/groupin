@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { Button, Text, VStack } from 'native-base';
 import { FeGroupInfo } from '../stores/groupStore';
 
@@ -26,7 +27,7 @@ const GroupInfoComponent: React.FC<GroupInfoProps> = ({ groupInfo, onJoinGroup, 
     groupInfo.iBelong ? leaveButton : joinButton;
 
   return (
-    <VStack space={4} alignItems="center">
+    <VStack style={styles.stack} space={4} >
       <Text>{ groupInfo?.name }</Text>
       <Text>{ groupInfo?.description }</Text>
       <Text>{ groupInfo?.visibilityLabel }</Text>
@@ -35,5 +36,11 @@ const GroupInfoComponent: React.FC<GroupInfoProps> = ({ groupInfo, onJoinGroup, 
     </VStack>
   );
 }
+
+const styles = StyleSheet.create({
+  stack: {
+    margin: 20,
+  },
+});
 
 export default GroupInfoComponent;

@@ -22,7 +22,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const appStackNavigator = () => (
   <Stack.Navigator initialRouteName="GroupList" >
-    <Stack.Screen name="GroupsSearch" component={GroupsSearch} />
+    <Stack.Screen options={{ headerTitle: 'Buscar grupo', }} name="GroupsSearch" component={GroupsSearch} />
     <Stack.Screen 
       name="GroupList" 
       key="GROUP_LIST"

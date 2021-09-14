@@ -20,7 +20,7 @@ export type SettingsProps = {
 
 const SettingsComponent: React.FC<SettingsProps> = ({ onLogout }) => {
   return (
-    <Center flex={1}>
+    <Center flex={1} safeArea>
       <VStack space={4} flex={1} w="90%" mt={4}>
         <Heading color="emerald.400">Configurações</Heading>
         <Button onPress={onLogout} style={styles.button} >
