@@ -1,7 +1,5 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { Container, Content, Button, Text } from 'native-base';
-import styles from '../Style';
+import { Button, Text, VStack } from 'native-base';
 import { FeGroupInfo } from '../stores/groupStore';
 
 export type GroupInfoProps = {
@@ -12,13 +10,13 @@ export type GroupInfoProps = {
 
 const GroupInfoComponent: React.FC<GroupInfoProps> = ({ groupInfo, onJoinGroup, onLeaveGroup }) => {
   const joinButton = (
-    <Button block success onPress={() => onJoinGroup()} >
+    <Button onPress={() => onJoinGroup()} >
       <Text>Entrar no grupo</Text>
     </Button>
   );
 
   const leaveButton =  (
-    <Button block success onPress={() => onLeaveGroup()} >
+    <Button onPress={() => onLeaveGroup()} >
       <Text>Sair do grupo</Text>
     </Button>
   );
@@ -28,17 +26,13 @@ const GroupInfoComponent: React.FC<GroupInfoProps> = ({ groupInfo, onJoinGroup, 
     groupInfo.iBelong ? leaveButton : joinButton;
 
   return (
-    <SafeAreaView style={{ flex: 1 }} >
-      <Container>
-        <Content>
-          <Text>{ groupInfo?.name }</Text>
-          <Text>{ groupInfo?.description }</Text>
-          <Text>{ groupInfo?.visibilityLabel }</Text>
-          <Text>{ `Identificador: "${ groupInfo?.friendlyId }"` }</Text>
-          { button }
-        </Content>
-      </Container>
-    </SafeAreaView>
+    <VStack space={4} alignItems="center">
+      <Text>{ groupInfo?.name }</Text>
+      <Text>{ groupInfo?.description }</Text>
+      <Text>{ groupInfo?.visibilityLabel }</Text>
+      <Text>{ `Identificador: "${ groupInfo?.friendlyId }"` }</Text>
+      { button }
+    </VStack>
   );
 }
 

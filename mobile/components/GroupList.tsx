@@ -43,13 +43,13 @@ const GroupListComponent: React.FC<GroupListProps> = ({
       <View style={styles.rowBack}>
         <Button 
           style={styles.backLeftBtn}
-          full danger onPress={() => onLeaveGroup(group.id)}>
-          <Icon active name="trash" />
+          onPress={() => onLeaveGroup(group.id)}>
+          <Icon name="trash" />
         </Button>
         <Button 
           style={styles.backRightBtn}
-          full onPress={() => onPinClicked(group) }>
-          <Icon active name={pinIconName} />
+          onPress={() => onPinClicked(group) }>
+          <Icon name={pinIconName} />
         </Button>
       </View>
     );

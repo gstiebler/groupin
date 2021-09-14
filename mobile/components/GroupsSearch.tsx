@@ -1,14 +1,13 @@
 import React from 'react';
-import { 
-  Container, 
-  Body,  
-  List, 
-  ListItem,
+import {  
+  Box,
+  FlatList,
+  Input,
   Text,
-  Content,
+  VStack,
 } from 'native-base';
 import { Group } from '../lib/server';
-import { TextInput } from 'react-native';
+import { ListRenderItemInfo } from 'react-native';
 
 export interface GroupSearchProps {
   groups: Group[];
@@ -21,29 +20,25 @@ const GroupSearchComponent: React.FC<GroupSearchProps> = ({
   changeSearchText, 
   onGroupSelected,
 }) => {
-  const renderGroup = (group: Group) => (
-    <ListItem button onPress={ () => onGroupSelected(group.id) }>
-      <Body>
-        <Text>{group.name}</Text>
-      </Body>
-    </ListItem>
+  const renderGroup = ({ item: group }: ListRenderItemInfo<Group>): React.ReactElement => (
+    <Box>
+      <Text onPress={() => onGroupSelected(group.id)}>{group.name}</Text>
+    </Box>
   );
 
   const reset = () => changeSearchText('');
 
   return (
-    <Container>
-      <Content>
-        <TextInput
+    <VStack space={4} alignItems="center">
+        <Input
           onChangeText={changeSearchText}
           placeholder='Buscar'
         />
-        <List 
-          dataArray={groups} 
-          renderRow={renderGroup}
+        <FlatList 
+          data={groups} 
+          renderItem={renderGroup}
         />
-      </Content>
-    </Container>
+    </VStack>
   );
 }
 

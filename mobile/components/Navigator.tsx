@@ -31,12 +31,12 @@ const appStackNavigator = () => (
         headerTitle: 'Meus grupos',
         headerBackTitle: null,
         headerLeft: () => (
-          <Button transparent onPress={() => navigation.push('GroupsSearch')}>
+          <Button onPress={() => navigation.push('GroupsSearch')}>
             <Text>Buscar</Text>
           </Button>
         ),
         headerRight: () => (
-          <Button transparent>
+          <Button>
             <Icon name='add' onPress={() => {
               navigation.push('NewGroup')
             }}/>
@@ -65,7 +65,7 @@ const appStackNavigator = () => (
         ),
         headerBackTitle: null,
         headerRight: () => (
-          <Button transparent>
+          <Button>
             <Icon name='add' onPress={() => navigation.push('NewTopic', { groupId: route.params.groupId })}/>
           </Button>
         ),

@@ -38,8 +38,8 @@ const TopicListComponent: React.FC<TopicsListProps> =  ({ topics, selectTopic, o
         <View />
         <Button 
           style={styles.backRightBtn}
-          full onPress={() => onPinClicked(topic) }>
-          <Icon active name={pinIconName} />
+          onPress={() => onPinClicked(topic) }>
+          <Icon name={pinIconName} />
         </Button>
       </View>
     );

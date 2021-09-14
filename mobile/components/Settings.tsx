@@ -1,13 +1,11 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { 
-  Container, 
-  Header,
-  Body, 
-  Right, 
-  Title, 
+import {
   Text,
   Button,
+  Center,
+  VStack,
+  Heading,
 } from 'native-base';
 
 const styles = StyleSheet.create({
@@ -21,22 +19,15 @@ export type SettingsProps = {
 };
 
 const SettingsComponent: React.FC<SettingsProps> = ({ onLogout }) => {
-  const header = (
-    <Header>
-      <Body>
-        <Title>Configurações</Title>
-      </Body>
-      <Right />
-    </Header>
-  );
-
   return (
-    <Container>
-      { header }
-      <Button onPress={onLogout} style={styles.button} >
-        <Text>Sair</Text>
-      </Button>
-    </Container>
+    <Center flex={1}>
+      <VStack space={4} flex={1} w="90%" mt={4}>
+        <Heading color="emerald.400">Configurações</Heading>
+        <Button onPress={onLogout} style={styles.button} >
+          <Text>Sair</Text>
+        </Button>
+      </VStack>
+    </Center>
   );
 }
 
