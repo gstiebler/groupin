@@ -27,7 +27,7 @@ const GroupListComponent: React.FC<GroupListProps> = ({
         style={styles.rowFront}
       >
         <Box style={styles.frontView}>   
-          {group.pinned ? <Ionicons name="md-arrow-up" /> : <Box style={{ paddingLeft: 10 }}/> }
+          {group.pinned ? <Ionicons size={25} name="md-arrow-up" /> : <Box style={{ paddingLeft: 10 }}/> }
           <Text 
             style={{ fontWeight }}
             onPress={() => selectGroup(group.id, group.name) }
@@ -42,14 +42,16 @@ const GroupListComponent: React.FC<GroupListProps> = ({
     return (
       <Box style={styles.rowBack}>
         <Button 
+          variant="ghost"
           style={styles.backLeftBtn}
           onPress={() => onLeaveGroup(group.id)}>
-          <Ionicons name="trash" />
+          <Ionicons name="trash" size={20} />
         </Button>
         <Button 
+          variant="ghost"
           style={styles.backRightBtn}
           onPress={() => onPinClicked(group) }>
-          <Ionicons name={pinIconName} />
+          <Ionicons name={pinIconName} size={20} />
         </Button>
       </Box>
     );
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
   },
   rowBack: {
     height: 50,
+    width: '100%',
     alignItems: 'center',
     backgroundColor: '#DDD',
     flex: 1,
