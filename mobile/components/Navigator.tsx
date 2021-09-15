@@ -65,7 +65,7 @@ const appStackNavigator = () => (
         ),
         headerBackTitle: null,
         headerRight: () => (
-          <Button>
+          <Button variant="ghost">
             <Ionicons name='add' size={25} onPress={() => navigation.push('NewTopic', { groupId: route.params.groupId })}/>
           </Button>
         ),
