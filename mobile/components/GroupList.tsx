@@ -60,16 +60,14 @@ const GroupListComponent: React.FC<GroupListProps> = ({
   const getEmpty = () => <Text style={{ padding: 10 }}>Nenhum grupo ainda</Text>
 
   return _.isEmpty(ownGroups) ? getEmpty() : (
-    <Container w="100%">
-      <SwipeListView<Group>
-        style={{ width: '100%' }}
-        data={ownGroups}
-        leftOpenValue={50}
-        rightOpenValue={-50} 
-        renderItem={renderGroup}
-        renderHiddenItem={renderHiddenItem}   
-      />
-    </Container>
+    <SwipeListView<Group>
+      style={{ width: '100%' }}
+      data={ownGroups}
+      leftOpenValue={50}
+      rightOpenValue={-50} 
+      renderItem={renderGroup}
+      renderHiddenItem={renderHiddenItem}   
+    />
   );
 }
 
