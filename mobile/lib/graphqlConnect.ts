@@ -3,7 +3,13 @@ import env from './graphqlEnv';
 
 const url = env.SERVER_URL;
 
+type ErrorHandler = (error: string) => void;
+
 export default {
+
+  errorHandler: (error: string) => { console.error(error) },
+  setErrorHandler(handler: ErrorHandler) { this.errorHandler = handler; },
+
   setToken(token: string) {
     axios.defaults.headers.common.authorization = token;
   },
@@ -32,7 +38,8 @@ export default {
       return res.data.data;
     } catch (err) {
       console.error(err);
-      console.error(err.response?.data?.errors);
+      const errorMessage = err.message || err.response?.data?.errors;
+      this.errorHandler(errorMessage);
       throw new Error(err);
     }
   },

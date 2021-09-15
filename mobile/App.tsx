@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Navigator from './components/Navigator';
 import { extendTheme, NativeBaseProvider } from 'native-base';
 

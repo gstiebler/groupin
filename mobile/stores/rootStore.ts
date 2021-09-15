@@ -4,8 +4,17 @@ import * as server from '../lib/server';
 
 export class RootStore {
   userId = '';
+  error = '';
+  errorId = Math.random();
 
   setUserIdAction = (userId: string) => { this.userId = userId; };
+  setErrorAction = (error: string) => {
+    if (_.isEmpty(error)) {
+      return;
+    }
+    this.error = error;
+    this.errorId = Math.random();
+  };
 
   async updateNotificationToken(notificationToken: string) {
     if (!this.userId) {

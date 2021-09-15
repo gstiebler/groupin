@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { observer } from 'mobx-react-lite';
 import SplashScreenContainer from '../containers/SplashScreenContainer';
 import GroupList from '../containers/GroupListContainer';
 import TopicsList from '../containers/TopicsListContainer';
@@ -14,9 +15,12 @@ import Login from '../containers/LoginContainer';
 import GroupsSearch from '../containers/GroupsSearchContainer';
 import GroupInfo from '../containers/GroupInfoContainer';
 import Settings from '../containers/SettingsContainer';
-import * as React from 'react';
-import { Button, Text } from 'native-base';
+import React, { useEffect } from 'react';
+import { Button, Text, useToast } from 'native-base';
 import { RootStackParamList } from '../rn_lib/Navigator.types';
+import { rootStore as rootStoreInstance } from '../rn_lib/storesFactory';
+import _ from 'lodash';
+import { RootStore } from '../stores/rootStore';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -103,15 +107,31 @@ const tabNavigator = () => (
   </Tab.Navigator>
 );
 
-const App = () => (
-  <NavigationContainer>
-    <Stack.Navigator initialRouteName="SplashScreen" headerMode="none" screenOptions={{ gestureEnabled: false }}>
-      <Stack.Screen name="SplashScreen" component={SplashScreenContainer} />
-      <Stack.Screen name="Register" component={RegisterContainer} />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="TabNavigator" component={tabNavigator} />
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+const App: React.FC<{ rootStore: RootStore }> = ({ rootStore }) => {
+  const toast = useToast();
 
-export default App;
+  useEffect(() => {
+    if (_.isEmpty(rootStore.error)) {
+      return;
+    }
+    toast.show({
+      title: rootStore.error,
+      status: 'error',
+    });
+  }, [rootStore.errorId]);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="SplashScreen" headerMode="none" screenOptions={{ gestureEnabled: false }}>
+        <Stack.Screen name="SplashScreen" component={SplashScreenContainer} />
+        <Stack.Screen name="Register" component={RegisterContainer} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="TabNavigator" component={tabNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const ObserverApp = observer(App);
+
+export default () => <ObserverApp rootStore={rootStoreInstance} />;
