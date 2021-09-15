@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ListRenderItemInfo, Pressable } from 'react-native';
-import { Container, Button, Text, Box } from 'native-base';
+import { Button, Text, Box } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as _ from 'lodash';
