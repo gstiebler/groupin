@@ -379,7 +379,7 @@ describe('main', () => {
       beforeEach(async () => {
         setCurrentUser(alice);
         topicStore = new TopicStore(new GroupStore(), createStorage());
-        topicStore.topicId = topicId;
+        topicStore.currentlyViewedTopicId = topicId;
         await topicStore.sendMessages([{ text: messageText } as GiMessage]);
       });
 
