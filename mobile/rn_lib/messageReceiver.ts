@@ -3,10 +3,13 @@ import { TopicStore } from "../stores/topicStore";
 import { NotificationProcessingParams } from "./notificationTypes";
 
 export async function messageReceived(groupStore: GroupStore, topicStore: TopicStore) {
-  await Promise.all([
-    groupStore.getTopicsOfCurrentGroup(),
-    topicStore.fetchMessagesOfCurrentTopic(),
-  ]);
+  if (topicStore.currentlyViewedTopicId) {
+    await topicStore.fetchMessagesOfCurrentTopic();
+  } else if (groupStore.currentlyViewedGroupId) {
+    await groupStore.getTopicsOfCurrentGroup();
+  } else {
+    await groupStore.fetchOwnGroups();
+  }
 }
 
 async function onNewNotification(notificationParams: NotificationProcessingParams) {
