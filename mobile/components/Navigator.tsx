@@ -99,6 +99,7 @@ const tabNavigator = () => (
     tabBarOptions={{
       activeTintColor: 'purple',
       inactiveTintColor: 'gray',
+      keyboardHidesTabBar: true,
       showLabel: false,
     }}
   >
