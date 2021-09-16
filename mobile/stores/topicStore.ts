@@ -79,6 +79,7 @@ export class TopicStore {
     const { topicId, unsubscribeFn } = params;
     this.setCurrentViewedTopicId(undefined);
     this.setMessagesAction([]);
+    this.setSentMessagesAction([]);
     server.setTopicLatestRead(topicId);
     const currentTopic = _.find(this.groupStore.topics, { id: topicId });
     // TODO: move this logic to the server?

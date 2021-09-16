@@ -300,11 +300,11 @@ describe('main', () => {
       expect(storeMessageTexts[24]).toEqual('Message 49');
     });
 
-    it('getMessagesOfCurrentTopic', async () => {
+    it('fetchMessagesOfCurrentTopic', async () => {
       setCurrentUser(userFixtures.robert);
       const topicStore = new TopicStore(new GroupStore(), createStorage());
       topicStore.currentlyViewedTopicId = topicFixtures.topic1Group1._id!.toHexString();
-      await topicStore.getMessagesOfCurrentTopic();
+      await topicStore.fetchMessagesOfCurrentTopic();
       expect(topicStore.messages).toEqual(_.reverse([
         {
           _id: messageFixtures.message1topic1._id!.toHexString(),

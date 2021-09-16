@@ -14,7 +14,6 @@ const connectionContextPromise = createConnectionContext();
 export async function getContext(authToken: string): Promise<Context> {
   const connection = await connectionContextPromise;
   if (authToken) {
-    logger.debug(`authToken: ${authToken}`);
     const decodedToken = decodeAuthToken(authToken);
     return {
       userId: decodedToken.userId,
