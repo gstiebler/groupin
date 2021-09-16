@@ -63,12 +63,11 @@ export class GiNotifications {
 
   async startMessageListener() {
     this.notificationListener = Notifications.addNotificationReceivedListener(notification => {
-      console.log(notification);
+      console.log('addNotificationReceivedListener');
       messageReceiver.messageReceived(groupStore, topicStore);
     });
 
     this.responseListener = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
       console.log('onNotificationOpenedApp');
       messageReceiver.onNotificationOpened({
         notificationData: response.notification.request.content.data as NotificationData,
@@ -82,12 +81,12 @@ export class GiNotifications {
   }
 
   async subscribeToTopic(topic: string) {
-    console.error('subscribeToTopic not implemented');
+    console.info('subscribeToTopic not implemented');
     // messaging().subscribeToTopic(topic);
   }
 
   async unsubscribeFromTopic(topic: string) {
-    console.error('unsubscribeFromTopic not implemented');
+    console.info('unsubscribeFromTopic not implemented');
     // messaging().unsubscribeFromTopic(topic);
   }
 
@@ -101,7 +100,7 @@ export const notifications = new GiNotifications();
 
 function shouldDisplayNotification(notificationData: NotificationData) {
   if (notificationData.type === 'NEW_MESSAGE') {
-    return notificationData.topicId !== topicStore.topicId;
+    return notificationData.topicId !== topicStore.currentlyViewedTopicId;
   } else {
     return notificationData.groupId !== groupStore.currentlyViewedGroupId;
   }
@@ -109,7 +108,10 @@ function shouldDisplayNotification(notificationData: NotificationData) {
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
-    const displayNotification = shouldDisplayNotification(notification.request.content.data as NotificationData);
+    const notificationData = notification.request.content.data as NotificationData;
+    const displayNotification = shouldDisplayNotification(notificationData);
+    console.log(`Ids: ${topicStore.currentlyViewedTopicId}, ${groupStore.currentlyViewedGroupId}`);
+    console.log(`Received notification: ${JSON.stringify(notificationData, null, 2)}, ${displayNotification}`);
     return {
       shouldShowAlert: displayNotification,
       shouldPlaySound: displayNotification,

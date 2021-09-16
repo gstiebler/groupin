@@ -12,14 +12,12 @@ type SubscribeFunction = (formattedTopicId: string) => void;
 
 export class TopicStore {
   topicTitle = '';
-  topicId = '';
   currentlyViewedTopicId? = '';
   messages: GiMessage[] = [];
   sentMessages: GiMessage[] = [];
   hasOlderMessages = false;
 
   setTopicTitleAction = (topicTitle: string) => { this.topicTitle = topicTitle; };
-  setTopicIdAction = (topicId: string) => { this.topicId = topicId; };
   setCurrentViewedTopicId = (topicId?: string) => { this.currentlyViewedTopicId = topicId; }
   setMessagesAction = (messages: GiMessage[]) => { this.messages = messages; };
   setSentMessagesAction = (messages: GiMessage[]) => { this.sentMessages = messages; };
@@ -42,8 +40,6 @@ export class TopicStore {
   }) {
     const { topicId, topicName, storage, subscribeFn } = params;
     this.setTopicTitleAction(topicName);
-    this.setTopicIdAction(topicId);
-    // TODO: is `currentlyViewedTopicId` redundant with `topicId`?
     this.setCurrentViewedTopicId(topicId);
     this.setHasOlderMessagesAction(true);
   
@@ -71,15 +67,19 @@ export class TopicStore {
     this.setMessagesAction(messages);
     subscribeFn(formatDataTopicId(topicId));
   }
+
+  clear() {
+    this.setCurrentViewedTopicId(undefined);
+    this.setMessagesAction([]);
+    this.setSentMessagesAction([]);
+  }
   
   async onTopicClosed(params: {
     topicId: string,
     unsubscribeFn: SubscribeFunction
   }) {
+    this.clear();
     const { topicId, unsubscribeFn } = params;
-    this.setCurrentViewedTopicId(undefined);
-    this.setMessagesAction([]);
-    this.setSentMessagesAction([]);
     server.setTopicLatestRead(topicId);
     const currentTopic = _.find(this.groupStore.topics, { id: topicId });
     // TODO: move this logic to the server?
@@ -130,7 +130,7 @@ export class TopicStore {
     const firstMessage = messages[0];
     await server.sendMessage({
       message: firstMessage.text,
-      topicId: this.topicId,
+      topicId: this.currentlyViewedTopicId,
     });
   }
 }
