@@ -7,7 +7,7 @@ export class LocalStorage implements IStorage {
 
   async getMessages(topicId: string): Promise<GiMessage[]> {
     const res = await AsyncStorage.getItem(topicId);
-    return res ? JSON.parse(res) : null;
+    return res ? JSON.parse(res) : [];
   }
   
   async setMessages(topicId: string, value: GiMessage[]) {
