@@ -5,7 +5,7 @@ import { NotificationProcessingParams } from "./notificationTypes";
 export async function messageReceived(groupStore: GroupStore, topicStore: TopicStore) {
   await Promise.all([
     groupStore.getTopicsOfCurrentGroup(),
-    topicStore.getMessagesOfCurrentTopic(),
+    topicStore.fetchMessagesOfCurrentTopic(),
   ]);
 }
 

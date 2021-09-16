@@ -32,7 +32,7 @@ const ChatContainerObserver: React.FC<ContainerProp> = observer(({ navigation, r
   
   const props: ChatProps = {
     title: topicStore.topicTitle,
-    messages: topicStore.messages,
+    messages: topicStore.messagesView,
     userId: rootStore.userId, 
     hasOlderMessages: topicStore.hasOlderMessages,
     onSend: messages => topicStore.sendMessages(messages),

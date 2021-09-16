@@ -15,18 +15,24 @@ export class TopicStore {
   topicId = '';
   currentlyViewedTopicId? = '';
   messages: GiMessage[] = [];
+  sentMessages: GiMessage[] = [];
   hasOlderMessages = false;
 
   setTopicTitleAction = (topicTitle: string) => { this.topicTitle = topicTitle; };
   setTopicIdAction = (topicId: string) => { this.topicId = topicId; };
   setCurrentViewedTopicId = (topicId?: string) => { this.currentlyViewedTopicId = topicId; }
   setMessagesAction = (messages: GiMessage[]) => { this.messages = messages; };
+  setSentMessagesAction = (messages: GiMessage[]) => { this.sentMessages = messages; };
   setHasOlderMessagesAction = (hasOlderMessages: boolean) => { this.hasOlderMessages = hasOlderMessages; };
 
   constructor(
     private groupStore: GroupStore,
     private storage: IStorage,
   ) {}
+
+  get messagesView() {
+    return mergeMessages(this.messages, this.sentMessages);
+  }
 
   async onTopicOpened(params: {
     topicId: string,
@@ -85,13 +91,14 @@ export class TopicStore {
     await server.createTopic({ topicName: params.name, groupId: params.groupId });
   }
 
-  async getMessagesOfCurrentTopic(): Promise<void> {
+  async fetchMessagesOfCurrentTopic(): Promise<void> {
     if (!this.currentlyViewedTopicId) { return }
     const topicId = this.currentlyViewedTopicId;
     const messages = await server.getMessagesOfTopic({
       topicId,
       limit: NUM_ITEMS_PER_FETCH,
     });
+    this.setSentMessagesAction([]);
     this.setMessagesAction(messages);
     await this.storage.setMessages(topicId, this.messages);
   }
@@ -116,12 +123,13 @@ export class TopicStore {
   }
 
   async sendMessages(messages: GiMessage[]): Promise<void> {
+    const sentMessages = mergeMessages(this.sentMessages, messages);
+    this.setSentMessagesAction(sentMessages);
+
     const firstMessage = messages[0];
-    const newMessageId = await server.sendMessage({
+    await server.sendMessage({
       message: firstMessage.text,
       topicId: this.topicId,
     });
-    const newMessages = [{ ...firstMessage, id: newMessageId }];
-    this.addNewMessages(newMessages);
   }
 }
