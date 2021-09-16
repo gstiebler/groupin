@@ -130,7 +130,7 @@ export class TopicStore {
     const firstMessage = messages[0];
     await server.sendMessage({
       message: firstMessage.text,
-      topicId: this.currentlyViewedTopicId,
+      topicId: this.currentlyViewedTopicId!,
     });
   }
 }

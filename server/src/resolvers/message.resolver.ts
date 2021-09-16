@@ -105,13 +105,13 @@ export class MessageResolver {
 
     // update topic updatedAt
     await db.Topic.updateOne(
-      { id: topicId },
+      { _id: new ObjectId(topicId) },
       { updatedAt: new Date() },
     );
 
     // update group updatedAt
     await db.Group.updateOne(
-      { id: topic.groupId },
+      { _id: topic.groupId },
       { updatedAt: new Date() }
     );
 
