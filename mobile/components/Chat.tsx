@@ -1,6 +1,5 @@
 import React from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
-import { Container } from 'native-base';
 import { GiMessage } from '../lib/messages';
 
 export type ChatProps = {
@@ -20,16 +19,14 @@ const ChatComponent: React.FC<ChatProps> = ({
   onSend, 
   onLoadEarlier,
 }) => (
-  <Container>
-    <GiftedChat
-      messages={messages}
-      user={{ _id: userId }}
-      loadEarlier={hasOlderMessages}
-      renderUsernameOnMessage={true}
-      onSend={newMessages => onSend(newMessages)}
-      onLoadEarlier={() => onLoadEarlier()}
-    />
-  </Container>
+  <GiftedChat
+    messages={messages}
+    user={{ _id: userId }}
+    loadEarlier={hasOlderMessages}
+    renderUsernameOnMessage={true}
+    onSend={newMessages => onSend(newMessages)}
+    onLoadEarlier={() => onLoadEarlier()}
+  />
 );
 
 export default ChatComponent;

@@ -99,11 +99,22 @@ export class GiNotifications {
 
 export const notifications = new GiNotifications();
 
+function shouldDisplayNotification(notificationData: NotificationData) {
+  if (notificationData.type === 'NEW_MESSAGE') {
+    return notificationData.topicId !== topicStore.topicId;
+  } else {
+    return notificationData.groupId !== groupStore.currentlyViewedGroupId;
+  }
+}
+
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
+  handleNotification: async (notification) => {
+    const displayNotification = shouldDisplayNotification(notification.request.content.data as NotificationData);
+    return {
+      shouldShowAlert: displayNotification,
+      shouldPlaySound: displayNotification,
+      shouldSetBadge: false,
+    };
+  }
 });
 
